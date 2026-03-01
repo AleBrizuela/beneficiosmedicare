@@ -114,9 +114,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; color: var(--dark); font
 }
 @media (max-width: 768px) {
   .header {
-    position: fixed; top: 0; left: 0; right: 0;
+    position: sticky; top: 0; left: 0; right: 0;
     backdrop-filter: blur(8px);
-    transition: box-shadow 0.3s, top 0.25s ease;
+    transition: box-shadow 0.3s;
   }
 }
 .header.scrolled { box-shadow: var(--shadow); }
@@ -231,8 +231,9 @@ body.widget-active .sms-float {
   .widget-opt { padding: 14px 12px !important; transform: none !important; }
   .widget-opt-icon { width: 44px !important; height: 44px !important; font-size: 18px !important; border-radius: 10px !important; flex-shrink: 0; }
   .widget-opt-text h4 { font-size: 15px !important; }
-  .widget-opt-text p { font-size: 13px !important; line-height: 1.5 !important; }
-  .widget-opt-badge { position: absolute; bottom: 8px; right: 10px; font-size: 9px !important; padding: 3px 7px !important; }
+  .widget-opt-text p { font-size: 12px !important; line-height: 1.4 !important; }
+  .widget-opt-badge { position: static !important; font-size: 9px !important; padding: 3px 7px !important; flex-shrink: 0; align-self: center; }
+  .widget-opt-row { flex-wrap: nowrap !important; }
   .widget-opt { position: relative; }
   .mobile-sticky-cta { display: flex; }
 
@@ -824,8 +825,6 @@ a[href^="tel"] { white-space: nowrap; }
 <style>
   @media(max-width:768px) {
     #cms-disclaimer { font-size: 11px; padding: 4px 12px; }
-    .header { top: 26px; transition: top 0.25s ease; }
-    .header.disclaimer-gone { top: 0 !important; }
   }
 
 /* ==================================================
