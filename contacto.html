@@ -124,9 +124,10 @@ body { font-family: 'Inter', -apple-system, sans-serif; color: var(--dark); font
 }
 .logo {
   font-family: 'Playfair Display', serif; font-size: 22px;
-  font-weight: 700; color: var(--navy); text-decoration: none;
+  font-weight: 700; color: #146A5D !important; text-decoration: none;
 }
-.logo span { color: var(--green); }
+.logo span { color: #146A5D !important; }
+.logo .logo-icon { width: 48px; height: 48px; margin-right: 6px; vertical-align: middle; }
 nav { display: flex; align-items: center; gap: 8px; }
 nav a {
   text-decoration: none; font-size: 14px; font-weight: 500;
@@ -736,9 +737,13 @@ a[href^="tel"] { white-space: nowrap; }
 </head>
 
 <body>
+<!-- CMS Disclaimer Banner -->
+<div id="cms-disclaimer" style="background:#f1f5f9;color:#64748b;text-align:center;padding:6px 16px;font-size:12px;line-height:1.5;font-weight:400;border-bottom:1px solid #e2e8f0;position:relative;z-index:1100">
+  Este sitio web no es parte del gobierno federal ni del programa Medicare. Para información oficial visite <a href="https://www.medicare.gov" target="_blank" rel="noopener" style="color:#1d72b8;text-decoration:underline">Medicare.gov</a> o llame al <a href="tel:18006334227" style="color:#1d72b8;text-decoration:underline">1-800-medicare</a>
+</div>
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="index.html" class="logo"><img src="favicon-192x192.png" alt="Beneficios Medicare" class="logo-icon">Beneficios <span>Medicare</span></a>
+    <a href="index.html" class="logo"><svg class="logo-icon" width="48" height="48" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2L4 8.5v10c0 9 5.8 15 14 17.5 8.2-2.5 14-8.5 14-17.5v-10L18 2z" fill="#1E3A5F"/><path d="M18 11c-1.4-2.1-4.2-2.7-6-1.2a4.8 4.8 0 0 0-.9 5.5c1.6 3.2 6.9 7.2 6.9 7.2s5.3-4 6.9-7.2a4.8 4.8 0 0 0-.9-5.5c-1.8-1.5-4.6-.9-6 1.2z" fill="white"/><path d="M10 16.5h3l1.2-2.5 1.8 5 1.8-5 1.2 2.5H26" stroke="#146A5D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>Beneficios <span>Medicare</span></a>
     <nav id="desktop-nav">
       <a href="index.html">Inicio</a>
       <a href="beneficios.html">Beneficios</a>
@@ -748,11 +753,6 @@ a[href^="tel"] { white-space: nowrap; }
     <button class="mobile-menu-btn" onclick="toggleMobile()"><i class="fas fa-bars"></i></button>
   </div>
 </header>
-
-<div id="cms-disclaimer" style="background:#f0f4f8;border-bottom:1px solid #d1d9e0;padding:8px 16px;font-size:12px;color:#475569;text-align:center;line-height:1.5">
-  Este sitio web no está afiliado ni respaldado por el gobierno de los Estados Unidos ni por el programa federal de Medicare. No ofrecemos todos los planes disponibles en su área. La información proporcionada es solo para fines educativos. Contacte a Medicare.gov o 1-800-MEDICARE para obtener información completa.
-  <button onclick="document.getElementById('cms-disclaimer').style.display='none'" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;margin-left:12px;vertical-align:middle" aria-label="Cerrar">&times;</button>
-</div>
 
 <!-- Mobile nav -->
 <div class="mobile-nav" id="mobile-nav">
@@ -1042,37 +1042,21 @@ a[href^="tel"] { white-space: nowrap; }
 
 </main>
 
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;color:white;margin-bottom:12px">Susana Marcos <span style="color:var(--mint)">LLC</span></div>
-      <p>Agentes de Medicare bilingües con licencia en California, Illinois, Texas, Oklahoma, Florida e Iowa. Nuestro servicio es siempre 100% gratuito.</p>
+<footer style="padding:20px 24px 16px">
+  <div style="max-width:960px;margin:0 auto;text-align:center">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--mint);margin-bottom:10px">Susana Marcos LLC</div>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:6px;font-size:13px">
+      <a href="index.html" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-home"></i> Inicio</a>
+      <a href="beneficios.html" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-heart"></i> Beneficios</a>
     </div>
-    <div>
-      <h4>Páginas</h4>
-      <a href="index.html">Inicio</a>
-      <a href="beneficios.html">Beneficios</a>
-      <a href="contacto.html">Contáctenos</a>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:13px">
+      <a href="tel:+13105979142" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-phone-alt"></i> Llame</a>
+      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-video"></i> Agende Cita Virtual</a>
+      <a href="mailto:alejamedicare@gmail.com" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-envelope"></i> Email</a>
+      <a href="https://wa.me/13105979142" target="_blank" style="color:var(--lt-blue);text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>
     </div>
-    <div>
-      <h4>Contáctenos</h4>
-      
-      <a href="mailto:alejamedicare@gmail.com">alejamedicare@gmail.com</a>
-      <a href="https://wa.me/13105979142" target="_blank">WhatsApp</a>
-    </div>
-    <div>
-      <h4>Horario</h4>
-      <p>Lunes a Viernes: 7am–4pm PT<br>Sábado: 8am–12pm PT<br>Domingo: Solo con cita</p>
-    </div>
-  </div>
-  <div style="text-align:center;padding:20px 24px 0;border-top:1px solid rgba(255,255,255,0.1)">
-    <p style="font-size:15px;color:var(--mint);font-weight:600;margin-bottom:4px">Alejandra Brizuela Marcos</p>
-    <p style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:4px">Susana Marcos LLC</p>
-    <p style="font-size:14px;color:white;font-weight:600;margin-bottom:4px">alejamedicare@gmail.com | Hablo Español</p>
-  </div>
-  <div class="footer-bottom">
-    <p style="margin-bottom:6px">No ofrecemos todos los planes disponibles en su área. Cualquier información que proporcionemos se limita a los planes que ofrecemos en su área. Por favor, contacte a <a href="https://www.medicare.gov" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.7)">Medicare.gov</a> o llame al 1-800-MEDICARE para obtener información sobre todas sus opciones. La asesoría es gratuita y sin compromiso para usted.</p>
-    <p>Este sitio no tiene conexión ni está avalado por el gobierno de los EE.UU. ni por el programa federal de Medicare. - <a href="https://www.californiaseniorsbenefits.com" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.7);text-decoration:none">californiaseniorsbenefits.com</a> - nuestro sitio en Inglés</p>
+    <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px">Lun–Vie 7am–4pm PT · Sáb 8am–12pm PT</p>
+    <p style="font-size:10px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">No ofrecemos todos los planes disponibles en su área. Visite <a href="https://www.medicare.gov" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5)">Medicare.gov</a> o llame al 1-800-MEDICARE. Este sitio no está avalado por el gobierno federal ni por Medicare.</p>
   </div>
 </footer>
 
