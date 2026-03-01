@@ -379,16 +379,17 @@ section { padding: 80px 24px; }
 .widget-options { display: flex; flex-direction: column; gap: 12px; }
 .widget-opt {
   display: flex; align-items: flex-start; gap: 16px;
-  padding: 18px 20px; border-radius: 16px; cursor: pointer;
-  border: 2px solid var(--lt-gray);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: white;
+  padding: 18px 20px; border-radius: 14px; cursor: pointer;
+  border: 2px solid #d4dbe6;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 .widget-opt-text { display: flex; flex-direction: column; justify-content: flex-start; flex: 1; min-width: 0; }
 .widget-opt-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 .widget-opt-row p { flex: 1; margin: 0; }
-.widget-opt:hover { transform: translateX(8px); border-color: var(--blue); background: var(--lt-blue); }
-.widget-opt.selected { border-color: var(--blue); background: var(--lt-blue); }
+.widget-opt:hover { transform: translateY(-2px); border-color: var(--blue); background: white; box-shadow: 0 4px 12px rgba(27,107,90,0.15); }
+.widget-opt.selected { border-color: var(--blue); background: white; box-shadow: 0 4px 12px rgba(27,107,90,0.15); }
 .widget-opt-icon {
   width: 44px; height: 44px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
@@ -930,7 +931,7 @@ a[href^="tel"] { white-space: nowrap; }
 /* ── MOBILE tweaks ── */
 @media (max-width: 768px) {
   .hero { padding-top: 24px !important; padding-bottom: 24px !important; }
-  .widget-hero-heading { font-size: clamp(22px, 6vw, 28px) !important; margin-bottom: 14px !important; }
+  .widget-hero-heading { font-size: clamp(20px, 5vw, 26px) !important; margin-bottom: 10px !important; }
   /* keep icons large in 1-2-3 section on mobile */
   .steps-grid span[style*="font-size:4rem"] { font-size: 3.6rem !important; }
   .steps-grid .step-card { padding: 20px 12px !important; }
@@ -1009,8 +1010,8 @@ a[href^="tel"] { white-space: nowrap; }
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
         <div style="order:-1">
-          <h2 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,42px);font-weight:800;color:#0C2340;text-align:center;margin-bottom:8px;letter-spacing:-0.5px">¿Cómo podemos ayudarle?</h2>
-          <p style="text-align:center;font-size:15px;color:#5A6577;margin-bottom:20px">Asesoría gratuita de agentes licenciados en 8 estados</p>
+          <h2 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(24px,4.5vw,34px);font-weight:700;color:#5A6577;text-align:center;margin-bottom:4px;letter-spacing:-0.3px">¿Cómo podemos ayudarle?</h2>
+          <p style="text-align:center;font-size:14px;color:#8896A6;margin-bottom:18px">Asesoría gratuita de agentes licenciados en 8 estados</p>
                 <div class="hero-widget" id="widget-anchor">
           <div class="widget-container" id="widget-box">
             <div id="widget-progress-bar"><div id="widget-progress-fill"></div></div>
@@ -1298,10 +1299,10 @@ a[href^="tel"] { white-space: nowrap; }
       <p style="color:rgba(255,255,255,0.9);font-size:18px;margin-bottom:28px">La comparación es gratis y sin compromiso.</p>
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
         <a href="index.html#widget-anchor" class="btn" style="background:white;color:var(--navy);font-weight:700;font-size:16px;padding:16px 32px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px">
-          <i class="fas fa-search"></i> <span>Comparar Planes Gratis</span>
+          <i class="fas fa-search"></i> <span>Compare Planes Gratis</span>
         </a>
       </div>
-      <p style="color:rgba(255,255,255,0.65);font-size:14px;margin:0">O si prefiere: <a href="tel:+13105979142" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p>
+      <p style="color:rgba(255,255,255,0.65);font-size:14px;margin:0;text-align:center">O si prefiere: <a href="tel:+13105979142" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p>
     </div>
   </section>
 </div>
@@ -1330,7 +1331,7 @@ a[href^="tel"] { white-space: nowrap; }
 <div class="mobile-sticky-cta" id="mobile-sticky-cta">
   <button onclick="smoothScrollToWidget()">
     <i class="fas fa-search"></i>
-    <span>Comparar Planes</span>
+    <span>Compare Planes</span>
   </button>
 </div>
 
