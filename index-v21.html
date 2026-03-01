@@ -904,29 +904,21 @@ a[href^="tel"] { white-space: nowrap; }
   background: white !important;
 }
 
-/* ── CTA BANNER: clean Medicare green ── */
-.cta-banner { background: linear-gradient(135deg, #0C2340 0%, #0F524A 50%, #146A5D 100%) !important; }
+/* ── CTA BANNER: light background, single green CTA ── */
+.cta-banner { background: var(--lt-blue) !important; }
+.cta-banner h2 { color: var(--navy) !important; }
+.cta-banner p { color: #5A6577 !important; }
 .cta-banner .btn-primary {
   background: #146A5D !important;
   color: white !important;
-  border: 2px solid white !important;
+  border: 2px solid #146A5D !important;
   font-weight: 800 !important;
   font-size: 18px !important;
   padding: 20px 40px !important;
   border-radius: 12px !important;
   min-height: 60px !important;
 }
-.cta-banner .btn-primary:hover { background: #0F524A !important; }
-.cta-banner .btn-secondary {
-  background: #146A5D !important;
-  color: white !important;
-  border: 2px solid rgba(255,255,255,0.5) !important;
-  font-size: 18px !important;
-  padding: 20px 40px !important;
-  border-radius: 12px !important;
-  min-height: 60px !important;
-}
-.cta-banner .btn-secondary:hover { background: #0F524A !important; }
+.cta-banner .btn-primary:hover { background: #0F524A !important; border-color: #0F524A !important; }
 
 /* ── STATS BAR ── */
 .stats-bar { background: #0C2340 !important; }
@@ -1241,13 +1233,13 @@ a[href^="tel"] { white-space: nowrap; }
   </section>
 
   <!-- CTA BANNER: HABLAR CON ASESOR -->
-  <section class="cta-banner">
+  <section class="cta-banner" style="text-align:center;padding:60px 24px">
     <h2>¿Prefiere hablar con un asesor?</h2>
-    <p>Estamos aquí para ayudarle. Escoja la opción que prefiera.</p>
-    <div class="cta-buttons" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-      <a href="tel:+13105979142" class="btn btn-primary" style="font-size:17px;padding:18px 36px"><i class="fas fa-phone-alt"></i> Llame por Teléfono</a>
-      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" class="btn btn-secondary" style="font-size:17px;padding:18px 36px"><i class="fas fa-video"></i> Agende Video Llamada</a>
+    <p>Estamos aquí para ayudarle.</p>
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <a href="tel:+13105979142" class="btn btn-primary" style="font-size:18px;padding:20px 44px;border-radius:12px;display:inline-flex;align-items:center;gap:10px"><i class="fas fa-phone-alt"></i> Llame por Teléfono</a>
     </div>
+    <p style="font-size:14px;color:#8896A6;margin:0">o <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> agende una video llamada</a></p>
   </section>
 </div>
 
@@ -1313,14 +1305,14 @@ a[href^="tel"] { white-space: nowrap; }
   <!-- CTA Banner -->
   <section class="cta-banner" style="text-align:center;padding:60px 24px">
     <div class="container">
-      <div class="section-title" style="color:white;margin-bottom:8px">¿Listo para encontrar su plan?</div>
-      <p style="color:rgba(255,255,255,0.9);font-size:18px;margin-bottom:28px">La comparación es gratis y sin compromiso.</p>
-      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
-        <a href="index.html#widget-anchor" class="btn" style="background:white;color:var(--navy);font-weight:700;font-size:16px;padding:16px 32px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px">
+      <div class="section-title" style="color:var(--navy);margin-bottom:8px">¿Listo para encontrar su plan?</div>
+      <p style="color:#5A6577;font-size:18px;margin-bottom:28px">La comparación es gratis y sin compromiso.</p>
+      <div style="display:flex;justify-content:center;margin-bottom:14px">
+        <a href="index.html#widget-anchor" class="btn btn-primary" style="font-size:18px;padding:20px 44px;border-radius:12px;display:inline-flex;align-items:center;gap:10px;text-decoration:none">
           <i class="fas fa-search"></i> <span>Compare Planes Gratis</span>
         </a>
       </div>
-      <p style="color:rgba(255,255,255,0.65);font-size:14px;margin:0;text-align:center">O si prefiere: <a href="tel:+13105979142" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:white;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p>
+      <p style="font-size:14px;color:#8896A6;margin:0">O si prefiere: <a href="tel:+13105979142" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p>
     </div>
   </section>
 </div>
