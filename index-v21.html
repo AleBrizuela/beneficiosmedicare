@@ -931,10 +931,17 @@ a[href^="tel"] { white-space: nowrap; }
 /* ── MOBILE tweaks ── */
 @media (max-width: 768px) {
   .hero { padding-top: 24px !important; padding-bottom: 24px !important; }
-  .widget-hero-heading { font-size: clamp(20px, 5vw, 26px) !important; margin-bottom: 10px !important; }
+  .widget-hero-heading { font-size: 13px !important; margin-bottom: 8px !important; }
   /* keep icons full size on mobile - they stack vertically so there's room */
   .steps-grid span { font-size: 4rem !important; }
   .steps-grid div[style*="width:88px"] { width: 88px !important; height: 88px !important; }
+  /* Sticky next button on mobile so it's always visible */
+  .widget-container .btn.btn-primary[style*="width:100%"] {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 10 !important;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.1) !important;
+  }
 }
 
 /* Logo: both words same navy, icon gets the green accent */
@@ -1009,8 +1016,8 @@ a[href^="tel"] { white-space: nowrap; }
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
         <div style="order:-1">
-          <h2 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(24px,4.5vw,34px);font-weight:700;color:#5A6577;text-align:center;margin-bottom:4px;letter-spacing:-0.3px">¿Cómo podemos ayudarle?</h2>
-          <p style="text-align:center;font-size:14px;color:#8896A6;margin-bottom:18px">Asesoría gratuita de agentes licenciados en 8 estados</p>
+          <p class="widget-hero-heading" style="font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:#8896A6;text-align:center;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase">¿Cómo podemos ayudarle?</p>
+          <p style="text-align:center;font-size:13px;color:#A0AEC0;margin-bottom:16px">Asesoría gratuita · Agentes licenciados · 8 estados</p>
                 <div class="hero-widget" id="widget-anchor">
           <div class="widget-container" id="widget-box">
             <div id="widget-progress-bar"><div id="widget-progress-fill"></div></div>
@@ -2239,7 +2246,7 @@ function submitWidget(flow) {
       body: params
     }).then(r => console.log('[BeneficiosMedicare] Zapier response:', r.status)).catch(e => console.error('[BeneficiosMedicare] Zapier error:', e));
   } catch(e) { console.error('[BeneficiosMedicare] Zapier exception:', e); }
-  updateWidgetProgress(100); setTimeout(()=>{ showSuccessState('widget-box'); }, 400);
+  updateWidgetProgress(100); setTimeout(()=>{ showSuccessState('widget-box'); window.scrollTo({top:0,behavior:'smooth'}); }, 400);
   setTimeout(()=>{ document.body.classList.remove('widget-active'); }, 2000);
 }
 
