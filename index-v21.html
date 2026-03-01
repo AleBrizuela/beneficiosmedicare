@@ -642,7 +642,7 @@ footer {
   .contact-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .section-title { font-size: 30px; }
-  .header-inner { padding: 8px 16px 4px; justify-content: center; }
+  .header-inner { padding: 6px 16px 4px; justify-content: center; height: auto !important; }
   .header-inner .logo { margin: 0 auto; }
   .header-inner .mobile-menu-btn { position: absolute; right: 16px; }
   .phone-header { display: none; }
@@ -1021,12 +1021,12 @@ a[href^="tel"] { white-space: nowrap; }
 <div class="page active" id="page-home">
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="container">
+  <section class="hero" style="padding-top:0">
+    <div class="container" style="padding-top:0">
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
-        <div style="order:-1">
-          <h1 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(22px,5.8vw,44px);font-weight:800;color:#0C2340;text-align:center;margin-bottom:8px;letter-spacing:-0.5px;white-space:nowrap">¿Cómo puedo ayudarle?</h1>
+        <div style="order:-1;padding-top:0">
+          <h1 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(22px,5.8vw,44px);font-weight:800;color:#0C2340;text-align:center;margin-top:0;margin-bottom:8px;letter-spacing:-0.5px;white-space:nowrap">¿Cómo puedo ayudarle?</h1>
           <p style="text-align:center;font-size:17px;color:#1A202C;margin-bottom:18px;font-weight:400;letter-spacing:0.02em">Asesoría gratis y objetiva</p>
                 <div class="hero-widget" id="widget-anchor">
           <div class="widget-container" id="widget-box">
