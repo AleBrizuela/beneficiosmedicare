@@ -458,7 +458,7 @@ section { padding: 80px 24px; }
   font-family: 'Playfair Display', serif; font-size: 36px;
   color: white; margin-bottom: 16px;
 }
-.cta-banner p { font-size: 18px; color: var(--lt-blue); margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.cta-banner p { font-size: 18px; color: var(--lt-blue); margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center; }
 .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 /* CTA banner dark-bg button overrides */
 .cta-banner .btn-primary { background: #B8D4C8; color: #1E3A5F; border-color: #B8D4C8; font-weight: 700; }
@@ -1238,7 +1238,7 @@ a[href^="tel"] { white-space: nowrap; }
     <div style="display:flex;justify-content:center;margin-bottom:14px">
       <a href="tel:+13105979142" class="btn btn-primary" style="font-size:18px;padding:20px 44px;border-radius:12px;display:inline-flex;align-items:center;gap:10px"><i class="fas fa-phone-alt"></i> Llame por Teléfono</a>
     </div>
-    <p style="font-size:14px;color:#8896A6;margin:0;text-align:center">o <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> agende una video llamada</a></p>
+    <div style="text-align:center;width:100%"><p style="font-size:14px;color:#8896A6;margin:0">o <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> agende una video llamada</a></p></div>
   </section>
 </div>
 
@@ -1311,7 +1311,7 @@ a[href^="tel"] { white-space: nowrap; }
           <i class="fas fa-search"></i> <span>Compare Planes Gratis</span>
         </a>
       </div>
-      <p style="font-size:14px;color:#8896A6;margin:0;text-align:center">O si prefiere: <a href="tel:+13105979142" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p>
+      <div style="text-align:center;width:100%"><p style="font-size:14px;color:#8896A6;margin:0">O si prefiere: <a href="tel:+13105979142" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Video Llamada</a></p></div>
     </div>
   </section>
 </div>
@@ -1376,21 +1376,14 @@ function toggleFAQ(button) {
   const answer = button.nextElementSibling;
   const isActive = answer.style.maxHeight && answer.style.maxHeight !== '0px';
 
-  // Close all other FAQs
-  document.querySelectorAll('.faq-answer').forEach(a => {
-    a.style.maxHeight = '0px';
-    a.style.padding = '0px 24px';
-  });
-  document.querySelectorAll('.faq-question').forEach(q => {
-    q.style.background = 'white';
-    q.style.color = 'var(--navy)';
-  });
-  document.querySelectorAll('.faq-icon').forEach(i => {
-    i.style.transform = 'rotate(0deg)';
-  });
-
-  // Toggle current FAQ
-  if (!isActive) {
+  // Toggle this FAQ (keep others open)
+  if (isActive) {
+    answer.style.maxHeight = '0px';
+    answer.style.padding = '0px 24px';
+    button.style.background = 'white';
+    button.style.color = 'var(--navy)';
+    button.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+  } else {
     answer.style.maxHeight = answer.scrollHeight + 'px';
     answer.style.padding = '24px';
     button.style.background = 'var(--green)';
