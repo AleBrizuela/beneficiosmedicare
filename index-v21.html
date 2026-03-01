@@ -388,7 +388,7 @@ section { padding: 80px 24px; }
   display: flex; align-items: center; gap: 16px;
   padding: 18px 20px; border-radius: 14px; cursor: pointer;
   border: 2px solid #8896A6;
-  border-left: 4px solid #6B7A8D;
+  border-left: 6px solid #6B7A8D;
   transition: all 0.2s ease;
   background: white;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
@@ -939,12 +939,13 @@ a[href^="tel"] { white-space: nowrap; }
 
 /* ── MOBILE tweaks ── */
 @media (max-width: 768px) {
-  .hero { padding-top: 4px !important; padding-bottom: 80px !important; }
+  section.hero { padding-top: 2px !important; padding-bottom: 80px !important; }
   .hero::after { height: 80px !important; }
-  .hero .hero-grid { margin-top: 0 !important; }
-  .hero .widget-hero-heading { font-size: min(7.2vw, 36px) !important; margin-top: 0 !important; margin-bottom: 2px !important; white-space: nowrap !important; }
-  .hero .widget-hero-heading + p { margin-bottom: 8px !important; font-size: 15px !important; }
-  #cms-disclaimer { font-size: 10px !important; padding: 2px 10px !important; line-height: 1.2 !important; }
+  .hero .hero-grid { margin-top: 0 !important; gap: 0 !important; }
+  .hero .widget-hero-heading { font-size: min(7.2vw, 36px) !important; margin-top: 0 !important; margin-bottom: 0 !important; white-space: nowrap !important; padding-top: 0 !important; }
+  .hero .widget-hero-heading + p { margin-bottom: 6px !important; font-size: 14px !important; }
+  #cms-disclaimer { font-size: 9px !important; padding: 2px 8px !important; line-height: 1.2 !important; }
+  .widget-opt { border-left-width: 6px !important; }
   /* keep icons full size on mobile - they stack vertically so there's room */
   .steps-grid span { font-size: 4rem !important; }
   .steps-grid div[style*="width:88px"] { width: 88px !important; height: 88px !important; }
@@ -1328,7 +1329,7 @@ a[href^="tel"] { white-space: nowrap; }
 
 <footer style="padding:40px 24px 24px">
   <div style="max-width:960px;margin:0 auto;text-align:center">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;color:white;margin-bottom:6px">Susana Marcos <span style="color:var(--mint)">LLC</span></div>
+    <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--mint);margin-bottom:6px">Susana Marcos LLC</div>
     <p style="font-size:14px;color:var(--mint);font-weight:600;margin-bottom:16px">Alejandra Brizuela Marcos · Agente Licenciada</p>
     <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:20px;font-size:14px">
       <a href="index.html" style="color:var(--lt-blue);text-decoration:none">Inicio</a>
