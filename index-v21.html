@@ -312,20 +312,11 @@ section { padding: 80px 24px; }
 
 /* ── HERO ──────────────────────────────────────────────── */
 .hero {
-  padding-top: 60px; padding-bottom: 40px;
-  background: transparent;
+  padding-top: 60px; padding-bottom: 100px;
+  background: linear-gradient(135deg, #F8FAFB 0%, #E8F0F8 40%, #EEF4F0 100%);
   position: relative; overflow: visible;
 }
 .hero::after {
-  display: none;
-}
-.hero-bg-wrap {
-  background: linear-gradient(135deg, #F8FAFB 0%, #E8F0F8 40%, #EEF4F0 100%);
-  position: relative;
-  overflow: visible;
-  padding-bottom: 0;
-}
-.hero-bg-wrap::after {
   content: ''; position: absolute; bottom: -2px; left: -10%; right: -10%;
   height: 120px; background: white;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
@@ -1024,7 +1015,6 @@ a[href^="tel"] { white-space: nowrap; }
 <div class="page active" id="page-home">
 
   <!-- HERO -->
-  <div class="hero-bg-wrap">
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
@@ -1103,7 +1093,7 @@ a[href^="tel"] { white-space: nowrap; }
 </section>
 
   <!-- 3-STEP PROCESS -->
-  <section class="how-it-works" style="padding:80px 24px 140px;background:transparent;position:relative;z-index:2">
+  <section class="how-it-works" style="padding:80px 24px;background:white">
     <div style="max-width:960px;margin:0 auto;padding:0 1.5rem">
       <div style="margin-bottom:64px;text-align:center">
         <div class="section-label" style="color:var(--green)">ASÍ FUNCIONA</div>
@@ -1144,7 +1134,6 @@ a[href^="tel"] { white-space: nowrap; }
       </div>
     </div>
   </section>
-  </div><!-- /hero-bg-wrap -->
   <!-- Team Section -->
   <section style="padding:60px 24px">
     <div class="container">
