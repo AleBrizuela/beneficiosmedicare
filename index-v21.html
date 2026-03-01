@@ -629,7 +629,9 @@ footer {
   .contact-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .section-title { font-size: 30px; }
-  .header-inner { padding: 0 16px; }
+  .header-inner { padding: 0 16px; justify-content: center; }
+  .header-inner .logo { margin: 0 auto; }
+  .header-inner .mobile-menu-btn { position: absolute; right: 16px; }
   .phone-header { display: none; }
 }
 @media (max-width: 500px) {
@@ -931,7 +933,7 @@ a[href^="tel"] { white-space: nowrap; }
 /* ── MOBILE tweaks ── */
 @media (max-width: 768px) {
   .hero { padding-top: 24px !important; padding-bottom: 24px !important; }
-  .widget-hero-heading { font-size: 13px !important; margin-bottom: 8px !important; }
+  .widget-hero-heading { font-size: 19px !important; margin-bottom: 6px !important; }
   /* keep icons full size on mobile - they stack vertically so there's room */
   .steps-grid span { font-size: 4rem !important; }
   .steps-grid div[style*="width:88px"] { width: 88px !important; height: 88px !important; }
@@ -947,7 +949,7 @@ a[href^="tel"] { white-space: nowrap; }
 /* Logo: both words same navy, icon gets the green accent */
 .logo { color: #1E3A5F !important; }
 .logo span { color: #1E3A5F !important; }
-.logo .logo-icon { width: 40px; height: 40px; margin-right: 10px; vertical-align: middle; }
+.logo .logo-icon { width: 48px; height: 48px; margin-right: 6px; vertical-align: middle; }
 
 /* WhatsApp button: white pill with navy text to avoid green-on-green clash */
 .wa-float {
@@ -974,7 +976,7 @@ a[href^="tel"] { white-space: nowrap; }
 </script>
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="index.html" class="logo"><svg class="logo-icon" width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2L4 8.5v10c0 9 5.8 15 14 17.5 8.2-2.5 14-8.5 14-17.5v-10L18 2z" fill="#1B6B5A"/><path d="M18 11c-1.4-2.1-4.2-2.7-6-1.2a4.8 4.8 0 0 0-.9 5.5c1.6 3.2 6.9 7.2 6.9 7.2s5.3-4 6.9-7.2a4.8 4.8 0 0 0-.9-5.5c-1.8-1.5-4.6-.9-6 1.2z" fill="white"/><path d="M10 16.5h3l1.2-2.5 1.8 5 1.8-5 1.2 2.5H26" stroke="#1B6B5A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>Beneficios <span>Medicare</span></a>
+    <a href="index.html" class="logo"><svg class="logo-icon" width="48" height="48" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2L4 8.5v10c0 9 5.8 15 14 17.5 8.2-2.5 14-8.5 14-17.5v-10L18 2z" fill="#1B6B5A"/><path d="M18 11c-1.4-2.1-4.2-2.7-6-1.2a4.8 4.8 0 0 0-.9 5.5c1.6 3.2 6.9 7.2 6.9 7.2s5.3-4 6.9-7.2a4.8 4.8 0 0 0-.9-5.5c-1.8-1.5-4.6-.9-6 1.2z" fill="white"/><path d="M10 16.5h3l1.2-2.5 1.8 5 1.8-5 1.2 2.5H26" stroke="#1B6B5A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>Beneficios <span>Medicare</span></a>
     <nav id="desktop-nav">
       <a href="index.html" class="active">Inicio</a>
       <a href="beneficios.html">Beneficios</a>
@@ -1016,8 +1018,8 @@ a[href^="tel"] { white-space: nowrap; }
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
         <div style="order:-1">
-          <p class="widget-hero-heading" style="font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:#8896A6;text-align:center;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase">¿Cómo podemos ayudarle?</p>
-          <p style="text-align:center;font-size:13px;color:#A0AEC0;margin-bottom:16px">Asesoría gratuita · Agentes licenciados · 8 estados</p>
+          <p class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#2D3748;text-align:center;margin-bottom:4px">¿Cómo podemos ayudarle?</p>
+          <p style="text-align:center;font-size:14px;color:#718096;margin-bottom:16px">Asesoría gratuita · Agentes licenciados · 8 estados</p>
                 <div class="hero-widget" id="widget-anchor">
           <div class="widget-container" id="widget-box">
             <div id="widget-progress-bar"><div id="widget-progress-fill"></div></div>
