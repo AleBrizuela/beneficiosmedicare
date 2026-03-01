@@ -283,8 +283,8 @@ body.widget-active .sms-float {
   /* Footer */
   .footer-grid { grid-template-columns: 1fr !important; }
 
-  /* General sections */
-  section { padding: 40px 16px !important; }
+  /* General sections (exclude hero - it has its own padding) */
+  section:not(.hero) { padding: 40px 16px !important; }
 
   /* About section */
   .team-card { padding: 24px 16px !important; }
@@ -1026,7 +1026,7 @@ a[href^="tel"] { white-space: nowrap; }
 <div class="page active" id="page-home">
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" style="padding-top:0">
     <div class="container">
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
