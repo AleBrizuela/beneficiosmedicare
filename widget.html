@@ -149,6 +149,13 @@ body {
   border-bottom-right-radius: 4px;
   align-self: flex-end;
 }
+.message.error {
+  background: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -721,7 +728,7 @@ const T = {
     enroll_ours: "¡Le podemos inscribir hoy!",
     enroll_other: "Llame a Medicare: 1-800-633-4227",
     see_all_one: "Ver <strong>1</strong> plan restante",
-    see_all: "Ver los <strong>{n}</strong> planes restantes",
+    see_all: "Ver los&nbsp;<strong>{n}</strong>&nbsp;planes restantes",
     free: "GRATIS",
     mo: "/mes",
     moop: "Máximo al año",
@@ -861,9 +868,15 @@ function updateDisclaimer(orgs, products) {
 const chat = document.getElementById('chat-area');
 
 function scrollToBottom() {
-  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
-  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 200);
-  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 500);
+  const doScroll = () => {
+    chat.scrollTop = chat.scrollHeight + 9999;
+    const last = chat.lastElementChild;
+    if (last) last.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
+  doScroll();
+  setTimeout(doScroll, 80);
+  setTimeout(doScroll, 250);
+  setTimeout(doScroll, 600);
 }
 
 function addMessage(html, type = 'bot') {
@@ -966,7 +979,7 @@ function addZipInput(placeholder, buttonText, onSubmit) {
       onSubmit(val);
     } else {
       input.style.borderColor = '#e74c3c';
-      addMessage(t('zip_bad'), 'bot');
+      addMessage(t('zip_bad'), 'error');
     }
   };
 
@@ -1159,7 +1172,7 @@ function stepZip() {
       hideLoading();
 
       if (!data || data.total_plans === 0) {
-        addMessage(t('zip_none'), 'bot');
+        addMessage(t('zip_none'), 'error');
         addZipInput(t('zip_ph'), t('zip_go'), arguments.callee);
         return;
       }
@@ -1213,14 +1226,14 @@ function stepDOB() {
     const val = input.value.trim();
     const parts = val.split('/');
     if (parts.length !== 3 || parts[2].length !== 4) {
-      addMessage(t('dob_bad'), 'bot');
+      addMessage(t('dob_bad'), 'error');
       return;
     }
     const month = parseInt(parts[0], 10);
     const day = parseInt(parts[1], 10);
     const year = parseInt(parts[2], 10);
     if (isNaN(month) || isNaN(day) || isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31 || year < 1920 || year > 2010) {
-      addMessage(t('dob_bad'), 'bot');
+      addMessage(t('dob_bad'), 'error');
       return;
     }
 
@@ -1353,7 +1366,7 @@ function stepDoctor() {
     hideLoading();
 
     if (!data || !data.results || data.results.length === 0) {
-      addMessage(t('doc_none'), 'bot');
+      addMessage(t('doc_none'), 'error');
       addButtons([
         { text: t('doc_retry'), class: 'secondary', action: () => stepDoctor() },
         { text: t('doc_skip'), class: 'accent', action: () => {
@@ -1415,42 +1428,44 @@ function stepDoctor() {
 
 // STEP 4: Medications
 // Common drugs list - ~25 most prescribed for Medicare beneficiaries (esp. Latino population)
+// Ordered by prevalence in Latino 65+ Medicare population
 const COMMON_DRUGS = [
-  // Diabetes
+  // 1. Diabetes (~50% of Latinos age 70-74, vs ~30% general pop)
   {drug_name:'metformin', drug_name_brand:'Glucophage', drug_name_es:'Metformina', cat_es:'Diabetes', therapeutic_category:'Diabetes'},
   {drug_name:'insulin glargine', drug_name_brand:'Lantus', drug_name_es:'Insulina Glargina', cat_es:'Diabetes', therapeutic_category:'Diabetes'},
   {drug_name:'semaglutide', drug_name_brand:'Ozempic', drug_name_es:'Semaglutida', cat_es:'Diabetes', therapeutic_category:'Diabetes'},
   {drug_name:'glipizide', drug_name_brand:'Glucotrol', drug_name_es:'Glipizida', cat_es:'Diabetes', therapeutic_category:'Diabetes'},
-  // Blood Pressure
+  // 2. Blood Pressure
   {drug_name:'lisinopril', drug_name_brand:'Prinivil', drug_name_es:'Lisinopril', cat_es:'Presión', therapeutic_category:'Blood Pressure'},
   {drug_name:'amlodipine', drug_name_brand:'Norvasc', drug_name_es:'Amlodipina', cat_es:'Presión', therapeutic_category:'Blood Pressure'},
   {drug_name:'losartan', drug_name_brand:'Cozaar', drug_name_es:'Losartan', cat_es:'Presión', therapeutic_category:'Blood Pressure'},
   {drug_name:'hydrochlorothiazide', drug_name_brand:'HCTZ', drug_name_es:'Hidroclorotiazida', cat_es:'Presión', therapeutic_category:'Blood Pressure'},
-  {drug_name:'metoprolol', drug_name_brand:'Lopressor', drug_name_es:'Metoprolol', cat_es:'Corazón', therapeutic_category:'Heart'},
-  // Cholesterol
+  // 3. Cholesterol
   {drug_name:'atorvastatin', drug_name_brand:'Lipitor', drug_name_es:'Atorvastatina', cat_es:'Colesterol', therapeutic_category:'Cholesterol'},
   {drug_name:'rosuvastatin', drug_name_brand:'Crestor', drug_name_es:'Rosuvastatina', cat_es:'Colesterol', therapeutic_category:'Cholesterol'},
-  // Stomach
+  // 4. Heart
+  {drug_name:'metoprolol', drug_name_brand:'Lopressor', drug_name_es:'Metoprolol', cat_es:'Corazón', therapeutic_category:'Heart'},
+  // 5. Blood Thinner
+  {drug_name:'apixaban', drug_name_brand:'Eliquis', drug_name_es:'Apixaban', cat_es:'Sangre', therapeutic_category:'Blood Thinner'},
+  {drug_name:'warfarin', drug_name_brand:'Coumadin', drug_name_es:'Warfarina', cat_es:'Sangre', therapeutic_category:'Blood Thinner'},
+  // 6. Stomach
   {drug_name:'omeprazole', drug_name_brand:'Prilosec', drug_name_es:'Omeprazol', cat_es:'Estómago', therapeutic_category:'Stomach'},
   {drug_name:'pantoprazole', drug_name_brand:'Protonix', drug_name_es:'Pantoprazol', cat_es:'Estómago', therapeutic_category:'Stomach'},
-  // Thyroid
+  // 7. Thyroid
   {drug_name:'levothyroxine', drug_name_brand:'Synthroid', drug_name_es:'Levotiroxina', cat_es:'Tiroides', therapeutic_category:'Thyroid'},
-  // Pain & Nerve
+  // 8. Diuretic
+  {drug_name:'furosemide', drug_name_brand:'Lasix', drug_name_es:'Furosemida', cat_es:'Retención líquidos', therapeutic_category:'Diuretic'},
+  // 9. Pain & Nerve
   {drug_name:'gabapentin', drug_name_brand:'Neurontin', drug_name_es:'Gabapentina', cat_es:'Dolor nervios', therapeutic_category:'Nerve Pain'},
   {drug_name:'tramadol', drug_name_brand:'Ultram', drug_name_es:'Tramadol', cat_es:'Dolor', therapeutic_category:'Pain'},
   {drug_name:'acetaminophen/hydrocodone', drug_name_brand:'Norco', drug_name_es:'Acetaminofén/Hidrocodona', cat_es:'Dolor', therapeutic_category:'Pain'},
-  // Mental Health
+  // 10. Respiratory
+  {drug_name:'albuterol', drug_name_brand:'ProAir', drug_name_es:'Albuterol', cat_es:'Pulmones', therapeutic_category:'Respiratory'},
+  {drug_name:'montelukast', drug_name_brand:'Singulair', drug_name_es:'Montelukast', cat_es:'Pulmones', therapeutic_category:'Respiratory'},
+  // 11. Mental Health
   {drug_name:'sertraline', drug_name_brand:'Zoloft', drug_name_es:'Sertralina', cat_es:'Depresión', therapeutic_category:'Depression'},
   {drug_name:'escitalopram', drug_name_brand:'Lexapro', drug_name_es:'Escitalopram', cat_es:'Ansiedad', therapeutic_category:'Anxiety'},
   {drug_name:'alprazolam', drug_name_brand:'Xanax', drug_name_es:'Alprazolam', cat_es:'Ansiedad', therapeutic_category:'Anxiety'},
-  // Blood Thinner
-  {drug_name:'apixaban', drug_name_brand:'Eliquis', drug_name_es:'Apixaban', cat_es:'Sangre', therapeutic_category:'Blood Thinner'},
-  {drug_name:'warfarin', drug_name_brand:'Coumadin', drug_name_es:'Warfarina', cat_es:'Sangre', therapeutic_category:'Blood Thinner'},
-  // Respiratory
-  {drug_name:'albuterol', drug_name_brand:'ProAir', drug_name_es:'Albuterol', cat_es:'Pulmones', therapeutic_category:'Respiratory'},
-  {drug_name:'montelukast', drug_name_brand:'Singulair', drug_name_es:'Montelukast', cat_es:'Pulmones', therapeutic_category:'Respiratory'},
-  // Other
-  {drug_name:'furosemide', drug_name_brand:'Lasix', drug_name_es:'Furosemida', cat_es:'Retención líquidos', therapeutic_category:'Diuretic'},
 ];
 
 function stepMedications() {
@@ -1500,13 +1515,13 @@ function stepMedications() {
           : (isES ? 'Confirmar selección' : 'Confirm selection');
       }
     };
-    const name = isES ? drug.drug_name_es : drug.drug_name;
     const brand = drug.drug_name_brand;
+    const generic = isES ? drug.drug_name_es : drug.drug_name;
     row.innerHTML = '';
     row.appendChild(cb);
     const txt = document.createElement('span');
     txt.className = 'med-check-label';
-    txt.innerHTML = `<strong>${name}</strong> <span class="med-brand">${brand}</span>`;
+    txt.innerHTML = `<strong>${brand}</strong> <span class="med-brand">${generic}</span>`;
     row.appendChild(txt);
     listDiv.appendChild(row);
   });
@@ -1728,33 +1743,24 @@ function renderPlanCard(plan, rank) {
   scrollToBottom();
 }
 
-// Enrollment handoff
+// Enrollment handoff - always capture lead regardless of contracted status
 function handleEnroll(planId, contracted) {
-  if (contracted) {
-    addMessage(t('enroll_title'), 'bot');
-    addMessage(t('enroll_msg'), 'bot');
+  addMessage(t('enroll_title'), 'bot');
+  addMessage(t('enroll_msg'), 'bot');
 
-    const form = document.createElement('div');
-    form.style.width = '100%';
-    form.style.alignSelf = 'flex-start';
-    form.innerHTML = `
-      <div style="margin-top:10px">
-        <input type="text" class="input-field" id="enroll-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
-        <input type="tel" class="input-field" id="enroll-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-        <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
-        <button class="btn accent large" onclick="submitEnroll('${planId}')">${t('enroll_send')}</button>
-      </div>
-    `;
-    chat.appendChild(form);
-    scrollToBottom();
-  } else {
-    addMessage(t('enroll_other_msg'), 'bot');
-    addMessage(`
-      <a href="https://www.medicare.gov/plan-compare/" target="_blank" style="color:var(--primary-light);font-size:18px;text-decoration:underline">Medicare.gov Plan Compare</a><br><br>
-      📞 1-800-MEDICARE (1-800-633-4227)<br>
-      <span class="text-sm">TTY: 1-877-486-2048 | 24/7</span>
-    `, 'bot');
-  }
+  const form = document.createElement('div');
+  form.style.width = '100%';
+  form.style.alignSelf = 'flex-start';
+  form.innerHTML = `
+    <div style="margin-top:10px">
+      <input type="text" class="input-field" id="enroll-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
+      <input type="tel" class="input-field" id="enroll-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
+      <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+      <button class="btn accent large" onclick="submitEnroll('${planId}')">${t('enroll_send')}</button>
+    </div>
+  `;
+  chat.appendChild(form);
+  scrollToBottom();
 }
 
 function submitEnroll(planId) {
@@ -1763,11 +1769,34 @@ function submitEnroll(planId) {
   const email = document.getElementById('enroll-email').value;
   if (!name || !phone) return;
 
+  // Remove the form
+  const formEl = document.getElementById('enroll-name').closest('div').parentElement;
+  if (formEl) formEl.remove();
+
   const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
   addMessage(display, 'user');
-  addMessage(`✓ ${t('enroll_thanks')}`, 'bot');
 
+  // Confirmation card
   const plan = (state.results?.plans || []).find(p => p.plan_id === planId) || {};
+  const isES = state.lang === 'es';
+  const conf = document.createElement('div');
+  conf.className = 'message bot';
+  conf.style.cssText = 'background:linear-gradient(135deg,#065f46,#047857);color:white;border-radius:16px;padding:24px;text-align:center;';
+  conf.innerHTML = `
+    <div style="font-size:48px;margin-bottom:8px">✓</div>
+    <div style="font-size:22px;font-weight:700;margin-bottom:12px">${isES ? '¡Recibido!' : 'Got it!'}</div>
+    <div style="font-size:16px;opacity:0.9;margin-bottom:16px">${t('enroll_thanks')}</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:12px;text-align:left;font-size:14px;line-height:1.8">
+      <div><strong>${isES ? 'Plan' : 'Plan'}:</strong> ${plan.plan_name || planId}</div>
+      <div><strong>${isES ? 'Nombre' : 'Name'}:</strong> ${name}</div>
+      <div><strong>${isES ? 'Tel' : 'Phone'}:</strong> ${phone}</div>
+      ${email ? `<div><strong>Email:</strong> ${email}</div>` : ''}
+    </div>
+    <div style="margin-top:16px;font-size:13px;opacity:0.7">${isES ? 'Le llamamos en menos de 24 horas' : 'We will call within 24 hours'}</div>
+  `;
+  chat.appendChild(conf);
+  scrollToBottom();
+
   sendLead({
     type: 'enrollment',
     name, phone, email,
