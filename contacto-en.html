@@ -252,12 +252,7 @@ section { padding: 80px 24px; }
   background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
   position: relative; overflow: hidden;
 }
-.hero::after {
-  content: ''; position: absolute; bottom: -2px; left: -10%; right: -10%;
-  height: 120px; background: white;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  z-index: 1;
-}
+.hero::after { display: none; }
 .hero-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
   align-items: center;
@@ -780,7 +775,7 @@ a[href^="tel"] { white-space: nowrap; }
 <!-- ═══════════════════════════════════════════════════════ -->
 
   <!-- Hero -->
-  <section class="hero" style="padding-top:140px;padding-bottom:120px">
+  <section class="hero" style="padding-top:140px;padding-bottom:48px">
     <div class="container" style="text-align:center;position:relative;z-index:2">
       <div class="section-label">LET'S TALK</div>
       <h1 class="section-title">Contact Us</h1>
@@ -789,7 +784,7 @@ a[href^="tel"] { white-space: nowrap; }
   </section>
 
   <!-- Contact Grid -->
-  <section style="padding:0 24px 60px;margin-top:-80px;background:transparent;position:relative;z-index:2">
+  <section style="padding:40px 24px 60px;background:white">
     <div class="container">
       <div class="contact-grid">
 
