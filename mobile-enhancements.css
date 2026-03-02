@@ -363,18 +363,18 @@ img[loading="lazy"] {
   transition: opacity 0.3s;
 }
 
-/* -- 17. LOGO & HEADER: Better sizing on mobile -- */
+/* -- 17. LOGO & HEADER: Matches benefits/contact pages -- */
 @media (max-width: 768px) {
   .logo {
-    font-size: 18px !important;
+    font-size: 22px !important;
     gap: 8px !important;
   }
   .logo-icon {
-    height: 28px !important;
-    width: 28px !important;
+    height: 48px !important;
+    width: 48px !important;
   }
   .header-inner {
-    height: 60px !important;
+    height: 70px !important;
     padding: 0 16px !important;
   }
 }
@@ -382,12 +382,12 @@ img[loading="lazy"] {
 /* -- 18. NARROW PHONE (320px) -- */
 @media (max-width: 374px) {
   .logo {
-    font-size: 16px !important;
+    font-size: 20px !important;
     gap: 6px !important;
   }
   .logo-icon {
-    height: 24px !important;
-    width: 24px !important;
+    height: 40px !important;
+    width: 40px !important;
   }
   .hero h1 {
     font-size: 24px !important;
