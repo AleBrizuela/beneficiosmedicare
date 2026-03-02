@@ -743,7 +743,7 @@ a[href^="tel"] { white-space: nowrap; }
 <style>
   .header { top: 30px !important; transition: top 0.25s ease; }
   .header.disclaimer-gone { top: 0 !important; }
-  @media(max-width:768px){ #cms-disclaimer { font-size:11px; padding:4px 12px; } .header { top:26px !important; } }
+  @media(max-width:768px){ #cms-disclaimer { font-size:10px; padding:3px 12px; } .header { top:38px !important; } }
 </style>
 <script>(function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone')}}window.addEventListener('scroll',c,{passive:true});c()})()</script>
 <header class="header" id="header">
