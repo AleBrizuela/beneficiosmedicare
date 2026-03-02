@@ -376,7 +376,20 @@ section { padding: 80px 24px; }
 /* ── CTA BANNER ────────────────────────────────────────── */
 .cta-banner {
   background: linear-gradient(135deg, var(--navy), var(--blue));
-  padding: 60px 24px; text-align: center;
+  padding: 80px 24px 60px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-banner::before {
+  content: ''; position: absolute; top: -2px; left: -10%; right: -10%;
+  height: 80px; background: white;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  z-index: 1;
+}
+.cta-banner::after {
+  content: ''; position: absolute; bottom: -2px; left: -10%; right: -10%;
+  height: 80px; background: white;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  z-index: 1;
 }
 .cta-banner h2 {
   font-family: 'Playfair Display', serif; font-size: 36px;
@@ -1041,7 +1054,7 @@ a[href^="tel"] { white-space: nowrap; }
   </section>
 
   <!-- CTA Banner -->
-  <section class="cta-banner" style="text-align:center;padding:60px 24px">
+  <section class="cta-banner">
     <div class="container">
       <div class="section-title" style="color:white;margin-bottom:8px">¿Listo para empezar?</div>
       <p style="color:rgba(255,255,255,0.9);font-size:18px;margin-bottom:28px">La consulta es 100% gratuita y sin compromiso.</p>
