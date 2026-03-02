@@ -811,7 +811,7 @@ a[href^="tel"] { white-space: nowrap; }
             <div class="form-group">
               <label id="dob-label">Fecha de Nacimiento *</label>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-                <select id="dob-month" name="dob_month" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid var(--border);border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
+                <select id="dob-month" name="dob_month" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid #E2E8F0;border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
                   <option value="">Mes</option>
 <option value="01">Enero</option><option value="02">Febrero</option>
 <option value="03">Marzo</option><option value="04">Abril</option>
@@ -820,7 +820,7 @@ a[href^="tel"] { white-space: nowrap; }
 <option value="09">Septiembre</option><option value="10">Octubre</option>
 <option value="11">Noviembre</option><option value="12">Diciembre</option>
                 </select>
-                <select id="dob-day" name="dob_day" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid var(--border);border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
+                <select id="dob-day" name="dob_day" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid #E2E8F0;border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
                   <option value="">Día</option>
 <option value="01">1</option>
 <option value="02">2</option>
@@ -854,7 +854,7 @@ a[href^="tel"] { white-space: nowrap; }
 <option value="30">30</option>
 <option value="31">31</option>
                 </select>
-                <select id="dob-year" name="dob_year" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid var(--border);border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
+                <select id="dob-year" name="dob_year" required style="font-size:16px;min-height:52px;padding:12px 8px;border:1px solid #E2E8F0;border-radius:4px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;padding-right:1.5rem">
                   <option value="">Año</option>
 <option value="1962">1962</option>
 <option value="1961">1961</option>
@@ -904,10 +904,10 @@ a[href^="tel"] { white-space: nowrap; }
             <div class="form-group">
               <div>
                 <label style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:6px">Código postal</label>
-                <input type="text" id="cf2-zip" name="zip" maxlength="5" placeholder="Ej: 90028" autocomplete="postal-code" inputmode="numeric" style="width:100%;font-size:16px;min-height:52px;padding:12px 16px;border:1px solid var(--border);border-radius:4px;box-sizing:border-box;margin-bottom:10px"
+                <input type="text" id="cf2-zip" name="zip" maxlength="5" placeholder="Ej: 90028" autocomplete="postal-code" inputmode="numeric" style="width:100%;font-size:16px;min-height:52px;padding:12px 16px;border:1px solid #E2E8F0;border-radius:4px;box-sizing:border-box;margin-bottom:10px"
                   oninput="const st=zipToState(this.value);if(st){document.getElementById('cf2-state').value=st;}">
                 <label style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:6px">Estado</label>
-                <select id="cf2-state" name="state" style="width:100%;font-size:16px;min-height:52px;padding:12px 16px;border:1px solid var(--border);border-radius:4px;background:white">
+                <select id="cf2-state" name="state" style="width:100%;font-size:16px;min-height:52px;padding:12px 16px;border:1px solid #E2E8F0;border-radius:4px;background:white">
                   <option value="">Seleccionar estado...</option>
                   <option value="AL">AL - Alabama</option>
                   <option value="AK">AK - Alaska</option>
@@ -992,6 +992,7 @@ a[href^="tel"] { white-space: nowrap; }
   <div style="font-size:3rem; margin-bottom:1rem;">✅</div>
   <h3 style="color:#1a3a5c; font-size:1.5rem; margin-bottom:0.75rem;">¡Gracias!</h3>
   <p style="color:#444; font-size:1.1rem; margin-bottom:0.5rem;">Recibimos su mensaje y nos pondremos en contacto pronto.</p>
+  <p style="color:#666; font-size:0.95rem; margin-top:0.75rem;">Recibirá una respuesta por su método de contacto preferido dentro de 24 horas.</p>
 </div>
         </div>
 
@@ -2094,8 +2095,9 @@ async function submitForm(e) {
         fetch('https://hooks.zapier.com/hooks/catch/26596586/u0m5tqb/', {
             method: 'POST',
             body: params
-        }).catch(() => {});
-    } catch(err) {}
+        }).then(r => { if(!r.ok) console.warn('[Contact] Webhook response:', r.status); })
+          .catch(err => console.warn('[Contact] Webhook error:', err));
+    } catch(err) { console.warn('[Contact] Submit error:', err); }
     
     // Show confirmation
     form.style.display = 'none';

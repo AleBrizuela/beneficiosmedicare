@@ -188,7 +188,7 @@ nav a:hover, nav a.active { color: var(--navy); background: var(--lt-blue); }
 /* ── MOBILE FIRST ────────────────────────────────────────── */
 @media (max-width: 768px) {
   body { font-size: 16px !important; line-height: 1.65 !important; }
-  .hero { padding-top: 100px !important; padding-bottom: 40px !important; }
+  .hero { padding-top: 130px !important; padding-bottom: 30px !important; }
   .hero h1, .page-hero h1, .about-hero h1, .contact-hero h1 { font-size: 28px !important; line-height: 1.25 !important; }
   .hero-grid { grid-template-columns: 1fr !important; }
   .hero-grid > div:first-child { order: 2; }
@@ -250,7 +250,7 @@ section { padding: 80px 24px; }
 
 /* ── HERO ──────────────────────────────────────────────── */
 .hero {
-  padding-top: 170px; padding-bottom: 60px;
+  padding-top: 200px; padding-bottom: 40px;
   background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
   position: relative; overflow: hidden;
 }
@@ -754,7 +754,7 @@ a[href^="tel"] { white-space: nowrap; }
     
       <div class="lang-pill"><button class="" onclick="goLang('es')" aria-label="Español">ES</button><button class="lp-active" onclick="goLang('en')" aria-label="English">EN</button></div>
     </nav>
-    <button class="mobile-menu-btn" onclick="toggleMobile()"><i class="fas fa-bars"></i></button>
+    <button class="mobile-menu-btn" onclick="toggleMobile()" aria-label="Open navigation menu"><i class="fas fa-bars"></i></button>
   </div>
 </header>
 
