@@ -1740,7 +1740,7 @@ function renderContactForm(containerId, flow) {
       </div>
     </div>
     <div class="widget-q" style="margin-bottom:8px">'¿Cómo te llamamos?'</div>
-    <div class="widget-qsub">${es?'Alejandra le llama en español o inglés, como prefiera. Gratis, sin obligación.'}</div>
+    <div class="widget-qsub">${es?'Alejandra le llama en español o inglés, como prefiera. Gratis, sin obligación.':'Alejandra calls you in Spanish or English, your choice. Free, no obligation.'}</div>
     ${inp('cf-name','Su nombre completo*','Your full name*','text','Ej: María García','E.g. Maria Garcia',true)}
     ${inp('cf-phone','Su teléfono*','Your phone number*','tel','Ej: (310) 555-1234','E.g. (310) 555-1234',true)}
     ${sel('cf-contact','¿Cómo prefiere que lo contactemos?','How would you like us to reach you?',
@@ -1757,7 +1757,7 @@ function renderContactForm(containerId, flow) {
     )}
     ${sel('cf-lang','¿Prefiere que lo llamemos en...?','Preferred language for the call?',
       `<option value="es">'Español'</option>
-       <option value="en">${es?'Inglés'}</option>
+       <option value="en">${es?'Inglés':'English'}</option>
        <option value="both">'Cualquiera está bien'</option>`
     )}
     <div style="margin-bottom:20px">
