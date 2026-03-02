@@ -613,7 +613,7 @@ body {
   </div>
 </div>
 
-<script src="cms_data.js"></script>
+<script src="data/zip_index.js"></script>
 <script>
 // ============================================
 // BENEFICIOS MEDICARE WIDGET
@@ -1045,27 +1045,68 @@ async function apiCall(endpoint, options = {}) {
     return await resp.json();
   } catch (e) {
     console.warn('API call failed, using mock data:', e);
-    return mockData(endpoint, options);
+    return await mockData(endpoint, options);
   }
 }
 
-// --- CMS DATA LOOKUP (replaces mock data) ---
-// CMS_DATA is loaded from cms_data.js: { zips: {zip: {county,state}}, plans: {county: [{id,name,carrier,type,premium,deductible,moop,drug_premium,stars,has_drug},...]} }
+// --- CMS DATA LOOKUP (on-demand per-state loading) ---
+// ZIP_INDEX loaded from data/zip_index.js: {"33125":"FL", "90001":"CA", ...}
+// State data loaded on demand from data/cms_{STATE}.js
 
-function cmsLookupZip(zip) {
-  if (typeof CMS_DATA === 'undefined') return null;
-  const info = CMS_DATA.zips[zip];
+// Cache of loaded state data: { "FL": {zips:{...}, plans:{...}}, ... }
+const _stateCache = {};
+let _loadingState = null;
+
+function loadStateData(stateCode) {
+  if (_stateCache[stateCode]) return Promise.resolve(_stateCache[stateCode]);
+  if (_loadingState === stateCode) {
+    // Already loading, wait for it
+    return new Promise(resolve => {
+      const check = setInterval(() => {
+        if (_stateCache[stateCode]) { clearInterval(check); resolve(_stateCache[stateCode]); }
+      }, 100);
+    });
+  }
+  _loadingState = stateCode;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = `data/cms_${stateCode}.js`;
+    script.onload = () => {
+      if (typeof CMS_STATE_DATA !== 'undefined') {
+        _stateCache[stateCode] = CMS_STATE_DATA;
+        // Clear the global so next state load doesn't conflict
+        window.CMS_STATE_DATA = undefined;
+      }
+      _loadingState = null;
+      resolve(_stateCache[stateCode] || null);
+    };
+    script.onerror = () => { _loadingState = null; reject(new Error(`Failed to load data for ${stateCode}`)); };
+    document.head.appendChild(script);
+  });
+}
+
+async function cmsLookupZip(zip) {
+  if (typeof ZIP_INDEX === 'undefined') return null;
+  const stateCode = ZIP_INDEX[zip];
+  if (!stateCode) return null;
+  const data = await loadStateData(stateCode);
+  if (!data) return null;
+  const info = data.zips[zip];
   if (!info) return null;
-  const plans = CMS_DATA.plans[info.county] || [];
+  const plans = data.plans[info.county] || [];
   const carriers = new Set(plans.map(p => p.carrier));
   return { zip_code: zip, county: info.county, state: info.state, total_plans: plans.length, total_carriers: carriers.size };
 }
 
-function cmsRecommend(body) {
-  if (typeof CMS_DATA === 'undefined') return null;
-  const info = CMS_DATA.zips[body.zip_code];
+async function cmsRecommend(body) {
+  if (typeof ZIP_INDEX === 'undefined') return null;
+  const stateCode = ZIP_INDEX[body.zip_code];
+  if (!stateCode) return null;
+  const data = await loadStateData(stateCode);
+  if (!data) return null;
+  const info = data.zips[body.zip_code];
   if (!info) return null;
-  const plans = CMS_DATA.plans[info.county] || [];
+  const plans = data.plans[info.county] || [];
 
   // Map CMS plans to widget format
   const mapped = plans.map(p => ({
@@ -1118,10 +1159,10 @@ const LOCAL_PROVIDERS = [
   {id:5, provider_name:'Dr. Tiffany Berkshire', first_name:'Tiffany', last_name:'Berkshire', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-945-7745', languages:'English'},
 ];
 
-function mockData(endpoint, options) {
+async function mockData(endpoint, options) {
   if (endpoint.startsWith('/plans?zip=')) {
     const zip = endpoint.split('=')[1];
-    return cmsLookupZip(zip);
+    return await cmsLookupZip(zip);
   }
   if (endpoint.startsWith('/providers/search')) {
     const name = new URLSearchParams(endpoint.split('?')[1]).get('name');
@@ -1134,7 +1175,7 @@ function mockData(endpoint, options) {
   }
   if (endpoint === '/recommend') {
     const body = JSON.parse(options.body);
-    return cmsRecommend(body);
+    return await cmsRecommend(body);
   }
   return null;
 }
