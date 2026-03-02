@@ -122,10 +122,10 @@ body {
 .chat-area {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 16px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
 /* Messages */
@@ -562,7 +562,7 @@ body {
 
 <div class="widget-container" id="app">
   <!-- CMS compliance banner -->
-  <div class="cms-banner" id="cms-banner">Este sitio web no es parte del gobierno federal ni del programa Medicare.</div>
+  <div class="cms-banner" id="cms-banner">No estamos conectados ni respaldados por el gobierno de EE.UU. ni por Medicare.</div>
   <!-- Header -->
   <div class="widget-header">
     <div class="header-row">
@@ -615,6 +615,23 @@ body {
 // --- CONFIG ---
 const API_BASE = 'http://localhost:8000/api';
 
+// --- LEAD CAPTURE (Google Sheets) ---
+// Replace this URL after deploying your Google Apps Script
+const LEADS_URL = 'https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
+
+function sendLead(data) {
+  if (!LEADS_URL || LEADS_URL.includes('YOUR_')) {
+    console.log('LEAD (no endpoint configured):', data);
+    return;
+  }
+  fetch(LEADS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  }).catch(err => console.warn('Lead send failed:', err));
+}
+
 // --- STATE ---
 let state = {
   lang: null,       // 'es' or 'en'
@@ -633,57 +650,57 @@ let state = {
 // --- TRANSLATIONS ---
 const T = {
   es: {
-    greeting: "Le voy a guiar paso a paso para comparar planes de salud disponibles para usted. Es fácil y completamente gratis.\n\n¿Dónde vive? Solo necesito su código postal para empezar.",
+    greeting: "Vamos a comparar planes de salud para usted. Es gratis.\n\n¿Cuál es su código postal?",
     choose_lang: "Primero, ¿en qué idioma prefiere que hablemos?",
-    zip_ask: "¿Dónde vive? Solo necesito su código postal para buscar los planes cerca de usted.",
-    zip_ph: "Su código postal (ej: 33125)",
-    zip_go: "Buscar planes",
-    zip_bad: "Hmm, ese código no parece correcto. Necesito 5 números, como 33125.",
-    zip_none: "No encontré planes para ese código postal. ¿Puede verificar el número e intentar de nuevo?",
-    zip_found: "¡Muy bien! Encontré {n} planes disponibles en {county}, {state}.",
+    zip_ask: "¿Cuál es su código postal?",
+    zip_ph: "Ej: 33125",
+    zip_go: "Buscar",
+    zip_bad: "Necesito 5 números (ej: 33125).",
+    zip_none: "No encontré planes para ese código. ¿Puede verificar?",
+    zip_found: "¡Listo! {n} planes en {county}, {state}.",
     dob_ask: "¿Cuál es su fecha de nacimiento?",
     dob_ph: "MM/DD/AAAA",
     dob_go: "Continuar",
     dob_bad: "Por favor ingrese una fecha válida (MM/DD/AAAA).",
-    dob_65plus: "¡Perfecto! Usted califica para Medicare.",
-    dob_turning65: "¡Buenas noticias! Cumple 65 en {months} meses. Ya puede empezar a inscribirse.",
-    dob_under65: "Tiene {age} años. Personas menores de 65 pueden calificar para Medicare si tienen una de estas condiciones:",
+    dob_65plus: "Califica para Medicare.",
+    dob_turning65: "Cumple 65 en {months} meses. Ya puede inscribirse.",
+    dob_under65: "Tiene {age} años. Menores de 65 califican con:",
     dob_cond_ssdi: "Recibo SSDI hace más de 24 meses",
     dob_cond_esrd: "Enfermedad renal (diálisis o trasplante)",
     dob_cond_als: "ALS (enfermedad de Lou Gehrig)",
     dob_no_condition: "Ninguna de estas",
     dob_under65_ok: "Entendido. Le mostraremos las opciones disponibles.",
-    dob_future_eligible: "Usted será elegible para Medicare en {date}. Su período de inscripción comienza en {iep}, que es cuando puede tomar acción.",
-    dob_future_offer: "¿Quiere que le avisemos cuando sea su momento? Le llamamos para guiarle paso a paso. Sin compromiso.",
+    dob_future_eligible: "Será elegible en {date}. Su inscripción abre en {iep}.",
+    dob_future_offer: "¿Quiere que le avisemos? Le llamamos cuando sea su momento.",
     dob_future_btn: "Sí, avísenme cuando sea mi momento",
     dob_future_skip: "No gracias, solo estoy investigando",
-    dob_future_thanks: "¡Perfecto! Le contactaremos cerca de {date} para ayudarle con su inscripción. Guarde nuestro número.",
-    dob_future_skip_ok: "¡Entendido! Cuando esté listo/a, aquí estaremos. Puede regresar en cualquier momento.",
-    doc_ask: "Ahora, ¿tiene un doctor que le gusta y quiere seguir viendo?",
+    dob_future_thanks: "¡Listo! Le contactamos cerca de {date}.",
+    dob_future_skip_ok: "Cuando quiera, aquí estamos.",
+    doc_ask: "¿Tiene un doctor que quiere seguir viendo?",
     yes: "Sí, tengo un doctor",
     no: "No, todavía no",
-    doc_name: "¿Cómo se llama? Con el apellido es suficiente.",
+    doc_name: "¿Apellido del doctor?",
     doc_ph: "Apellido del doctor",
     doc_search: "Buscar",
     doc_found: "Encontré estos doctores. ¿Es alguno el suyo?",
-    doc_none: "No encontré a ese doctor en nuestra lista, pero no se preocupe. Puede intentar con otro nombre o seguir adelante.",
+    doc_none: "No encontré ese doctor. Intente otro nombre o siga adelante.",
     doc_retry: "Intentar otro nombre",
     doc_skip: "Seguir sin doctor",
     doc_not_mine: "Ninguno es mi doctor",
-    doc_selected: "¡Perfecto! Su doctor: {name} - {specialty}",
-    doc_recorded: "¡Entendido! Anoté el nombre '{name}' para su expediente. Seguimos adelante.",
-    med_ask: "Ahora, hablemos de sus medicinas.",
+    doc_selected: "Su doctor: {name} - {specialty}",
+    doc_recorded: "Anoté '{name}'. Seguimos.",
+    med_ask: "¿Qué medicinas toma?",
     med_no: "No tomo ninguna",
     med_pick: "Seleccione las que toma de esta lista:",
     med_added: "¡Listo! Agregué: {name}",
-    pri_ask: "¡Ya casi terminamos! Una última pregunta: ¿qué es lo más importante para usted?",
+    pri_ask: "Última pregunta: ¿qué es lo más importante?",
     pri_cost: "Pagar lo menos posible",
     pri_cost_d: "Planes con prima mensual más baja",
     pri_doc: "Poder ver cualquier doctor",
     pri_doc_d: "Planes PPO con más flexibilidad",
     pri_drug: "Que mis medicinas estén cubiertas",
     pri_drug_d: "Sus medicinas al menor costo",
-    loading: "Déme un momentito, estoy buscando planes disponibles para usted...",
+    loading: "Buscando planes...",
     results_title: "¡Aquí están sus opciones!",
     results_sub: "De {total} planes en su área, estos {n} cubren lo que usted necesita:",
     cost: "Costo mensual",
@@ -716,7 +733,7 @@ const T = {
     otc: "Productos sin receta",
     qtr: "/trimestre",
     enroll_title: "¡Registramos su elección!",
-    enroll_msg: "Le vamos a ayudar con todo. Una de nosotras le va a llamar para guiarle. Solo necesito:",
+    enroll_msg: "Una de nosotras le va a llamar para guiarle. Solo necesito:",
     enroll_name: "Nombre completo",
     enroll_phone: "Teléfono",
     enroll_email: "Email (opcional)",
@@ -729,46 +746,46 @@ const T = {
     disclaimer_full: "No ofrecemos todos los planes disponibles en su área. Actualmente representamos {orgs} organizaciones que ofrecen {products} productos en su área. Para una lista completa, contacte Medicare.gov, 1-800-MEDICARE, o SHIP.",
   },
   en: {
-    greeting: "I'll walk you through comparing health plans available to you, step by step. It's easy and completely free.\n\nWhere do you live? I just need your zip code to get started.",
+    greeting: "Let's compare health plans for you. It's free.\n\nWhat's your zip code?",
     choose_lang: "First, what language do you prefer?",
-    zip_ask: "Where do you live? I just need your zip code to find plans near you.",
-    zip_ph: "Your zip code (e.g., 33125)",
-    zip_go: "Continue",
-    zip_bad: "Please enter a valid 5-digit zip code.",
-    zip_none: "No plans found for that zip code. Please check and try again.",
-    zip_found: "Found {n} plans available in {county}, {state}.",
+    zip_ask: "What's your zip code?",
+    zip_ph: "E.g., 33125",
+    zip_go: "Search",
+    zip_bad: "Need 5 digits (e.g., 33125).",
+    zip_none: "No plans found for that zip. Please check.",
+    zip_found: "Found {n} plans in {county}, {state}.",
     dob_ask: "What is your date of birth?",
     dob_ph: "MM/DD/YYYY",
     dob_go: "Continue",
     dob_bad: "Please enter a valid date (MM/DD/YYYY).",
     dob_65plus: "You qualify for Medicare.",
-    dob_turning65: "Great news! You turn 65 in {months} months. You can start enrolling now.",
-    dob_under65: "You're {age} years old. People under 65 may qualify for Medicare with one of these conditions:",
+    dob_turning65: "You turn 65 in {months} months. You can start enrolling.",
+    dob_under65: "You're {age}. Under-65 may qualify with:",
     dob_cond_ssdi: "Receiving SSDI for 24+ months",
     dob_cond_esrd: "End-Stage Renal Disease (dialysis/transplant)",
     dob_cond_als: "ALS (Lou Gehrig's disease)",
     dob_no_condition: "None of these",
     dob_under65_ok: "Got it. We'll show you the options available.",
-    dob_future_eligible: "You'll be eligible for Medicare in {date}. Your enrollment period starts in {iep}, which is when you can take action.",
-    dob_future_offer: "Want us to remind you when it's time? We'll call to walk you through it. No obligation.",
+    dob_future_eligible: "You'll be eligible in {date}. Enrollment opens {iep}.",
+    dob_future_offer: "Want us to remind you when it's time? No obligation.",
     dob_future_btn: "Yes, remind me when it's my time",
     dob_future_skip: "No thanks, just researching",
-    dob_future_thanks: "We'll reach out near {date} to help with your enrollment. Save our number!",
-    dob_future_skip_ok: "No problem! When you're ready, we'll be here. Come back any time.",
-    doc_ask: "Do you have a doctor you want to keep seeing?",
+    dob_future_thanks: "We'll reach out near {date}.",
+    dob_future_skip_ok: "When you're ready, we're here.",
+    doc_ask: "Do you have a doctor you want to keep?",
     yes: "Yes, I have a doctor",
     no: "No doctor",
-    doc_name: "What's your doctor's name? (last name is fine)",
+    doc_name: "Doctor's last name?",
     doc_ph: "Doctor's last name",
     doc_search: "Search",
     doc_found: "Is any of these your doctor?",
-    doc_none: "Couldn't find that doctor in our database. You can try another name or continue.",
+    doc_none: "Not found. Try another name or continue.",
     doc_retry: "Try another name",
     doc_skip: "Continue without doctor",
     doc_not_mine: "None of these is my doctor",
     doc_selected: "Your doctor: {name} - {specialty}",
-    doc_recorded: "Got it! I've noted '{name}' for your records. Let's keep going.",
-    med_ask: "Now, let's talk about your medications.",
+    doc_recorded: "Noted '{name}'. Moving on.",
+    med_ask: "What medications do you take?",
     med_no: "I don't take any",
     med_pick: "Select the ones you take from this list:",
     med_added: "Added: {name}",
@@ -779,7 +796,7 @@ const T = {
     pri_doc_d: "PPO plans with more flexibility",
     pri_drug: "Best medication coverage",
     pri_drug_d: "Your meds at the lowest cost",
-    loading: "Finding plans available to you...",
+    loading: "Finding plans...",
     results_title: "Here Are Your Options",
     results_sub: "Out of {total} plans in your area, these {n} match what you told us:",
     cost: "Monthly cost",
@@ -812,7 +829,7 @@ const T = {
     otc: "OTC allowance",
     qtr: "/quarter",
     enroll_title: "We've noted your choice!",
-    enroll_msg: "We'll help you with everything. One of us will call to guide you. We just need:",
+    enroll_msg: "One of us will call to guide you. We just need:",
     enroll_name: "Full name",
     enroll_phone: "Phone number",
     enroll_email: "Email (optional)",
@@ -932,6 +949,8 @@ function addZipInput(placeholder, buttonText, onSubmit) {
   input.style.fontSize = '24px';
   input.style.textAlign = 'center';
   input.style.letterSpacing = '4px';
+  input.style.width = '100%';
+  input.style.boxSizing = 'border-box';
 
   const btn = document.createElement('button');
   btn.className = 'btn primary large';
@@ -1283,8 +1302,13 @@ function stepDOB() {
                 const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
                 addMessage(display, 'user');
                 addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
-                // In production: POST to CRM as future lead
-                console.log('FUTURE LEAD:', { name, phone, email, dob: state.dob, age, turn65: turn65Str, iepStart: iepStr, zip: state.zip, lang: state.lang });
+                sendLead({
+                  type: 'future',
+                  name, phone, email,
+                  dob: state.dob, age,
+                  turn65: turn65Str, iep_start: iepStr,
+                  zip: state.zip, lang: state.lang
+                });
               };
 
               document.getElementById('future-skip').onclick = () => {
@@ -1741,8 +1765,20 @@ function submitEnroll(planId) {
   addMessage(display, 'user');
   addMessage(`✓ ${t('enroll_thanks')}`, 'bot');
 
-  // In production: POST to your CRM/lead system
-  console.log('LEAD:', { planId, name, phone, email, zip: state.zip, lang: state.lang });
+  const plan = (state.results?.plans || []).find(p => p.plan_id === planId) || {};
+  sendLead({
+    type: 'enrollment',
+    name, phone, email,
+    zip: state.zip,
+    county: state.county || '',
+    state: state.state || '',
+    plan_name: plan.plan_name || planId,
+    plan_id: planId,
+    carrier: plan.carrier || '',
+    premium: plan.premium || '',
+    lang: state.lang,
+    eligibility: state.eligibility || ''
+  });
 }
 
 // Navigation
