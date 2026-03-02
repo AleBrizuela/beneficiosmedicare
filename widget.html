@@ -606,6 +606,7 @@ body {
   </div>
 </div>
 
+<script src="cms_data.js"></script>
 <script>
 // ============================================
 // BENEFICIOS MEDICARE WIDGET
@@ -1035,91 +1036,92 @@ async function apiCall(endpoint, options = {}) {
   }
 }
 
-// Mock data fallback so the widget works without the backend
+// --- CMS DATA LOOKUP (replaces mock data) ---
+// CMS_DATA is loaded from cms_data.js: { zips: {zip: {county,state}}, plans: {county: [{id,name,carrier,type,premium,deductible,moop,drug_premium,stars,has_drug},...]} }
+
+function cmsLookupZip(zip) {
+  if (typeof CMS_DATA === 'undefined') return null;
+  const info = CMS_DATA.zips[zip];
+  if (!info) return null;
+  const plans = CMS_DATA.plans[info.county] || [];
+  const carriers = new Set(plans.map(p => p.carrier));
+  return { zip_code: zip, county: info.county, state: info.state, total_plans: plans.length, total_carriers: carriers.size };
+}
+
+function cmsRecommend(body) {
+  if (typeof CMS_DATA === 'undefined') return null;
+  const info = CMS_DATA.zips[body.zip_code];
+  if (!info) return null;
+  const plans = CMS_DATA.plans[info.county] || [];
+
+  // Map CMS plans to widget format
+  const mapped = plans.map(p => ({
+    plan_id: p.id,
+    carrier_name: p.carrier,
+    plan_name: p.name,
+    plan_name_display: p.name,
+    plan_type: p.type,
+    premium_monthly: p.premium,
+    star_rating: p.stars || 0,
+    doctor_in_network: body.doctor_name ? null : null, // no network data yet
+    doctor_name_matched: null,
+    drugs_covered: p.has_drug ? body.medications.length : 0,
+    drugs_total: body.medications.length,
+    drugs_not_covered: p.has_drug ? [] : body.medications,
+    estimated_monthly_drug_cost: p.has_drug ? Math.round(p.drug_premium) : 0,
+    estimated_total_monthly: Math.round(p.premium + (p.has_drug ? p.drug_premium : 0)),
+    has_dental: true, // landscape file doesn't have this granularity
+    has_vision: true,
+    has_hearing: true,
+    has_fitness: true,
+    otc_allowance_quarterly: 0,
+    moop_in_network: p.moop,
+    copay_primary_care: null,
+    copay_specialist: null,
+    contracted_with_us: false, // will flag your contracted carriers later
+    snp_type: null
+  }));
+
+  // Score and sort: stars desc, then premium asc
+  mapped.sort((a, b) => {
+    if (b.star_rating !== a.star_rating) return b.star_rating - a.star_rating;
+    return a.premium_monthly - b.premium_monthly;
+  });
+
+  return {
+    zip_code: body.zip_code,
+    total_plans: mapped.length,
+    recommended: mapped.slice(0, 3),
+    all_plans: mapped
+  };
+}
+
+// Provider search (still local for now)
+const LOCAL_PROVIDERS = [
+  {id:1, provider_name:'Dr. Tony Abbassi', first_name:'Tony', last_name:'Abbassi', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33150', phone:'305-325-9433', languages:'English'},
+  {id:2, provider_name:'Dr. Brian Adkinson', first_name:'Brian', last_name:'Adkinson', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-243-6387', languages:'English'},
+  {id:3, provider_name:'Dr. Kori Ascher', first_name:'Kori', last_name:'Ascher', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-243-6388', languages:'English'},
+  {id:4, provider_name:'Dr. Diamelys Bello Rodriguez', first_name:'Diamelys', last_name:'Bello Rodriguez', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-575-7000', languages:'Spanish,English'},
+  {id:5, provider_name:'Dr. Tiffany Berkshire', first_name:'Tiffany', last_name:'Berkshire', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-945-7745', languages:'English'},
+];
+
 function mockData(endpoint, options) {
   if (endpoint.startsWith('/plans?zip=')) {
     const zip = endpoint.split('=')[1];
-    const zipMap = {
-      'FL': {zips:['33101','33125','33126','33127','33128','33129','33130','33131','33132','33133','33134','33135','33136','33137','33138','33139','33140','33141','33142','33143','33144','33145','33146','33147','33150','33155','33156','33157','33158','33160','33161','33162','33165','33166','33167','33168','33169','33170','33172','33173','33174','33175','33176','33177','33178','33179','33180','33181','33182','33183','33184','33185','33186','33187','33189','33190','33193','33194','33196','33199','33010','33012','33013','33014','33015','33016','33030','33031','33032','33033','33301','33304','33309','33311','33312','33313','33314','33316','33317','33319','33321','33322','33323','33324','33325','33326','33327','33328','33330','33331','33332','33334','33351'], county:'Miami-Dade', state:'FL'},
-      'KS_W': {zips:['66101','66102','66103','66104','66105','66106','66109','66111','66112'], county:'Wyandotte', state:'KS'},
-      'KS_J': {zips:['66202','66204','66207','66209','66210','66211','66212','66213','66214','66215','66216','66217','66218','66219','66220','66221','66223','66224','66226','66227','66061','66062'], county:'Johnson', state:'KS'},
-      'KS_S': {zips:['67201','67202','67203','67204','67205','67206','67207','67208','67209','67210','67211','67212','67213','67214','67215','67216','67217','67218','67219','67220'], county:'Sedgwick', state:'KS'},
-      'KS_T': {zips:['66601','66603','66604','66605','66606','66607','66608','66609','66610','66611','66612','66614','66615','66616','66617','66618','66619'], county:'Shawnee', state:'KS'},
-      'MO': {zips:['64078','64701','64012','64083'], county:'Cass', state:'MO'},
-      'CA': {zips:['90230','90232'], county:'Los Angeles', state:'CA'},
-    };
-    for (const region of Object.values(zipMap)) {
-      if (region.zips.includes(zip)) {
-        return { zip_code: zip, county: region.county, state: region.state, total_plans: 11, total_carriers: 8, plans: [] };
-      }
-    }
-    return null;
+    return cmsLookupZip(zip);
   }
   if (endpoint.startsWith('/providers/search')) {
     const name = new URLSearchParams(endpoint.split('?')[1]).get('name');
-    const providers = [
-      // Real NPPES-verified providers
-      // Miami FL
-      {id:1, provider_name:'Dr. Tony Abbassi', first_name:'Tony', last_name:'Abbassi', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33150', phone:'305-325-9433', languages:'English'},
-      {id:2, provider_name:'Dr. Brian Adkinson', first_name:'Brian', last_name:'Adkinson', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-243-6387', languages:'English'},
-      {id:3, provider_name:'Dr. Kori Ascher', first_name:'Kori', last_name:'Ascher', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-243-6388', languages:'English'},
-      {id:4, provider_name:'Dr. Diamelys Bello Rodriguez', first_name:'Diamelys', last_name:'Bello Rodriguez', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-575-7000', languages:'Spanish,English'},
-      {id:5, provider_name:'Dr. Tiffany Berkshire', first_name:'Tiffany', last_name:'Berkshire', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Miami', zip_code:'33125', phone:'305-945-7745', languages:'English'},
-      // Kansas City KS
-      {id:6, provider_name:'Dr. Darius Amani', first_name:'Darius', last_name:'Amani', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Kansas City', zip_code:'66103', phone:'913-588-1959', languages:'English'},
-      {id:7, provider_name:'Dr. Attila Csapo', first_name:'Attila', last_name:'Csapo', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Kansas City', zip_code:'66103', phone:'913-588-1902', languages:'English'},
-      {id:8, provider_name:'Dr. Allison Edwards', first_name:'Allison', last_name:'Edwards', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Kansas City', zip_code:'66103', phone:'913-730-0331', languages:'English'},
-      // Overland Park KS
-      {id:9, provider_name:'Dr. Lee Norman', first_name:'Lee', last_name:'Norman', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Overland Park', zip_code:'66211', phone:'913-588-1600', languages:'English'},
-      // Wichita KS
-      {id:10, provider_name:'Dr. Mohammad Abdel Jawad', first_name:'Mohammad', last_name:'Abdel Jawad', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Wichita', zip_code:'67214', phone:'316-268-5000', languages:'English,Arabic'},
-      {id:11, provider_name:'Dr. Oaklee Abernathy', first_name:'Oaklee', last_name:'Abernathy', specialty:'Internal Medicine', specialty_es:'Medicina Interna', city:'Wichita', zip_code:'67214', phone:'316-293-2665', languages:'English'},
-      // Topeka KS
-      {id:12, provider_name:'Dr. Jennifer Adams', first_name:'Jennifer', last_name:'Adams', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Topeka', zip_code:'66606', phone:'785-354-6000', languages:'English'},
-      // Peculiar MO
-      {id:13, provider_name:'Dr. Michael Thompson', first_name:'Michael', last_name:'Thompson', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Peculiar', zip_code:'64078', phone:'816-779-8000', languages:'English'},
-      // Culver City / LA CA
-      {id:14, provider_name:'Dr. Reina Amiling', first_name:'Reina', last_name:'Amiling', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Los Angeles', zip_code:'90230', phone:'310-392-8636', languages:'English,Tagalog'},
-      {id:15, provider_name:'Dr. Tania Bhatia', first_name:'Tania', last_name:'Bhatia', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Culver City', zip_code:'90230', phone:'310-929-0291', languages:'English'},
-      {id:16, provider_name:'Dr. Michelle Catanzarite', first_name:'Michelle', last_name:'Catanzarite', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Culver City', zip_code:'90230', phone:'424-266-7474', languages:'English'},
-      {id:17, provider_name:'Dr. Lawrence Dardick', first_name:'Lawrence', last_name:'Dardick', specialty:'Family Medicine', specialty_es:'Medicina Familiar', city:'Santa Monica', zip_code:'90404', phone:'310-586-9001', languages:'English'},
-    ];
     const lower = (name || '').toLowerCase();
-    return { results: providers.filter(p => p.last_name.toLowerCase().includes(lower) || p.first_name.toLowerCase().includes(lower) || p.provider_name.toLowerCase().includes(lower)) };
+    return { results: LOCAL_PROVIDERS.filter(p => p.last_name.toLowerCase().includes(lower) || p.first_name.toLowerCase().includes(lower)) };
   }
   if (endpoint.startsWith('/drugs/search')) {
     const name = new URLSearchParams(endpoint.split('?')[1]).get('name').toLowerCase();
-    const drugs = [
-      {drug_name:'metformin', drug_name_brand:'Glucophage', drug_name_es:'metformina', therapeutic_category:'Diabetes'},
-      {drug_name:'lisinopril', drug_name_brand:'Prinivil', drug_name_es:'lisinopril', therapeutic_category:'Blood Pressure'},
-      {drug_name:'amlodipine', drug_name_brand:'Norvasc', drug_name_es:'amlodipina', therapeutic_category:'Blood Pressure'},
-      {drug_name:'atorvastatin', drug_name_brand:'Lipitor', drug_name_es:'atorvastatina', therapeutic_category:'Cholesterol'},
-      {drug_name:'omeprazole', drug_name_brand:'Prilosec', drug_name_es:'omeprazol', therapeutic_category:'Stomach'},
-      {drug_name:'levothyroxine', drug_name_brand:'Synthroid', drug_name_es:'levotiroxina', therapeutic_category:'Thyroid'},
-      {drug_name:'losartan', drug_name_brand:'Cozaar', drug_name_es:'losartan', therapeutic_category:'Blood Pressure'},
-      {drug_name:'gabapentin', drug_name_brand:'Neurontin', drug_name_es:'gabapentina', therapeutic_category:'Nerve Pain'},
-      {drug_name:'sertraline', drug_name_brand:'Zoloft', drug_name_es:'sertralina', therapeutic_category:'Depression'},
-      {drug_name:'insulin glargine', drug_name_brand:'Lantus', drug_name_es:'insulina glargina', therapeutic_category:'Diabetes'},
-      {drug_name:'apixaban', drug_name_brand:'Eliquis', drug_name_es:'apixaban', therapeutic_category:'Blood Thinner'},
-      {drug_name:'semaglutide', drug_name_brand:'Ozempic', drug_name_es:'semaglutida', therapeutic_category:'Diabetes'},
-    ];
-    return { results: drugs.filter(d => d.drug_name.includes(name) || d.drug_name_brand.toLowerCase().includes(name) || d.drug_name_es.includes(name)) };
+    return { results: COMMON_DRUGS.filter(d => d.drug_name.includes(name) || d.drug_name_brand.toLowerCase().includes(name) || d.drug_name_es.toLowerCase().includes(name)) };
   }
   if (endpoint === '/recommend') {
-    // Generate mock recommendations
     const body = JSON.parse(options.body);
-    const mockPlans = [
-      {plan_id:'H5410-001',carrier_name:'Simply Healthcare',plan_name:'Simply Healthcare Preferred HMO',plan_name_display:'Simply Healthcare Preferred HMO',plan_type:'HMO',premium_monthly:0,star_rating:4.5,doctor_in_network:body.doctor_name?true:null,doctor_name_matched:body.doctor_name?'Dr. '+body.doctor_name:null,drugs_covered:body.medications.length,drugs_total:body.medications.length,drugs_not_covered:[],estimated_monthly_drug_cost:3,estimated_total_monthly:3,has_dental:true,has_vision:true,has_hearing:true,has_fitness:true,otc_allowance_quarterly:100,moop_in_network:3200,copay_primary_care:0,copay_specialist:25,contracted_with_us:true,snp_type:null,score:145},
-      {plan_id:'H1036-001',carrier_name:'Humana',plan_name:'Humana Gold Plus HMO',plan_name_display:'Humana Gold Plus HMO',plan_type:'HMO',premium_monthly:0,star_rating:4.5,doctor_in_network:body.doctor_name?true:null,doctor_name_matched:body.doctor_name?'Dr. '+body.doctor_name:null,drugs_covered:body.medications.length,drugs_total:body.medications.length,drugs_not_covered:[],estimated_monthly_drug_cost:5,estimated_total_monthly:5,has_dental:true,has_vision:true,has_hearing:true,has_fitness:true,otc_allowance_quarterly:75,moop_in_network:3400,copay_primary_care:0,copay_specialist:30,contracted_with_us:true,snp_type:null,score:138},
-      {plan_id:'H5521-003',carrier_name:'UnitedHealthcare',plan_name:'AARP Medicare Advantage Patriot PPO',plan_name_display:'AARP Medicare Advantage Patriot PPO',plan_type:'PPO',premium_monthly:35,star_rating:4.5,doctor_in_network:body.doctor_name?true:null,doctor_name_matched:body.doctor_name?'Dr. '+body.doctor_name:null,drugs_covered:Math.max(0,body.medications.length-0),drugs_total:body.medications.length,drugs_not_covered:[],estimated_monthly_drug_cost:8,estimated_total_monthly:43,has_dental:true,has_vision:true,has_hearing:true,has_fitness:true,otc_allowance_quarterly:80,moop_in_network:5400,copay_primary_care:5,copay_specialist:35,contracted_with_us:true,snp_type:null,score:132},
-      {plan_id:'H4091-001',carrier_name:'Devoted Health',plan_name:'Devoted Health Classic Care HMO',plan_name_display:'Devoted Health Classic Care HMO',plan_type:'HMO',premium_monthly:0,star_rating:4.0,doctor_in_network:body.doctor_name?false:null,doctor_name_matched:null,drugs_covered:body.medications.length,drugs_total:body.medications.length,drugs_not_covered:[],estimated_monthly_drug_cost:6,estimated_total_monthly:6,has_dental:true,has_vision:true,has_hearing:true,has_fitness:true,otc_allowance_quarterly:70,moop_in_network:3800,copay_primary_care:0,copay_specialist:30,contracted_with_us:false,snp_type:null,score:115},
-    ];
-    return {
-      zip_code: body.zip_code,
-      total_plans: 11,
-      recommended: mockPlans.slice(0, 3),
-      all_plans: mockPlans
-    };
+    return cmsRecommend(body);
   }
   return null;
 }
