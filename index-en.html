@@ -129,7 +129,6 @@ body { font-family: 'Inter', -apple-system, sans-serif; color: var(--dark); font
 .logo {
   font-family: 'Playfair Display', serif; font-size: 22px;
   font-weight: 700; color: #146A5D !important; text-decoration: none;
-  display: flex; align-items: center;
 }
 .logo span { color: #146A5D !important; }
 nav { display: flex; align-items: center; gap: 8px; }
@@ -645,8 +644,8 @@ footer {
   .contact-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .section-title { font-size: 30px; }
-  .header-inner { padding: 6px 16px 4px; justify-content: space-between; height: auto !important; }
-  .header-inner .logo { margin: 0; }
+  .header-inner { padding: 0 16px; }
+  .mobile-menu-btn { display: block; }
   .phone-header { display: none; }
 }
 @media (max-width: 500px) {
