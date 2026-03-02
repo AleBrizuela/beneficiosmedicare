@@ -142,6 +142,7 @@ body {
   color: var(--text);
   border-bottom-left-radius: 4px;
   align-self: flex-start;
+  border-left: 3px solid var(--primary-light);
 }
 .message.user {
   background: var(--bg-user-message);
@@ -288,12 +289,20 @@ body {
   background: white;
   border: 2px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
-  margin-top: 12px;
-  transition: border-color 0.2s;
+  padding: 22px;
+  margin-top: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .plan-card:hover { border-color: var(--primary-light); }
+.plan-card.stars-5 {
+  border-color: #f39c12;
+  box-shadow: 0 2px 12px rgba(243, 156, 18, 0.15);
+}
+.plan-card.stars-45 {
+  border-color: #d4ac0d;
+}
 .plan-card .card-header {
   display: flex;
   justify-content: space-between;
@@ -301,21 +310,46 @@ body {
   margin-bottom: 12px;
 }
 .plan-card .carrier {
-  font-size: 14px;
-  color: var(--text-light);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  padding: 4px 0 6px 0;
+  border-bottom: 2px solid var(--primary-light);
+  margin-bottom: 6px;
+}
+.plan-card .carrier-logo {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 .plan-card .plan-name {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--primary-dark);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
   margin-bottom: 8px;
+  line-height: 1.3;
 }
 .plan-card .stars {
   color: #f39c12;
   font-size: 18px;
   white-space: nowrap;
+}
+.plan-card .stars .star-label {
+  font-size: 12px;
+  color: var(--text-light);
+  display: block;
+  text-align: right;
 }
 .plan-card .plan-details {
   display: grid;
@@ -328,7 +362,7 @@ body {
 }
 .plan-card .detail-label {
   color: var(--text-light);
-  font-size: 13px;
+  font-size: 14px;
   display: block;
 }
 .plan-card .detail-value {
@@ -379,6 +413,55 @@ body {
   background: #fef9e7;
   color: #7d6608;
   border: 1px solid #f9e79f;
+}
+
+/* Trust signals section */
+.trust-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 14px 16px;
+  background: linear-gradient(to right, #f0f7ff, #f8fafe, #f0f7ff);
+  border-top: 1px solid #e0eaf3;
+  border-bottom: 1px solid #e0eaf3;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 500;
+}
+.trust-item svg {
+  flex-shrink: 0;
+}
+.trust-item .trust-icon {
+  width: 22px;
+  height: 22px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Improved plan type badge */
+.plan-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e8f4fd;
+  color: var(--primary);
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 /* Rank badge */
@@ -604,6 +687,13 @@ body {
     </button>
   </div>
 
+  <!-- Trust Signals -->
+  <div class="trust-bar" id="trust-bar">
+    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos oficiales de CMS</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x1F512;</span><span id="trust-2">100% gratuito</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x2665;</span><span id="trust-3">Sin compromiso</span></div>
+  </div>
+
   <!-- Chat Area -->
   <div class="chat-area" id="chat-area"></div>
 
@@ -632,12 +722,31 @@ function sendLead(data) {
     console.log('LEAD (no endpoint configured):', data);
     return;
   }
+  // Add timestamp and source info
+  data.timestamp = new Date().toISOString();
+  data.source = 'widget_v2';
+  data.url = window.location.href;
+
+  const payload = JSON.stringify(data);
+
+  // Primary attempt
   fetch(LEADS_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify(data)
-  }).catch(err => console.warn('Lead send failed:', err));
+    body: payload
+  }).catch(err => {
+    console.warn('Lead send failed, retrying...', err);
+    // Retry once after 2 seconds
+    setTimeout(() => {
+      fetch(LEADS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: payload
+      }).catch(err2 => console.warn('Lead retry also failed:', err2));
+    }, 2000);
+  });
 }
 
 // --- STATE ---
@@ -661,9 +770,9 @@ const T = {
     greeting: "Vamos a comparar planes de salud para usted. Es gratis.\n\n¿Cuál es su código postal?",
     choose_lang: "Primero, ¿en qué idioma prefiere que hablemos?",
     zip_ask: "¿Cuál es su código postal?",
-    zip_ph: "Ej: 33125",
+    zip_ph: "Ej: 90001",
     zip_go: "Buscar",
-    zip_bad: "Necesito 5 números (ej: 33125).",
+    zip_bad: "Necesito 5 números (ej: 90001).",
     zip_none: "No encontré planes para ese código. ¿Puede verificar?",
     zip_found: "¡Listo! {n} planes en {county}, {state}.",
     dob_ask: "¿Cuál es su fecha de nacimiento?",
@@ -757,9 +866,9 @@ const T = {
     greeting: "Let's compare health plans for you. It's free.\n\nWhat's your zip code?",
     choose_lang: "First, what language do you prefer?",
     zip_ask: "What's your zip code?",
-    zip_ph: "E.g., 33125",
+    zip_ph: "E.g., 90001",
     zip_go: "Search",
-    zip_bad: "Need 5 digits (e.g., 33125).",
+    zip_bad: "Need 5 digits (e.g., 90001).",
     zip_none: "No plans found for that zip. Please check.",
     zip_found: "Found {n} plans in {county}, {state}.",
     dob_ask: "What is your date of birth?",
@@ -862,6 +971,16 @@ function updateDisclaimer(orgs, products) {
   } else {
     el.textContent = t('disclaimer_generic');
   }
+}
+
+function updateTrustBar() {
+  const isES = state.lang === 'es';
+  document.getElementById('trust-1').textContent = isES ? 'Datos oficiales de CMS' : 'Official CMS data';
+  document.getElementById('trust-2').textContent = isES ? '100% gratuito' : '100% free';
+  document.getElementById('trust-3').textContent = isES ? 'Sin compromiso' : 'No obligation';
+  document.getElementById('cms-banner').textContent = isES
+    ? 'No estamos conectados ni respaldados por el gobierno de EE.UU. ni por Medicare.'
+    : 'We are not connected with or endorsed by the U.S. Government or Medicare.';
 }
 
 // --- DOM HELPERS ---
@@ -1204,6 +1323,7 @@ function stepZip() {
   state.history.push('language');
   updateProgress(1);
   showBackButton(false);
+  updateTrustBar();
 
   addMessage(t('greeting'), 'bot');
   setTimeout(() => {
@@ -1687,7 +1807,8 @@ async function stepResults() {
 
 function renderPlanCard(plan, rank) {
   const card = document.createElement('div');
-  card.className = 'plan-card';
+  const starClass = plan.star_rating >= 5 ? ' stars-5' : plan.star_rating >= 4.5 ? ' stars-45' : '';
+  card.className = 'plan-card' + starClass;
   card.style.alignSelf = 'flex-start';
   card.style.animation = `fadeIn 0.3s ease-out ${rank * 0.1}s both`;
 
@@ -1741,13 +1862,24 @@ function renderPlanCard(plan, rank) {
     ? `<div class="enrollment-badge ours">⚡ ${t('enroll_ours')}</div>`
     : `<div class="enrollment-badge other">📞 ${t('enroll_other')}</div>`;
 
+  // Star rating with label
+  const starsWithLabel = plan.star_rating
+    ? `<div class="stars">${starsHtml}<span class="star-label">${state.lang === 'es' ? 'Calidad CMS' : 'CMS Quality'}</span></div>`
+    : '';
+
+  // Carrier initial for mini logo
+  const carrierInitial = plan.carrier_name ? plan.carrier_name.charAt(0) : '?';
+
+  // Plan type badge
+  const typeBadge = plan.plan_type ? `<span class="plan-type-badge">${plan.plan_type}</span>` : '';
+
   card.innerHTML = `
     <div class="card-header">
-      <div>
-        <div class="carrier">${plan.carrier_name}</div>
-        <div class="plan-name"><span class="rank-badge">${rank}</span>${plan.plan_name_display || plan.plan_name}</div>
+      <div style="flex:1">
+        <div class="carrier"><span class="carrier-logo">${carrierInitial}</span>${plan.carrier_name}</div>
+        <div class="plan-name"><span class="rank-badge">${rank}</span>${plan.plan_name_display || plan.plan_name}${typeBadge}</div>
       </div>
-      <div class="stars">${starsHtml}</div>
+      ${starsWithLabel}
     </div>
     <div class="plan-details">
       <div class="detail-item">
@@ -1785,7 +1917,10 @@ function renderPlanCard(plan, rank) {
 }
 
 // Enrollment handoff - always capture lead regardless of contracted status
+let _enrollActive = false;
 function handleEnroll(planId, contracted) {
+  if (_enrollActive) return; // prevent double-trigger
+  _enrollActive = true;
   addMessage(t('enroll_title'), 'bot');
   addMessage(t('enroll_msg'), 'bot');
 
@@ -1871,6 +2006,7 @@ function goBack() {
 
 function restart() {
   state = { lang: null, step: 0, zip: null, county: null, stateCode: null, dob: null, age: null, eligibility: null, doctorId: null, doctorName: null, doctorSearchName: null, medications: [], priority: null, results: null, history: [] };
+  _enrollActive = false;
   stepLanguage();
 }
 
