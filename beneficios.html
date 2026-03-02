@@ -740,7 +740,7 @@ a[href^="tel"] { white-space: nowrap; }
   #cms-disclaimer.hidden { transform: translateY(-100%); }
   @media(max-width:768px){ #cms-disclaimer { font-size:10px; padding:3px 12px; } }
 </style>
-<script>(function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function setTop(){h.style.top=d.offsetHeight+'px';}setTop();window.addEventListener('resize',setTop);function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone')}}window.addEventListener('scroll',c,{passive:true});c()})()</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function setTop(){h.style.top=d.offsetHeight+'px';}setTop();window.addEventListener('resize',setTop);function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone');setTop();}}window.addEventListener('scroll',c,{passive:true});c()})</script>
 
 <header class="header" id="header">
   <div class="header-inner">
