@@ -874,10 +874,7 @@ body {
 
 /* Back button */
 .nav-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background: var(--bg);
+  display: none;
 }
 .nav-btn {
   background: none;
@@ -2351,6 +2348,12 @@ async function stepResults() {
     t('results_sub').replace('{total}', data.total_plans).replace('{n}', topN),
     'bot'
   );
+
+  // Start over link
+  const restartRow = document.createElement('div');
+  restartRow.style.cssText = 'text-align:center;margin-bottom:8px;';
+  restartRow.innerHTML = `<button onclick="restart()" style="background:none;border:none;color:var(--primary-light);font-size:14px;cursor:pointer;padding:4px 12px;">↻ ${state.lang==='es'?'Empezar de nuevo':'Start over'}</button>`;
+  chat.appendChild(restartRow);
 
   // Filter chips
   const filterContainer = document.createElement('div');
