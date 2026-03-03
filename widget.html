@@ -1736,7 +1736,12 @@ function makeChoiceCards(options) {
   options.forEach(opt => {
     const card = document.createElement('button');
     card.className = 'choice-card' + (opt.fullWidth ? ' full-width' : '');
-    if (opt.icon) {
+    if (opt.iconHtml) {
+      const icon = document.createElement('span');
+      icon.className = 'card-icon';
+      icon.innerHTML = opt.iconHtml;
+      card.appendChild(icon);
+    } else if (opt.icon) {
       const icon = document.createElement('span');
       icon.className = 'card-icon';
       icon.textContent = opt.icon;
@@ -1925,9 +1930,9 @@ function updateProgress(step) {
   if (fill) fill.style.width = pct + '%';
   if (label) {
     if (pct === 0) {
-      label.textContent = state.lang === 'es' ? 'Solo 2 minutos' : 'Only 2 minutes';
+      label.textContent = state.lang === 'es' ? '2 minutos para completar' : '2 minutes to complete';
     } else if (pct < 100) {
-      label.textContent = pct + '% ' + (state.lang === 'es' ? 'completado · Solo 2 minutos' : 'complete · Only 2 minutes');
+      label.textContent = pct + '% ' + (state.lang === 'es' ? 'completado · 2 minutos' : 'complete · 2 minutes to complete');
     } else {
       label.textContent = '';
     }
@@ -2120,9 +2125,11 @@ function stepLanguage() {
   updateProgress(1);
   showBackButton(false);
 
+  const usFlag = '<img src="https://flagcdn.com/w40/us.png" width="36" height="24" alt="US" style="border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.15)">';
+  const esFlag = '<img src="https://flagcdn.com/w40/es.png" width="36" height="24" alt="ES" style="border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.15)">';
   const cards = makeChoiceCards([
-    { icon: '🇪🇸', label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
-    { icon: '🇺🇸', label: 'English', action: () => { state.lang = 'en'; updateTrustBar(); stepZip(); }},
+    { iconHtml: usFlag, label: 'English', action: () => { state.lang = 'en'; updateTrustBar(); stepZip(); }},
+    { iconHtml: esFlag, label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
   ]);
 
   showStep({
