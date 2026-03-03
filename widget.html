@@ -2478,7 +2478,7 @@ function finishDOB(age, dob) {
               const display = email ? `${fullName} - ${phone} - ${email}` : `${fullName} - ${phone}`;
               addMessage(display, 'user');
               addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
-              sendLead({ type: 'future', first_name: firstName, last_name: lastName, phone, email, dob: state.dob, age, zip: state.zip, lang: state.lang });
+              sendLead({ type: 'future', first_name: firstName, last_name: lastName, phone, email, zip: state.zip, county: state.county || '', state_code: state.stateCode || '', dob: state.dob, age, eligibility: state.eligibility || '', doctor_name: state.doctorName || '', doctor_id: state.doctorId || '', medications: (state.medications || []).join(', '), lang: state.lang });
             };
             document.getElementById('future-skip').onclick = () => { form.remove(); addMessage(t('dob_future_skip_ok'), 'bot'); };
           }, 500);
@@ -3511,8 +3511,14 @@ function submitEnroll(planId) {
     last_name: lastName,
     phone, email,
     zip: state.zip,
+    county: state.county || '',
+    state_code: state.stateCode || '',
     dob: state.dob || '',
     age: state.age || '',
+    eligibility: state.eligibility || '',
+    doctor_name: state.doctorName || '',
+    doctor_id: state.doctorId || '',
+    medications: (state.medications || []).join(', '),
     plan_name: plan.plan_name || planId,
     carrier: plan.carrier || '',
     premium: plan.premium || '',
