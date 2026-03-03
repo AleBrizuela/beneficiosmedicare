@@ -2505,7 +2505,7 @@ function stepDoctor() {
   // First ask YES / NO
   addMessage(t('doc_ask'), 'bot');
   addButtons([
-    { text: t('yes'), class: 'accent large', action: () => stepDoctorSearch() },
+    { text: t('yes'), class: 'accent large', noEcho: true, action: () => stepDoctorSearch() },
     { text: t('no'), class: 'secondary large', action: () => {
       state.doctorId = null;
       state.doctorName = null;
@@ -2516,11 +2516,9 @@ function stepDoctor() {
 
 // Show doctor search input after user says YES
 function stepDoctorSearch() {
-  // Clear the YES/NO buttons
-  const btns = chat.querySelectorAll('.btn-group');
-  btns.forEach(b => b.remove());
-
-  // Note: addButtons already echoes user choice, don't duplicate
+  // Clear everything and start fresh for doctor search
+  chat.innerHTML = '';
+  addMessage(t('yes'), 'user');
   addMessage(t('doc_name'), 'bot');
 
   addInput(t('doc_ph'), t('doc_search'), async (name) => {
