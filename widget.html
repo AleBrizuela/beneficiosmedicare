@@ -1924,7 +1924,7 @@ function updateProgress(step) {
   const label = document.getElementById('progress-label');
   if (fill) fill.style.width = pct + '%';
   if (label) {
-    const timeNote = pct < 100 ? (state.lang === 'es' ? ' · Solo 3 minutos' : ' · Only 3 minutes') : '';
+    const timeNote = pct < 100 ? (state.lang === 'es' ? ' · Solo 2 minutos' : ' · Only 2 minutes') : '';
     label.textContent = pct > 0 ? pct + '% ' + (state.lang === 'es' ? 'completado' : 'complete') + timeNote : '';
   }
   // Legacy compat
