@@ -463,6 +463,78 @@ body {
   margin-left: 4px;
   vertical-align: middle;
 }
+.plan-type-badge.snp {
+  background: #fef3cd;
+  color: #856404;
+}
+.plan-type-badge.pdp {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Filter chips */
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  align-self: flex-start;
+  width: 100%;
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-chip:hover {
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+.filter-chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.chip-count {
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(0,0,0,0.1);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+.filter-chip.active .chip-count {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Category notes */
+.category-note {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  align-self: flex-start;
+  width: 100%;
+}
+.snp-note {
+  background: #fef3cd;
+  color: #856404;
+  border-left: 3px solid #ffc107;
+}
+
+/* Show more button */
+.show-more-btn {
+  width: 100%;
+  margin-top: 8px;
+}
 
 /* Rank badge */
 .rank-badge {
@@ -838,6 +910,18 @@ const T = {
     enroll_other: "Llame a Medicare: 1-800-633-4227",
     see_all_one: "Ver <strong>1</strong> plan restante",
     see_all: "Ver los&nbsp;<strong>{n}</strong>&nbsp;planes restantes",
+    show_more: "Ver {n} planes más",
+    filter_all: "Todos",
+    filter_ma: "Medicare Advantage",
+    filter_snp: "Necesidades Especiales",
+    filter_pdp: "Medicamentos",
+    snp_note: "Plan de Necesidades Especiales - puede requerir verificación de elegibilidad",
+    snp_badge: "SNP",
+    pdp_badge: "PDP",
+    ma_badge: "MA",
+    section_ma: "Planes Medicare Advantage",
+    section_snp: "Planes de Necesidades Especiales (SNP)",
+    section_pdp: "Planes de Medicamentos (PDP)",
     free: "GRATIS",
     mo: "/mes",
     moop: "Máximo al año",
@@ -934,6 +1018,18 @@ const T = {
     enroll_other: "Call Medicare: 1-800-633-4227",
     see_all_one: "See <strong>1</strong> remaining plan",
     see_all: "See <strong>{n}</strong> remaining plans",
+    show_more: "Show {n} more plans",
+    filter_all: "All",
+    filter_ma: "Medicare Advantage",
+    filter_snp: "Special Needs",
+    filter_pdp: "Drug Plans",
+    snp_note: "Special Needs Plan - may require eligibility verification",
+    snp_badge: "SNP",
+    pdp_badge: "PDP",
+    ma_badge: "MA",
+    section_ma: "Medicare Advantage Plans",
+    section_snp: "Special Needs Plans (SNP)",
+    section_pdp: "Prescription Drug Plans (PDP)",
     free: "FREE",
     mo: "/mo",
     moop: "Max per year",
@@ -1228,32 +1324,40 @@ async function cmsRecommend(body) {
   const plans = data.plans[info.county] || [];
 
   // Map CMS plans to widget format
-  const mapped = plans.map(p => ({
-    plan_id: p.id,
-    carrier_name: p.carrier,
-    plan_name: p.name,
-    plan_name_display: p.name,
-    plan_type: p.type,
-    premium_monthly: p.premium,
-    star_rating: p.stars || 0,
-    doctor_in_network: body.doctor_name ? null : null, // no network data yet
-    doctor_name_matched: null,
-    drugs_covered: p.has_drug ? body.medications.length : 0,
-    drugs_total: body.medications.length,
-    drugs_not_covered: p.has_drug ? [] : body.medications,
-    estimated_monthly_drug_cost: p.has_drug ? Math.round(p.drug_premium) : 0,
-    estimated_total_monthly: Math.round(p.premium + (p.has_drug ? p.drug_premium : 0)),
-    has_dental: true, // landscape file doesn't have this granularity
-    has_vision: true,
-    has_hearing: true,
-    has_fitness: true,
-    otc_allowance_quarterly: 0,
-    moop_in_network: p.moop,
-    copay_primary_care: null,
-    copay_specialist: null,
-    contracted_with_us: false, // will flag your contracted carriers later
-    snp_type: null
-  }));
+  const mapped = plans.map(p => {
+    // Determine category: ma, snp, or pdp
+    let category = 'ma';
+    if (p.cat === 'SNP' || p.snp) category = 'snp';
+    else if (p.cat === 'PDP') category = 'pdp';
+
+    return {
+      plan_id: p.id,
+      carrier_name: p.carrier,
+      plan_name: p.name,
+      plan_name_display: p.name,
+      plan_type: p.type,
+      category: category,
+      premium_monthly: p.premium,
+      star_rating: p.stars || 0,
+      doctor_in_network: body.doctor_name ? null : null,
+      doctor_name_matched: null,
+      drugs_covered: p.has_drug ? body.medications.length : 0,
+      drugs_total: body.medications.length,
+      drugs_not_covered: p.has_drug ? [] : body.medications,
+      estimated_monthly_drug_cost: p.has_drug ? Math.round(p.drug_premium) : 0,
+      estimated_total_monthly: Math.round(p.premium + (p.has_drug ? p.drug_premium : 0)),
+      has_dental: category !== 'pdp',
+      has_vision: category !== 'pdp',
+      has_hearing: category !== 'pdp',
+      has_fitness: category !== 'pdp',
+      otc_allowance_quarterly: 0,
+      moop_in_network: p.moop,
+      copay_primary_care: null,
+      copay_specialist: null,
+      contracted_with_us: false,
+      snp_type: p.snp || null
+    };
+  });
 
   // Score and sort: stars desc, then premium asc
   mapped.sort((a, b) => {
@@ -1261,11 +1365,22 @@ async function cmsRecommend(body) {
     return a.premium_monthly - b.premium_monthly;
   });
 
+  // Separate by category
+  const maPlans = mapped.filter(p => p.category === 'ma');
+  const snpPlans = mapped.filter(p => p.category === 'snp');
+  const pdpPlans = mapped.filter(p => p.category === 'pdp');
+
+  // Top 3 from MA/MA-PD only (main recommendations)
+  const recommended = maPlans.slice(0, 3);
+
   return {
     zip_code: body.zip_code,
     total_plans: mapped.length,
-    recommended: mapped.slice(0, 3),
-    all_plans: mapped
+    recommended: recommended,
+    all_plans: mapped,
+    ma_plans: maPlans,
+    snp_plans: snpPlans,
+    pdp_plans: pdpPlans
   };
 }
 
@@ -1778,6 +1893,8 @@ async function stepResults() {
   }
 
   state.results = data;
+  state.visibleCount = 3; // pagination state
+  state.activeFilter = 'all';
 
   const topN = Math.min(3, data.recommended.length);
   addMessage(
@@ -1786,31 +1903,117 @@ async function stepResults() {
     'bot'
   );
 
-  // Render top 3 plan cards
-  data.recommended.slice(0, 3).forEach((plan, i) => renderPlanCard(plan, i + 1));
+  // Filter chips
+  const filterContainer = document.createElement('div');
+  filterContainer.className = 'filter-chips';
+  filterContainer.id = 'filter-chips';
+  const filters = [
+    { key: 'all', label: t('filter_all'), count: data.all_plans.length },
+    { key: 'ma', label: t('filter_ma'), count: (data.ma_plans || []).length },
+    { key: 'snp', label: t('filter_snp'), count: (data.snp_plans || []).length },
+    { key: 'pdp', label: t('filter_pdp'), count: (data.pdp_plans || []).length },
+  ];
+  filters.forEach(f => {
+    if (f.count === 0 && f.key !== 'all') return;
+    const chip = document.createElement('button');
+    chip.className = 'filter-chip' + (f.key === 'all' ? ' active' : '');
+    chip.dataset.filter = f.key;
+    chip.innerHTML = `${f.label} <span class="chip-count">${f.count}</span>`;
+    chip.onclick = () => applyFilter(f.key);
+    filterContainer.appendChild(chip);
+  });
+  chat.appendChild(filterContainer);
 
-  // "See all" button
-  if (data.all_plans && data.all_plans.length > 3) {
-    const remaining = data.all_plans.length - 3;
-    addButtons([{
-      text: remaining === 1 ? t('see_all_one') : t('see_all').replace('{n}', remaining),
-      html: true,
-      class: 'outline large',
-      noEcho: true,
-      action: () => {
-        data.all_plans.slice(3).forEach((plan, i) => renderPlanCard(plan, i + 4));
-        scrollToBottom();
-      }
-    }]);
+  // Plan cards container
+  const cardsContainer = document.createElement('div');
+  cardsContainer.id = 'plan-cards-container';
+  chat.appendChild(cardsContainer);
+
+  // Render initial view
+  renderFilteredPlans('all');
+}
+
+function getFilteredPlans(filterKey) {
+  const data = state.results;
+  if (!data) return [];
+  switch(filterKey) {
+    case 'ma': return data.ma_plans || [];
+    case 'snp': return data.snp_plans || [];
+    case 'pdp': return data.pdp_plans || [];
+    default: return data.all_plans || [];
   }
 }
 
+function applyFilter(filterKey) {
+  state.activeFilter = filterKey;
+  state.visibleCount = 5;
+
+  // Update chip styles
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.filter === filterKey);
+  });
+
+  renderFilteredPlans(filterKey);
+}
+
+function renderFilteredPlans(filterKey) {
+  const container = document.getElementById('plan-cards-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const plans = getFilteredPlans(filterKey);
+  if (plans.length === 0) {
+    const msg = document.createElement('div');
+    msg.className = 'message bot';
+    msg.textContent = state.lang === 'es' ? 'No hay planes en esta categoría.' : 'No plans in this category.';
+    container.appendChild(msg);
+    return;
+  }
+
+  // Show section label for SNP/PDP
+  if (filterKey === 'snp') {
+    const note = document.createElement('div');
+    note.className = 'category-note snp-note';
+    note.textContent = t('snp_note');
+    container.appendChild(note);
+  }
+
+  const toShow = plans.slice(0, state.visibleCount);
+  toShow.forEach((plan, i) => {
+    const card = buildPlanCard(plan, i + 1);
+    container.appendChild(card);
+  });
+
+  // "Show more" button
+  const remaining = plans.length - state.visibleCount;
+  if (remaining > 0) {
+    const showCount = Math.min(5, remaining);
+    const moreBtn = document.createElement('button');
+    moreBtn.className = 'btn outline large show-more-btn';
+    moreBtn.innerHTML = t('show_more').replace('{n}', showCount);
+    moreBtn.onclick = () => {
+      state.visibleCount += 5;
+      renderFilteredPlans(state.activeFilter);
+      scrollToBottom();
+    };
+    container.appendChild(moreBtn);
+  }
+
+  scrollToBottom();
+}
+
 function renderPlanCard(plan, rank) {
+  const card = buildPlanCard(plan, rank);
+  chat.appendChild(card);
+  scrollToBottom();
+}
+
+function buildPlanCard(plan, rank) {
   const card = document.createElement('div');
   const starClass = plan.star_rating >= 5 ? ' stars-5' : plan.star_rating >= 4.5 ? ' stars-45' : '';
   card.className = 'plan-card' + starClass;
   card.style.alignSelf = 'flex-start';
-  card.style.animation = `fadeIn 0.3s ease-out ${rank * 0.1}s both`;
+  card.style.animation = `fadeIn 0.3s ease-out ${Math.min(rank, 5) * 0.1}s both`;
 
   const premium = plan.premium_monthly === 0 ? t('free') : `$${plan.premium_monthly}${t('mo')}`;
   const premiumClass = plan.premium_monthly === 0 ? 'highlight' : '';
@@ -1870,8 +2073,15 @@ function renderPlanCard(plan, rank) {
   // Carrier initial for mini logo
   const carrierInitial = plan.carrier_name ? plan.carrier_name.charAt(0) : '?';
 
-  // Plan type badge
-  const typeBadge = plan.plan_type ? `<span class="plan-type-badge">${plan.plan_type}</span>` : '';
+  // Plan type badge with category coloring
+  let typeBadge = '';
+  if (plan.category === 'snp') {
+    typeBadge = `<span class="plan-type-badge snp">${t('snp_badge')}</span>`;
+  } else if (plan.category === 'pdp') {
+    typeBadge = `<span class="plan-type-badge pdp">${t('pdp_badge')}</span>`;
+  } else if (plan.plan_type) {
+    typeBadge = `<span class="plan-type-badge">${plan.plan_type}</span>`;
+  }
 
   card.innerHTML = `
     <div class="card-header">
@@ -1912,8 +2122,7 @@ function renderPlanCard(plan, rank) {
     </div>
   `;
 
-  chat.appendChild(card);
-  scrollToBottom();
+  return card;
 }
 
 // Enrollment handoff - always capture lead regardless of contracted status

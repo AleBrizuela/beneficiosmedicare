@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medigap Data Scraper - Beneficios Medicare</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+  h1 { color: #0d5c8f; margin-bottom: 8px; }
+  .subtitle { color: #666; margin-bottom: 24px; }
+  .instructions { background: #f0f7ff; border-left: 4px solid #0d5c8f; padding: 16px; margin-bottom: 24px; border-radius: 4px; }
+  .instructions ol { padding-left: 20px; }
+  .instructions li { margin-bottom: 6px; }
+  button { background: #0d5c8f; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; }
+  button:hover { background: #0a4a73; }
+  button:disabled { background: #999; cursor: not-allowed; }
+  #progress { margin-top: 20px; }
+  .progress-bar { width: 100%; height: 24px; background: #e0e0e0; border-radius: 12px; overflow: hidden; margin: 10px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #0d5c8f, #1a8fd1); transition: width 0.3s; border-radius: 12px; }
+  #log { max-height: 300px; overflow-y: auto; background: #1a1a2e; color: #0f0; font-family: monospace; font-size: 13px; padding: 12px; border-radius: 6px; margin-top: 16px; white-space: pre-wrap; }
+  .state-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 4px; margin-top: 12px; }
+  .state-chip { text-align: center; padding: 4px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .state-chip.done { background: #d4edda; color: #155724; }
+  .state-chip.pending { background: #f0f0f0; color: #999; }
+  .state-chip.active { background: #fff3cd; color: #856404; }
+  .state-chip.error { background: #f8d7da; color: #721c24; }
+  #download-section { margin-top: 24px; display: none; }
+  #download-section a { display: inline-block; background: #28a745; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; }
+  #download-section a:hover { background: #218838; }
+  .stats { display: flex; gap: 24px; margin-top: 12px; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 28px; font-weight: 700; color: #0d5c8f; }
+  .stat .label { font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+
+<h1>Medigap Data Scraper</h1>
+<p class="subtitle">Scrapes Medicare.gov's public API for all 50 states + DC</p>
+
+<div class="instructions">
+  <strong>How to use:</strong>
+  <ol>
+    <li>Open this file in Chrome (must be on your computer, not a VM)</li>
+    <li>Click "Start Scraping" below</li>
+    <li>Wait ~3-5 minutes for all states to complete</li>
+    <li>Click "Download All Data" to get the JS files</li>
+    <li>Place the downloaded files in the <code>data/</code> folder of the repo</li>
+  </ol>
+</div>
+
+<button id="start-btn" onclick="startScrape()">Start Scraping</button>
+
+<div id="progress" style="display:none">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div id="progress-text">Starting...</div>
+  <div class="stats">
+    <div class="stat"><div class="num" id="stat-done">0</div><div class="label">States Done</div></div>
+    <div class="stat"><div class="num" id="stat-plans">0</div><div class="label">Plan Types</div></div>
+    <div class="stat"><div class="num" id="stat-policies">0</div><div class="label">Policies</div></div>
+  </div>
+  <div class="state-grid" id="state-grid"></div>
+  <div id="log"></div>
+</div>
+
+<div id="download-section">
+  <h2>Scraping Complete!</h2>
+  <p style="margin:8px 0 16px">Click below to download all Medigap data files as a zip.</p>
+  <a href="#" id="download-btn" onclick="downloadAll(event)">Download All Data</a>
+  <p style="margin-top:8px;font-size:13px;color:#666;">Or download individual state files:</p>
+  <div id="individual-downloads" style="margin-top:8px;"></div>
+</div>
+
+<script>
+const BASE = 'https://www.medicare.gov/api/v1/data/plan-compare/medigap';
+const RATE_MAP = {
+  'MEDIGAP_RATE_TYPE_ATTAINED_AGE': 'attained_age',
+  'MEDIGAP_RATE_TYPE_ISSUE_AGE': 'issue_age',
+  'MEDIGAP_RATE_TYPE_COMMUNITY_RATED': 'community_rated'
+};
+
+const STATE_ZIPS = {
+  "AL":"35203","AK":"99501","AZ":"85001","AR":"72201","CA":"90001",
+  "CO":"80201","CT":"06101","DE":"19901","DC":"20001","FL":"33101",
+  "GA":"30301","HI":"96801","ID":"83701","IL":"60601","IN":"46201",
+  "IA":"50301","KS":"66101","KY":"40201","LA":"70112","ME":"04101",
+  "MD":"21201","MA":"02101","MI":"48201","MN":"55101","MS":"39201",
+  "MO":"63101","MT":"59601","NE":"68101","NV":"89101","NH":"03101",
+  "NJ":"07101","NM":"87101","NY":"10001","NC":"27601","ND":"58501",
+  "OH":"43201","OK":"73101","OR":"97201","PA":"15201","RI":"02901",
+  "SC":"29201","SD":"57101","TN":"37201","TX":"77045","UT":"84101",
+  "VT":"05601","VA":"23219","WA":"98101","WV":"25301","WI":"53201","WY":"82001"
+};
+
+const allData = {};
+let totalPlans = 0, totalPolicies = 0;
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += msg + '\n';
+  el.scrollTop = el.scrollHeight;
+}
+
+function updateProgress(done, total, currentState) {
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done}/${total} states (${pct}%) - ${currentState || 'done'}`;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-plans').textContent = totalPlans;
+  document.getElementById('stat-policies').textContent = totalPolicies;
+}
+
+function updateStateChip(state, status) {
+  const chip = document.getElementById('chip-' + state);
+  if (chip) { chip.className = 'state-chip ' + status; }
+}
+
+async function fetchJSON(url) {
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function scrapeState(state, zip) {
+  updateStateChip(state, 'active');
+
+  // Get plan types
+  const plansData = await fetchJSON(`${BASE}/plans?state=${state}&zipcode=${zip}`);
+  if (!plansData.plans || !plansData.plans.length) {
+    log(`  ${state}: no plans available`);
+    updateStateChip(state, 'error');
+    return null;
+  }
+
+  const plans = [];
+  for (const rp of plansData.plans) {
+    const pk = rp.medigap_plan_type;
+    const letter = pk.replace('MEDIGAP_PLAN_TYPE_', '');
+
+    // Get policies for this plan type
+    await sleep(300); // polite delay between requests
+    const polData = await fetchJSON(`${BASE}/policies?medigap_plan_type=${pk}&state=${state}&zipcode=${zip}`);
+    const policies = (polData.policies || []).map(p => ({
+      co: p.company,
+      rt: RATE_MAP[p.rate_type] || p.rate_type,
+      min: p.monthly_rate_min,
+      max: p.monthly_rate_max,
+      ph: p.phone_number || '',
+      web: p.website || ''
+    }));
+
+    totalPolicies += policies.length;
+    totalPlans++;
+
+    plans.push({
+      type: letter,
+      plan_key: pk,
+      premium_min: rp.monthly_rate_min,
+      premium_max: rp.monthly_rate_max,
+      policies
+    });
+
+    log(`  ${state} Plan ${letter}: ${policies.length} carriers, $${rp.monthly_rate_min}-$${rp.monthly_rate_max}/mo`);
+  }
+
+  updateStateChip(state, 'done');
+  return { state, plans };
+}
+
+async function startScrape() {
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('progress').style.display = 'block';
+
+  const states = Object.keys(STATE_ZIPS).sort();
+  const total = states.length;
+
+  // Build state grid
+  const grid = document.getElementById('state-grid');
+  grid.innerHTML = states.map(st => `<div class="state-chip pending" id="chip-${st}">${st}</div>`).join('');
+
+  let done = 0;
+  for (const state of states) {
+    const zip = STATE_ZIPS[state];
+    updateProgress(done, total, state);
+    log(`\nScraping ${state} (zip ${zip})...`);
+
+    try {
+      const data = await scrapeState(state, zip);
+      if (data) {
+        allData[state] = data;
+        log(`  ${state}: ${data.plans.length} plan types`);
+      }
+    } catch (e) {
+      log(`  ${state}: ERROR - ${e.message}`);
+      updateStateChip(state, 'error');
+      // If we get rate limited, wait longer
+      if (e.message.includes('403')) {
+        log(`  Rate limited! Waiting 30 seconds...`);
+        await sleep(30000);
+      }
+    }
+
+    done++;
+    updateProgress(done, total, state);
+    await sleep(500); // delay between states
+  }
+
+  updateProgress(total, total, null);
+  log(`\n===== DONE =====`);
+  log(`States scraped: ${Object.keys(allData).length}`);
+  log(`Total plan types: ${totalPlans}`);
+  log(`Total policies: ${totalPolicies}`);
+
+  // Show download section
+  document.getElementById('download-section').style.display = 'block';
+
+  // Create individual download links
+  const indiv = document.getElementById('individual-downloads');
+  for (const st of Object.keys(allData).sort()) {
+    const a = document.createElement('a');
+    const js = `const MEDIGAP_STATE_DATA = ${JSON.stringify(allData[st], null, 0)};`;
+    const blob = new Blob([js], { type: 'application/javascript' });
+    a.href = URL.createObjectURL(blob);
+    a.download = `medigap_${st}.js`;
+    a.textContent = st;
+    a.style.cssText = 'display:inline-block;margin:3px;padding:4px 8px;background:#0d5c8f;color:#fff;border-radius:4px;text-decoration:none;font-size:12px;';
+    indiv.appendChild(a);
+  }
+}
+
+function downloadAll(e) {
+  e.preventDefault();
+  // Download each state as individual files (no zip library needed)
+  for (const st of Object.keys(allData).sort()) {
+    const js = `const MEDIGAP_STATE_DATA = ${JSON.stringify(allData[st])};`;
+    const blob = new Blob([js], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `medigap_${st}.js`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
+</script>
+
+</body>
+</html>
