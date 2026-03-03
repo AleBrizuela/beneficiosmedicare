@@ -101,22 +101,35 @@ body {
   line-height: 1.3;
 }
 
-/* Progress bar */
+/* Progress bar - continuous style */
 .progress-bar {
-  display: flex;
-  gap: 4px;
-  padding: 12px 24px;
+  padding: 10px 24px 6px;
   background: var(--bg);
+  position: relative;
 }
-.progress-step {
-  flex: 1;
+.progress-track {
   height: 6px;
   border-radius: 3px;
   background: var(--border);
-  transition: background 0.3s;
+  overflow: hidden;
 }
-.progress-step.active { background: var(--primary-light); }
-.progress-step.done { background: var(--accent); }
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--primary-light), var(--accent));
+  transition: width 0.5s ease;
+  width: 0%;
+}
+.progress-label {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* Legacy step dots - hidden but kept for compat */
+.progress-step { display: none; }
 
 /* Chat area */
 .chat-area {
@@ -162,6 +175,186 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Step screen - one question per screen layout */
+.step-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 8px 16px;
+  animation: fadeIn 0.35s ease-out;
+  width: 100%;
+}
+.step-screen .step-question {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.step-screen .step-subtitle {
+  font-size: 15px;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* Choice cards - big tappable options */
+.choice-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 80px;
+  flex: 1;
+  min-width: 140px;
+  max-width: 200px;
+  text-align: center;
+  gap: 8px;
+}
+.choice-card:hover, .choice-card:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 2px 12px rgba(26,82,118,0.15);
+  transform: translateY(-1px);
+}
+.choice-card:active {
+  transform: scale(0.97);
+  background: var(--bg-message);
+  border-color: var(--primary);
+}
+.choice-card.selected {
+  border-color: var(--primary);
+  background: var(--bg-message);
+  box-shadow: 0 0 0 3px rgba(41,128,185,0.2);
+}
+.choice-card .card-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+.choice-card .card-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+.choice-card.full-width {
+  max-width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+}
+.choice-card.full-width .card-label {
+  text-align: left;
+}
+
+/* Grid of tappable items (months, days) */
+.tap-grid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.tap-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.tap-grid.cols-7 { grid-template-columns: repeat(7, 1fr); }
+.tap-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.15s;
+  min-height: 48px;
+}
+.tap-item:hover { border-color: var(--primary-light); background: #f0f8ff; }
+.tap-item:active { transform: scale(0.95); background: var(--bg-message); border-color: var(--primary); }
+
+/* Step input - centered single input */
+.step-input-wrap {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 16px;
+}
+.step-input-wrap input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 22px;
+  text-align: center;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.step-input-wrap input:focus { border-color: var(--primary-light); }
+.step-input-wrap .input-hint {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 6px;
+}
+.step-input-wrap .input-error {
+  font-size: 13px;
+  color: var(--warning);
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* Step footer nav */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 12px;
+}
+.step-nav .step-back {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.step-nav .step-back:hover { color: var(--text); }
+.step-nav .step-continue {
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary-light);
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.step-nav .step-continue:hover { background: var(--primary); }
+.step-nav .step-continue:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Buttons */
 .btn-group {
@@ -742,11 +935,8 @@ body {
 
   <!-- Progress -->
   <div class="progress-bar" id="progress">
-    <div class="progress-step" data-step="1"></div>
-    <div class="progress-step" data-step="2"></div>
-    <div class="progress-step" data-step="3"></div>
-    <div class="progress-step" data-step="4"></div>
-    <div class="progress-step" data-step="5"></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label"></div>
   </div>
 
   <!-- Navigation -->
@@ -1094,6 +1284,91 @@ function scrollToBottom() {
   setTimeout(doScroll, 600);
 }
 
+// Show a single-question step screen (comparemedicare-style)
+function showStep({ question, subtitle, content, showBack, onBack }) {
+  chat.innerHTML = '';
+  const screen = document.createElement('div');
+  screen.className = 'step-screen';
+
+  const q = document.createElement('div');
+  q.className = 'step-question';
+  q.textContent = question;
+  screen.appendChild(q);
+
+  if (subtitle) {
+    const sub = document.createElement('div');
+    sub.className = 'step-subtitle';
+    sub.textContent = subtitle;
+    screen.appendChild(sub);
+  }
+
+  if (content) screen.appendChild(content);
+
+  // Bottom nav with back button
+  if (showBack && onBack) {
+    const nav = document.createElement('div');
+    nav.className = 'step-nav';
+    const back = document.createElement('button');
+    back.className = 'step-back';
+    back.innerHTML = '&#8249; ' + (state.lang === 'es' ? 'Atrás' : 'Back');
+    back.onclick = onBack;
+    nav.appendChild(back);
+    nav.appendChild(document.createElement('div')); // spacer
+    screen.appendChild(nav);
+  }
+
+  chat.appendChild(screen);
+  scrollToBottom();
+  return screen;
+}
+
+// Create choice cards (big tappable buttons with optional icons)
+function makeChoiceCards(options) {
+  const container = document.createElement('div');
+  container.className = 'choice-cards';
+  options.forEach(opt => {
+    const card = document.createElement('button');
+    card.className = 'choice-card' + (opt.fullWidth ? ' full-width' : '');
+    if (opt.icon) {
+      const icon = document.createElement('span');
+      icon.className = 'card-icon';
+      icon.textContent = opt.icon;
+      card.appendChild(icon);
+    }
+    const label = document.createElement('span');
+    label.className = 'card-label';
+    label.textContent = opt.label;
+    card.appendChild(label);
+    card.onclick = () => {
+      // Visual feedback
+      container.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      setTimeout(() => opt.action(), 200); // brief delay for visual feedback before advancing
+    };
+    container.appendChild(card);
+  });
+  return container;
+}
+
+// Create a tap grid (for months, days, etc.)
+function makeTapGrid(items, cols) {
+  const grid = document.createElement('div');
+  grid.className = `tap-grid cols-${cols}`;
+  items.forEach(item => {
+    const cell = document.createElement('button');
+    cell.className = 'tap-item';
+    cell.textContent = item.label;
+    cell.onclick = () => {
+      grid.querySelectorAll('.tap-item').forEach(c => c.style.borderColor = '');
+      cell.style.borderColor = 'var(--primary)';
+      cell.style.background = 'var(--bg-message)';
+      setTimeout(() => item.action(), 150);
+    };
+    grid.appendChild(cell);
+  });
+  return grid;
+}
+
 function addMessage(html, type = 'bot') {
   const div = document.createElement('div');
   div.className = `message ${type}`;
@@ -1235,6 +1510,14 @@ function hideLoading() {
 }
 
 function updateProgress(step) {
+  // Map steps: 0=lang(10%), 1=zip(25%), 2=dob(45%), 3=doctor(60%), 4=meds(75%), 5=results(100%)
+  const pctMap = { 0: 0, 1: 10, 2: 25, 3: 45, 4: 60, 5: 75, 6: 100 };
+  const pct = pctMap[step] || 0;
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = pct > 0 ? pct + '% ' + (state.lang === 'es' ? 'completado' : 'complete') : '';
+  // Legacy compat
   const steps = document.querySelectorAll('.progress-step');
   steps.forEach((s, i) => {
     s.className = 'progress-step';
@@ -1421,214 +1704,378 @@ function stepLanguage() {
   state.step = 0;
   updateProgress(1);
   showBackButton(false);
-  chat.innerHTML = '';
 
-  // Show greeting in both languages
-  addMessage("Hola! Welcome to Beneficios Medicare.");
-
-  addButtons([
-    { text: 'Español', class: 'large primary', action: () => { state.lang = 'es'; stepZip(); }},
-    { text: 'English', class: 'large', action: () => { state.lang = 'en'; stepZip(); }},
+  const cards = makeChoiceCards([
+    { icon: '🇲🇽', label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
+    { icon: '🇺🇸', label: 'English', action: () => { state.lang = 'en'; updateTrustBar(); stepZip(); }},
   ]);
+
+  showStep({
+    question: 'Hola! Welcome to Beneficios Medicare.',
+    subtitle: 'Choose your language / Escoja su idioma',
+    content: cards,
+    showBack: false
+  });
 }
 
 // STEP 1: Zip code
 function stepZip() {
   state.step = 1;
   state.history.push('language');
-  updateProgress(1);
+  updateProgress(2);
   showBackButton(false);
   updateTrustBar();
 
-  addMessage(t('greeting'), 'bot');
-  setTimeout(() => {
-    addZipInput(t('zip_ph'), t('zip_go'), async (zip) => {
-      showLoading();
-      const data = await apiCall(`/plans?zip=${zip}`);
-      hideLoading();
+  const wrap = document.createElement('div');
+  wrap.style.width = '100%';
 
-      if (!data || data.total_plans === 0) {
-        addMessage(t('zip_none'), 'error');
-        addZipInput(t('zip_ph'), t('zip_go'), arguments.callee);
-        return;
-      }
+  const inputWrap = document.createElement('div');
+  inputWrap.className = 'step-input-wrap';
 
-      state.zip = zip;
-      state.county = data.county;
-      state.stateCode = data.state;
-      updateDisclaimer(data.total_carriers || 6, data.total_plans);
-      addMessage(t('zip_found').replace('{n}', data.total_plans).replace('{county}', data.county).replace('{state}', data.state), 'bot');
-      setTimeout(() => stepDOB(), 500);
-    });
-  }, 300);
+  const input = document.createElement('input');
+  input.type = 'tel';
+  input.placeholder = '00000';
+  input.maxLength = 5;
+  input.pattern = '[0-9]*';
+  input.inputMode = 'numeric';
+  input.style.letterSpacing = '6px';
+  input.style.fontWeight = '700';
+  inputWrap.appendChild(input);
+
+  const hint = document.createElement('div');
+  hint.className = 'input-hint';
+  hint.textContent = state.lang === 'es' ? '5 dígitos' : '5 digits';
+  inputWrap.appendChild(hint);
+
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'input-error';
+  errorDiv.style.display = 'none';
+  inputWrap.appendChild(errorDiv);
+
+  wrap.appendChild(inputWrap);
+
+  const btnWrap = document.createElement('div');
+  btnWrap.style.textAlign = 'center';
+  btnWrap.style.marginTop = '8px';
+  const btn = document.createElement('button');
+  btn.className = 'step-continue';
+  btn.textContent = t('zip_go');
+  btn.style.width = '100%';
+  btn.style.maxWidth = '300px';
+  btn.style.padding = '14px 32px';
+  btn.style.borderRadius = '10px';
+  btn.style.border = 'none';
+  btn.style.background = 'var(--primary-light)';
+  btn.style.color = 'white';
+  btn.style.fontSize = '17px';
+  btn.style.fontWeight = '600';
+  btn.style.cursor = 'pointer';
+  btnWrap.appendChild(btn);
+  wrap.appendChild(btnWrap);
+
+  const doSubmit = async () => {
+    const zip = input.value.trim();
+    if (!/^\d{5}$/.test(zip)) {
+      errorDiv.textContent = t('zip_bad');
+      errorDiv.style.display = 'block';
+      input.style.borderColor = 'var(--warning)';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = state.lang === 'es' ? 'Buscando...' : 'Searching...';
+    errorDiv.style.display = 'none';
+
+    const data = await apiCall(`/plans?zip=${zip}`);
+
+    if (!data || data.total_plans === 0) {
+      btn.disabled = false;
+      btn.textContent = t('zip_go');
+      errorDiv.textContent = t('zip_none');
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    state.zip = zip;
+    state.county = data.county;
+    state.stateCode = data.state;
+    updateDisclaimer(data.total_carriers || 6, data.total_plans);
+
+    // Brief success message before advancing
+    hint.textContent = t('zip_found').replace('{n}', data.total_plans).replace('{county}', data.county).replace('{state}', data.state);
+    hint.style.color = 'var(--accent)';
+    hint.style.fontWeight = '600';
+    setTimeout(() => stepDOB(), 600);
+  };
+
+  btn.onclick = doSubmit;
+  input.onkeydown = (e) => { if (e.key === 'Enter') doSubmit(); };
+
+  showStep({
+    question: t('greeting'),
+    subtitle: state.lang === 'es' ? 'Esto nos ayuda a encontrar planes en su área' : 'This helps us find plans in your area',
+    content: wrap,
+    showBack: true,
+    onBack: () => stepLanguage()
+  });
+
+  setTimeout(() => input.focus(), 300);
 }
 
-// STEP 2: Date of birth
+// STEP 2: Date of birth - broken into month, day, year sub-steps
 function stepDOB() {
   state.step = 2;
   state.history.push('zip');
-  updateProgress(2);
+  updateProgress(3);
   showBackButton(true);
 
-  addMessage(t('dob_ask'), 'bot');
+  stepDOB_month();
+}
 
-  // DOB input with date mask
-  const container = document.createElement('div');
-  container.className = 'input-group';
-  container.style.width = '100%';
-  container.style.alignSelf = 'flex-start';
+function stepDOB_month() {
+  const isES = state.lang === 'es';
+  const monthsEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const monthsES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const months = isES ? monthsES : monthsEN;
+
+  const grid = makeTapGrid(months.map((m, i) => ({
+    label: m,
+    action: () => {
+      state._dobMonth = i + 1;
+      state._dobMonthName = m;
+      stepDOB_day();
+    }
+  })), 3);
+
+  showStep({
+    question: t('dob_ask'),
+    subtitle: isES ? 'Seleccione su mes de nacimiento' : 'Select your birth month',
+    content: grid,
+    showBack: true,
+    onBack: () => stepZip()
+  });
+}
+
+function stepDOB_day() {
+  const isES = state.lang === 'es';
+  // Calculate days in selected month (use a leap year to be safe)
+  const daysInMonth = new Date(2000, state._dobMonth, 0).getDate();
+  const days = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    days.push({
+      label: String(d),
+      action: () => {
+        state._dobDay = d;
+        stepDOB_year();
+      }
+    });
+  }
+
+  const grid = makeTapGrid(days, 7);
+
+  showStep({
+    question: isES ? 'Seleccione el día' : 'Select your birth day',
+    subtitle: state._dobMonthName,
+    content: grid,
+    showBack: true,
+    onBack: () => stepDOB_month()
+  });
+  updateProgress(3);
+}
+
+function stepDOB_year() {
+  const isES = state.lang === 'es';
+  updateProgress(3);
+
+  const wrap = document.createElement('div');
+  wrap.style.width = '100%';
+
+  const inputWrap = document.createElement('div');
+  inputWrap.className = 'step-input-wrap';
 
   const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'input-field';
-  input.placeholder = t('dob_ph');
-  input.autocomplete = 'off';
+  input.type = 'tel';
+  input.placeholder = '1955';
+  input.maxLength = 4;
   input.inputMode = 'numeric';
-  input.maxLength = 10;
+  inputWrap.appendChild(input);
 
-  // Auto-format MM/DD/YYYY
-  input.oninput = () => {
-    let v = input.value.replace(/\D/g, '');
-    if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
-    if (v.length > 5) v = v.slice(0,5) + '/' + v.slice(5,9);
-    input.value = v;
-  };
+  const hint = document.createElement('div');
+  hint.className = 'input-hint';
+  hint.textContent = isES ? 'Ingrese su año de nacimiento (4 dígitos)' : 'Enter your 4-digit birth year';
+  inputWrap.appendChild(hint);
 
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'input-error';
+  errorDiv.style.display = 'none';
+  inputWrap.appendChild(errorDiv);
+
+  wrap.appendChild(inputWrap);
+
+  const btnWrap = document.createElement('div');
+  btnWrap.style.textAlign = 'center';
+  btnWrap.style.marginTop = '12px';
   const btn = document.createElement('button');
-  btn.className = 'btn primary';
-  btn.textContent = t('dob_go');
+  btn.className = 'step-continue';
+  btn.textContent = isES ? 'Continuar' : 'Continue';
+  btn.style.width = '100%';
+  btn.style.maxWidth = '300px';
+  btn.style.padding = '14px 32px';
+  btn.style.borderRadius = '10px';
+  btn.style.border = 'none';
+  btn.style.background = 'var(--primary-light)';
+  btn.style.color = 'white';
+  btn.style.fontSize = '17px';
+  btn.style.fontWeight = '600';
+  btn.style.cursor = 'pointer';
+  btnWrap.appendChild(btn);
+  wrap.appendChild(btnWrap);
 
-  const submit = () => {
-    const val = input.value.trim();
-    const parts = val.split('/');
-    if (parts.length !== 3 || parts[2].length !== 4) {
-      addMessage(t('dob_bad'), 'error');
+  const doSubmit = () => {
+    const yearStr = input.value.trim();
+    const year = parseInt(yearStr, 10);
+    if (isNaN(year) || year < 1920 || year > 2010) {
+      errorDiv.textContent = t('dob_bad');
+      errorDiv.style.display = 'block';
+      input.style.borderColor = 'var(--warning)';
       return;
     }
-    const month = parseInt(parts[0], 10);
-    const day = parseInt(parts[1], 10);
-    const year = parseInt(parts[2], 10);
-    if (isNaN(month) || isNaN(day) || isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31 || year < 1920 || year > 2010) {
-      addMessage(t('dob_bad'), 'error');
-      return;
-    }
 
+    const month = state._dobMonth;
+    const day = state._dobDay;
     const dob = new Date(year, month - 1, day);
     const today = new Date();
     let age = today.getFullYear() - dob.getFullYear();
     const mDiff = today.getMonth() - dob.getMonth();
     if (mDiff < 0 || (mDiff === 0 && today.getDate() < dob.getDate())) age--;
 
-    state.dob = val;
+    const mm = String(month).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    state.dob = `${mm}/${dd}/${year}`;
     state.age = age;
-    addMessage(val, 'user');
-    container.remove();
 
-    if (age >= 65) {
-      state.eligibility = '65plus';
-      addMessage(t('dob_65plus'), 'bot');
-      setTimeout(() => stepDoctor(), 500);
-    } else {
-      // Calculate months until 65
-      const turn65 = new Date(dob.getFullYear() + 65, dob.getMonth(), dob.getDate());
-      const monthsUntil = Math.round((turn65 - today) / (1000 * 60 * 60 * 24 * 30.44));
-
-      if (monthsUntil <= 7) {
-        state.eligibility = 'turning65';
-        addMessage(t('dob_turning65').replace('{months}', monthsUntil), 'bot');
-        setTimeout(() => stepDoctor(), 500);
-      } else {
-        state.eligibility = 'under65';
-        addMessage(t('dob_under65').replace('{age}', age), 'bot');
-        addButtons([
-          { text: t('dob_cond_ssdi'), class: 'primary', action: () => {
-            state.eligibility = 'under65_ssdi';
-            stepDoctor();
-          }},
-          { text: t('dob_cond_esrd'), class: 'primary', action: () => {
-            state.eligibility = 'under65_esrd';
-            stepDoctor();
-          }},
-          { text: t('dob_cond_als'), class: 'primary', action: () => {
-            state.eligibility = 'under65_als';
-            stepDoctor();
-          }},
-          { text: t('dob_no_condition'), class: 'outline', action: () => {
-            // Calculate when they turn 65 and when IEP starts (7 months before)
-            const turn65 = new Date(dob.getFullYear() + 65, dob.getMonth(), dob.getDate());
-            const iepStart = new Date(turn65);
-            iepStart.setMonth(iepStart.getMonth() - 3); // IEP starts 3 months before birthday month
-            const monthNames = state.lang === 'es'
-              ? ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
-              : ['January','February','March','April','May','June','July','August','September','October','November','December'];
-            const turn65Str = `${monthNames[turn65.getMonth()]} ${turn65.getFullYear()}`;
-            const iepStr = `${monthNames[iepStart.getMonth()]} ${iepStart.getFullYear()}`;
-
-            addMessage(t('dob_future_eligible').replace('{date}', turn65Str).replace('{iep}', iepStr), 'bot');
-            setTimeout(() => {
-              addMessage(t('dob_future_offer'), 'bot');
-              // Show lead capture form
-              const form = document.createElement('div');
-              form.style.width = '100%';
-              form.style.alignSelf = 'flex-start';
-              const isES = state.lang === 'es';
-              form.innerHTML = `
-                <div style="margin-top:10px">
-                  <input type="text" class="input-field" id="future-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
-                  <input type="tel" class="input-field" id="future-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-                  <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
-                  <button class="btn accent large" id="future-submit">${t('dob_future_btn')}</button>
-                  <button class="btn outline" id="future-skip" style="margin-top:6px">${t('dob_future_skip')}</button>
-                </div>
-              `;
-              chat.appendChild(form);
-              scrollToBottom();
-
-              document.getElementById('future-submit').onclick = () => {
-                const name = document.getElementById('future-name').value;
-                const phone = document.getElementById('future-phone').value;
-                const email = document.getElementById('future-email').value;
-                if (!name || !phone) return;
-                form.remove();
-                const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
-                addMessage(display, 'user');
-                addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
-                sendLead({
-                  type: 'future',
-                  name, phone, email,
-                  dob: state.dob, age,
-                  turn65: turn65Str, iep_start: iepStr,
-                  zip: state.zip, lang: state.lang
-                });
-              };
-
-              document.getElementById('future-skip').onclick = () => {
-                form.remove();
-                addMessage(t('dob_future_skip_ok'), 'bot');
-              };
-            }, 500);
-          }},
-        ]);
-      }
-    }
+    finishDOB(age, dob);
   };
 
-  btn.onclick = submit;
-  input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
+  btn.onclick = doSubmit;
+  input.onkeydown = (e) => { if (e.key === 'Enter') doSubmit(); };
 
-  container.appendChild(input);
-  container.appendChild(btn);
-  chat.appendChild(container);
-  scrollToBottom();
-  setTimeout(() => input.focus(), 200);
+  showStep({
+    question: isES ? 'Año de nacimiento' : 'Birth year',
+    subtitle: `${state._dobMonthName} ${state._dobDay}`,
+    content: wrap,
+    showBack: true,
+    onBack: () => stepDOB_day()
+  });
+
+  setTimeout(() => input.focus(), 300);
+}
+
+// Process DOB result (eligibility logic)
+function finishDOB(age, dob) {
+  const today = new Date();
+  const isES = state.lang === 'es';
+
+  if (age >= 65) {
+    state.eligibility = '65plus';
+    // Show brief eligibility confirmation then advance
+    chat.innerHTML = '';
+    const screen = document.createElement('div');
+    screen.className = 'step-screen';
+    const msg = document.createElement('div');
+    msg.style.textAlign = 'center';
+    msg.style.padding = '24px 0';
+    msg.innerHTML = `<div style="font-size:48px;margin-bottom:12px">&#10003;</div><div style="font-size:20px;font-weight:600;color:var(--accent)">${t('dob_65plus')}</div>`;
+    screen.appendChild(msg);
+    chat.appendChild(screen);
+    setTimeout(() => stepDoctor(), 1000);
+  } else {
+    const turn65 = new Date(dob.getFullYear() + 65, dob.getMonth(), dob.getDate());
+    const monthsUntil = Math.round((turn65 - today) / (1000 * 60 * 60 * 24 * 30.44));
+
+    if (monthsUntil <= 7) {
+      state.eligibility = 'turning65';
+      chat.innerHTML = '';
+      const screen = document.createElement('div');
+      screen.className = 'step-screen';
+      const msg = document.createElement('div');
+      msg.style.textAlign = 'center';
+      msg.style.padding = '24px 0';
+      msg.innerHTML = `<div style="font-size:48px;margin-bottom:12px">&#10003;</div><div style="font-size:20px;font-weight:600;color:var(--accent)">${t('dob_turning65').replace('{months}', monthsUntil)}</div>`;
+      screen.appendChild(msg);
+      chat.appendChild(screen);
+      setTimeout(() => stepDoctor(), 1000);
+    } else {
+      state.eligibility = 'under65';
+      // Under 65 - show condition options as choice cards
+      const cards = makeChoiceCards([
+        { icon: '♿', label: t('dob_cond_ssdi'), action: () => { state.eligibility = 'under65_ssdi'; stepDoctor(); }},
+        { icon: '🏥', label: t('dob_cond_esrd'), action: () => { state.eligibility = 'under65_esrd'; stepDoctor(); }},
+        { icon: '🩺', label: t('dob_cond_als'), action: () => { state.eligibility = 'under65_als'; stepDoctor(); }},
+        { icon: '⏳', label: t('dob_no_condition'), fullWidth: true, action: () => {
+          // Calculate future eligibility
+          const turn65 = new Date(dob.getFullYear() + 65, dob.getMonth(), dob.getDate());
+          const iepStart = new Date(turn65);
+          iepStart.setMonth(iepStart.getMonth() - 3);
+          const monthNames = isES
+            ? ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+            : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+          const turn65Str = `${monthNames[turn65.getMonth()]} ${turn65.getFullYear()}`;
+          const iepStr = `${monthNames[iepStart.getMonth()]} ${iepStart.getFullYear()}`;
+
+          // Show future eligibility info in step-screen style
+          chat.innerHTML = '';
+          addMessage(t('dob_future_eligible').replace('{date}', turn65Str).replace('{iep}', iepStr), 'bot');
+          setTimeout(() => {
+            addMessage(t('dob_future_offer'), 'bot');
+            const form = document.createElement('div');
+            form.style.width = '100%';
+            form.style.alignSelf = 'flex-start';
+            form.innerHTML = `
+              <div style="margin-top:10px">
+                <input type="text" class="input-field" id="future-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
+                <input type="tel" class="input-field" id="future-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
+                <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+                <button class="btn accent large" id="future-submit">${t('dob_future_btn')}</button>
+                <button class="btn outline" id="future-skip" style="margin-top:6px">${t('dob_future_skip')}</button>
+              </div>
+            `;
+            chat.appendChild(form);
+            scrollToBottom();
+
+            document.getElementById('future-submit').onclick = () => {
+              const name = document.getElementById('future-name').value;
+              const phone = document.getElementById('future-phone').value;
+              const email = document.getElementById('future-email').value;
+              if (!name || !phone) return;
+              form.remove();
+              const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
+              addMessage(display, 'user');
+              addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
+              sendLead({ type: 'future', name, phone, email, dob: state.dob, age, turn65: turn65Str, iep_start: iepStr, zip: state.zip, lang: state.lang });
+            };
+            document.getElementById('future-skip').onclick = () => { form.remove(); addMessage(t('dob_future_skip_ok'), 'bot'); };
+          }, 500);
+        }},
+      ]);
+
+      showStep({
+        question: t('dob_under65').replace('{age}', age),
+        subtitle: isES ? 'Seleccione si aplica alguna condición' : 'Select if any condition applies',
+        content: cards,
+        showBack: true,
+        onBack: () => stepDOB_year()
+      });
+    }
+  }
 }
 
 // STEP 3: Doctor search
 function stepDoctor() {
   state.step = 3;
   state.history.push('dob');
-  updateProgress(3);
+  updateProgress(4);
   showBackButton(true);
+  chat.innerHTML = '';
 
   addMessage(t('doc_ask'), 'bot');
   addInput(t('doc_ph'), t('doc_search'), async (name) => {
@@ -1747,9 +2194,10 @@ const COMMON_DRUGS = [
 function stepMedications() {
   state.step = 4;
   state.history.push('doctor');
-  updateProgress(4);
+  updateProgress(5);
   showBackButton(true);
   state.medications = [];
+  chat.innerHTML = '';
 
   const isES = state.lang === 'es';
   addMessage(t('med_ask'), 'bot');
@@ -1863,9 +2311,10 @@ function stepPriority() { stepResults(); }
 async function stepResults() {
   state.step = 5;
   state.history.push('medications');
-  updateProgress(5);
+  updateProgress(6);
   showBackButton(true);
   state.priority = state.priority || 'lowest_cost';
+  chat.innerHTML = '';
 
   showLoading();
 
