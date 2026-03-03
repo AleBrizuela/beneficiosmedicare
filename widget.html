@@ -2492,12 +2492,29 @@ function stepDoctor() {
   showBackButton(true);
   chat.innerHTML = '';
 
+  // First ask YES / NO
   addMessage(t('doc_ask'), 'bot');
+  addButtons([
+    { text: t('yes'), class: 'accent large', action: () => stepDoctorSearch() },
+    { text: t('no'), class: 'secondary large', action: () => {
+      state.doctorId = null;
+      state.doctorName = null;
+      stepMedications();
+    }},
+  ]);
+}
+
+// Show doctor search input after user says YES
+function stepDoctorSearch() {
+  // Clear the YES/NO buttons
+  const btns = chat.querySelectorAll('.button-group');
+  btns.forEach(b => b.remove());
+
+  addMessage(t('yes'), 'user');
+  addMessage(t('doc_name'), 'bot');
+
   addInput(t('doc_ph'), t('doc_search'), async (name) => {
     state.doctorSearchName = name;
-    // Remove the initial skip button when search is submitted
-    const skipBtn = chat.querySelector('.doc-skip-btn');
-    if (skipBtn) skipBtn.remove();
 
     showLoading();
     const data = await apiCall(`/providers/search?name=${encodeURIComponent(name)}&zip_code=${state.zip}`);
@@ -2506,7 +2523,7 @@ function stepDoctor() {
     if (!data || !data.results || data.results.length === 0) {
       addMessage(t('doc_none'), 'error');
       addButtons([
-        { text: t('doc_retry'), class: 'secondary', action: () => stepDoctor() },
+        { text: t('doc_retry'), class: 'secondary', action: () => { stepDoctor(); } },
         { text: t('doc_skip'), class: 'accent', action: () => {
           state.doctorId = null;
           state.doctorName = name;
@@ -2536,7 +2553,7 @@ function stepDoctor() {
       }]);
     });
 
-    // "None of these" option if results don't match
+    // "None of these" option
     addButtons([{
       text: t('doc_not_mine'),
       class: 'secondary',
@@ -2548,20 +2565,6 @@ function stepDoctor() {
       }
     }]);
   });
-
-  // "No" skip button below the search input
-  setTimeout(() => {
-    const skipContainer = addButtons([{
-      text: t('doc_skip'),
-      class: 'secondary',
-      action: () => {
-        state.doctorId = null;
-        state.doctorName = null;
-        stepMedications();
-      }
-    }]);
-    skipContainer.classList.add('doc-skip-btn');
-  }, 100);
 }
 
 // STEP 4: Medications
