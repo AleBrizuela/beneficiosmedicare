@@ -1504,10 +1504,9 @@ const T = {
     qtr: "/trimestre",
     enroll_title: "¡Excelente elección!",
     enroll_msg: "Una de nosotras le va a llamar para guiarle. Solo necesito:",
-    enroll_first: "Nombre legal",
-    enroll_last: "Apellido legal",
+    enroll_name: "Nombre completo",
     enroll_phone: "Teléfono",
-    enroll_email: "Email (opcional)",
+    enroll_email: "Email",
     enroll_send: "Sí, llámenme",
     enroll_thanks: "¡Listo! Le llamaremos muy pronto. Gracias por confiar en nosotros.",
     enroll_other_msg: "Este plan no lo manejamos directamente, pero le ayudo a inscribirse:",
@@ -1641,10 +1640,9 @@ const T = {
     qtr: "/quarter",
     enroll_title: "Great choice!",
     enroll_msg: "One of us will call to guide you. We just need:",
-    enroll_first: "Legal first name",
-    enroll_last: "Legal last name",
+    enroll_name: "Full name",
     enroll_phone: "Phone number",
-    enroll_email: "Email (optional)",
+    enroll_email: "Email",
     enroll_send: "Call me",
     enroll_thanks: "Thank you! We'll call you soon.",
     enroll_other_msg: "To enroll in this plan:",
@@ -2456,10 +2454,9 @@ function finishDOB(age, dob) {
             form.style.alignSelf = 'flex-start';
             form.innerHTML = `
               <div style="margin-top:10px">
-                <input type="text" class="input-field" id="future-first" placeholder="${t('enroll_first')}" style="width:100%;margin-bottom:8px">
-                <input type="text" class="input-field" id="future-last" placeholder="${t('enroll_last')}" style="width:100%;margin-bottom:8px">
+                <input type="text" class="input-field" id="future-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
                 <input type="tel" class="input-field" id="future-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-                <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+                <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email" required>
                 <button class="btn accent large" id="future-submit">${t('dob_future_btn')}</button>
                 <button class="btn outline" id="future-skip" style="margin-top:6px">${t('dob_future_skip')}</button>
               </div>
@@ -2468,14 +2465,15 @@ function finishDOB(age, dob) {
             scrollToBottom();
 
             document.getElementById('future-submit').onclick = () => {
-              const firstName = document.getElementById('future-first').value;
-              const lastName = document.getElementById('future-last').value;
-              const phone = document.getElementById('future-phone').value;
-              const email = document.getElementById('future-email').value;
-              if (!firstName || !lastName || !phone) return;
+              const fullName = document.getElementById('future-name').value.trim();
+              const phone = document.getElementById('future-phone').value.trim();
+              const email = document.getElementById('future-email').value.trim();
+              if (!fullName || !phone || !email) return;
+              const nameParts = fullName.split(' ');
+              const firstName = nameParts[0] || '';
+              const lastName = nameParts.slice(1).join(' ') || '';
               form.remove();
-              const fullName = `${firstName} ${lastName}`;
-              const display = email ? `${fullName} - ${phone} - ${email}` : `${fullName} - ${phone}`;
+              const display = `${fullName} - ${phone} - ${email}`;
               addMessage(display, 'user');
               addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
               sendLead({ type: 'future', first_name: firstName, last_name: lastName, phone, email, zip: state.zip, county: state.county || '', state_code: state.stateCode || '', dob: state.dob, age, eligibility: state.eligibility || '', doctor_name: state.doctorName || '', doctor_id: state.doctorId || '', medications: (state.medications || []).join(', '), lang: state.lang });
@@ -2522,7 +2520,7 @@ function stepDoctorSearch() {
   const btns = chat.querySelectorAll('.button-group');
   btns.forEach(b => b.remove());
 
-  addMessage(t('yes'), 'user');
+  // Note: addButtons already echoes user choice, don't duplicate
   addMessage(t('doc_name'), 'bot');
 
   addInput(t('doc_ph'), t('doc_search'), async (name) => {
@@ -3456,32 +3454,34 @@ function handleEnroll(planId, contracted) {
   form.style.alignSelf = 'flex-start';
   form.innerHTML = `
     <div style="margin-top:10px">
-      <input type="text" class="input-field" id="enroll-first" placeholder="${t('enroll_first')}" style="width:100%;margin-bottom:8px">
-      <input type="text" class="input-field" id="enroll-last" placeholder="${t('enroll_last')}" style="width:100%;margin-bottom:8px">
+      <input type="text" class="input-field" id="enroll-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
       <input type="tel" class="input-field" id="enroll-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-      <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+      <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email" required>
       <button class="btn accent large" onclick="submitEnroll('${planId}')">${t('enroll_send')}</button>
     </div>
   `;
   chat.appendChild(form);
 
   // Focus the first field
-  setTimeout(() => { const f = document.getElementById('enroll-first'); if (f) f.focus(); }, 200);
+  setTimeout(() => { const f = document.getElementById('enroll-name'); if (f) f.focus(); }, 200);
 }
 
 function submitEnroll(planId) {
-  const firstName = document.getElementById('enroll-first').value;
-  const lastName = document.getElementById('enroll-last').value;
-  const phone = document.getElementById('enroll-phone').value;
-  const email = document.getElementById('enroll-email').value;
-  if (!firstName || !lastName || !phone) return;
+  const fullName = document.getElementById('enroll-name').value.trim();
+  const phone = document.getElementById('enroll-phone').value.trim();
+  const email = document.getElementById('enroll-email').value.trim();
+  if (!fullName || !phone || !email) return;
+
+  // Split name for lead storage
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
 
   // Remove the form
-  const formEl = document.getElementById('enroll-first').closest('div').parentElement;
+  const formEl = document.getElementById('enroll-name').closest('div').parentElement;
   if (formEl) formEl.remove();
 
-  const fullName = `${firstName} ${lastName}`;
-  const display = email ? `${fullName} - ${phone} - ${email}` : `${fullName} - ${phone}`;
+  const display = `${fullName} - ${phone} - ${email}`;
   addMessage(display, 'user');
 
   // Confirmation card
