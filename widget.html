@@ -70,7 +70,7 @@ body {
 
 /* Header */
 .widget-header {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: linear-gradient(135deg, #146849, #1a8a5c);
   color: var(--text-white);
   padding: 16px 24px;
   position: sticky;
@@ -116,7 +116,7 @@ body {
 .progress-fill {
   height: 100%;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--primary-light), var(--accent));
+  background: linear-gradient(90deg, #1a8a5c, #146849);
   transition: width 0.5s ease;
   width: 0%;
 }
@@ -959,34 +959,35 @@ body {
 .trust-bar {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  padding: 14px 16px;
+  gap: 10px;
+  padding: 10px 12px;
   background: linear-gradient(to right, #f0f7ff, #f8fafe, #f0f7ff);
   border-top: 1px solid #e0eaf3;
   border-bottom: 1px solid #e0eaf3;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .trust-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 12px;
   color: var(--primary);
-  font-weight: 500;
+  font-weight: 600;
+  white-space: nowrap;
 }
 .trust-item svg {
   flex-shrink: 0;
 }
 .trust-item .trust-icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   background: var(--primary);
   color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -1295,8 +1296,8 @@ body {
 
   <!-- Trust Signals -->
   <div class="trust-bar" id="trust-bar">
-    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos oficiales de CMS</span></div>
-    <div class="trust-item"><span class="trust-icon">&#x1F512;</span><span id="trust-2">100% gratuito</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos de CMS</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x1F512;</span><span id="trust-2">100% gratis</span></div>
     <div class="trust-item"><span class="trust-icon">&#x2665;</span><span id="trust-3">Sin compromiso</span></div>
   </div>
 
@@ -1663,8 +1664,8 @@ function updateDisclaimer(orgs, products) {
 
 function updateTrustBar() {
   const isES = state.lang === 'es';
-  document.getElementById('trust-1').textContent = isES ? 'Datos oficiales de CMS' : 'Official CMS data';
-  document.getElementById('trust-2').textContent = isES ? '100% gratuito' : '100% free';
+  document.getElementById('trust-1').textContent = isES ? 'Datos de CMS' : 'CMS data';
+  document.getElementById('trust-2').textContent = isES ? '100% gratis' : '100% free';
   document.getElementById('trust-3').textContent = isES ? 'Sin compromiso' : 'No obligation';
   document.getElementById('cms-banner').textContent = isES
     ? 'No estamos conectados ni respaldados por el gobierno de EE.UU. ni por Medicare.'
@@ -1918,7 +1919,10 @@ function updateProgress(step) {
   const fill = document.getElementById('progress-fill');
   const label = document.getElementById('progress-label');
   if (fill) fill.style.width = pct + '%';
-  if (label) label.textContent = pct > 0 ? pct + '% ' + (state.lang === 'es' ? 'completado' : 'complete') : '';
+  if (label) {
+    const timeNote = pct < 100 ? (state.lang === 'es' ? ' · Solo 3 minutos' : ' · Only 3 minutes') : '';
+    label.textContent = pct > 0 ? pct + '% ' + (state.lang === 'es' ? 'completado' : 'complete') + timeNote : '';
+  }
   // Legacy compat
   const steps = document.querySelectorAll('.progress-step');
   steps.forEach((s, i) => {
