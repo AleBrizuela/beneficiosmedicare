@@ -2517,7 +2517,7 @@ function stepDoctor() {
 // Show doctor search input after user says YES
 function stepDoctorSearch() {
   // Clear the YES/NO buttons
-  const btns = chat.querySelectorAll('.button-group');
+  const btns = chat.querySelectorAll('.btn-group');
   btns.forEach(b => b.remove());
 
   // Note: addButtons already echoes user choice, don't duplicate
