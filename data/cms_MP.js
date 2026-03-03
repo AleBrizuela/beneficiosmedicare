@@ -1,0 +1,1 @@
+const CMS_STATE_DATA = {"zips":{},"plans":{"All Counties":[{"id":"S5820_036","name":"AARP Medicare Rx Preferred from UHC (PDP)","carrier":"UnitedHealthcare","type":"PDP","cat":"PDP","premium":0,"deductible":615.0,"moop":0,"drug_premium":32.1,"stars":3.0,"has_drug":true}]}};
