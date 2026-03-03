@@ -11,6 +11,13 @@
   status = 301
   force = true
 
+# Redirect coberturacalifornia.com to beneficiosmedicare.com
+[[redirects]]
+  from = "https://coberturacalifornia.com/*"
+  to = "https://beneficiosmedicare.com/:splat"
+  status = 301
+  force = true
+
 # Default to Spanish index
 [[redirects]]
   from = "/"
