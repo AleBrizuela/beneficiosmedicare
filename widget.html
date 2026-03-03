@@ -608,6 +608,85 @@ body {
   border: 1px solid #f9e79f;
 }
 
+/* Comparison mode */
+.compare-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  animation: fadeIn 0.3s ease-out;
+}
+.compare-banner button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.compare-banner button:hover { background: rgba(255,255,255,0.3); }
+
+.plan-card .compare-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--text-light);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.plan-card .compare-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.plan-card.is-base {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(41,128,185,0.15);
+}
+.plan-card.is-base .compare-btn {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Comparison diff indicators */
+.cmp-diff {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.cmp-diff.better {
+  background: #eaf7ef;
+  color: #27ae60;
+}
+.cmp-diff.worse {
+  background: #fde8e8;
+  color: #c0392b;
+}
+.cmp-diff.same {
+  background: #f0f0f0;
+  color: #888;
+}
+.cmp-diff.na {
+  display: none;
+}
+
 /* Trust signals section */
 .trust-bar {
   display: flex;
@@ -1021,6 +1100,7 @@ let state = {
   priority: null,
   results: null,
   history: [],      // step history for back button
+  compareBase: null, // plan object for inline comparison
 };
 
 // --- TRANSLATIONS ---
@@ -1103,6 +1183,14 @@ const T = {
     filter_snp: "Necesidades Especiales",
     filter_pdp: "Medicamentos",
     snp_note: "Plan de Necesidades Especiales - puede requerir verificación de elegibilidad",
+    compare: "Comparar",
+    comparing_against: "Comparando con",
+    stop_compare: "Salir",
+    cmp_better: "mejor",
+    cmp_worse: "más",
+    cmp_same: "igual",
+    cmp_has: "tiene",
+    cmp_missing: "no tiene",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -1211,6 +1299,14 @@ const T = {
     filter_snp: "Special Needs",
     filter_pdp: "Drug Plans",
     snp_note: "Special Needs Plan - may require eligibility verification",
+    compare: "Compare",
+    comparing_against: "Comparing against",
+    stop_compare: "Exit",
+    cmp_better: "less",
+    cmp_worse: "more",
+    cmp_same: "same",
+    cmp_has: "has",
+    cmp_missing: "missing",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -2571,10 +2667,144 @@ function buildPlanCard(plan, rank) {
     ${enrollBadge}
     <div class="card-actions">
       <button class="btn accent" style="flex:1" onclick="handleEnroll('${plan.plan_id}', ${plan.contracted_with_us})">${t('want')}</button>
+      <button class="compare-btn" data-planid="${plan.plan_id}" onclick="toggleCompareBase('${plan.plan_id}')">${t('compare')}</button>
     </div>
   `;
 
+  // If comparison mode active, annotate this card
+  if (state.compareBase && state.compareBase.plan_id !== plan.plan_id) {
+    annotatePlanCard(card, plan, state.compareBase);
+  }
+  if (state.compareBase && state.compareBase.plan_id === plan.plan_id) {
+    card.classList.add('is-base');
+    const cmpBtn = card.querySelector('.compare-btn');
+    if (cmpBtn) cmpBtn.textContent = '★ ' + t('compare');
+  }
+
   return card;
+}
+
+// ---- Plan Comparison (inline highlight) ----
+
+function toggleCompareBase(planId) {
+  const plans = getFilteredPlans(state.activeFilter);
+  const plan = plans.find(p => p.plan_id === planId) ||
+               (state.results ? state.results.all_plans.find(p => p.plan_id === planId) : null);
+  if (!plan) return;
+
+  if (state.compareBase && state.compareBase.plan_id === planId) {
+    // Clicking same plan again exits comparison
+    exitCompare();
+    return;
+  }
+
+  state.compareBase = plan;
+  renderFilteredPlans(state.activeFilter);
+  renderCompareBanner();
+}
+
+function exitCompare() {
+  state.compareBase = null;
+  const banner = document.getElementById('compare-banner');
+  if (banner) banner.remove();
+  renderFilteredPlans(state.activeFilter);
+}
+
+function renderCompareBanner() {
+  let banner = document.getElementById('compare-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'compare-banner';
+    banner.id = 'compare-banner';
+    const container = document.getElementById('plan-cards-container');
+    if (container) container.parentNode.insertBefore(banner, container);
+  }
+  const baseName = state.compareBase.plan_name_display || state.compareBase.plan_name;
+  const shortName = baseName.length > 30 ? baseName.substring(0, 28) + '...' : baseName;
+  banner.innerHTML = `
+    <span>${t('comparing_against')}: ${shortName}</span>
+    <button onclick="exitCompare()">${t('stop_compare')}</button>
+  `;
+}
+
+function annotatePlanCard(cardEl, plan, base) {
+  // Find detail items and add diff badges
+  const details = cardEl.querySelectorAll('.detail-item');
+  details.forEach(item => {
+    const label = item.querySelector('.detail-label');
+    const value = item.querySelector('.detail-value');
+    if (!label || !value) return;
+    const labelText = label.textContent.trim();
+
+    let diff = null;
+
+    // Monthly cost
+    if (labelText === t('cost')) {
+      diff = compareCost(plan.premium_monthly, base.premium_monthly);
+    }
+    // Doctor copay
+    else if (labelText === t('copay_doc')) {
+      const pCopay = plan.copay_primary_care;
+      const bCopay = base.copay_primary_care;
+      if (pCopay != null && bCopay != null) {
+        diff = compareCost(pCopay, bCopay);
+      }
+    }
+    // Drug cost
+    else if (labelText === t('drug_cost')) {
+      diff = compareCost(plan.estimated_monthly_drug_cost, base.estimated_monthly_drug_cost);
+    }
+    // Total estimated
+    else if (labelText === t('total_est')) {
+      diff = compareCost(plan.estimated_total_monthly, base.estimated_total_monthly);
+    }
+    // Max per year (MOOP)
+    else if (labelText === t('moop')) {
+      diff = compareCost(plan.moop_in_network, base.moop_in_network);
+    }
+
+    if (diff) {
+      const badge = document.createElement('span');
+      badge.className = 'cmp-diff ' + diff.cls;
+      badge.textContent = diff.text;
+      value.appendChild(badge);
+    }
+  });
+
+  // Annotate benefits
+  const benefitRow = cardEl.querySelector('.benefits-row');
+  if (benefitRow) {
+    const baseBenefits = [];
+    if (base.has_dental) baseBenefits.push(t('dental'));
+    if (base.has_vision) baseBenefits.push(t('vision'));
+    if (base.has_hearing) baseBenefits.push(t('hearing'));
+    if (base.has_fitness) baseBenefits.push(t('fitness'));
+
+    const planBenefits = [];
+    if (plan.has_dental) planBenefits.push(t('dental'));
+    if (plan.has_vision) planBenefits.push(t('vision'));
+    if (plan.has_hearing) planBenefits.push(t('hearing'));
+    if (plan.has_fitness) planBenefits.push(t('fitness'));
+
+    // Show missing benefits that base has
+    baseBenefits.forEach(b => {
+      if (!planBenefits.includes(b)) {
+        const tag = document.createElement('span');
+        tag.className = 'benefit-tag';
+        tag.style.cssText = 'background:#fde8e8;color:#c0392b;text-decoration:line-through;';
+        tag.textContent = b;
+        benefitRow.appendChild(tag);
+      }
+    });
+  }
+}
+
+function compareCost(planVal, baseVal) {
+  if (planVal == null || baseVal == null) return null;
+  const diff = planVal - baseVal;
+  if (diff === 0) return { cls: 'same', text: '= ' + t('cmp_same') };
+  if (diff < 0) return { cls: 'better', text: (diff < 0 ? '' : '+') + '$' + Math.abs(diff) + ' ' + t('cmp_better') };
+  return { cls: 'worse', text: '+$' + diff + ' ' + t('cmp_worse') };
 }
 
 // Enrollment handoff - always capture lead regardless of contracted status
@@ -2666,7 +2896,7 @@ function goBack() {
 }
 
 function restart() {
-  state = { lang: null, step: 0, zip: null, county: null, stateCode: null, dob: null, age: null, eligibility: null, doctorId: null, doctorName: null, doctorSearchName: null, medications: [], priority: null, results: null, history: [] };
+  state = { lang: null, step: 0, zip: null, county: null, stateCode: null, dob: null, age: null, eligibility: null, doctorId: null, doctorName: null, doctorSearchName: null, medications: [], priority: null, results: null, history: [], compareBase: null };
   _enrollActive = false;
   stepLanguage();
 }
