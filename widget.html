@@ -1918,14 +1918,19 @@ function hideLoading() {
 
 function updateProgress(step) {
   // Map steps: 0=lang(10%), 1=zip(25%), 2=dob(45%), 3=doctor(60%), 4=meds(75%), 5=results(100%)
-  const pctMap = { 0: 0, 1: 10, 2: 25, 3: 45, 4: 60, 5: 75, 6: 100 };
+  const pctMap = { 0: 0, 1: 0, 2: 25, 3: 45, 4: 60, 5: 75, 6: 100 };
   const pct = pctMap[step] || 0;
   const fill = document.getElementById('progress-fill');
   const label = document.getElementById('progress-label');
   if (fill) fill.style.width = pct + '%';
   if (label) {
-    const timeNote = pct < 100 ? (state.lang === 'es' ? ' · Solo 2 minutos' : ' · Only 2 minutes') : '';
-    label.textContent = pct > 0 ? pct + '% ' + (state.lang === 'es' ? 'completado' : 'complete') + timeNote : '';
+    if (pct === 0) {
+      label.textContent = state.lang === 'es' ? 'Solo 2 minutos' : 'Only 2 minutes';
+    } else if (pct < 100) {
+      label.textContent = pct + '% ' + (state.lang === 'es' ? 'completado · Solo 2 minutos' : 'complete · Only 2 minutes');
+    } else {
+      label.textContent = '';
+    }
   }
   // Legacy compat
   const steps = document.querySelectorAll('.progress-step');
