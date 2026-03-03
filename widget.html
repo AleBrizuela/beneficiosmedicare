@@ -1300,7 +1300,7 @@ body {
 
   <!-- Trust Signals -->
   <div class="trust-bar" id="trust-bar">
-    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos de CMS</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos Oficiales</span></div>
     <div class="trust-item"><span class="trust-icon">&#x1F512;</span><span id="trust-2">100% gratis</span></div>
     <div class="trust-item"><span class="trust-icon">&#x2665;</span><span id="trust-3">Sin compromiso</span></div>
   </div>
@@ -1502,9 +1502,10 @@ const T = {
     fitness: "Ejercicio",
     otc: "Productos sin receta",
     qtr: "/trimestre",
-    enroll_title: "¡Registramos su elección!",
+    enroll_title: "¡Excelente elección!",
     enroll_msg: "Una de nosotras le va a llamar para guiarle. Solo necesito:",
-    enroll_name: "Nombre completo",
+    enroll_first: "Nombre legal",
+    enroll_last: "Apellido legal",
     enroll_phone: "Teléfono",
     enroll_email: "Email (opcional)",
     enroll_send: "Sí, llámenme",
@@ -1638,9 +1639,10 @@ const T = {
     fitness: "Fitness",
     otc: "OTC allowance",
     qtr: "/quarter",
-    enroll_title: "We've noted your choice!",
+    enroll_title: "Great choice!",
     enroll_msg: "One of us will call to guide you. We just need:",
-    enroll_name: "Full name",
+    enroll_first: "Legal first name",
+    enroll_last: "Legal last name",
     enroll_phone: "Phone number",
     enroll_email: "Email (optional)",
     enroll_send: "Call me",
@@ -1668,7 +1670,7 @@ function updateDisclaimer(orgs, products) {
 
 function updateTrustBar() {
   const isES = state.lang === 'es';
-  document.getElementById('trust-1').textContent = isES ? 'Datos de CMS' : 'CMS data';
+  document.getElementById('trust-1').textContent = isES ? 'Datos Oficiales' : 'Official data';
   document.getElementById('trust-2').textContent = isES ? '100% gratis' : '100% free';
   document.getElementById('trust-3').textContent = isES ? 'Sin compromiso' : 'No obligation';
   document.getElementById('cms-banner').textContent = isES
@@ -2454,7 +2456,8 @@ function finishDOB(age, dob) {
             form.style.alignSelf = 'flex-start';
             form.innerHTML = `
               <div style="margin-top:10px">
-                <input type="text" class="input-field" id="future-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
+                <input type="text" class="input-field" id="future-first" placeholder="${t('enroll_first')}" style="width:100%;margin-bottom:8px">
+                <input type="text" class="input-field" id="future-last" placeholder="${t('enroll_last')}" style="width:100%;margin-bottom:8px">
                 <input type="tel" class="input-field" id="future-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
                 <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
                 <button class="btn accent large" id="future-submit">${t('dob_future_btn')}</button>
@@ -2465,15 +2468,17 @@ function finishDOB(age, dob) {
             scrollToBottom();
 
             document.getElementById('future-submit').onclick = () => {
-              const name = document.getElementById('future-name').value;
+              const firstName = document.getElementById('future-first').value;
+              const lastName = document.getElementById('future-last').value;
               const phone = document.getElementById('future-phone').value;
               const email = document.getElementById('future-email').value;
-              if (!name || !phone) return;
+              if (!firstName || !lastName || !phone) return;
               form.remove();
-              const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
+              const fullName = `${firstName} ${lastName}`;
+              const display = email ? `${fullName} - ${phone} - ${email}` : `${fullName} - ${phone}`;
               addMessage(display, 'user');
               addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
-              sendLead({ type: 'future', name, phone, email, dob: state.dob, age, turn65: turn65Str, iep_start: iepStr, zip: state.zip, lang: state.lang });
+              sendLead({ type: 'future', first_name: firstName, last_name: lastName, phone, email, dob: state.dob, age, zip: state.zip, lang: state.lang });
             };
             document.getElementById('future-skip').onclick = () => { form.remove(); addMessage(t('dob_future_skip_ok'), 'bot'); };
           }, 500);
@@ -3430,7 +3435,8 @@ function handleEnroll(planId, contracted) {
   form.style.alignSelf = 'flex-start';
   form.innerHTML = `
     <div style="margin-top:10px">
-      <input type="text" class="input-field" id="enroll-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
+      <input type="text" class="input-field" id="enroll-first" placeholder="${t('enroll_first')}" style="width:100%;margin-bottom:8px">
+      <input type="text" class="input-field" id="enroll-last" placeholder="${t('enroll_last')}" style="width:100%;margin-bottom:8px">
       <input type="tel" class="input-field" id="enroll-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
       <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
       <button class="btn accent large" onclick="submitEnroll('${planId}')">${t('enroll_send')}</button>
@@ -3441,16 +3447,18 @@ function handleEnroll(planId, contracted) {
 }
 
 function submitEnroll(planId) {
-  const name = document.getElementById('enroll-name').value;
+  const firstName = document.getElementById('enroll-first').value;
+  const lastName = document.getElementById('enroll-last').value;
   const phone = document.getElementById('enroll-phone').value;
   const email = document.getElementById('enroll-email').value;
-  if (!name || !phone) return;
+  if (!firstName || !lastName || !phone) return;
 
   // Remove the form
-  const formEl = document.getElementById('enroll-name').closest('div').parentElement;
+  const formEl = document.getElementById('enroll-first').closest('div').parentElement;
   if (formEl) formEl.remove();
 
-  const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
+  const fullName = `${firstName} ${lastName}`;
+  const display = email ? `${fullName} - ${phone} - ${email}` : `${fullName} - ${phone}`;
   addMessage(display, 'user');
 
   // Confirmation card
@@ -3465,7 +3473,7 @@ function submitEnroll(planId) {
     <div style="font-size:16px;opacity:0.9;margin-bottom:16px">${t('enroll_thanks')}</div>
     <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:12px;text-align:left;font-size:14px;line-height:1.8">
       <div><strong>${isES ? 'Plan' : 'Plan'}:</strong> ${plan.plan_name || planId}</div>
-      <div><strong>${isES ? 'Nombre' : 'Name'}:</strong> ${name}</div>
+      <div><strong>${isES ? 'Nombre' : 'Name'}:</strong> ${fullName}</div>
       <div><strong>${isES ? 'Tel' : 'Phone'}:</strong> ${phone}</div>
       ${email ? `<div><strong>Email:</strong> ${email}</div>` : ''}
     </div>
@@ -3476,16 +3484,16 @@ function submitEnroll(planId) {
 
   sendLead({
     type: 'enrollment',
-    name, phone, email,
+    first_name: firstName,
+    last_name: lastName,
+    phone, email,
     zip: state.zip,
-    county: state.county || '',
-    state: state.state || '',
+    dob: state.dob || '',
+    age: state.age || '',
     plan_name: plan.plan_name || planId,
-    plan_id: planId,
     carrier: plan.carrier || '',
     premium: plan.premium || '',
-    lang: state.lang,
-    eligibility: state.eligibility || ''
+    lang: state.lang
   });
 }
 
