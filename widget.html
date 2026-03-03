@@ -514,16 +514,16 @@ body {
 }
 .plan-card .carrier-logo {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   background: var(--primary);
   color: #fff;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
-  line-height: 20px;
-  font-size: 12px;
+  line-height: 28px;
+  font-size: 15px;
   font-weight: 700;
-  margin-right: 6px;
+  margin-right: 8px;
   vertical-align: middle;
 }
 .plan-card .plan-name {
@@ -877,7 +877,7 @@ body {
 }
 .auto-compare-header small {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   opacity: 0.85;
   margin-top: 2px;
@@ -885,7 +885,7 @@ body {
 .auto-compare table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 15px;
 }
 .auto-compare th, .auto-compare td {
   padding: 10px 8px;
@@ -893,7 +893,7 @@ body {
   border-bottom: 1px solid #f0f0f0;
 }
 .auto-compare th {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text);
   background: #f8f9fa;
@@ -913,13 +913,13 @@ body {
 .auto-compare .cross { color: #ddd; font-size: 18px; }
 .auto-compare .plan-header {
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.3;
   max-width: 120px;
 }
 .auto-compare .plan-header .carrier-sm {
   font-weight: 400;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-light);
 }
 
@@ -2108,7 +2108,7 @@ function stepLanguage() {
   showBackButton(false);
 
   const cards = makeChoiceCards([
-    { icon: '🇲🇽', label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
+    { icon: '🇪🇸', label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
     { icon: '🇺🇸', label: 'English', action: () => { state.lang = 'en'; updateTrustBar(); stepZip(); }},
   ]);
 
@@ -2938,7 +2938,33 @@ function buildPlanCard(plan, rank) {
     ? `<div class="stars">${starsHtml}<span class="star-label">${state.lang === 'es' ? 'Calidad CMS' : 'CMS Quality'}</span></div>`
     : '';
 
-  // Carrier initial for mini logo
+  // Carrier brand color mapping
+  const carrierColors = {
+    'aetna': '#7B2D8E',
+    'humana': '#4B8B3B',
+    'unitedhealthcare': '#002677',
+    'uhc': '#002677',
+    'cigna': '#0075C9',
+    'anthem': '#003DA5',
+    'wellcare': '#00A4E4',
+    'centene': '#0072CE',
+    'molina': '#009B4D',
+    'kaiser': '#003B71',
+    'bluecross': '#0073CF',
+    'bcbs': '#0073CF',
+    'blue cross': '#0073CF',
+    'carefirst': '#0073CF',
+    'devoted': '#FF5722',
+    'clover': '#00BFA5',
+    'oscar': '#FF6B35',
+    'alignment': '#005EB8',
+    'scan': '#003865',
+    'mutual of omaha': '#004C97',
+    'texas independence': '#C8102E',
+    'erickson': '#1B5E20',
+  };
+  const cName = (plan.carrier_name || '').toLowerCase();
+  const brandColor = Object.entries(carrierColors).find(([k]) => cName.includes(k))?.[1] || 'var(--primary)';
   const carrierInitial = plan.carrier_name ? plan.carrier_name.charAt(0) : '?';
 
   // Plan type badge with category coloring
@@ -2954,7 +2980,7 @@ function buildPlanCard(plan, rank) {
   card.innerHTML = `
     <div class="card-header">
       <div style="flex:1">
-        <div class="carrier"><span class="carrier-logo">${carrierInitial}</span>${plan.carrier_name}</div>
+        <div class="carrier"><span class="carrier-logo" style="background:${brandColor}">${carrierInitial}</span>${plan.carrier_name}</div>
         <div class="plan-name"><span class="rank-badge">${rank}</span>${plan.plan_name_display || plan.plan_name}${typeBadge}</div>
       </div>
       ${starsWithLabel}
