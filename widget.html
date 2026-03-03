@@ -687,6 +687,175 @@ body {
   display: none;
 }
 
+/* Side-by-side compare */
+.plan-card .select-compare {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-light);
+  user-select: none;
+}
+.plan-card .select-compare input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.plan-card .select-compare.checked {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.compare-fab {
+  position: sticky;
+  bottom: 12px;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  animation: fadeIn 0.3s ease-out;
+}
+.compare-fab button {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(41,128,185,0.4);
+  transition: transform 0.2s;
+}
+.compare-fab button:active { transform: scale(0.96); }
+
+.compare-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+.compare-sheet {
+  background: white;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 20px 20px 0 0;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  padding: 0;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.compare-sheet-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+.compare-sheet-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text);
+}
+.compare-sheet-header .close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.compare-table th, .compare-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+.compare-table th {
+  background: var(--bg);
+  font-weight: 700;
+  color: var(--text);
+  position: sticky;
+  top: 52px;
+  z-index: 1;
+}
+.compare-table th:first-child,
+.compare-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-light);
+  font-size: 13px;
+  min-width: 90px;
+}
+.compare-table .plan-col-header {
+  font-size: 13px;
+  line-height: 1.3;
+  max-width: 130px;
+}
+.compare-table .plan-col-header .plan-col-name {
+  font-weight: 700;
+  color: var(--primary);
+}
+.compare-table .plan-col-header .plan-col-type {
+  font-size: 11px;
+  color: var(--text-light);
+}
+.compare-table .val-best {
+  color: #27ae60;
+  font-weight: 700;
+}
+.compare-table .val-worst {
+  color: #c0392b;
+}
+.compare-table .benefit-yes { color: #27ae60; }
+.compare-table .benefit-no { color: #ccc; }
+.compare-sheet-footer {
+  padding: 12px 20px 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.compare-sheet-footer button {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  max-width: 200px;
+}
+.compare-sheet-footer .btn-pick {
+  background: var(--accent);
+  color: white;
+  border: none;
+}
+.compare-sheet-footer .btn-close {
+  background: white;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
 /* Trust signals section */
 .trust-bar {
   display: flex;
@@ -1101,6 +1270,7 @@ let state = {
   results: null,
   history: [],      // step history for back button
   compareBase: null, // plan object for inline comparison
+  compareSelected: [], // array of plan_ids for side-by-side comparison
 };
 
 // --- TRANSLATIONS ---
@@ -1191,6 +1361,21 @@ const T = {
     cmp_same: "igual",
     cmp_has: "tiene",
     cmp_missing: "no tiene",
+    select_compare: "Seleccionar",
+    compare_n: "Comparar {n} planes",
+    compare_title: "Comparar Planes",
+    cmp_row_premium: "Costo mensual",
+    cmp_row_copay: "Copago doctor",
+    cmp_row_drug: "Costo medicinas",
+    cmp_row_total: "Total estimado",
+    cmp_row_moop: "Máximo al año",
+    cmp_row_rating: "Calificación",
+    cmp_row_dental: "Dental",
+    cmp_row_vision: "Visión",
+    cmp_row_hearing: "Audífonos",
+    cmp_row_fitness: "Ejercicio",
+    cmp_row_otc: "Productos OTC",
+    cmp_close: "Cerrar",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -1307,6 +1492,21 @@ const T = {
     cmp_same: "same",
     cmp_has: "has",
     cmp_missing: "missing",
+    select_compare: "Select",
+    compare_n: "Compare {n} plans",
+    compare_title: "Compare Plans",
+    cmp_row_premium: "Monthly cost",
+    cmp_row_copay: "Doctor copay",
+    cmp_row_drug: "Drug cost",
+    cmp_row_total: "Est. total",
+    cmp_row_moop: "Max per year",
+    cmp_row_rating: "Rating",
+    cmp_row_dental: "Dental",
+    cmp_row_vision: "Vision",
+    cmp_row_hearing: "Hearing",
+    cmp_row_fitness: "Fitness",
+    cmp_row_otc: "OTC allowance",
+    cmp_close: "Close",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -2669,6 +2869,10 @@ function buildPlanCard(plan, rank) {
       <button class="btn accent" style="flex:1" onclick="handleEnroll('${plan.plan_id}', ${plan.contracted_with_us})">${t('want')}</button>
       <button class="compare-btn" data-planid="${plan.plan_id}" onclick="toggleCompareBase('${plan.plan_id}')">${t('compare')}</button>
     </div>
+    <label class="select-compare ${(state.compareSelected || []).includes(plan.plan_id) ? 'checked' : ''}" onclick="event.stopPropagation()">
+      <input type="checkbox" ${(state.compareSelected || []).includes(plan.plan_id) ? 'checked' : ''} onchange="toggleCompareSelect('${plan.plan_id}', this.checked)">
+      ${t('select_compare')}
+    </label>
   `;
 
   // If comparison mode active, annotate this card
@@ -2807,6 +3011,156 @@ function compareCost(planVal, baseVal) {
   return { cls: 'worse', text: '+$' + diff + ' ' + t('cmp_worse') };
 }
 
+// ---- Side-by-side Comparison ----
+
+function toggleCompareSelect(planId, checked) {
+  if (!state.compareSelected) state.compareSelected = [];
+  if (checked) {
+    if (!state.compareSelected.includes(planId)) state.compareSelected.push(planId);
+  } else {
+    state.compareSelected = state.compareSelected.filter(id => id !== planId);
+  }
+  // Update all checkboxes to reflect state
+  document.querySelectorAll('.select-compare input[type="checkbox"]').forEach(cb => {
+    const lbl = cb.closest('.select-compare');
+    const cardEl = cb.closest('.plan-card');
+    if (!cardEl) return;
+    const cardPlanId = cardEl.querySelector('.compare-btn')?.dataset?.planid;
+    if (cardPlanId) {
+      cb.checked = state.compareSelected.includes(cardPlanId);
+    }
+  });
+  renderCompareFab();
+}
+
+function renderCompareFab() {
+  let fab = document.getElementById('compare-fab');
+  if (state.compareSelected.length < 2) {
+    if (fab) fab.remove();
+    return;
+  }
+  if (!fab) {
+    fab = document.createElement('div');
+    fab.id = 'compare-fab';
+    fab.className = 'compare-fab';
+    chat.appendChild(fab);
+  }
+  const label = t('compare_n').replace('{n}', state.compareSelected.length);
+  fab.innerHTML = `<button onclick="openCompareOverlay()">${label}</button>`;
+  // Keep FAB at the bottom of chat
+  chat.appendChild(fab);
+}
+
+function openCompareOverlay() {
+  const allPlans = state.results?.plans || [];
+  const selected = state.compareSelected
+    .map(id => allPlans.find(p => p.plan_id === id))
+    .filter(Boolean);
+  if (selected.length < 2) return;
+
+  // Build overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'compare-overlay';
+  overlay.id = 'compare-overlay';
+  overlay.onclick = function(e) { if (e.target === overlay) closeCompareOverlay(); };
+
+  const sheet = document.createElement('div');
+  sheet.className = 'compare-sheet';
+
+  // Header
+  sheet.innerHTML = `
+    <div class="compare-sheet-header">
+      <h3>${t('compare_title')}</h3>
+      <button class="close-btn" onclick="closeCompareOverlay()">✕</button>
+    </div>
+    ${buildCompareTable(selected)}
+    <div class="compare-sheet-footer">
+      <button class="btn-close" onclick="closeCompareOverlay()">${t('cmp_close')}</button>
+    </div>
+  `;
+
+  overlay.appendChild(sheet);
+  document.body.appendChild(overlay);
+}
+
+function closeCompareOverlay() {
+  const ov = document.getElementById('compare-overlay');
+  if (ov) ov.remove();
+}
+
+function buildCompareTable(plans) {
+  const cols = plans.length;
+
+  // Header row with plan names
+  let headerCells = '<th></th>';
+  plans.forEach(p => {
+    const shortName = p.plan_name.length > 25 ? p.plan_name.substring(0, 25) + '...' : p.plan_name;
+    headerCells += `<th><div class="plan-col-header"><div class="plan-col-name">${shortName}</div><div class="plan-col-type">${p.carrier_name || ''}</div></div></th>`;
+  });
+
+  // Define rows: [label_key, value_fn, type]
+  const rows = [
+    ['cmp_row_premium',  p => p.premium_monthly,            'cost'],
+    ['cmp_row_copay',    p => p.copay_primary_care,          'cost'],
+    ['cmp_row_drug',     p => p.estimated_monthly_drug_cost, 'cost'],
+    ['cmp_row_total',    p => p.estimated_total_monthly,     'cost'],
+    ['cmp_row_moop',     p => p.moop_in_network,             'cost'],
+    ['cmp_row_rating',   p => p.star_rating,                 'rating'],
+    ['cmp_row_dental',   p => p.has_dental,                  'bool'],
+    ['cmp_row_vision',   p => p.has_vision,                  'bool'],
+    ['cmp_row_hearing',  p => p.has_hearing,                 'bool'],
+    ['cmp_row_fitness',  p => p.has_fitness,                 'bool'],
+    ['cmp_row_otc',      p => p.otc_allowance_quarterly,     'money'],
+  ];
+
+  let bodyRows = '';
+  rows.forEach(([key, valueFn, type]) => {
+    let cells = `<td style="text-align:left;font-weight:600;white-space:nowrap">${t(key)}</td>`;
+    const values = plans.map(valueFn);
+
+    plans.forEach((p, i) => {
+      const v = values[i];
+      let display = '';
+      let cls = '';
+
+      if (type === 'cost') {
+        display = '$' + (v || 0).toLocaleString();
+        // Lower is better for costs
+        const numericVals = values.map(x => x || 0);
+        const minVal = Math.min(...numericVals);
+        const maxVal = Math.max(...numericVals);
+        if (numericVals[i] === minVal && minVal !== maxVal) cls = 'val-best';
+        else if (numericVals[i] === maxVal && minVal !== maxVal) cls = 'val-worst';
+      } else if (type === 'rating') {
+        display = v ? '★'.repeat(Math.round(v)) + ' ' + v : 'N/A';
+        // Higher is better for rating
+        const numericVals = values.map(x => x || 0);
+        const maxVal = Math.max(...numericVals);
+        const minVal = Math.min(...numericVals);
+        if (numericVals[i] === maxVal && minVal !== maxVal) cls = 'val-best';
+        else if (numericVals[i] === minVal && minVal !== maxVal) cls = 'val-worst';
+      } else if (type === 'bool') {
+        display = v ? '✓' : '✗';
+        cls = v ? 'benefit-yes' : 'benefit-no';
+      } else if (type === 'money') {
+        display = v ? '$' + v.toLocaleString() + '/qtr' : '-';
+        // Higher is better for allowances
+        const numericVals = values.map(x => x || 0);
+        const maxVal = Math.max(...numericVals);
+        const minVal = Math.min(...numericVals);
+        if (numericVals[i] === maxVal && minVal !== maxVal) cls = 'val-best';
+        else if (numericVals[i] === minVal && minVal !== maxVal) cls = 'val-worst';
+      }
+
+      cells += `<td class="${cls}">${display}</td>`;
+    });
+
+    bodyRows += `<tr>${cells}</tr>`;
+  });
+
+  return `<div style="overflow-x:auto"><table class="compare-table"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table></div>`;
+}
+
 // Enrollment handoff - always capture lead regardless of contracted status
 let _enrollActive = false;
 function handleEnroll(planId, contracted) {
@@ -2896,7 +3250,7 @@ function goBack() {
 }
 
 function restart() {
-  state = { lang: null, step: 0, zip: null, county: null, stateCode: null, dob: null, age: null, eligibility: null, doctorId: null, doctorName: null, doctorSearchName: null, medications: [], priority: null, results: null, history: [], compareBase: null };
+  state = { lang: null, step: 0, zip: null, county: null, stateCode: null, dob: null, age: null, eligibility: null, doctorId: null, doctorName: null, doctorSearchName: null, medications: [], priority: null, results: null, history: [], compareBase: null, compareSelected: [] };
   _enrollActive = false;
   stepLanguage();
 }
