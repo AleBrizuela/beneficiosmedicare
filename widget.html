@@ -711,12 +711,13 @@ body {
 }
 
 .compare-fab {
-  position: sticky;
-  bottom: 12px;
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 30;
   display: flex;
   justify-content: center;
-  margin-top: 12px;
   animation: fadeIn 0.3s ease-out;
 }
 .compare-fab button {
@@ -3052,7 +3053,7 @@ function renderCompareFab() {
 }
 
 function openCompareOverlay() {
-  const allPlans = state.results?.plans || [];
+  const allPlans = state.results?.all_plans || [];
   const selected = state.compareSelected
     .map(id => allPlans.find(p => p.plan_id === id))
     .filter(Boolean);
@@ -3198,7 +3199,7 @@ function submitEnroll(planId) {
   addMessage(display, 'user');
 
   // Confirmation card
-  const plan = (state.results?.plans || []).find(p => p.plan_id === planId) || {};
+  const plan = (state.results?.all_plans || []).find(p => p.plan_id === planId) || {};
   const isES = state.lang === 'es';
   const conf = document.createElement('div');
   conf.className = 'message bot';
