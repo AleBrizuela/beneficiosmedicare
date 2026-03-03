@@ -857,6 +857,104 @@ body {
   border: 1.5px solid var(--border);
 }
 
+/* Auto-comparison table shown inline on results */
+.auto-compare {
+  background: white;
+  border-radius: var(--radius);
+  border: 2px solid var(--primary-light);
+  margin: 12px 0 16px;
+  overflow: hidden;
+  width: 100%;
+  align-self: flex-start;
+}
+.auto-compare-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 14px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+.auto-compare-header small {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+.auto-compare table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.auto-compare th, .auto-compare td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+.auto-compare th {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  background: #f8f9fa;
+  border-bottom: 2px solid #e0e0e0;
+}
+.auto-compare th:first-child,
+.auto-compare td:first-child {
+  text-align: left;
+  font-weight: 600;
+  padding-left: 12px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+.auto-compare .best { color: #27ae60; font-weight: 700; }
+.auto-compare .worst { color: #c0392b; }
+.auto-compare .check { color: #27ae60; font-size: 18px; }
+.auto-compare .cross { color: #ddd; font-size: 18px; }
+.auto-compare .plan-header {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.3;
+  max-width: 120px;
+}
+.auto-compare .plan-header .carrier-sm {
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* Need help CTA */
+.need-help-cta {
+  background: linear-gradient(135deg, #f0f9f0, #e8f5e9);
+  border: 1.5px solid #c8e6c9;
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  margin: 16px 0;
+  width: 100%;
+  align-self: flex-start;
+}
+.need-help-cta h4 {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.need-help-cta p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+.need-help-cta .help-phone {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /* Trust signals section */
 .trust-bar {
   display: flex;
@@ -1377,6 +1475,11 @@ const T = {
     cmp_row_fitness: "Ejercicio",
     cmp_row_otc: "Productos OTC",
     cmp_close: "Cerrar",
+    auto_cmp_title: "Comparación rápida",
+    auto_cmp_sub: "Sus mejores opciones lado a lado",
+    need_help: "¿Necesita ayuda para elegir?",
+    need_help_sub: "Un agente licenciado le explica sin costo",
+    need_help_btn: "Llámenos gratis",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -1508,6 +1611,11 @@ const T = {
     cmp_row_fitness: "Fitness",
     cmp_row_otc: "OTC allowance",
     cmp_close: "Close",
+    auto_cmp_title: "Quick comparison",
+    auto_cmp_sub: "Your best options side by side",
+    need_help: "Need help choosing?",
+    need_help_sub: "A licensed agent can walk you through it, free",
+    need_help_btn: "Call us free",
     snp_badge: "SNP",
     pdp_badge: "PDP",
     ma_badge: "MA",
@@ -2733,6 +2841,12 @@ function renderFilteredPlans(filterKey) {
     container.appendChild(card);
   });
 
+  // Auto-compare table after the first batch of cards (only on "all" filter)
+  if (state.visibleCount <= 5 && filterKey === 'all' && plans.length >= 2) {
+    const autoTbl = buildAutoCompareEl(plans);
+    if (autoTbl) container.appendChild(autoTbl);
+  }
+
   // "Show more" button
   const remaining = plans.length - state.visibleCount;
   if (remaining > 0) {
@@ -2746,6 +2860,11 @@ function renderFilteredPlans(filterKey) {
       scrollToBottom();
     };
     container.appendChild(moreBtn);
+  }
+
+  // Need Help CTA at the bottom
+  if (state.visibleCount <= 5) {
+    container.appendChild(buildNeedHelpCta());
   }
 
   scrollToBottom();
@@ -3160,6 +3279,93 @@ function buildCompareTable(plans) {
   });
 
   return `<div style="overflow-x:auto"><table class="compare-table"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table></div>`;
+}
+
+// ---- Auto Comparison Table (inline on results) ----
+
+function buildAutoCompareEl(plans) {
+  if (!plans || plans.length < 2) return null;
+  const top = plans.slice(0, Math.min(3, plans.length));
+
+  const wrap = document.createElement('div');
+  wrap.className = 'auto-compare';
+  wrap.id = 'auto-compare';
+
+  // Header
+  let headerCells = '<th></th>';
+  top.forEach(p => {
+    const short = p.plan_name.length > 20 ? p.plan_name.substring(0, 20) + '...' : p.plan_name;
+    headerCells += `<th><div class="plan-header">${short}<div class="carrier-sm">${p.carrier_name || ''}</div></div></th>`;
+  });
+
+  // Rows
+  const rows = [
+    [t('cmp_row_premium'),  p => p.premium_monthly,            'cost'],
+    [t('cmp_row_copay'),    p => p.copay_primary_care,          'cost'],
+    [t('cmp_row_drug'),     p => p.estimated_monthly_drug_cost, 'cost'],
+    [t('cmp_row_total'),    p => p.estimated_total_monthly,     'cost'],
+    [t('cmp_row_moop'),     p => p.moop_in_network,             'cost_big'],
+    [t('cmp_row_rating'),   p => p.star_rating,                 'rating'],
+    [t('cmp_row_dental'),   p => p.has_dental,                  'bool'],
+    [t('cmp_row_vision'),   p => p.has_vision,                  'bool'],
+    [t('cmp_row_hearing'),  p => p.has_hearing,                 'bool'],
+    [t('cmp_row_fitness'),  p => p.has_fitness,                 'bool'],
+    [t('cmp_row_otc'),      p => p.otc_allowance_quarterly,     'money'],
+  ];
+
+  let bodyRows = '';
+  rows.forEach(([label, valueFn, type]) => {
+    let cells = `<td>${label}</td>`;
+    const values = top.map(valueFn);
+
+    top.forEach((p, i) => {
+      const v = values[i];
+      let display = '';
+      let cls = '';
+      const nums = values.map(x => x || 0);
+      const minV = Math.min(...nums);
+      const maxV = Math.max(...nums);
+
+      if (type === 'cost' || type === 'cost_big') {
+        const val = v || 0;
+        display = val === 0 ? t('free') : '$' + val.toLocaleString();
+        if (nums[i] === minV && minV !== maxV) cls = 'best';
+        else if (nums[i] === maxV && minV !== maxV) cls = 'worst';
+      } else if (type === 'rating') {
+        display = v ? '★'.repeat(Math.round(v)) + ' ' + v : '-';
+        if (nums[i] === maxV && minV !== maxV) cls = 'best';
+        else if (nums[i] === minV && minV !== maxV) cls = 'worst';
+      } else if (type === 'bool') {
+        display = v ? '✓' : '✗';
+        cls = v ? 'check' : 'cross';
+      } else if (type === 'money') {
+        display = v ? '$' + v.toLocaleString() : '-';
+        if (nums[i] === maxV && minV !== maxV) cls = 'best';
+        else if (nums[i] === minV && minV !== maxV) cls = 'worst';
+      }
+
+      cells += `<td class="${cls}">${display}</td>`;
+    });
+    bodyRows += `<tr>${cells}</tr>`;
+  });
+
+  wrap.innerHTML = `
+    <div class="auto-compare-header">${t('auto_cmp_title')}<small>${t('auto_cmp_sub')}</small></div>
+    <div style="overflow-x:auto"><table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table></div>
+  `;
+
+  return wrap;
+}
+
+function buildNeedHelpCta() {
+  const cta = document.createElement('div');
+  cta.className = 'need-help-cta';
+  cta.innerHTML = `
+    <h4>${t('need_help')}</h4>
+    <p>${t('need_help_sub')}</p>
+    <a href="tel:+18006334227" class="help-phone">📞 ${t('need_help_btn')}</a>
+  `;
+  return cta;
 }
 
 // Enrollment handoff - always capture lead regardless of contracted status
