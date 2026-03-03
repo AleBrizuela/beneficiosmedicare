@@ -3427,6 +3427,27 @@ let _enrollActive = false;
 function handleEnroll(planId, contracted) {
   if (_enrollActive) return; // prevent double-trigger
   _enrollActive = true;
+
+  // Clear results and show enrollment form as clean step
+  chat.innerHTML = '';
+  window.scrollTo(0, 0);
+
+  const plan = (state.results?.all_plans || []).find(p => p.plan_id === planId) || {};
+  const planLabel = plan.plan_name || planId;
+  const carrierLabel = plan.carrier || '';
+  const premiumLabel = plan.premium || '';
+  const isES = state.lang === 'es';
+
+  // Plan summary card at top
+  const summary = document.createElement('div');
+  summary.style.cssText = 'background:linear-gradient(135deg,#065f46,#047857);color:white;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;';
+  summary.innerHTML = `
+    <div style="font-size:14px;opacity:0.8;margin-bottom:4px">${isES ? 'Tu plan elegido' : 'Your chosen plan'}</div>
+    <div style="font-size:20px;font-weight:700">${planLabel}</div>
+    ${carrierLabel ? `<div style="font-size:14px;opacity:0.8;margin-top:4px">${carrierLabel}${premiumLabel ? ' · ' + premiumLabel : ''}</div>` : ''}
+  `;
+  chat.appendChild(summary);
+
   addMessage(t('enroll_title'), 'bot');
   addMessage(t('enroll_msg'), 'bot');
 
@@ -3443,7 +3464,9 @@ function handleEnroll(planId, contracted) {
     </div>
   `;
   chat.appendChild(form);
-  scrollToBottom();
+
+  // Focus the first field
+  setTimeout(() => { const f = document.getElementById('enroll-first'); if (f) f.focus(); }, 200);
 }
 
 function submitEnroll(planId) {
