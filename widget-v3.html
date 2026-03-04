@@ -358,7 +358,7 @@ function hb(icon,cls,title,sub,onclick){
 function stepHome(){
   prog(0);
   wb().innerHTML=`
-    ${bm(lang==='en'?'How can we help you?':'\u00BFC\u00F3mo le podemos ayudar?','plain')}
+    ${bm(lang==='en'?'How can I help?':'\u00BFC\u00F3mo le ayudo?','plain')}
     <div class="home-grid">
       ${hb('\uD83D\uDCC5','hb-navy',lang==='en'?'Explore Your Options':'Explore Sus Opciones',lang==='en'?'Turning 65 or newly eligible':'Cumple 65 o reci\u00E9n elegible',"go(ft_zip)")}
       ${hb('\uD83D\uDE9A','hb-teal',lang==='en'?'Update Your Plan':'Actualice Su Plan',lang==='en'?'Recently moved to a new area':'Se mud\u00F3 a una nueva \u00E1rea',"go(mv_zipFrom)")}
