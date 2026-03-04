@@ -747,14 +747,14 @@ function planEnroll(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?`Great choice! <strong>${D.selectedPlan}</strong>. A licensed agent will help you enroll. <strong>Free, no obligation.</strong>`
-      :`Excelente elección! <strong>${D.selectedPlan}</strong>. Un agente licenciado te ayudará a inscribirte. <strong>Gratis, sin compromiso.</strong>`)}
+      ?`Great choice! <strong>${D.selectedPlan}</strong>. One of us will help you enroll. <strong>Free, no obligation.</strong>`
+      :`Excelente elección! <strong>${D.selectedPlan}</strong>. Una de nosotras te ayudará a inscribirte. <strong>Gratis, sin compromiso.</strong>`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Enroll Me':'Inscribirme',"submitLead('enroll')")}
     <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by a licensed agent.':'Al enviar, aceptas ser contactado por un agente licenciado.'}
+      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, aceptas que una de nosotras te contacte.'}
     </p>`;
 }
 
@@ -766,14 +766,14 @@ function helpChoose(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?'A licensed agent can review these plans with you and help you pick the best one. <strong>Free, no obligation.</strong>'
-      :'Un agente licenciado puede revisar estos planes contigo y ayudarte a elegir el mejor. <strong>Gratis, sin compromiso.</strong>')}
+      ?'We can review these plans with you and help you pick the best one. <strong>Free, no obligation.</strong>'
+      :'Una de nosotras te llamamos para revisar estos planes contigo y ayudarte a elegir el mejor. <strong>Gratis, sin compromiso.</strong>')}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
     <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by a licensed agent.':'Al enviar, aceptas ser contactado por un agente licenciado.'}
+      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, aceptas que una de nosotras te contacte.'}
     </p>`;
 }
 
@@ -821,7 +821,7 @@ function flowSuccess(){
     <p style="color:var(--gray);font-size:14px;line-height:1.6;margin-bottom:16px">
       ${isSnooze
         ?(lang==='en'?'We will reach out before your enrollment window opens.':'Te contactaremos antes de que abra tu ventana de inscripcion.')
-        :(lang==='en'?'A licensed agent will contact you soon. Free, no obligation.':'Un agente licenciado te contactara pronto. Gratis, sin compromiso.')}
+        :(lang==='en'?'One of us will contact you soon. Free, no obligation.':'Una de nosotras te llamamos pronto. Gratis, sin compromiso.')}
     </p>
     ${!isSnooze?bs(lang==='en'?'View Plans Again':'Ver Planes de Nuevo','back();back()'):''}
     ${bs(lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare','hist=[];go(learnHome)')}
@@ -849,7 +849,7 @@ function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Medicare costs</strong> breakdown:':'Resumen de <strong>costos de Medicare</strong>:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayoria'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima más alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Enrollment periods</strong>:':'<strong>Periodos de inscripcion</strong>:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de tu cumpleaños 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada año. Cambia planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si te mudaste, perdiste cobertura, o calificas para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'A licensed agent can answer your questions. <strong>Free, no obligation.</strong>':'Un agente licenciado puede responder tus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Tu pregunta (opcional)',lang==='en'?'What would you like to know?':'Que te gustaria saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. <strong>Free, no obligation.</strong>':'Una de nosotras te llamamos para responder tus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Tu pregunta (opcional)',lang==='en'?'What would you like to know?':'Que te gustaria saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
 
 
 // ═══════════════════════════════════════
