@@ -249,13 +249,13 @@ const PLANS = [
 
 // ── i18n ──
 const T={
-  title:{en:'Your Guide',es:'Tu Guia'},
+  title:{en:'Your Guide',es:'Tu Guía'},
   sub:{en:'Beneficios Medicare',es:'Beneficios Medicare'},
-  back:{en:'\u2190 Back',es:'\u2190 Atras'},
+  back:{en:'\u2190 Back',es:'\u2190 Atrás'},
   next:{en:'Continue',es:'Continuar'},
   disc:{
     en:'This website is not part of the federal government or the Medicare program. For official information visit <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> or call 1-800-Medicare.',
-    es:'Este sitio web no es parte del gobierno federal ni del programa de Medicare. Para informacion oficial visite <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> o llame al 1-800-Medicare.'
+    es:'Este sitio web no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> o llame al 1-800-Medicare.'
   }
 };
 const t=k=>T[k]?.[lang]||k;
@@ -298,10 +298,10 @@ function ic(title,text,cls=''){return `<div class="info-card ${cls}"><h4>${title
 function stepHome(){
   prog(0);
   wb().innerHTML=`
-    ${bm(lang==='en'?'How can we help you?':'Como te podemos ayudar?')}
+    ${bm(lang==='en'?'How can we help you?':'Cómo te podemos ayudar?')}
     <div class="opt-grid">
-      ${oc('\uD83D\uDCC5','bl',lang==='en'?'Turning 65':'Cumpliendo 65',lang==='en'?'Step-by-step guide to get started.':'Guia paso a paso para comenzar.',lang==='en'?'START':'INICIAR','st',"go(ft_zip)")}
-      ${oc('\uD83D\uDE9A','gr',lang==='en'?'I Recently Moved':'Me Mude Recientemente',lang==='en'?'Keep your coverage after moving.':'Manten tu cobertura despues de mudarte.',lang==='en'?'CHANGE':'CAMBIAR','ch',"go(mv_zipFrom)")}
+      ${oc('\uD83D\uDCC5','bl',lang==='en'?'Turning 65':'Cumpliendo 65',lang==='en'?'Step-by-step guide to get started.':'Guía paso a paso para comenzar.',lang==='en'?'START':'INICIAR','st',"go(ft_zip)")}
+      ${oc('\uD83D\uDE9A','gr',lang==='en'?'I Recently Moved':'Me Mudé Recientemente',lang==='en'?'Keep your coverage after moving.':'Mantén tu cobertura después de mudarte.',lang==='en'?'CHANGE':'CAMBIAR','ch',"go(mv_zipFrom)")}
       ${oc('\uD83D\uDCCA','mi',lang==='en'?'Better Benefits':'Mejores Beneficios',lang==='en'?'Compare plans and save more.':'Compara planes y ahorra mas.',lang==='en'?'COMPARE':'COMPARAR','co',"go(bb_zip)")}
       ${oc('\u2753','sg',lang==='en'?'Learn About Medicare':'Aprende Sobre Medicare',lang==='en'?'Simple answers to common questions.':'Respuestas simples a preguntas comunes.',lang==='en'?'LEARN':'APRENDER','le',"go(learnHome)")}
     </div>`;
@@ -316,7 +316,7 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   _cb.zip=nextFn;
   wb().innerHTML=`${bk()}
     ${bm(msg, cls)}
-    <div class="input-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your zip code'):(fieldId.includes('from')?'Mudandote de (codigo postal)':'Tu codigo postal')}</label>
+    <div class="input-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your zip code'):(fieldId.includes('from')?'Mudándote de (código postal)':'Tu código postal')}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="90001" value="${D[fieldId]||''}" maxlength="5"
       oninput="D['${fieldId}']=this.value; if(this.value.length===5) setTimeout(()=>go(_cb.zip),300)">
     </div>
@@ -341,7 +341,7 @@ function dobMonth(nextFn){
     g+=`<div class="tap-cell ${sel}" onclick="D.dob_month='${v}';go(_cb.dobM)">${m}</div>`;
   });
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>month</strong> were you born?':'En que <strong>mes</strong> naciste?')}
+    ${bm(lang==='en'?'What <strong>month</strong> were you born?':'En qué <strong>mes</strong> naciste?')}
     <div class="tap-grid months">${g}</div>`;
 }
 
@@ -355,7 +355,7 @@ function dobDay(nextFn){
     g+=`<div class="tap-cell ${sel}" onclick="D.dob_day='${v}';go(_cb.dobD)">${d}</div>`;
   }
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>day</strong>?':'Que <strong>dia</strong>?')}
+    ${bm(lang==='en'?'What <strong>day</strong>?':'Qué <strong>día</strong>?')}
     <div class="tap-grid days">${g}</div>`;
 }
 
@@ -364,7 +364,7 @@ function dobYear(nextFn){
   _cb.dobY=nextFn;
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'What <strong>year</strong> were you born?':'En que <strong>año</strong> naciste?')}
-    <div class="input-group"><label>${lang==='en'?'Birth year':'Ano de nacimiento'}</label>
+    <div class="input-group"><label>${lang==='en'?'Birth year':'Año de nacimiento'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="dobYearInput" placeholder="${lang==='en'?'e.g. 1960':'ej. 1960'}" value="${D.dob_year||''}" maxlength="4"
       oninput="D.dob_year=this.value; if(this.value.length===4) setTimeout(()=>go(_cb.dobY),300)">
     </div>
@@ -403,7 +403,7 @@ function genderStep(nextFn){
   prog(30);
   _cb.gender=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What is your <strong>gender</strong>?':'Cual es tu <strong>genero</strong>?')}
+    ${bm(lang==='en'?'What is your <strong>gender</strong>?':'Cuál es tu <strong>género</strong>?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDC68','bl',lang==='en'?'Male':'Masculino','','','', "D.gender='male';go(_cb.gender)")}
       ${oc('\uD83D\uDC69','mi',lang==='en'?'Female':'Femenino','','','', "D.gender='female';go(_cb.gender)")}
@@ -450,7 +450,7 @@ function medsPick(nextFn){
   prog(58);
   _cb.meds=nextFn;
   let html=`${bk()}
-    ${bm(lang==='en'?'Select your medications by condition:':'Selecciona tus medicinas por condicion:')}
+    ${bm(lang==='en'?'Select your medications by condition:':'Selecciona tus medicinas por condición:')}
     <div id="sel-meds" class="sel-meds"></div><div style="margin-top:10px">`;
   for(const[cat,info]of Object.entries(MED_DB)){
     html+=`<div class="med-cat">
@@ -490,12 +490,12 @@ function priorityStep(nextFn){
   prog(68);
   _cb.priority=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What matters most to you?':'Que es lo mas importante para ti?')}
+    ${bm(lang==='en'?'What matters most to you?':'Que es lo más importante para ti?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDCB5','bl',lang==='en'?'Pay the least':'Pagar lo menos',lang==='en'?'Lowest monthly cost.':'Menor costo mensual.','','',`D.priority='cost';go(_cb.priority)`)}
-      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La eleccion de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
+      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elección de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
       ${oc('\uD83D\uDC8A','mi',lang==='en'?'Best drug coverage':'Mejor cobertura de medicinas',lang==='en'?'My meds covered.':'Mis medicinas cubiertas.','','',`D.priority='drugs';go(_cb.priority)`)}
-      ${oc('\u2B50','sg',lang==='en'?'Most benefits':'Mas beneficios',lang==='en'?'Dental, vision, hearing, gym.':'Dental, vision, audicion, gimnasio.','','',`D.priority='benefits';go(_cb.priority)`)}
+      ${oc('\u2B50','sg',lang==='en'?'Most benefits':'Más beneficios',lang==='en'?'Dental, visión, hearing, gym.':'Dental, visión, audición, gimnasio.','','',`D.priority='benefits';go(_cb.priority)`)}
     </div>`;
 }
 
@@ -555,7 +555,7 @@ function mv_zipFrom(){
   prog(12); D.flow='moved';
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarte te da un <strong>Periodo de Inscripcion Especial</strong>! 63 dias para cambiar tu plan.','hl')}
-    <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudandote DE (codigo postal)'}</label>
+    <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudándote DE (código postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
       oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
     </div>
@@ -566,7 +566,7 @@ function mv_zipTo(){
   prog(18);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'And where are you <strong>moving to</strong>?':'Y a donde te <strong>mudas</strong>?')}
-    <div class="input-group"><label>${lang==='en'?'Moving TO (zip code)':'Mudandote A (codigo postal)'}</label>
+    <div class="input-group"><label>${lang==='en'?'Moving TO (zip code)':'Mudándote A (código postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
       oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dobM),300)">
     </div>
@@ -595,7 +595,7 @@ function mv_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 //  FLOW: BETTER BENEFITS
 // ═══════════════════════════════════════
-function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for <strong>$0 premium plans</strong> with dental, vision, and hearing.':'Muchas personas califican para <strong>planes $0 prima</strong> con dental, vision y audicion.','zip',bb_dobM,'hl')}
+function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for <strong>$0 premium plans</strong> with dental, vision, and hearing.':'Muchas personas califican para <strong>planes $0 prima</strong> con dental, visión y audición.','zip',bb_dobM,'hl')}
 function bb_dobM(){dobMonth(bb_dobD)}
 function bb_dobD(){dobDay(bb_dobY)}
 function bb_dobY(){dobYear(bb_gender)}
@@ -674,7 +674,7 @@ function planCard(p,i){
     <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${p.drug}</span></div>
     <div class="plan-row"><span class="lb">Dental/Vision/${lang==='en'?'Hearing':'Audicion'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
     <div class="plan-row"><span class="lb">OTC</span><span class="vl gd">$${p.otc}/qtr</span></div>
-    ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devolucion Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
+    ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devolución Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
     <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'I Want This Plan':'Quiero Este Plan'}</button>
   </div>`;
 }
@@ -690,7 +690,7 @@ function flowResults(){
     else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>.`:`Tu inscripcion abre <strong>${monthName(ew.month)} ${ew.year}</strong>.`;}
   }
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Mejores planes</strong> en tu area${D.zip?' ('+D.zip+')':''}:`)}
+    ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Mejores planes</strong> en tu área${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Tu elegibilidad',note):''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Compare Side by Side':'Comparar Lado a Lado','go(flowCompare)')}
@@ -748,7 +748,7 @@ function planEnroll(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
       ?`Great choice! <strong>${D.selectedPlan}</strong>. A licensed agent will help you enroll. <strong>Free, no obligation.</strong>`
-      :`Excelente eleccion! <strong>${D.selectedPlan}</strong>. Un agente licenciado te ayudara a inscribirte. <strong>Gratis, sin compromiso.</strong>`)}
+      :`Excelente elección! <strong>${D.selectedPlan}</strong>. Un agente licenciado te ayudará a inscribirte. <strong>Gratis, sin compromiso.</strong>`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -845,10 +845,10 @@ function learnHome(){
     </div>
     <div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`;
 }
-function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has <strong>4 parts</strong>:':'Medicare tiene <strong>4 partes</strong>:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermeria, hospicio. $0 prima para la mayoria.')}${ic(lang==='en'?'Part B - Medical':'Parte B - Medica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atencion ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, vision, audicion.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi area','go(bb_zip)')}${bs(lang==='en'?'More topics':'Mas temas','go(learnHome)')}`}
-function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Medicare costs</strong> breakdown:':'Resumen de <strong>costos de Medicare</strong>:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayoria'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'Mas temas','go(learnHome)')}`}
-function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima mas alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'Mas temas','go(learnHome)')}`}
-function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Enrollment periods</strong>:':'<strong>Periodos de inscripcion</strong>:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de tu cumpleaños 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada año. Cambia planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si te mudaste, perdiste cobertura, o calificas para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'Mas temas','go(learnHome)')}`}
+function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has <strong>4 parts</strong>:':'Medicare tiene <strong>4 partes</strong>:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermeria, hospicio. $0 prima para la mayoría.')}${ic(lang==='en'?'Part B - Medical':'Parte B - Médica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atención ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, visión, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visión, audición.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi área','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
+function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Medicare costs</strong> breakdown:':'Resumen de <strong>costos de Medicare</strong>:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayoria'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
+function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima más alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
+function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Enrollment periods</strong>:':'<strong>Periodos de inscripcion</strong>:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de tu cumpleaños 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada año. Cambia planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si te mudaste, perdiste cobertura, o calificas para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
 function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'A licensed agent can answer your questions. <strong>Free, no obligation.</strong>':'Un agente licenciado puede responder tus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Tu pregunta (opcional)',lang==='en'?'What would you like to know?':'Que te gustaria saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
 
 
