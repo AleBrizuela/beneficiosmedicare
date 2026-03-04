@@ -484,7 +484,7 @@ function doctorAsk(nextYes,nextNo){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Do you have a doctor you want to keep?':'¿Tiene un doctor que quiere mantener?')}
     <div class="opt-grid">
-      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','bl',lang==='en'?'Yes':'Si',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
+      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','bl',lang==='en'?'Yes':'Sí',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
       ${oc('\uD83D\uDD0D','gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
     </div>`;
 }
@@ -493,7 +493,7 @@ function doctorName(nextFn){
   prog(44);
   _cb.docName=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?"What is your doctor's last name?":'Cual es el apellido de su doctor?')}
+    ${bm(lang==='en'?"What is your doctor's last name?":'¿Cuál es el apellido de su doctor?')}
     ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
     ${bp(t('next'),'go(_cb.docName)')}`;
 }
@@ -504,7 +504,7 @@ function medsAsk(nextYes,nextNo){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Do you take prescription medications?':'¿Toma medicinas recetadas?')}
     <div class="opt-grid">
-      ${oc('\uD83D\uDC8A','bl',lang==='en'?'Yes':'Si',lang==='en'?'I take medications.':'Tomo medicinas.','','',`D.hasMeds='yes';go(_cb.medY)`)}
+      ${oc('\uD83D\uDC8A','bl',lang==='en'?'Yes':'Sí',lang==='en'?'I take medications.':'Tomo medicinas.','','',`D.hasMeds='yes';go(_cb.medY)`)}
       ${oc('\u2705','gr',lang==='en'?'No':'No',lang==='en'?'None.':'Ninguna.','','',`D.hasMeds='no';go(_cb.medN)`)}
     </div>`;
 }
@@ -702,7 +702,7 @@ function snoozeStep(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`We will remind you before ${opensStr} so you can compare plans at the right time.`:`Le recordaremos antes de ${opensStr} para que pueda comparar planes en el momento correcto.`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
-    ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
+    ${inp('phone',lang==='en'?'Phone number':'Número de teléfono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead("snooze")')}`;
 }
@@ -749,10 +749,10 @@ function planCard(p,i){
     <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${p.drug}</span></div>
-    <div class="plan-row"><span class="lb">Dental/Vision/${lang==='en'?'Hearing':'Audicion'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
+    <div class="plan-row"><span class="lb">Dental/Vision/${lang==='en'?'Hearing':'Audición'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
     <div class="plan-row"><span class="lb">OTC</span><span class="vl gd">$${p.otc}/qtr</span></div>
     ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devolución Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
-    <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'I Want This Plan':'Quiero Este Plan'}</button>
+    <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'Más Información'}</button>
   </div>`;
 }
 
@@ -767,12 +767,12 @@ function flowResults(){
     else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>.`:`Su inscripción abre <strong>${monthName(ew.month)} ${ew.year}</strong>.`;}
   }
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Mejores planes</strong> en su área${D.zip?' ('+D.zip+')':''}:`)}
+    ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Planes disponibles</strong> en su área${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Compare Side by Side':'Comparar Lado a Lado','go(flowCompare)')}
     <div style="text-align:center;margin-top:10px">
-      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayudame a elegir'}</button>
+      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayúdeme a elegir'}</button>
     </div>
     ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}`;
 }
@@ -787,7 +787,7 @@ function flowCompare(){
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
     ['Dental',...plans.map(p=>p.dental?ck:no)],
     ['Vision',...plans.map(p=>p.vision?ck:no)],
-    [lang==='en'?'Hearing':'Audicion',...plans.map(p=>p.hearing?ck:no)],
+    [lang==='en'?'Hearing':'Audición',...plans.map(p=>p.hearing?ck:no)],
     ['Fitness',...plans.map(p=>p.fitness?ck:no)],
     ['OTC',...plans.map(p=>'$'+p.otc)],
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
@@ -799,10 +799,10 @@ function flowCompare(){
   rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
   tbl+=`</tbody></table>`;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Side-by-side comparison:':'Comparacion lado a lado:')}
+    ${bm(lang==='en'?'Side-by-side comparison:':'Comparación lado a lado:')}
     <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
     <div style="text-align:center;margin-top:8px">
-      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayudame a elegir'}</button>
+      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayúdeme a elegir'}</button>
     </div>
     ${bs(lang==='en'?'Back to plans':'Volver a planes','back()')}`;
 }
@@ -824,12 +824,12 @@ function planEnroll(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?`Great choice! <strong>${D.selectedPlan}</strong>. One of us will help you enroll. <strong>Free, no obligation.</strong>`
-      :`Excelente elección! <strong>${D.selectedPlan}</strong>. Una de nosotras le ayudará a inscribirse. <strong>Gratis, sin compromiso.</strong>`)}
+      ?`Great choice! <strong>${D.selectedPlan}</strong>. We will review this plan with you and answer all your questions. <strong>Free, no obligation.</strong>`
+      :`Excelente elección! <strong>${D.selectedPlan}</strong>. Revisaremos este plan con usted y responderemos todas sus preguntas. <strong>Gratis, sin compromiso.</strong>`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
-    ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
+    ${inp('phone',lang==='en'?'Phone number':'Número de teléfono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'Enroll Me':'Inscribirme',"submitLead('enroll')")}
+    ${bp(lang==='en'?'Help Me Decide':'Ayúdeme a Decidir',"submitLead('enroll')")}
     <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
       ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
     </p>`;
@@ -846,7 +846,7 @@ function helpChoose(){
       ?'We can review these plans with you and help you decide. <strong>Free, no obligation.</strong>'
       :'Una de nosotras le llamará para revisar estos planes y ayudarle a decidir. <strong>Gratis, sin compromiso.</strong>')}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
-    ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
+    ${inp('phone',lang==='en'?'Phone number':'Número de teléfono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
     <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
@@ -862,22 +862,37 @@ function submitLead(type){
   const name=D.fullName||document.getElementById('fullName')?.value||'';
   const phone=D.phone||document.getElementById('phone')?.value||'';
   const email=D.email||document.getElementById('email')?.value||'';
+  const question=document.getElementById('question')?.value||'';
 
   if(!name||!phone){
-    alert(lang==='en'?'Please enter your name and phone number.':'Por favor ingrese su nombre y tel\u00E9fono.');
+    alert(lang==='en'?'Please enter your name and phone number.':'Por favor ingrese su nombre y teléfono.');
     return;
   }
   D.fullName=name;D.phone=phone;D.email=email;
+  if(question) D.question=question;
   D.lang=lang;D.medications=[...selMeds];
   D.timestamp=new Date().toISOString();
-  D.source='widget-v3';D.leadType=type;
+  D.leadType=type;
 
-  const ZAPIER='YOUR_ZAPIER_WEBHOOK_URL_HERE';
-  if(ZAPIER!=='YOUR_ZAPIER_WEBHOOK_URL_HERE'){
-    fetch(ZAPIER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(D)}).catch(e=>console.log('err',e));
+  // Detect which site this widget is on
+  const host=window.location.hostname||'';
+  const parentHost=(window.self!==window.top)?document.referrer:'';
+  if(parentHost.includes('medicare-california')||host.includes('medicare-california')||host.includes('california')){
+    D.source='medicare-california';
   } else {
-    console.log('Lead:',JSON.stringify(D,null,2));
+    D.source='beneficiosmedicare';
   }
+  D.url=parentHost||window.location.href;
+
+  // Split name for sheet
+  const parts=name.trim().split(/\s+/);
+  D.firstName=parts[0]||'';
+  D.lastName=parts.slice(1).join(' ')||'';
+
+  // Google Sheets Apps Script endpoint
+  const GS_URL='https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
+  fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)}).catch(e=>console.log('lead-err',e));
+  console.log('Lead:',JSON.stringify(D,null,2));
   go(flowSuccess);
 }
 
