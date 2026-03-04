@@ -877,7 +877,8 @@ function submitLead(type){
   // Detect which site this widget is on
   const host=window.location.hostname||'';
   const parentHost=(window.self!==window.top)?document.referrer:'';
-  if(parentHost.includes('medicare-california')||host.includes('medicare-california')||host.includes('california')){
+  const path=window.location.pathname||'';
+  if(parentHost.includes('medicare-california')||parentHost.includes('/california')||host.includes('medicare-california')||host.includes('california')||path.includes('/california')){
     D.source='medicare-california';
   } else {
     D.source='beneficiosmedicare';
