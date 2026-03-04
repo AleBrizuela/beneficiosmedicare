@@ -821,6 +821,36 @@ a[href^="tel"] { white-space: nowrap; }
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
   <link rel="shortcut icon" href="favicon-192x192.png">
   <link rel="apple-touch-icon" href="favicon-192x192.png">
+<style>
+  html.embedded #cms-disclaimer,
+  html.embedded #header,
+  html.embedded #mobile-nav,
+  html.embedded .wa-float,
+  html.embedded #about-content,
+  html.embedded footer,
+  html.embedded .mobile-sticky-cta {
+    display: none !important;
+  }
+  html.embedded body {
+    background: transparent !important;
+    min-height: auto !important;
+  }
+  html.embedded #main-content {
+    padding-top: 0 !important;
+  }
+</style>
+<script>
+  if (window.self !== window.top) {
+    document.documentElement.classList.add('embedded');
+    new ResizeObserver(function() {
+      window.parent.postMessage({
+        type: 'widget-resize',
+        height: document.documentElement.scrollHeight
+      }, '*');
+    }).observe(document.body);
+  }
+</script>
+  
 </head>
 
 
