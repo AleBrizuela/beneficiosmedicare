@@ -19,15 +19,18 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135deg,#EAF6EE 0%,#D6EAF7 50%,#E4EDE8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body.in-iframe{padding:0;min-height:auto;background:var(--white);align-items:flex-start}
+body.in-iframe .widget-wrap{border-radius:0;box-shadow:none}
 .widget-wrap{width:100%;max-width:480px;background:var(--white);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
 
 /* ── LANG BUBBLE (floating) ── */
-.lang-bubble{position:absolute;bottom:50px;right:14px;width:48px;height:48px;border-radius:50%;background:var(--navy);color:white;border:2px solid rgba(255,255,255,.3);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 3px 14px rgba(30,58,95,.25);transition:all .2s;z-index:10;display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
-.lang-bubble:hover{transform:scale(1.08);box-shadow:0 4px 20px rgba(30,58,95,.35)}
-.lang-bubble:active{transform:scale(.95)}
+.lang-toggle{display:flex;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin-left:auto;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.lang-toggle button{padding:6px 12px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;background:transparent;color:rgba(255,255,255,.6);letter-spacing:.03em}
+.lang-toggle button.active{background:rgba(255,255,255,.95);color:var(--navy);border-radius:6px}
+.lang-toggle button:hover:not(.active){background:rgba(255,255,255,.1);color:white}
 
 /* ── HEADER ── */
-.widget-header{background:linear-gradient(135deg,var(--navy) 0%,var(--slate) 100%);padding:18px 24px 16px;color:white;display:flex;align-items:center;gap:14px}
+.widget-header{background:linear-gradient(135deg,var(--navy) 0%,var(--slate) 100%);padding:14px 20px 12px;color:white;display:flex;align-items:center;gap:12px}
 .widget-header .logo-icon{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
 .widget-header h2{font-size:19px;font-weight:700;line-height:1.2}
 .widget-header p{font-size:13px;opacity:.8;margin-top:2px}
@@ -37,14 +40,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 .progress-fill{height:100%;background:var(--sage);transition:width .4s ease;border-radius:0 2px 2px 0}
 
 /* ── BODY ── */
-.widget-body{padding:24px;min-height:340px}
+.widget-body{padding:18px 22px 22px;min-height:340px}
 
 /* ── ANIM ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .widget-body>*{animation:fadeUp .3s ease}
 
 /* ── BOT MSG ── */
-.bot-msg{background:var(--lt-gray);border-radius:16px 16px 16px 4px;padding:16px 18px;margin-bottom:16px;font-size:17px;line-height:1.6;color:var(--dark)}
+.bot-msg{background:var(--lt-gray);border-radius:16px 16px 16px 4px;padding:14px 16px;margin-bottom:12px;font-size:17px;line-height:1.55;color:var(--dark)}
 .bot-msg strong{color:var(--navy)}
 .bot-msg.plain{background:none;border-radius:0;padding:4px 0 8px;font-size:20px;font-weight:700;color:var(--navy)}
 .bot-msg.hl{background:var(--lt-mint);border-left:4px solid var(--sage)}
@@ -64,7 +67,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 
 /* ── HOME BUTTONS ── */
 .home-grid{display:flex;flex-direction:column;gap:10px}
-.home-btn{display:flex;align-items:center;gap:14px;padding:18px 20px;border:none;border-radius:var(--radius);cursor:pointer;transition:all .2s;min-height:62px;font-family:inherit;width:100%;text-align:left}
+.home-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-radius:var(--radius);cursor:pointer;transition:all .2s;min-height:56px;font-family:inherit;width:100%;text-align:left}
 .home-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .home-btn:active{transform:scale(.98)}
 .home-btn .hb-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:#fff!important;box-shadow:0 1px 4px rgba(0,0,0,.08)}
@@ -164,7 +167,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 .success-icon{width:72px;height:72px;background:var(--lt-mint);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
 
 /* ── FOOTER ── */
-.widget-footer{padding:12px 22px 16px;text-align:center;font-size:12px;color:var(--gray);line-height:1.55;border-top:1px solid #EDF2F7}
+.widget-footer{padding:10px 20px 12px;text-align:center;font-size:11.5px;color:var(--gray);line-height:1.5;border-top:1px solid #EDF2F7}
 .widget-footer a{color:var(--blue);text-decoration:none}
 
 /* ── RESPONSIVE ── */
@@ -187,7 +190,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
   .plan-row{font-size:15px;padding:8px 0}
   .plan-card h4{font-size:17px}
   .plan-cta{padding:16px;font-size:16px;min-height:54px}
-  .home-btn{padding:20px 18px;gap:12px;min-height:68px}
+  .home-btn{padding:16px 16px;gap:12px;min-height:60px}
   .home-btn .hb-icon{width:46px;height:46px;font-size:22px}
   .home-btn .hb-text{font-size:18px}
   .home-btn .hb-sub{font-size:14px}
@@ -201,11 +204,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
   <div class="widget-header">
     <div class="logo-icon">&#x1F6E1;</div>
     <div><h2 id="hdr-title">Your Guide</h2><p id="hdr-sub">Beneficios Medicare</p></div>
+    <div class="lang-toggle" id="lang-toggle">
+      <button id="lang-en" onclick="setLang('en')">EN</button>
+      <button id="lang-es" onclick="setLang('es')">ES</button>
+    </div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
   <div class="widget-body" id="wb"></div>
-  <!-- FLOATING LANG BUBBLE -->
-  <button class="lang-bubble" id="lang-bubble" onclick="toggleLang()">ES</button>
+  <!-- LANG TOGGLE (moved to header in JS) -->
   <div class="widget-footer" id="wf">
     This website is not part of the federal government or the Medicare program.
     For official information visit <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> or call 1-800-Medicare.
@@ -217,6 +223,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 // ═══════════════════════════════════════
 
 let lang=new URLSearchParams(location.search).get('lang')==='es'?'es':'en', hist=[], D={}, selMeds=[];
+if(window.self!==window.top) document.body.classList.add('in-iframe');
 
 // ── CALLBACK REGISTRY ──
 // Shared steps store their next-function here instead of
@@ -284,14 +291,19 @@ const t=k=>T[k]?.[lang]||k;
 function toggleLang(){setLang(lang==='en'?'es':'en')}
 function setLang(l){
   lang=l;
-  // Bubble shows the OTHER language (the one you'd switch TO)
-  const bubble=document.getElementById('lang-bubble');
-  if(bubble) bubble.textContent=l==='en'?'ES':'EN';
+  // Update toggle buttons
+  document.getElementById('lang-en').classList.toggle('active',l==='en');
+  document.getElementById('lang-es').classList.toggle('active',l==='es');
   document.getElementById('hdr-title').textContent=t('title');
   document.getElementById('hdr-sub').textContent=t('sub');
   document.getElementById('wf').innerHTML=t('disc');
   if(hist.length>0)hist[hist.length-1]();
 }
+// Initialize toggle state
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('lang-en').classList.toggle('active',lang==='en');
+  document.getElementById('lang-es').classList.toggle('active',lang==='es');
+});
 
 // ── NAV ──
 function go(fn){hist.push(fn);fn()}
@@ -547,16 +559,17 @@ function ft_eligibility(){
     const iepDate=new Date(ew.year,ew.month-1,1);
     const monthsAway=Math.round((iepDate-now)/(1000*60*60*24*30));
     if(monthsAway>8){
-      // Under 65 — ask about special qualifying conditions
+      // Under 65 — show enrollment date + remind me + qualifying conditions
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Tu ventana de inscripci\u00F3n abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
-        ${bm(lang==='en'?'But you might still qualify now. Do any of these apply to you?':'Pero podr\u00EDas calificar ahora. \u00BFAlguna de estas situaciones aplica para ti?')}
+        <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recordarme cuando sea hora'}</button>
+        ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDas calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
           ${oc('\u267F','bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
           ${oc('\uD83C\uDFE5','gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
           ${oc('\uD83E\uDDE0','mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
-          ${oc('\u274C','sg',lang==='en'?'None of these':'Ninguna de estas',lang==='en'?'I just want to learn or get reminded':'Solo quiero aprender o que me recuerden','','','go(ft_notYetStep)')}
-        </div>`;
+        </div>
+        ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Tu ventana de inscripcion abre ${opensStr}!`,'hl')}
