@@ -236,7 +236,10 @@ body.in-iframe .widget-body{padding-top:14px}
 // COMBINED WIDGET v3
 // ═══════════════════════════════════════
 
-let lang=new URLSearchParams(location.search).get('lang')==='es'?'es':'en', hist=[], D={}, selMeds=[];
+const _params=new URLSearchParams(location.search);
+let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selMeds=[];
+const _initZip=_params.get('zip')||'';
+if(_initZip && /^\d{5}$/.test(_initZip)) D.zip=_initZip;
 if(window.self!==window.top){
   document.body.classList.add('in-iframe');
   // Auto-resize: tell parent our height
