@@ -50,7 +50,7 @@ body.in-iframe .widget-body{padding-top:14px}
 .widget-body>*{animation:fadeUp .3s ease}
 
 /* ── BOT MSG ── */
-.bot-msg{background:var(--lt-gray);border-radius:16px 16px 16px 4px;padding:14px 16px;margin-bottom:12px;font-size:17px;line-height:1.55;color:var(--dark)}
+.bot-msg{background:var(--lt-gray);border-radius:16px 16px 16px 4px;padding:12px 14px;margin-bottom:10px;font-size:15px;line-height:1.5;color:var(--gray)}
 .bot-msg strong{color:var(--navy)}
 .bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:24px;font-weight:700;color:var(--navy)}
 .bot-msg.hl{background:var(--lt-mint);border-left:4px solid var(--sage)}
@@ -401,7 +401,7 @@ function dobMonth(nextFn){
     g+=`<div class="tap-cell ${sel}" onclick="D.dob_month='${v}';go(_cb.dobM)">${m}</div>`;
   });
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>month</strong> were you born?':'En qué <strong>mes</strong> naciste?')}
+    ${bm(lang==='en'?'What <strong>month</strong> were you born?':'¿En qué <strong>mes</strong> nació?')}
     <div class="tap-grid months">${g}</div>`;
 }
 
@@ -415,7 +415,7 @@ function dobDay(nextFn){
     g+=`<div class="tap-cell ${sel}" onclick="D.dob_day='${v}';go(_cb.dobD)">${d}</div>`;
   }
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>day</strong>?':'Qué <strong>día</strong>?')}
+    ${bm(lang==='en'?'What <strong>day</strong>?':'¿Qué <strong>día</strong>?')}
     <div class="tap-grid days">${g}</div>`;
 }
 
@@ -423,7 +423,7 @@ function dobYear(nextFn){
   prog(26);
   _cb.dobY=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>year</strong> were you born?':'En que <strong>año</strong> naciste?')}
+    ${bm(lang==='en'?'What <strong>year</strong> were you born?':'¿En qué <strong>año</strong> nació?')}
     <div class="input-group"><label>${lang==='en'?'Birth year':'Año de nacimiento'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="dobYearInput" placeholder="${lang==='en'?'e.g. 1960':'ej. 1960'}" value="${D.dob_year||''}" maxlength="4"
       oninput="D.dob_year=this.value; if(this.value.length===4) setTimeout(()=>go(_cb.dobY),300)">
@@ -463,11 +463,11 @@ function genderStep(nextFn){
   prog(30);
   _cb.gender=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What is your <strong>gender</strong>?':'Cuál es su <strong>género</strong>?')}
+    ${bm(lang==='en'?'What is your <strong>gender</strong>?':'¿Cuál es su <strong>género</strong>?')}
     <div class="opt-grid">
-      ${oc('\uD83D\uDC68','bl',lang==='en'?'Male':'Masculino','','','', "D.gender='male';go(_cb.gender)")}
-      ${oc('\uD83D\uDC69','mi',lang==='en'?'Female':'Femenino','','','', "D.gender='female';go(_cb.gender)")}
-      ${oc('\u27A1\uFE0F','sg',lang==='en'?'Prefer not to say':'Prefiero no decir','','','', "D.gender='undisclosed';go(_cb.gender)")}
+      ${oc('M','bl',lang==='en'?'Male':'Masculino','','','', "D.gender='male';go(_cb.gender)")}
+      ${oc('F','mi',lang==='en'?'Female':'Femenino','','','', "D.gender='female';go(_cb.gender)")}
+      ${oc('\u2014','sg',lang==='en'?'Prefer not to say':'Prefiere no decir','','','', "D.gender='undisclosed';go(_cb.gender)")}
     </div>`;
 }
 
@@ -499,7 +499,7 @@ function medsAsk(nextYes,nextNo){
   prog(50);
   _cb.medY=nextYes; _cb.medN=nextNo;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you take prescription medications?':'Tomas medicinas recetadas?')}
+    ${bm(lang==='en'?'Do you take prescription medications?':'¿Toma medicinas recetadas?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDC8A','bl',lang==='en'?'Yes':'Si',lang==='en'?'I take medications.':'Tomo medicinas.','','',`D.hasMeds='yes';go(_cb.medY)`)}
       ${oc('\u2705','gr',lang==='en'?'No':'No',lang==='en'?'None.':'Ninguna.','','',`D.hasMeds='no';go(_cb.medN)`)}
@@ -554,7 +554,7 @@ function priorityStep(nextFn){
     <div class="opt-grid">
       ${oc('\uD83D\uDCB5','bl',lang==='en'?'Pay the least':'Pagar lo menos',lang==='en'?'Lowest monthly cost.':'Menor costo mensual.','','',`D.priority='cost';go(_cb.priority)`)}
       ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elección de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
-      ${oc('\uD83D\uDC8A','mi',lang==='en'?'Best drug coverage':'Mejor cobertura de medicinas',lang==='en'?'My meds covered.':'Mis medicinas cubiertas.','','',`D.priority='drugs';go(_cb.priority)`)}
+      ${oc('\uD83D\uDC8A','mi',lang==='en'?'Drug coverage':'Cobertura de medicinas',lang==='en'?'My meds covered.':'Mis medicinas cubiertas.','','',`D.priority='drugs';go(_cb.priority)`)}
       ${oc('\u2B50','sg',lang==='en'?'Most benefits':'Más beneficios',lang==='en'?'Dental, visión, hearing, gym.':'Dental, visión, audición, gimnasio.','','',`D.priority='benefits';go(_cb.priority)`)}
     </div>`;
 }
@@ -576,7 +576,7 @@ function ft_eligibility(){
     // Already eligible, auto-advance
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
-      ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find the best options for you.':'Puede inscribirse o cambiar planes ahora. Permítanos encontrar las mejores opciones.')}`;
+      ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Permítanos encontrar opciones disponibles.')}`;
     setTimeout(()=>go(ft_docAsk),1500);
   } else if(ew){
     const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
@@ -639,7 +639,7 @@ function mv_zipFrom(){
 function mv_zipTo(){
   prog(18);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'And where are you <strong>moving to</strong>?':'Y a dónde se <strong>muda</strong>?')}
+    ${bm(lang==='en'?'And where are you <strong>moving to</strong>?':'¿Y a dónde se <strong>muda</strong>?')}
     <div class="input-group"><label>${lang==='en'?'Moving TO (zip code)':'Mudándose A (código postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
       oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dobM),300)">
@@ -654,7 +654,7 @@ function mv_gender(){genderStep(mv_plan)}
 function mv_plan(){
   prog(38);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What plan do you have now?':'Qu\u00E9 plan tiene actualmente?')}
+    ${bm(lang==='en'?'What plan do you have now?':'¿Qué plan tiene actualmente?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDCCB','bl','Medicare Advantage',lang==='en'?'Part C plan.':'Plan Parte C.','','',"D.curPlan='advantage';go(mv_medsQ)")}
       ${oc('\uD83D\uDCCB','gr','Medigap + Part D',lang==='en'?'Supplement.':'Suplemento.','','',"D.curPlan='medigap';go(mv_medsQ)")}
@@ -677,7 +677,7 @@ function bb_gender(){genderStep(bb_benefits)}
 function bb_benefits(){
   prog(40);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What benefits matter most?':'Qué beneficios le importan más?')}
+    ${bm(lang==='en'?'What benefits matter most?':'¿Qué beneficios le importan más?')}
     <div class="opt-grid">
       ${oc('\uD83E\uDDB7','bl',lang==='en'?'Dental & Vision':'Dental y Vision','','','',"D.priority='dental';go(bb_medsQ)")}
       ${oc('\uD83D\uDC8A','gr',lang==='en'?'Drug Savings':'Ahorros en Medicinas','','','',"D.priority='drugs';go(bb_medsQ)")}
@@ -722,16 +722,16 @@ function scorePlans(){
   });
   plans.sort((a,b)=>b.score-a.score);
   // Assign labels
-  plans[0].label=lang==='en'?'Best Match':'Mejor Opcion';plans[0].labelCls='best-match';
-  // Find best value (lowest moop)
+  plans[0].label=lang==='en'?'Closest Match':'Mayor Coincidencia';plans[0].labelCls='best-match';
+  // Find lowest out-of-pocket max
   const bv=[...plans].sort((a,b)=>a.moop-b.moop)[0];
-  if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Best Value':'Mejor Valor';p.labelCls='best-value';}
-  // Most benefits
+  if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Lowest Cost':'Menor Costo';p.labelCls='best-value';}
+  // Most included benefits
   const mb=[...plans].sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50))[0];
-  if(!mb.label){mb.label=lang==='en'?'Most Benefits':'Mas Beneficios';mb.labelCls='most-benefits';}
-  // Top rated
+  if(!mb.label){mb.label=lang==='en'?'Most Included':'Más Incluido';mb.labelCls='most-benefits';}
+  // Highest rated
   const tr=[...plans].sort((a,b)=>b.rating-a.rating)[0];
-  if(!tr.label){tr.label=lang==='en'?'Top Rated':'Mejor Calificado';tr.labelCls='top-rated';}
+  if(!tr.label){tr.label=lang==='en'?'Highest Rated':'Mayor Calificación';tr.labelCls='top-rated';}
   return plans;
 }
 
@@ -840,8 +840,8 @@ function helpChoose(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?'We can review these plans with you and help you pick the best one. <strong>Free, no obligation.</strong>'
-      :'Una de nosotras le llamará para revisar estos planes y ayudarle a elegir el mejor. <strong>Gratis, sin compromiso.</strong>')}
+      ?'We can review these plans with you and help you decide. <strong>Free, no obligation.</strong>'
+      :'Una de nosotras le llamará para revisar estos planes y ayudarle a decidir. <strong>Gratis, sin compromiso.</strong>')}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -927,7 +927,7 @@ function flowSuccess(){
 function learnHome(){
   prog(5);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What would you like to know?':'Qué le gustaría saber?')}
+    ${bm(lang==='en'?'What would you like to know?':'¿Qué le gustaría saber?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDCD6','bl',lang==='en'?'Medicare Parts (A,B,C,D)':'Partes de Medicare (A,B,C,D)',lang==='en'?'What each covers.':'Que cubre cada una.','','','go(lParts)')}
       ${oc('\uD83D\uDCB0','gr',lang==='en'?'Costs & Premiums':'Costos y Primas',lang==='en'?'What you will pay.':'Lo que pagará.','','','go(lCosts)')}
@@ -940,7 +940,7 @@ function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Medicare costs</strong> breakdown:':'Resumen de <strong>costos de Medicare</strong>:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayoria'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima más alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Enrollment periods</strong>:':'<strong>Periodos de inscripcion</strong>:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumpleaños 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada año. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mudó, perdió cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'Más temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. <strong>Free, no obligation.</strong>':'Podemos responder sus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'Qué le gustaría saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. <strong>Free, no obligation.</strong>':'Podemos responder sus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'¿Qué le gustaría saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
 
 
 // ═══════════════════════════════════════
