@@ -363,7 +363,7 @@ function stepHome(){
       ${hb('\uD83D\uDCC5','hb-navy',lang==='en'?'Explore Your Options':'Explore Sus Opciones',lang==='en'?'Turning 65 or newly eligible':'Cumple 65 o reci\u00E9n elegible',"go(ft_zip)")}
       ${hb('\uD83D\uDE9A','hb-teal',lang==='en'?'Update Your Plan':'Actualice Su Plan',lang==='en'?'Recently moved to a new area':'Se mud\u00F3 a una nueva \u00E1rea',"go(mv_zipFrom)")}
       ${hb('\uD83D\uDCCA','hb-sage',lang==='en'?'Compare Plans':'Compare Planes',lang==='en'?'Find better benefits or lower costs':'Encuentre mejores beneficios o menor costo',"go(bb_zip)")}
-      ${hb('\u2753','hb-plum',lang==='en'?'Learn About Medicare':'Conozca Medicare',lang==='en'?'Clear answers to common questions':'Respuestas claras a preguntas frecuentes',"go(learnHome)")}
+      ${hb('\u2753','hb-plum',lang==='en'?'Learn About Medicare':'Entienda Medicare',lang==='en'?'Clear answers to common questions':'Respuestas claras a preguntas frecuentes',"go(learnHome)")}
     </div>`;
 }
 
@@ -479,7 +479,7 @@ function doctorAsk(nextYes,nextNo){
   prog(40);
   _cb.docY=nextYes; _cb.docN=nextNo;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'Tienes un doctor que quieres mantener?')}
+    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'¿Tiene un doctor que quiere mantener?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','bl',lang==='en'?'Yes':'Si',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
       ${oc('\uD83D\uDD0D','gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
@@ -510,7 +510,7 @@ function medsPick(nextFn){
   prog(58);
   _cb.meds=nextFn;
   let html=`${bk()}
-    ${bm(lang==='en'?'Select your medications by condition:':'Selecciona tus medicinas por condición:')}
+    ${bm(lang==='en'?'Select your medications by condition:':'Seleccione sus medicinas por condición:')}
     <div id="sel-meds" class="sel-meds"></div><div style="margin-top:10px">`;
   for(const[cat,info]of Object.entries(MED_DB)){
     html+=`<div class="med-cat">
@@ -550,7 +550,7 @@ function priorityStep(nextFn){
   prog(68);
   _cb.priority=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What matters most to you?':'Que es lo más importante para ti?')}
+    ${bm(lang==='en'?'What matters most to you?':'¿Qué es lo más importante para usted?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDCB5','bl',lang==='en'?'Pay the least':'Pagar lo menos',lang==='en'?'Lowest monthly cost.':'Menor costo mensual.','','',`D.priority='cost';go(_cb.priority)`)}
       ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elección de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
@@ -563,7 +563,7 @@ function priorityStep(nextFn){
 // ═══════════════════════════════════════
 //  FLOW: TURNING 65
 // ═══════════════════════════════════════
-function ft_zip(){zipStep('turning65',lang==='en'?'Let me guide you step by step.':'Dejame guiarte paso a paso.','zip',ft_dobM)}
+function ft_zip(){zipStep('turning65',lang==='en'?'Let me guide you step by step.':'Déjeme guiarle paso a paso.','zip',ft_dobM)}
 function ft_dobM(){dobMonth(ft_dobD)}
 function ft_dobD(){dobDay(ft_dobY)}
 function ft_dobY(){dobYear(ft_gender)}
@@ -629,7 +629,7 @@ function mv_zipFrom(){
   prog(12); D.flow='moved';
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarse le da un <strong>Periodo de Inscripci\u00F3n Especial</strong>! 63 d\u00EDas para cambiar su plan.','hl')}
-    <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudándote DE (código postal)'}</label>
+    <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudándose DE (código postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
       oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
     </div>
@@ -697,7 +697,7 @@ function snoozeStep(){
   const ew=getEnrollmentWindow();
   const opensStr=ew?`${monthName(ew.month)} ${ew.year}`:'';
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`We will remind you before ${opensStr} so you can compare plans at the right time.`:`Te recordaremos antes de ${opensStr} para que puedas comparar planes en el momento correcto.`)}
+    ${bm(lang==='en'?`We will remind you before ${opensStr} so you can compare plans at the right time.`:`Le recordaremos antes de ${opensStr} para que pueda comparar planes en el momento correcto.`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'Numero de telefono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -760,8 +760,8 @@ function flowResults(){
   const age=getAge();
   let note='';
   if(age!==null){
-    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tienes <strong>${age} años</strong> y eres elegible ahora.`;
-    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>.`:`Tu inscripcion abre <strong>${monthName(ew.month)} ${ew.year}</strong>.`;}
+    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} años</strong> y es elegible ahora.`;
+    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>.`:`Su inscripción abre <strong>${monthName(ew.month)} ${ew.year}</strong>.`;}
   }
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Mejores planes</strong> en su área${D.zip?' ('+D.zip+')':''}:`)}
