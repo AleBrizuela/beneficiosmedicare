@@ -216,7 +216,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 // COMBINED WIDGET v3
 // ═══════════════════════════════════════
 
-let lang='en', hist=[], D={}, selMeds=[];
+let lang=new URLSearchParams(location.search).get('lang')==='es'?'es':'en', hist=[], D={}, selMeds=[];
 
 // ── CALLBACK REGISTRY ──
 // Shared steps store their next-function here instead of
@@ -547,13 +547,16 @@ function ft_eligibility(){
     const iepDate=new Date(ew.year,ew.month-1,1);
     const monthsAway=Math.round((iepDate-now)/(1000*60*60*24*30));
     if(monthsAway>8){
-      // Too far away, offer snooze
+      // Under 65 — ask about special qualifying conditions
       wb().innerHTML=`${bk()}
-        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Tu ventana de inscripcion abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
-        ${ic(lang==='en'?'No rush':'Sin prisa',lang==='en'?'We can remind you when it is time to start looking at plans.':'Podemos recordarte cuando sea hora de empezar a ver planes.')}
-        ${bp(lang==='en'?'Continue anyway':'Continuar de todas formas','go(ft_docAsk)')}
-        <button class="btn-remind" onclick="go(snoozeStep)">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recordarme cuando sea hora'}</button>
-        ${bs(lang==='en'?'Learn about Medicare while I wait':'Aprender sobre Medicare mientras espero','go(learnHome)')}`;
+        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Tu ventana de inscripci\u00F3n abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
+        ${bm(lang==='en'?'But you might still qualify now. Do any of these apply to you?':'Pero podr\u00EDas calificar ahora. \u00BFAlguna de estas situaciones aplica para ti?')}
+        <div class="opt-grid">
+          ${oc('\u267F','bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
+          ${oc('\uD83C\uDFE5','gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
+          ${oc('\uD83E\uDDE0','mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
+          ${oc('\u274C','sg',lang==='en'?'None of these':'Ninguna de estas',lang==='en'?'I just want to learn or get reminded':'Solo quiero aprender o que me recuerden','','','go(ft_notYetStep)')}
+        </div>`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Tu ventana de inscripcion abre ${opensStr}!`,'hl')}
@@ -563,6 +566,16 @@ function ft_eligibility(){
   } else {
     go(ft_docAsk);
   }
+}
+function ft_notYetStep(){
+  prog(35);
+  const ew=getEnrollmentWindow();
+  const opensStr=ew?`<strong>${monthName(ew.month)} ${ew.year}</strong>`:'';
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'No problem! We can help you prepare for when the time comes.':'No hay problema! Te podemos ayudar a prepararte para cuando llegue el momento.')}
+    ${ic(lang==='en'?'Your options':'Tus opciones',lang==='en'?`We can remind you before ${opensStr} or you can learn about Medicare now.`:`Podemos recordarte antes de ${opensStr} o puedes aprender sobre Medicare ahora.`)}
+    <button class="btn-remind" onclick="go(snoozeStep)">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recordarme cuando sea hora'}</button>
+    ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
 }
 function ft_docAsk(){doctorAsk(ft_docName,ft_medsQ)}
 function ft_docName(){doctorName(ft_medsQ)}
