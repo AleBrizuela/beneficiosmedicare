@@ -377,6 +377,8 @@ function stepHome(){
 function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   prog(12); D.flow=flowName;
   _cb.zip=nextFn;
+  // Auto-skip if ZIP already known (share across flows)
+  if(D[fieldId] && /^\d{5}$/.test(D[fieldId])) { go(nextFn); return; }
   wb().innerHTML=`${bk()}
     ${bm(msg, cls)}
     <div class="input-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your zip code'):(fieldId.includes('from')?'Mudándose de (código postal)':'Su código postal')}</label>
@@ -630,6 +632,7 @@ function ft_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 function mv_zipFrom(){
   prog(12); D.flow='moved';
+  if(!D.zipFrom && D.zip) D.zipFrom=D.zip; // share zip across flows
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarse le da un <strong>Periodo de Inscripci\u00F3n Especial</strong>! 63 d\u00EDas para cambiar su plan.','hl')}
     <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudándose DE (código postal)'}</label>
@@ -770,9 +773,9 @@ function flowResults(){
     ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Planes disponibles</strong> en su área${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
-    ${bp(lang==='en'?'Compare Side by Side':'Comparar Lado a Lado','go(flowCompare)')}
+    ${bp(lang==='en'?'Help Me Choose':'Ayúdeme a Elegir','go(helpChoose)')}
     <div style="text-align:center;margin-top:10px">
-      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayúdeme a elegir'}</button>
+      <button class="btn-ghost" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
     </div>
     ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}`;
 }
@@ -930,7 +933,7 @@ function flowSuccess(){
         <li><span class="sb-icon">\u2764\uFE0F</span>${lang==='en'?'We are a family team that treats you like family':'Somos un equipo familiar que le trata como familia'}</li>
         <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
       </ul>
-      <button class="success-cta" onclick="back();back()">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
+      <button class="success-cta" onclick="back();back()">${lang==='en'?'Back To Plans':'Volver a Planes'}</button>
       <div class="success-links">
         <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
         <button onclick="hist=[];D={};selMeds=[];go(stepHome)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
