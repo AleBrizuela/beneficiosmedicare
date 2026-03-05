@@ -377,6 +377,8 @@ function stepHome(){
 function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   prog(12); D.flow=flowName;
   _cb.zip=nextFn;
+  // Auto-skip if ZIP already known (share across flows)
+  if(D[fieldId] && /^\d{5}$/.test(D[fieldId])) { go(nextFn); return; }
   wb().innerHTML=`${bk()}
     ${bm(msg, cls)}
     <div class="input-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your zip code'):(fieldId.includes('from')?'Mudándose de (código postal)':'Su código postal')}</label>
@@ -468,8 +470,8 @@ function genderStep(nextFn){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'What is your <strong>gender</strong>?':'¿Cuál es su <strong>género</strong>?')}
     <div class="opt-grid">
-      ${oc('M','bl',lang==='en'?'Male':'Masculino','','','', "D.gender='male';go(_cb.gender)")}
-      ${oc('F','mi',lang==='en'?'Female':'Femenino','','','', "D.gender='female';go(_cb.gender)")}
+      ${oc('\uD83D\uDC68\uD83C\uDFFB','bl',lang==='en'?'Male':'Masculino','','','', "D.gender='male';go(_cb.gender)")}
+      ${oc('\uD83D\uDC69\uD83C\uDFFB','mi',lang==='en'?'Female':'Femenino','','','', "D.gender='female';go(_cb.gender)")}
       ${oc('\u2014','sg',lang==='en'?'Prefer not to say':'Prefiere no decir','','','', "D.gender='undisclosed';go(_cb.gender)")}
     </div>`;
 }
@@ -484,7 +486,7 @@ function doctorAsk(nextYes,nextNo){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Do you have a doctor you want to keep?':'¿Tiene un doctor que quiere mantener?')}
     <div class="opt-grid">
-      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','bl',lang==='en'?'Yes':'Sí',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
+      ${oc('\uD83D\uDC68\uD83C\uDFFB\u200D\u2695\uFE0F','bl',lang==='en'?'Yes':'Sí',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
       ${oc('\uD83D\uDD0D','gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
     </div>`;
 }
@@ -556,7 +558,7 @@ function priorityStep(nextFn){
     ${bm(lang==='en'?'What matters most to you?':'¿Qué es lo más importante para usted?')}
     <div class="opt-grid">
       ${oc('\uD83D\uDCB5','bl',lang==='en'?'Pay the least':'Pagar lo menos',lang==='en'?'Lowest monthly cost.':'Menor costo mensual.','','',`D.priority='cost';go(_cb.priority)`)}
-      ${oc('\uD83D\uDC68\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elección de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
+      ${oc('\uD83D\uDC68\uD83C\uDFFB\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elección de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
       ${oc('\uD83D\uDC8A','mi',lang==='en'?'Drug coverage':'Cobertura de medicinas',lang==='en'?'My meds covered.':'Mis medicinas cubiertas.','','',`D.priority='drugs';go(_cb.priority)`)}
       ${oc('\u2B50','sg',lang==='en'?'Most benefits':'Más beneficios',lang==='en'?'Dental, visión, hearing, gym.':'Dental, visión, audición, gimnasio.','','',`D.priority='benefits';go(_cb.priority)`)}
     </div>`;
@@ -630,6 +632,7 @@ function ft_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 function mv_zipFrom(){
   prog(12); D.flow='moved';
+  if(!D.zipFrom && D.zip) D.zipFrom=D.zip; // share zip across flows
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarse le da un <strong>Periodo de Inscripci\u00F3n Especial</strong>! 63 d\u00EDas para cambiar su plan.','hl')}
     <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mudándose DE (código postal)'}</label>
@@ -684,7 +687,7 @@ function bb_benefits(){
     <div class="opt-grid">
       ${oc('\uD83E\uDDB7','bl',lang==='en'?'Dental & Vision':'Dental y Vision','','','',"D.priority='dental';go(bb_medsQ)")}
       ${oc('\uD83D\uDC8A','gr',lang==='en'?'Drug Savings':'Ahorros en Medicinas','','','',"D.priority='drugs';go(bb_medsQ)")}
-      ${oc('\uD83C\uDFCB','mi',lang==='en'?'Fitness & Wellness':'Fitness y Bienestar','','','',"D.priority='wellness';go(bb_medsQ)")}
+      ${oc('\uD83C\uDFCB\uD83C\uDFFB','mi',lang==='en'?'Fitness & Wellness':'Fitness y Bienestar','','','',"D.priority='wellness';go(bb_medsQ)")}
       ${oc('\uD83D\uDCB0','sg',lang==='en'?'All of the above':'Todo lo anterior','','','',"D.priority='all';go(bb_medsQ)")}
     </div>`;
 }
@@ -770,9 +773,9 @@ function flowResults(){
     ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Planes disponibles</strong> en su área${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
-    ${bp(lang==='en'?'Compare Side by Side':'Comparar Lado a Lado','go(flowCompare)')}
+    ${bp(lang==='en'?'Help Me Choose':'Ayúdeme a Elegir','go(helpChoose)')}
     <div style="text-align:center;margin-top:10px">
-      <button class="btn-ghost" onclick="go(helpChoose)">${lang==='en'?'Help me choose':'Ayúdeme a elegir'}</button>
+      <button class="btn-ghost" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
     </div>
     ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}`;
 }
@@ -926,11 +929,11 @@ function flowSuccess(){
       <h3 class="success-title">\uD83C\uDF89 ${lang==='en'?'Great News, '+firstName+'!':'\u00A1Excelentes Noticias, '+firstName+'!'}</h3>
       <p class="success-subtitle">${lang==='en'?'Your personalized help is on the way':'Su ayuda personalizada va en camino'}</p>
       <ul class="success-bullets">
-        <li><span class="sb-icon">\uD83D\uDC69\u200D\uD83D\uDCBC</span>${lang==='en'?'A dedicated agent will call you personally':'Una agente dedicada le llamar\u00E1 personalmente'}</li>
+        <li><span class="sb-icon">\uD83D\uDC69\uD83C\uDFFB\u200D\uD83D\uDCBC</span>${lang==='en'?'A dedicated agent will call you personally':'Una agente dedicada le llamar\u00E1 personalmente'}</li>
         <li><span class="sb-icon">\u2764\uFE0F</span>${lang==='en'?'We are a family team that treats you like family':'Somos un equipo familiar que le trata como familia'}</li>
         <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
       </ul>
-      <button class="success-cta" onclick="back();back()">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
+      <button class="success-cta" onclick="back();back()">${lang==='en'?'Back To Plans':'Volver a Planes'}</button>
       <div class="success-links">
         <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
         <button onclick="hist=[];D={};selMeds=[];go(stepHome)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
