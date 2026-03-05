@@ -959,6 +959,141 @@ body {
   background: linear-gradient(135deg, var(--accent-dark), var(--accent));
 }
 
+/* Soft lead capture card */
+.soft-lead-card {
+  background: linear-gradient(135deg, #fffde7, #fff9c4);
+  border: 2px solid #fdd835;
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  margin: 20px 0;
+  width: 100%;
+  align-self: flex-start;
+  animation: fadeIn 0.4s ease-out;
+}
+.soft-lead-card h4 {
+  font-size: 20px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.soft-lead-card p {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+.soft-lead-card .soft-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.soft-lead-card .soft-fields input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 16px;
+  font-family: var(--font);
+}
+.soft-lead-card .soft-fields input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.soft-lead-card .soft-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: white;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.soft-lead-card .soft-btn:hover {
+  background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+}
+.soft-lead-card.submitted {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-color: #81c784;
+}
+
+/* Exit intent overlay */
+.exit-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+.exit-popup {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  animation: slideUp 0.4s ease-out;
+}
+.exit-popup h3 {
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.exit-popup p {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-bottom: 18px;
+}
+.exit-popup .exit-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.exit-popup .exit-fields input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 16px;
+  font-family: var(--font);
+}
+.exit-popup .exit-fields input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.exit-popup .exit-btn-primary {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: white;
+  padding: 14px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.exit-popup .exit-btn-skip {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+}
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 /* Trust signals section */
 .trust-bar {
   display: flex;
@@ -1300,7 +1435,7 @@ body {
 
   <!-- Trust Signals -->
   <div class="trust-bar" id="trust-bar">
-    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos de CMS</span></div>
+    <div class="trust-item"><span class="trust-icon">&#x2713;</span><span id="trust-1">Datos Oficiales</span></div>
     <div class="trust-item"><span class="trust-icon">&#x1F512;</span><span id="trust-2">100% gratis</span></div>
     <div class="trust-item"><span class="trust-icon">&#x2665;</span><span id="trust-3">Sin compromiso</span></div>
   </div>
@@ -1358,6 +1493,126 @@ function sendLead(data) {
       }).catch(err2 => console.warn('Lead retry also failed:', err2));
     }, 2000);
   });
+}
+
+// --- FUNNEL TRACKING ---
+function trackFunnel(event, extra) {
+  const data = {
+    type: 'funnel',
+    event: event,
+    lang: state.lang || 'unknown',
+    zip: state.zip || '',
+    timestamp: new Date().toISOString(),
+    source: 'widget_v2',
+    url: window.location.href
+  };
+  if (extra) Object.assign(data, extra);
+
+  fetch(LEADS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+}
+
+// --- EXIT INTENT ---
+let _exitShown = false;
+let _softLeadSubmitted = false;
+
+function setupExitIntent() {
+  // Desktop: mouse leaves viewport at top
+  document.addEventListener('mouseleave', (e) => {
+    if (e.clientY < 10 && state.step >= 5 && !_exitShown && !_softLeadSubmitted) {
+      showExitPopup();
+    }
+  });
+
+  // Mobile: back button / visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && state.step >= 5 && !_exitShown && !_softLeadSubmitted) {
+      // Can't show popup when hidden, but track the event
+      trackFunnel('exit_attempt');
+    }
+  });
+}
+
+function showExitPopup() {
+  _exitShown = true;
+  trackFunnel('exit_popup_shown');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'exit-overlay';
+  overlay.id = 'exit-overlay';
+  overlay.innerHTML = `
+    <div class="exit-popup">
+      <div style="font-size:40px;margin-bottom:8px">👋</div>
+      <h3>${t('exit_title')}</h3>
+      <p>${t('exit_sub')}</p>
+      <div class="exit-fields">
+        <input type="text" id="exit-name" placeholder="${t('enroll_name')}">
+        <input type="tel" id="exit-phone" placeholder="${t('enroll_phone')}" inputmode="tel">
+        <input type="email" id="exit-email" placeholder="${t('enroll_email')}" inputmode="email">
+      </div>
+      <button class="exit-btn-primary" onclick="submitExitLead()">${t('exit_btn')}</button>
+      <button class="exit-btn-skip" onclick="closeExitPopup()">${t('exit_skip')}</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Close on overlay click (not popup)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeExitPopup();
+  });
+
+  setTimeout(() => { const f = document.getElementById('exit-name'); if (f) f.focus(); }, 300);
+}
+
+function submitExitLead() {
+  const name = document.getElementById('exit-name').value.trim();
+  const phone = document.getElementById('exit-phone').value.trim();
+  const email = document.getElementById('exit-email').value.trim();
+  if (!name && !phone && !email) return;
+
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  sendLead({
+    type: 'exit_intent',
+    first_name: firstName,
+    last_name: lastName,
+    phone: phone,
+    email: email,
+    zip: state.zip || '',
+    county: state.county || '',
+    state_code: state.stateCode || '',
+    dob: state.dob || '',
+    age: state.age || '',
+    eligibility: state.eligibility || '',
+    doctor_name: state.doctorName || '',
+    doctor_id: state.doctorId || '',
+    medications: (state.medications || []).join(', '),
+    lang: state.lang
+  });
+
+  trackFunnel('exit_lead_submitted');
+
+  // Show thank you
+  const popup = document.querySelector('.exit-popup');
+  if (popup) {
+    popup.innerHTML = `
+      <div style="font-size:48px;margin-bottom:12px">✓</div>
+      <h3 style="color:var(--accent)">${state.lang === 'es' ? '¡Gracias!' : 'Thank you!'}</h3>
+      <p>${t('soft_lead_thanks')}</p>
+    `;
+    setTimeout(closeExitPopup, 2500);
+  }
+}
+
+function closeExitPopup() {
+  const overlay = document.getElementById('exit-overlay');
+  if (overlay) overlay.remove();
 }
 
 // --- STATE ---
@@ -1502,11 +1757,11 @@ const T = {
     fitness: "Ejercicio",
     otc: "Productos sin receta",
     qtr: "/trimestre",
-    enroll_title: "¡Registramos su elección!",
+    enroll_title: "¡Excelente elección!",
     enroll_msg: "Una de nosotras le va a llamar para guiarle. Solo necesito:",
     enroll_name: "Nombre completo",
     enroll_phone: "Teléfono",
-    enroll_email: "Email (opcional)",
+    enroll_email: "Email",
     enroll_send: "Sí, llámenme",
     enroll_thanks: "¡Listo! Le llamaremos muy pronto. Gracias por confiar en nosotros.",
     enroll_other_msg: "Este plan no lo manejamos directamente, pero le ayudo a inscribirse:",
@@ -1514,6 +1769,16 @@ const T = {
     restart: "Empezar de nuevo",
     disclaimer_generic: "Para una lista completa de planes disponibles en su área, contacte Medicare.gov, 1-800-MEDICARE, o SHIP.",
     disclaimer_full: "No ofrecemos todos los planes disponibles en su área. Actualmente representamos {orgs} organizaciones que ofrecen {products} productos en su área. Para una lista completa, contacte Medicare.gov, 1-800-MEDICARE, o SHIP.",
+    // Soft lead capture
+    soft_lead_title: "¿Le ayudamos a elegir?",
+    soft_lead_sub: "Déjenos su información y un agente licenciado le llama gratis para guiarle.",
+    soft_lead_btn: "Sí, que me llamen",
+    soft_lead_thanks: "¡Gracias! Le llamaremos pronto para ayudarle.",
+    // Exit intent
+    exit_title: "¡Espere! No se vaya sin ayuda",
+    exit_sub: "Déjenos su nombre y teléfono. Le llamamos para explicarle sus opciones sin costo.",
+    exit_btn: "Sí, llámenme",
+    exit_skip: "No gracias",
   },
   en: {
     greeting: "Let's compare health plans for you. It's free.\n\nWhat's your zip code?",
@@ -1638,11 +1903,11 @@ const T = {
     fitness: "Fitness",
     otc: "OTC allowance",
     qtr: "/quarter",
-    enroll_title: "We've noted your choice!",
+    enroll_title: "Great choice!",
     enroll_msg: "One of us will call to guide you. We just need:",
     enroll_name: "Full name",
     enroll_phone: "Phone number",
-    enroll_email: "Email (optional)",
+    enroll_email: "Email",
     enroll_send: "Call me",
     enroll_thanks: "Thank you! We'll call you soon.",
     enroll_other_msg: "To enroll in this plan:",
@@ -1650,6 +1915,16 @@ const T = {
     restart: "Start over",
     disclaimer_generic: "For a complete list of plans available in your area, contact Medicare.gov, 1-800-MEDICARE, or SHIP.",
     disclaimer_full: "We do not offer every plan available in your area. Currently we represent {orgs} organizations which offer {products} products in your area. For a complete list, contact Medicare.gov, 1-800-MEDICARE, or SHIP.",
+    // Soft lead capture
+    soft_lead_title: "Need help choosing?",
+    soft_lead_sub: "Leave your info and a licensed agent will call you free to help.",
+    soft_lead_btn: "Yes, call me",
+    soft_lead_thanks: "Thanks! We'll call you soon to help.",
+    // Exit intent
+    exit_title: "Wait! Don't leave without help",
+    exit_sub: "Leave your name and phone. We'll call to explain your options at no cost.",
+    exit_btn: "Yes, call me",
+    exit_skip: "No thanks",
   }
 };
 
@@ -1668,7 +1943,7 @@ function updateDisclaimer(orgs, products) {
 
 function updateTrustBar() {
   const isES = state.lang === 'es';
-  document.getElementById('trust-1').textContent = isES ? 'Datos de CMS' : 'CMS data';
+  document.getElementById('trust-1').textContent = isES ? 'Datos Oficiales' : 'Official data';
   document.getElementById('trust-2').textContent = isES ? '100% gratis' : '100% free';
   document.getElementById('trust-3').textContent = isES ? 'Sin compromiso' : 'No obligation';
   document.getElementById('cms-banner').textContent = isES
@@ -1736,7 +2011,12 @@ function makeChoiceCards(options) {
   options.forEach(opt => {
     const card = document.createElement('button');
     card.className = 'choice-card' + (opt.fullWidth ? ' full-width' : '');
-    if (opt.icon) {
+    if (opt.iconHtml) {
+      const icon = document.createElement('span');
+      icon.className = 'card-icon';
+      icon.innerHTML = opt.iconHtml;
+      card.appendChild(icon);
+    } else if (opt.icon) {
       const icon = document.createElement('span');
       icon.className = 'card-icon';
       icon.textContent = opt.icon;
@@ -1925,9 +2205,9 @@ function updateProgress(step) {
   if (fill) fill.style.width = pct + '%';
   if (label) {
     if (pct === 0) {
-      label.textContent = state.lang === 'es' ? 'Solo 2 minutos' : 'Only 2 minutes';
+      label.textContent = state.lang === 'es' ? '2 minutos para completar' : '2 minutes to complete';
     } else if (pct < 100) {
-      label.textContent = pct + '% ' + (state.lang === 'es' ? 'completado · Solo 2 minutos' : 'complete · Only 2 minutes');
+      label.textContent = pct + '% ' + (state.lang === 'es' ? 'completado · 2 minutos' : 'complete · 2 minutes to complete');
     } else {
       label.textContent = '';
     }
@@ -2120,9 +2400,11 @@ function stepLanguage() {
   updateProgress(1);
   showBackButton(false);
 
+  const usFlag = '<img src="https://flagcdn.com/w40/us.png" width="36" height="24" alt="US" style="border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.15)">';
+  const esFlag = '<img src="https://flagcdn.com/w40/es.png" width="36" height="24" alt="ES" style="border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.15)">';
   const cards = makeChoiceCards([
-    { icon: '🇪🇸', label: 'Español', action: () => { state.lang = 'es'; updateTrustBar(); stepZip(); }},
-    { icon: '🇺🇸', label: 'English', action: () => { state.lang = 'en'; updateTrustBar(); stepZip(); }},
+    { iconHtml: usFlag, label: 'English', action: () => { state.lang = 'en'; trackFunnel('lang_selected', {value: 'en'}); updateTrustBar(); stepZip(); }},
+    { iconHtml: esFlag, label: 'Español', action: () => { state.lang = 'es'; trackFunnel('lang_selected', {value: 'es'}); updateTrustBar(); stepZip(); }},
   ]);
 
   showStep({
@@ -2219,6 +2501,7 @@ function stepZip() {
     hint.textContent = t('zip_found').replace('{n}', data.total_plans).replace('{county}', data.county).replace('{state}', data.state);
     hint.style.color = 'var(--accent)';
     hint.style.fontWeight = '600';
+    trackFunnel('zip_entered', {zip: state.zip, county: data.county, state: data.state});
     setTimeout(() => stepDOB(), 600);
   };
 
@@ -2387,6 +2670,7 @@ function stepDOB_year() {
 
 // Process DOB result (eligibility logic)
 function finishDOB(age, dob) {
+  trackFunnel('dob_completed', {age: age});
   const today = new Date();
   const isES = state.lang === 'es';
 
@@ -2449,7 +2733,7 @@ function finishDOB(age, dob) {
               <div style="margin-top:10px">
                 <input type="text" class="input-field" id="future-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
                 <input type="tel" class="input-field" id="future-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-                <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+                <input type="email" class="input-field" id="future-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email" required>
                 <button class="btn accent large" id="future-submit">${t('dob_future_btn')}</button>
                 <button class="btn outline" id="future-skip" style="margin-top:6px">${t('dob_future_skip')}</button>
               </div>
@@ -2458,15 +2742,18 @@ function finishDOB(age, dob) {
             scrollToBottom();
 
             document.getElementById('future-submit').onclick = () => {
-              const name = document.getElementById('future-name').value;
-              const phone = document.getElementById('future-phone').value;
-              const email = document.getElementById('future-email').value;
-              if (!name || !phone) return;
+              const fullName = document.getElementById('future-name').value.trim();
+              const phone = document.getElementById('future-phone').value.trim();
+              const email = document.getElementById('future-email').value.trim();
+              if (!fullName || !phone || !email) return;
+              const nameParts = fullName.split(' ');
+              const firstName = nameParts[0] || '';
+              const lastName = nameParts.slice(1).join(' ') || '';
               form.remove();
-              const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
+              const display = `${fullName} - ${phone} - ${email}`;
               addMessage(display, 'user');
               addMessage(t('dob_future_thanks').replace('{date}', iepStr), 'bot');
-              sendLead({ type: 'future', name, phone, email, dob: state.dob, age, turn65: turn65Str, iep_start: iepStr, zip: state.zip, lang: state.lang });
+              sendLead({ type: 'future', first_name: firstName, last_name: lastName, phone, email, zip: state.zip, county: state.county || '', state_code: state.stateCode || '', dob: state.dob, age, eligibility: state.eligibility || '', doctor_name: state.doctorName || '', doctor_id: state.doctorId || '', medications: (state.medications || []).join(', '), lang: state.lang });
             };
             document.getElementById('future-skip').onclick = () => { form.remove(); addMessage(t('dob_future_skip_ok'), 'bot'); };
           }, 500);
@@ -2491,11 +2778,12 @@ function stepDoctor() {
   updateProgress(4);
   showBackButton(true);
   chat.innerHTML = '';
+  trackFunnel('doctor_step');
 
   // First ask YES / NO
   addMessage(t('doc_ask'), 'bot');
   addButtons([
-    { text: t('yes'), class: 'accent large', action: () => stepDoctorSearch() },
+    { text: t('yes'), class: 'accent large', noEcho: true, action: () => stepDoctorSearch() },
     { text: t('no'), class: 'secondary large', action: () => {
       state.doctorId = null;
       state.doctorName = null;
@@ -2506,10 +2794,8 @@ function stepDoctor() {
 
 // Show doctor search input after user says YES
 function stepDoctorSearch() {
-  // Clear the YES/NO buttons
-  const btns = chat.querySelectorAll('.button-group');
-  btns.forEach(b => b.remove());
-
+  // Clear everything and start fresh for doctor search
+  chat.innerHTML = '';
   addMessage(t('yes'), 'user');
   addMessage(t('doc_name'), 'bot');
 
@@ -2616,6 +2902,7 @@ function stepMedications() {
   showBackButton(true);
   state.medications = [];
   chat.innerHTML = '';
+  trackFunnel('meds_step');
 
   const isES = state.lang === 'es';
   addMessage(t('med_ask'), 'bot');
@@ -2762,6 +3049,8 @@ async function stepResults() {
   state.results = data;
   state.visibleCount = 3; // pagination state
   state.activeFilter = 'all';
+  trackFunnel('results_viewed', {total_plans: data.total_plans, recommended: data.recommended.length});
+  setupExitIntent();
 
   const topN = Math.min(3, data.recommended.length);
   addMessage(
@@ -3401,13 +3690,63 @@ function buildAutoCompareEl(plans) {
 
 function buildNeedHelpCta() {
   const cta = document.createElement('div');
-  cta.className = 'need-help-cta';
+  cta.className = 'soft-lead-card';
+  cta.id = 'soft-lead-card';
   cta.innerHTML = `
-    <h4>${t('need_help')}</h4>
-    <p>${t('need_help_sub')}</p>
-    <a href="tel:+18006334227" class="help-phone">📞 ${t('need_help_btn')}</a>
+    <h4>${t('soft_lead_title')}</h4>
+    <p>${t('soft_lead_sub')}</p>
+    <div class="soft-fields">
+      <input type="text" id="soft-name" placeholder="${t('enroll_name')}">
+      <input type="tel" id="soft-phone" placeholder="${t('enroll_phone')}" inputmode="tel">
+      <input type="email" id="soft-email" placeholder="${t('enroll_email')}" inputmode="email">
+    </div>
+    <button class="soft-btn" onclick="submitSoftLead()">${t('soft_lead_btn')}</button>
+    <div style="margin-top:12px">
+      <a href="tel:+18006334227" style="color:var(--text-light);font-size:14px;text-decoration:none">📞 ${t('need_help_btn')}</a>
+    </div>
   `;
   return cta;
+}
+
+function submitSoftLead() {
+  const name = document.getElementById('soft-name').value.trim();
+  const phone = document.getElementById('soft-phone').value.trim();
+  const email = document.getElementById('soft-email').value.trim();
+  if (!name && !phone && !email) return;
+
+  _softLeadSubmitted = true;
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  sendLead({
+    type: 'soft_lead',
+    first_name: firstName,
+    last_name: lastName,
+    phone: phone,
+    email: email,
+    zip: state.zip || '',
+    county: state.county || '',
+    state_code: state.stateCode || '',
+    dob: state.dob || '',
+    age: state.age || '',
+    eligibility: state.eligibility || '',
+    doctor_name: state.doctorName || '',
+    doctor_id: state.doctorId || '',
+    medications: (state.medications || []).join(', '),
+    lang: state.lang
+  });
+
+  trackFunnel('soft_lead_submitted');
+
+  const card = document.getElementById('soft-lead-card');
+  if (card) {
+    card.classList.add('submitted');
+    card.innerHTML = `
+      <div style="font-size:40px;margin-bottom:8px">✓</div>
+      <h4 style="color:var(--accent)">${t('soft_lead_thanks')}</h4>
+    `;
+  }
 }
 
 // Enrollment handoff - always capture lead regardless of contracted status
@@ -3415,6 +3754,28 @@ let _enrollActive = false;
 function handleEnroll(planId, contracted) {
   if (_enrollActive) return; // prevent double-trigger
   _enrollActive = true;
+  trackFunnel('enroll_clicked', {plan_id: planId, contracted: contracted});
+
+  // Clear results and show enrollment form as clean step
+  chat.innerHTML = '';
+  window.scrollTo(0, 0);
+
+  const plan = (state.results?.all_plans || []).find(p => p.plan_id === planId) || {};
+  const planLabel = plan.plan_name || planId;
+  const carrierLabel = plan.carrier || '';
+  const premiumLabel = plan.premium || '';
+  const isES = state.lang === 'es';
+
+  // Plan summary card at top
+  const summary = document.createElement('div');
+  summary.style.cssText = 'background:linear-gradient(135deg,#065f46,#047857);color:white;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;';
+  summary.innerHTML = `
+    <div style="font-size:14px;opacity:0.8;margin-bottom:4px">${isES ? 'Tu plan elegido' : 'Your chosen plan'}</div>
+    <div style="font-size:20px;font-weight:700">${planLabel}</div>
+    ${carrierLabel ? `<div style="font-size:14px;opacity:0.8;margin-top:4px">${carrierLabel}${premiumLabel ? ' · ' + premiumLabel : ''}</div>` : ''}
+  `;
+  chat.appendChild(summary);
+
   addMessage(t('enroll_title'), 'bot');
   addMessage(t('enroll_msg'), 'bot');
 
@@ -3425,25 +3786,32 @@ function handleEnroll(planId, contracted) {
     <div style="margin-top:10px">
       <input type="text" class="input-field" id="enroll-name" placeholder="${t('enroll_name')}" style="width:100%;margin-bottom:8px">
       <input type="tel" class="input-field" id="enroll-phone" placeholder="${t('enroll_phone')}" style="width:100%;margin-bottom:8px" inputmode="tel">
-      <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email">
+      <input type="email" class="input-field" id="enroll-email" placeholder="${t('enroll_email')}" style="width:100%;margin-bottom:8px" inputmode="email" required>
       <button class="btn accent large" onclick="submitEnroll('${planId}')">${t('enroll_send')}</button>
     </div>
   `;
   chat.appendChild(form);
-  scrollToBottom();
+
+  // Focus the first field
+  setTimeout(() => { const f = document.getElementById('enroll-name'); if (f) f.focus(); }, 200);
 }
 
 function submitEnroll(planId) {
-  const name = document.getElementById('enroll-name').value;
-  const phone = document.getElementById('enroll-phone').value;
-  const email = document.getElementById('enroll-email').value;
-  if (!name || !phone) return;
+  const fullName = document.getElementById('enroll-name').value.trim();
+  const phone = document.getElementById('enroll-phone').value.trim();
+  const email = document.getElementById('enroll-email').value.trim();
+  if (!fullName || !phone || !email) return;
+
+  // Split name for lead storage
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
 
   // Remove the form
   const formEl = document.getElementById('enroll-name').closest('div').parentElement;
   if (formEl) formEl.remove();
 
-  const display = email ? `${name} - ${phone} - ${email}` : `${name} - ${phone}`;
+  const display = `${fullName} - ${phone} - ${email}`;
   addMessage(display, 'user');
 
   // Confirmation card
@@ -3458,7 +3826,7 @@ function submitEnroll(planId) {
     <div style="font-size:16px;opacity:0.9;margin-bottom:16px">${t('enroll_thanks')}</div>
     <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:12px;text-align:left;font-size:14px;line-height:1.8">
       <div><strong>${isES ? 'Plan' : 'Plan'}:</strong> ${plan.plan_name || planId}</div>
-      <div><strong>${isES ? 'Nombre' : 'Name'}:</strong> ${name}</div>
+      <div><strong>${isES ? 'Nombre' : 'Name'}:</strong> ${fullName}</div>
       <div><strong>${isES ? 'Tel' : 'Phone'}:</strong> ${phone}</div>
       ${email ? `<div><strong>Email:</strong> ${email}</div>` : ''}
     </div>
@@ -3467,18 +3835,26 @@ function submitEnroll(planId) {
   chat.appendChild(conf);
   scrollToBottom();
 
+  trackFunnel('form_submitted', {plan_id: planId});
+
   sendLead({
     type: 'enrollment',
-    name, phone, email,
+    first_name: firstName,
+    last_name: lastName,
+    phone, email,
     zip: state.zip,
     county: state.county || '',
-    state: state.state || '',
+    state_code: state.stateCode || '',
+    dob: state.dob || '',
+    age: state.age || '',
+    eligibility: state.eligibility || '',
+    doctor_name: state.doctorName || '',
+    doctor_id: state.doctorId || '',
+    medications: (state.medications || []).join(', '),
     plan_name: plan.plan_name || planId,
-    plan_id: planId,
     carrier: plan.carrier || '',
     premium: plan.premium || '',
-    lang: state.lang,
-    eligibility: state.eligibility || ''
+    lang: state.lang
   });
 }
 
