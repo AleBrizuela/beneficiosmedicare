@@ -293,6 +293,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ── NAV ──
 function go(fn){hist.push(fn);fn()}
 function back(){if(hist.length>1){hist.pop();hist[hist.length-1]()}}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
 function bk(){return hist.length<=1?'':`<button class="btn-back" onclick="back()">${t('back')}</button>`}
