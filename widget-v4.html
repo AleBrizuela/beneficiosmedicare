@@ -108,6 +108,11 @@ body.in-iframe .widget-body{padding-top:14px}
 .health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(91,138,114,.15)}
 .health-textarea::placeholder{color:#A0AEC0}
 
+/* ── RANK BADGES (priority step) ── */
+.opt-card{position:relative}
+.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(91,138,114,.3);animation:popIn .25s ease}
+.opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
+
 /* ── PLAN CARDS ── */
 .plan-card{border:2px solid #E2E8F0;border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all .2s;position:relative;border-left:5px solid #E2E8F0}
 .plan-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -209,7 +214,7 @@ body.in-iframe .widget-body{padding-top:14px}
 // ═══════════════════════════════════════
 
 const _params=new URLSearchParams(location.search);
-let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[];
+let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[];
 const _initZip=_params.get('zip')||'';
 if(_initZip && /^\d{5}$/.test(_initZip)) D.zip=_initZip;
 if(window.self!==window.top){
@@ -339,17 +344,14 @@ function dobStep(nextFn){
 }
 
 function formatDob(el){
-  const pos=el.selectionStart;
   let raw=el.value.replace(/[^\d]/g,'');
   if(raw.length>8) raw=raw.slice(0,8);
-  let v=raw;
-  if(v.length>2) v=v.slice(0,2)+' / '+v.slice(2);
-  if(v.length>7) v=v.slice(0,7)+' / '+v.slice(7);
+  const mm=raw.slice(0,2), dd=raw.slice(2,4), yyyy=raw.slice(4,8);
+  let v=mm;
+  if(raw.length>2) v+=(' / '+dd);
+  if(raw.length>4) v+=(' / '+yyyy);
   el.value=v;
-  // keep cursor in a natural spot after auto-format
-  let newPos=pos;
-  if(raw.length===2||raw.length===4) newPos=v.length;
-  try{el.setSelectionRange(newPos,newPos);}catch(e){}
+  el.setSelectionRange(v.length,v.length);
 }
 function parseDob(){
   const v=document.getElementById('dobInput')?.value||'';
@@ -440,17 +442,43 @@ function toggleCond(id){
 // ═══════════════════════════════════════
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
+const PRI_OPTIONS=[
+  {id:'cost',icon:'\uD83D\uDCB5',icls:'bl',en:'Pay the least',es:'Pagar lo menos',enD:'Lowest monthly cost.',esD:'Menor costo mensual.'},
+  {id:'doctor',icon:'\uD83D\uDC68\uD83C\uDFFB\u200D\u2695\uFE0F',icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'Doctor choice matters.',esD:'La elecci\u00F3n de doctor importa.'},
+  {id:'drugs',icon:'\uD83D\uDC8A',icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My meds covered.',esD:'Mis medicinas cubiertas.'},
+  {id:'benefits',icon:'\u2B50',icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision, hearing, gym.',esD:'Dental, visi\u00F3n, audici\u00F3n, gimnasio.'}
+];
 function priorityStep(nextFn){
   prog(68);
   _cb.priority=nextFn;
+  priRank=[];
+  const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What matters <strong>most</strong> to you?':'\u00BFQu\u00E9 es lo <strong>m\u00E1s importante</strong> para usted?')}
-    <div class="opt-grid">
-      ${oc('\uD83D\uDCB5','bl',lang==='en'?'Pay the least':'Pagar lo menos',lang==='en'?'Lowest monthly cost.':'Menor costo mensual.','','',`D.priority='cost';go(_cb.priority)`)}
-      ${oc('\uD83D\uDC68\uD83C\uDFFB\u200D\u2695\uFE0F','gr',lang==='en'?'Keep my doctor':'Mantener mi doctor',lang==='en'?'Doctor choice matters.':'La elecci\u00F3n de doctor importa.','','',`D.priority='doctor';go(_cb.priority)`)}
-      ${oc('\uD83D\uDC8A','mi',lang==='en'?'Drug coverage':'Cobertura de medicinas',lang==='en'?'My meds covered.':'Mis medicinas cubiertas.','','',`D.priority='drugs';go(_cb.priority)`)}
-      ${oc('\u2B50','sg',lang==='en'?'Most benefits':'M\u00E1s beneficios',lang==='en'?'Dental, vision, hearing, gym.':'Dental, visi\u00F3n, audici\u00F3n, gimnasio.','','',`D.priority='benefits';go(_cb.priority)`)}
-    </div>`;
+    ${bm(lang==='en'?'What matters most? <strong>Tap in order</strong> of importance.':'\u00BFQu\u00E9 es lo m\u00E1s importante? <strong>Toque en orden</strong> de importancia.')}
+    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'1st tap = top priority. Tap again to remove.':'1er toque = prioridad #1. Toque de nuevo para quitar.'}</p>
+    <div class="opt-grid">${cards}</div>
+    ${bp(t('next'),'savePriority();go(_cb.priority)')}
+    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority="benefits";D.priorities=[];go(_cb.priority)')}`;
+}
+function togglePri(id){
+  const i=priRank.indexOf(id);
+  if(i>=0) priRank.splice(i,1); else priRank.push(id);
+  PRI_OPTIONS.forEach(o=>{
+    const el=document.getElementById('pri-'+o.id);
+    const rank=priRank.indexOf(o.id);
+    el.classList.toggle('ranked',rank>=0);
+    const old=el.querySelector('.rank-badge');
+    if(old) old.remove();
+    if(rank>=0){
+      const b=document.createElement('span');
+      b.className='rank-badge';b.textContent=rank+1;
+      el.appendChild(b);
+    }
+  });
+}
+function savePriority(){
+  D.priorities=[...priRank];
+  D.priority=priRank[0]||'benefits';
 }
 
 
@@ -586,14 +614,18 @@ function snoozeStep(){
 // ═══════════════════════════════════════
 function scorePlans(){
   let plans=[...PLANS];
+  const ranked=D.priorities&&D.priorities.length?D.priorities:[D.priority||'benefits'];
   plans.forEach(p=>{
     p.score=0;
-    if(D.priority==='cost')p.score+=(6000-p.moop)/1000+(p.premium===0?3:0)+(p.giveback>0?2:0);
-    if(D.priority==='benefits'||D.priority==='all')p.score+=(p.dental+p.vision+p.hearing+p.fitness)+p.otc/50;
-    if(D.priority==='drugs')p.score+=(p.drug==='Enhanced'?3:1);
-    if(D.priority==='dental')p.score+=(p.dental?3:0)+(p.vision?2:0);
-    if(D.priority==='wellness')p.score+=(p.fitness?3:0)+p.otc/30;
-    if(D.priority==='doctor')p.score+=(p.type==='PPO'?3:1);
+    ranked.forEach((pri,idx)=>{
+      const w=ranked.length-idx; // 1st pick gets highest weight
+      if(pri==='cost')p.score+=w*((6000-p.moop)/1000+(p.premium===0?3:0)+(p.giveback>0?2:0));
+      if(pri==='benefits'||pri==='all')p.score+=w*((p.dental+p.vision+p.hearing+p.fitness)+p.otc/50);
+      if(pri==='drugs')p.score+=w*(p.drug==='Enhanced'?3:1);
+      if(pri==='dental')p.score+=w*((p.dental?3:0)+(p.vision?2:0));
+      if(pri==='wellness')p.score+=w*((p.fitness?3:0)+p.otc/30);
+      if(pri==='doctor')p.score+=w*(p.type==='PPO'?3:1);
+    });
     // Boost for matching conditions
     if(selConds.includes('vision')&&p.vision)p.score+=1;
     if(selConds.includes('bones')&&p.fitness)p.score+=1;
@@ -780,7 +812,7 @@ function flowSuccess(){
       </ul>
       <div class="success-links">
         <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
-        <button onclick="hist=[];D={};selConds=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
+        <button onclick="hist=[];D={};selConds=[];priRank=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
       </div>
     </div>`;
   } else {
@@ -796,7 +828,7 @@ function flowSuccess(){
       <button class="success-cta" onclick="back();back()">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
       <div class="success-links">
         <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
-        <button onclick="hist=[];D={};selConds=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
+        <button onclick="hist=[];D={};selConds=[];priRank=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
       </div>
     </div>`;
   }
