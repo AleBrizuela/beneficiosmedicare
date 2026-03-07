@@ -313,9 +313,23 @@ section { padding: 80px 24px; }
 /* ── HERO ──────────────────────────────────────────────── */
 .hero {
   padding-top: 60px; padding-bottom: 120px;
-  background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
+  background: linear-gradient(135deg, #E0F2F1 0%, #E8F4FD 40%, #F0F7F4 100%);
   position: relative; overflow: visible;
 }
+/* Floating decorative shapes */
+.hero-decor { position:absolute; border-radius:50%; opacity:0.08; z-index:0; }
+.hero-decor-1 { width:300px; height:300px; background:#00796B; top:-60px; right:-80px; animation:float 8s ease-in-out infinite; }
+.hero-decor-2 { width:200px; height:200px; background:#2E6BA4; bottom:40px; left:-60px; animation:float 10s ease-in-out infinite reverse; }
+.hero-decor-3 { width:120px; height:120px; background:#00796B; top:40%; right:15%; animation:float 6s ease-in-out infinite 1s; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+/* Widget glow */
+.hero-widget iframe { box-shadow: 0 8px 40px rgba(0,121,107,0.15), 0 2px 12px rgba(0,0,0,0.06); }
+/* Trust mini-cards */
+.trust-mini { display:flex; align-items:center; gap:12px; background:white; border-radius:12px; padding:14px 18px; box-shadow:0 2px 12px rgba(0,0,0,0.06); transition:transform .2s; }
+.trust-mini:hover { transform:translateY(-2px); }
+.trust-mini-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.trust-mini-text { font-size:14px; font-weight:600; color:#1C2B3A; line-height:1.4; }
+.trust-mini-text small { display:block; font-weight:400; color:#5A6577; font-size:12px; margin-top:2px; }
 .hero::after {
   content: ''; position: absolute; bottom: -2px; left: -10%; right: -10%;
   height: 120px; background: white;
@@ -1052,7 +1066,12 @@ a[href^="tel"] { white-space: nowrap; }
 
   <!-- HERO -->
   <section class="hero" style="padding-top:0">
-    <div class="container">
+    <!-- Floating decorative shapes -->
+    <div class="hero-decor hero-decor-1"></div>
+    <div class="hero-decor hero-decor-2"></div>
+    <div class="hero-decor hero-decor-3"></div>
+
+    <div class="container" style="position:relative;z-index:2">
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
         <div style="order:-1">
@@ -1066,11 +1085,20 @@ a[href^="tel"] { white-space: nowrap; }
         <!-- Hero text on RIGHT (desktop) / BOTTOM (mobile) -->
         <div style="position:relative;z-index:2">
           <h2>Beneficios <em>Medicare</em></h2>
-          <p style="font-size:18px;font-weight:500;color:#2D3748;margin-bottom:20px;line-height:1.6">Comparamos planes de Kaiser, SCAN, Aetna y más. Sin costo para usted.</p>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> Asesoría 100% gratuita</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> Sin compromiso ni obligación</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> Le llamamos con opciones personalizadas</div>
+          <p style="font-size:18px;font-weight:500;color:#2D3748;margin-bottom:24px;line-height:1.6">Comparamos planes de Kaiser, SCAN, Aetna y más. Sin costo para usted.</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#E0F2F1;color:#00796B"><i class="fas fa-shield-alt"></i></div>
+              <div class="trust-mini-text">100% Gratuito<small>Nunca le cobramos por nuestra asesoría</small></div>
+            </div>
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#E8F4FD;color:#2E6BA4"><i class="fas fa-user-md"></i></div>
+              <div class="trust-mini-text">Agentes Licenciadas<small>Madre e hija, en 8 estados</small></div>
+            </div>
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#FFF3E0;color:#E65100"><i class="fas fa-comments"></i></div>
+              <div class="trust-mini-text">En Español<small>Le llamamos con opciones personalizadas</small></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1271,37 +1299,6 @@ a[href^="tel"] { white-space: nowrap; }
     </div>
   </section>
 
-  <!-- AREAS QUE SERVIMOS -->
-  <section style="background:#F0F7F4;padding:60px 24px">
-    <div class="container">
-      <div style="text-align:center">
-        <div class="section-label">ÁREAS QUE SERVIMOS</div>
-        <div class="section-title" style="text-align:center">Licencia en 8 Estados</div>
-        <p style="font-size:18px;color:var(--gray);max-width:700px;margin:16px auto 24px">Servimos a comunidades hispanas en 8 estados. Si se mudó recientemente, es posible que también podamos ayudarle.</p>
-      </div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">California</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Florida</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Illinois</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Iowa</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Kansas</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Missouri</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Oklahoma</span>
-        <span class="credential-tag" style="background:#E8F5F1;color:#146A5D;font-weight:700;border:1.5px solid #B8D4C8">Texas</span>
-      </div>
-      
-    </div>
-  </section>
-
-  <!-- CTA BANNER: HABLAR CON ASESOR -->
-  <section class="cta-banner" style="text-align:center;padding:60px 24px">
-    <h2>¿Prefiere hablar con nosotras?</h2>
-    <p>Estamos aquí para ayudarle.</p>
-    <div style="display:flex;justify-content:center;margin-bottom:14px">
-      <a href="tel:+13105979142" class="btn btn-primary" style="font-size:18px;padding:20px 44px;border-radius:12px;display:inline-flex;align-items:center;gap:10px"><i class="fas fa-phone-alt"></i> Llame por Teléfono</a>
-    </div>
-    <div style="display:flex;justify-content:center;width:100%"><span style="font-size:14px;color:#8896A6">o <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> agende una video llamada</a></span></div>
-  </section>
 </div>
 
 <div id="about-content">

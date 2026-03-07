@@ -315,9 +315,15 @@ section { padding: 80px 24px; }
 /* ── HERO ──────────────────────────────────────────────── */
 .hero {
   padding-top: 60px; padding-bottom: 120px;
-  background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
+  background: linear-gradient(135deg, #E0F2F1 0%, #E8F4FD 40%, #F0F7F4 100%);
   position: relative; overflow: visible;
 }
+/* Floating decorative shapes */
+.hero-decor { position:absolute; border-radius:50%; opacity:0.08; z-index:0; }
+.hero-decor-1 { width:300px; height:300px; background:#00796B; top:-60px; right:-80px; animation:float 8s ease-in-out infinite; }
+.hero-decor-2 { width:200px; height:200px; background:#2E6BA4; bottom:40px; left:-60px; animation:float 10s ease-in-out infinite reverse; }
+.hero-decor-3 { width:120px; height:120px; background:#00796B; top:40%; right:15%; animation:float 6s ease-in-out infinite 1s; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
 .hero::after {
   content: ''; position: absolute; bottom: -2px; left: -10%; right: -10%;
   height: 120px; background: white;
@@ -346,6 +352,12 @@ section { padding: 80px 24px; }
 }
 .hero p { font-size: 19px; color: var(--navy); opacity: 0.6; margin-bottom: 32px; line-height: 1.7; }
 .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+.trust-mini { display:flex; align-items:center; gap:12px; background:white; border-radius:12px; padding:14px 18px; box-shadow:0 2px 12px rgba(0,0,0,0.06); transition:transform .2s; }
+.trust-mini:hover { transform:translateY(-2px); }
+.trust-mini-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.trust-mini-text { font-size:14px; font-weight:600; color:#1C2B3A; line-height:1.4; }
+.trust-mini-text small { display:block; font-weight:400; color:#5A6577; font-size:12px; margin-top:2px; }
+.hero-widget iframe { box-shadow: 0 8px 40px rgba(0,121,107,0.15), 0 2px 12px rgba(0,0,0,0.06); }
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 14px 28px; border-radius: 10px;
@@ -1054,11 +1066,16 @@ a[href^="tel"] { white-space: nowrap; }
 
   <!-- HERO -->
   <section class="hero" style="padding-top:0">
-    <div class="container">
+    <!-- Floating decorative shapes -->
+    <div class="hero-decor hero-decor-1"></div>
+    <div class="hero-decor hero-decor-2"></div>
+    <div class="hero-decor hero-decor-3"></div>
+
+    <div class="container" style="position:relative;z-index:2">
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
         <div style="order:-1">
-          <h1 style="font-family:'Playfair Display',serif;font-size:clamp(22px,5.8vw,38px);font-weight:800;color:#0C2340;text-align:center;margin-top:0;margin-bottom:4px;letter-spacing:-0.3px">Trusted Benefit Experts</h1>
+          <h1 class="widget-hero-heading" style="font-family:'Playfair Display',serif;font-size:clamp(22px,5.8vw,38px);font-weight:800;color:#0C2340;text-align:center;margin-top:0;margin-bottom:4px;letter-spacing:-0.5px">Trusted Benefit Experts</h1>
           <p class="hero-subtitle" style="text-align:center;font-size:13px;color:#4A5568;margin-bottom:10px;font-weight:400">Professional guidance to choose your Medicare plan</p>
                 <div class="hero-widget" id="widget-anchor" style="padding:0;background:none;box-shadow:none;border:none">
           <iframe id="widget-frame" src="widget-v4.html" style="width:100%;height:560px;border:none;border-radius:16px;display:block;overflow:hidden;transition:height .3s ease" scrolling="no" title="Medicare Plan Guide"></iframe>
@@ -1067,12 +1084,21 @@ a[href^="tel"] { white-space: nowrap; }
         </div>
         <!-- Hero text on RIGHT (desktop) / BOTTOM (mobile) -->
         <div style="position:relative;z-index:2">
-          <h2>Beneficios <em>Medicare</em></h2>
-          <p style="font-size:18px;font-weight:500;color:#2D3748;margin-bottom:20px;line-height:1.6">We compare plans from Kaiser, SCAN, Aetna and more. At no cost to you.</p>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> 100% free advisory</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> No commitment or obligation</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#4A5568"><i class="fas fa-check-circle" style="color:#146A5D"></i> We call you with personalized options</div>
+          <h2>Benefits <em>Medicare</em></h2>
+          <p style="font-size:18px;font-weight:500;color:#2D3748;margin-bottom:24px;line-height:1.6">We compare plans from Kaiser, SCAN, Aetna and more. At no cost to you.</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#E0F2F1;color:#00796B"><i class="fas fa-shield-alt"></i></div>
+              <div class="trust-mini-text">100% Free<small>We never charge you for our guidance</small></div>
+            </div>
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#E8F4FD;color:#2E6BA4"><i class="fas fa-user-md"></i></div>
+              <div class="trust-mini-text">Licensed Agents<small>Mother & daughter team, in 8 states</small></div>
+            </div>
+            <div class="trust-mini">
+              <div class="trust-mini-icon" style="background:#FFF3E0;color:#E65100"><i class="fas fa-comments"></i></div>
+              <div class="trust-mini-text">Bilingual Service<small>We call you with personalized options</small></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1274,36 +1300,6 @@ a[href^="tel"] { white-space: nowrap; }
     </div>
   </section>
 
-  <!-- AREAS WE SERVE -->
-  <section style="background:var(--lt-mint);padding:60px 24px">
-    <div class="container">
-      <div style="text-align:center">
-        <div class="section-label">AREAS WE SERVE</div>
-        <div class="section-title" style="text-align:center">Licensed in 8 States</div>
-        <p style="font-size:18px;color:var(--gray);max-width:700px;margin:16px auto 24px">We serve clients across 8 states. If you recently moved, we may be able to help you too.</p>
-      </div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">California</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Florida</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Illinois</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Iowa</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Kansas</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Missouri</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Oklahoma</span>
-        <span class="credential-tag" style="background:var(--green);color:white;font-weight:700">Texas</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER: TALK TO ADVISOR -->
-  <section class="cta-banner" style="text-align:center;padding:60px 24px">
-    <h2>Prefer to speak with us?</h2>
-    <p>We are here to help you.</p>
-    <div style="display:flex;justify-content:center;margin-bottom:14px">
-      <a href="tel:+13105979142" class="btn btn-primary" style="font-size:18px;padding:20px 44px;border-radius:12px;display:inline-flex;align-items:center;gap:10px"><i class="fas fa-phone-alt"></i> Call Us</a>
-    </div>
-    <div style="display:flex;justify-content:center;width:100%"><span style="font-size:14px;color:#8896A6">or <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> schedule a video call</a></span></div>
-  </section>
 </div>
 
 <div id="about-content">
