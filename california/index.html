@@ -14,6 +14,7 @@
 <meta property="og:url" content="https://medicare-california.com/">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Medicare California">
+<link rel="icon" type="image/svg+xml" href="favicon-california.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,16 +71,9 @@ h1, h2, h3, h4 {
   gap: 8px;
 }
 .logo-mark {
-  width: 36px;
+  width: 32px;
   height: 36px;
-  background: linear-gradient(135deg, var(--terra), var(--terra-dark));
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
+  flex-shrink: 0;
 }
 .lang-link {
   font-size: 14px;
@@ -472,8 +466,8 @@ h1, h2, h3, h4 {
 <!-- ═══ HEADER ═══ -->
 <header class="site-header">
   <a href="/" class="logo">
-    <div class="logo-mark">MC</div>
-    Medicare California
+    <svg class="logo-mark" viewBox="6 6 52 62" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shieldGradCA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M32 6 L58 17 L58 38 C58 52 47 61 32 68 C17 61 6 52 6 38 L6 17 Z" fill="url(#shieldGradCA)"/><polyline points="20,38 28,46 44,28" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Medicare <span style="font-weight:500;color:#3D9BE9;">California</span></span>
   </a>
   <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
 </header>

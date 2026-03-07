@@ -59,15 +59,13 @@
   color: var(--navy);
   text-decoration: none;
 }
-.logo span { color: var(--blue); }
+.logo span { color: #26A69A; }
 
 /* The favicon icon inside the logo */
 .logo-icon {
-  height: 32px;
+  height: 36px;
   width:  32px;
-  border-radius: 50%;
   flex-shrink: 0;
-  object-fit: cover;
 }
 
 /* ── 3. BUTTONS ──────────────────────────── */
