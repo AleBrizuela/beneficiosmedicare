@@ -680,11 +680,7 @@ function togglePlanSel(id){
     el.textContent=on?'\u2713':'';
   });
   const bar=document.getElementById('compareBar');
-  if(bar){
-    bar.style.display=selPlans.length>=2?'block':'none';
-    const btn=bar.querySelector('button');
-    if(btn)btn.textContent=(lang==='en'?'Compare '+selPlans.length+' plans':'Comparar '+selPlans.length+' planes');
-  }
+  if(bar) bar.style.display=selPlans.length>=2?'block':'none';
 }
 
 function flowResults(){
@@ -774,10 +770,10 @@ function allPlans(){
     ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
     <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el c\u00EDrculo en los planes que quiera comparar.'}</p>
     ${plans.map((p,i)=>planCard(p,i,true)).join('')}
+    ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}
     <div id="compareBar" class="compare-float" style="display:none">
-      <button class="btn-p" onclick="go(customCompare)">${lang==='en'?'Compare 0 plans':'Comparar 0 planes'}</button>
-    </div>
-    ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}`;
+      <button class="btn-s" onclick="go(customCompare)">${lang==='en'?'Compare Selected':'Comparar Seleccionados'}</button>
+    </div>`;
 }
 
 
