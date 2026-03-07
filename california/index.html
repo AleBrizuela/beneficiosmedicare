@@ -646,6 +646,10 @@ window.addEventListener('message', function(e) {
   if (e.data && e.data.type === 'widget-resize') {
     frame.style.height = e.data.height + 'px';
   }
+  if (e.data && e.data.type === 'widget-scrolltop') {
+    var a = document.getElementById('widget-anchor') || frame;
+    if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
+  }
 });
 </script>
 </body>
