@@ -141,9 +141,15 @@ body.in-iframe .widget-body{padding-top:14px}
 .plan-sel:hover{border-color:var(--sage)}
 .plan-sel.checked{background:var(--sage);border-color:var(--sage);color:white}
 
-/* ── SORT BAR ── */
+/* ── TYPE FILTER + SORT BAR ── */
+.type-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;padding:0 2px}
+.type-pill{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border:1.5px solid #dadce0;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
+.type-pill:hover{border-color:var(--sage);color:var(--sage)}
+.type-pill.active{background:var(--sage);color:white;border-color:var(--sage)}
+.type-count{font-size:11px;font-weight:700;background:rgba(0,0,0,.08);padding:1px 6px;border-radius:10px}
+.type-pill.active .type-count{background:rgba(255,255,255,.25)}
 .sort-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:0 2px}
-.sort-pill{padding:7px 12px;border:1.5px solid #dadce0;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
+.sort-pill{padding:6px 10px;border:1.5px solid #dadce0;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
 .sort-pill:hover{border-color:var(--sage);color:var(--sage)}
 .sort-pill.active{background:var(--sage);color:white;border-color:var(--sage)}
 .compare-float{position:sticky;bottom:0;left:0;right:0;background:white;padding:10px 0 4px;border-top:1px solid #EDF2F7;margin-top:12px;text-align:center}
@@ -940,6 +946,37 @@ function togglePlanSel(id){
 }
 
 // ── SORT / FILTER BAR ──
+// ── PLAN TYPE FILTER ──
+let _typeFilter='all';
+function classifyType(t){
+  if(!t) return 'ma';
+  if(t==='PDP') return 'pdp';
+  if(t.includes('SNP')) return 'snp';
+  return 'ma'; // HMO, PPO, HMO-POS = Medicare Advantage
+}
+function typeFilterBar(allPlans){
+  const counts={all:allPlans.length, ma:0, snp:0, pdp:0};
+  allPlans.forEach(p=>{counts[classifyType(p.type)]++});
+  const TYPES=[
+    {id:'all', en:'All Plans',           es:'Todos'},
+    {id:'ma',  en:'Medicare Advantage',  es:'Medicare Advantage'},
+    {id:'snp', en:'Special Needs',       es:'Necesidades Especiales'},
+    {id:'pdp', en:'Drug Plans (PDP)',    es:'Medicamentos (PDP)'},
+  ];
+  return `<div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
+    `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
+  ).join('')}</div>`;
+}
+function filterByType(plans){
+  if(_typeFilter==='all') return plans;
+  return plans.filter(p=>classifyType(p.type)===_typeFilter);
+}
+function applyTypeFilter(type){
+  _typeFilter=type;
+  if(_inAllPlans) go(allPlans);
+  else go(flowResults);
+}
+
 let _sortMode='best';
 const SORT_MODES=[
   {id:'best',  en:'Best Match',     es:'Mejor Opci\u00F3n'},
@@ -974,7 +1011,8 @@ async function flowResults(){
   prog(82); _inAllPlans=false;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
   const scored=scorePlans();
-  const plans=_sortMode==='best'?scored:sortPlans(scored,_sortMode);
+  const filtered=filterByType(scored);
+  const plans=_sortMode==='best'?filtered:sortPlans(filtered,_sortMode);
   D.conditions=[...selConds];
   const age=getAge();
   let note='';
@@ -982,16 +1020,19 @@ async function flowResults(){
     if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
     else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
   }
+  const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\u2019s actual plans.':'Los planes mostrados son ejemplos. Ingrese un codigo postal valido para los planes reales de su area.'}</div>`:''}
+    ${typeFilterBar(scored)}
     ${sortBar()}
+    ${noPlans?`<div style="text-align:center;padding:20px 0;color:#888;font-size:14px">${lang==='en'?'No plans in this category. Try a different type above.':'No hay planes en esta categoria. Pruebe otro tipo arriba.'}</div>`:''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
-    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
-    <div style="text-align:center;margin-top:8px">
+    ${!noPlans?bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)'):''}
+    ${!noPlans?`<div style="text-align:center;margin-top:8px">
       <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
-    </div>
+    </div>`:''}
     ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}
     <div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px solid #eee">
       <button style="background:none;border:none;color:var(--sage);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;padding:6px 12px;text-decoration:underline" onclick="hist=[];D.zip='';D._zipValid=false;PLANS=[];go(startZip)">${lang==='en'?'Change ZIP code':'Cambiar c\u00F3digo postal'}</button>
@@ -1060,10 +1101,12 @@ function allPlans(){
   prog(85); _inAllPlans=true;
   selPlans=[];
   const scored=scorePlans();
-  const plans=_sortMode==='best'?scored:sortPlans(scored,_sortMode);
+  const filtered=filterByType(scored);
+  const plans=_sortMode==='best'?filtered:sortPlans(filtered,_sortMode);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
     <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el c\u00EDrculo en los planes que quiera comparar.'}</p>
+    ${typeFilterBar(scored)}
     ${sortBar()}
     ${plans.map((p,i)=>planCard(p,i,true)).join('')}
     ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}
