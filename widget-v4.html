@@ -895,7 +895,7 @@ function scorePlans(){
     p.score+=p.rating;
   });
   plans.sort((a,b)=>b.score-a.score);
-  plans[0].label=lang==='en'?'Closest Match':'Mayor Coincidencia';plans[0].labelCls='best-match';
+  plans[0].label=lang==='en'?'Your Result':'Su Resultado';plans[0].labelCls='best-match';
   const bv=[...plans].sort((a,b)=>a.moop-b.moop)[0];
   if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Lowest Cost':'Menor Costo';p.labelCls='best-value';}
   const mb=[...plans].sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50))[0];
@@ -973,7 +973,7 @@ function applyTypeFilter(type){
 
 let _sortMode='best';
 const SORT_MODES=[
-  {id:'best',  en:'Best Match',     es:'Mejor Opci\u00F3n'},
+  {id:'best',  en:'Your Result',    es:'Su Resultado'},
   {id:'cost',  en:'Lowest Cost',    es:'Menor Costo'},
   {id:'star',  en:'Highest Rated',  es:'Mejor Rating'},
   {id:'drug',  en:'Drug Coverage',  es:'Cobertura de Medicinas'},
