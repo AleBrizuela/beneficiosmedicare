@@ -954,7 +954,10 @@ async function flowResults(){
     <div style="text-align:center;margin-top:8px">
       <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
     </div>
-    ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}`;
+    ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}
+    <div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px solid #eee">
+      <button style="background:none;border:none;color:var(--sage);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;padding:6px 12px;text-decoration:underline" onclick="hist=[];D.zip='';D._zipValid=false;PLANS=[];go(startZip)">${lang==='en'?'Change ZIP code':'Cambiar c\u00F3digo postal'}</button>
+    </div>`;
 }
 
 function flowCompare(){
