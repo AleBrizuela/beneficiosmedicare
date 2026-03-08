@@ -1,0 +1,15 @@
+# Cloudflare Pages custom headers
+# Prevent aggressive caching of HTML files so deployments take effect immediately
+
+/widget-v4.html
+  Cache-Control: no-cache, must-revalidate
+  X-Widget-Version: v4.3-exp
+
+/*.html
+  Cache-Control: public, max-age=300
+
+/data/*
+  Cache-Control: public, max-age=86400
+
+/experiments/*
+  Cache-Control: no-cache, must-revalidate
