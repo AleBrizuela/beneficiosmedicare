@@ -407,15 +407,17 @@ function getAge(){
 }
 function getEnrollmentWindow(){
   const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
-  if(!m||!d||!y)return null;
+  if(!m||!d||!y||y<1900||y>2010)return null;
   let iepMonth=m-3, iepYear=y+65;
   if(iepMonth<=0){iepMonth+=12;iepYear--;}
+  if(iepMonth<1||iepMonth>12)return null;
   return {month:iepMonth, year:iepYear};
 }
 function monthName(m){
   const en=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const es=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  return (lang==='en'?en:es)[m-1];
+  const idx=Math.max(0,Math.min(11,(+m||1)-1));
+  return (lang==='en'?en:es)[idx];
 }
 
 
@@ -544,7 +546,7 @@ function ft_eligibility(){
     if(monthsAway>8){
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Su ventana de inscripci\u00F3n abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
-        <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recordarme cuando sea hora'}</button>
+        <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
           ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
