@@ -391,17 +391,13 @@ let PLANS = [];
 let _cmsData = null;
 let _cmsLoadedState = null;
 
-// Fallback plans shown only if data fails to load
-const FALLBACK_PLANS = [
-  {id:'fb1',name:'SCAN Classic (HMO)',carrier:'SCAN Health Plan',premium:0,ded:0,moop:3400,dental:1,vision:1,hearing:1,fitness:1,otc:100,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
-  {id:'fb2',name:'Kaiser Permanente Senior Advantage (HMO)',carrier:'Kaiser Permanente',premium:0,ded:0,moop:699,dental:1,vision:1,hearing:1,fitness:1,otc:0,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
-  {id:'fb3',name:'Aetna Medicare Eagle (PPO)',carrier:'Aetna Medicare',premium:0,ded:0,moop:6750,dental:1,vision:1,hearing:1,fitness:1,otc:0,drug:'Enhanced',giveback:0,rating:4.5,type:'PPO'}
-];
+// No fallback plans -- only real CMS data is shown
 
 // Map CMS plan to widget format
 function cmsToWidget(p){
-  // Most MA-PD $0 plans include dental/vision; we mark all as included
-  // since CMS data doesn't break this down at this level
+  const isPDP = p.cat==='PDP';
+  const isMA = p.cat==='MA'||p.cat==='MA-PD';
+  const isSNP = p.cat==='SNP';
   return {
     id: p.id,
     name: p.name,
@@ -409,12 +405,12 @@ function cmsToWidget(p){
     premium: p.premium,
     ded: p.deductible,
     moop: p.moop,
-    dental: 1,
-    vision: 1,
-    hearing: p.has_drug ? 1 : 0,
-    fitness: 1,
+    dental: isPDP?0:1,
+    vision: isPDP?0:1,
+    hearing: isPDP?0:(p.has_drug?1:0),
+    fitness: isPDP?0:1,
     otc: 0,
-    drug: p.has_drug ? 'Included' : 'N/A',
+    drug: (isPDP||p.has_drug)?'Included':'N/A',
     giveback: 0,
     rating: p.stars || 3,
     type: p.type
@@ -462,10 +458,10 @@ async function loadPlansForZip(zip){
   try {
     const idx = await loadZipIndex();
     const state = idx[zip];
-    if(!state) { D._zipValid=false; PLANS = [...FALLBACK_PLANS]; return; }
+    if(!state) { D._zipValid=false; PLANS=[]; return; }
     const data = await loadCmsData(state);
     const info = data.zips?.[zip];
-    if(!info) { D._zipValid=false; PLANS = [...FALLBACK_PLANS]; return; }
+    if(!info) { D._zipValid=false; PLANS=[]; return; }
     const county = info.county;
     D.county = county;
     D.state = state;
@@ -475,15 +471,13 @@ async function loadPlansForZip(zip){
     // Dedupe by plan ID
     const seen = new Set();
     raw = raw.filter(p => { if(seen.has(p.id)) return false; seen.add(p.id); return true; });
-    // Filter: only MA-PD plans (skip MA-only, Medi-Cal, etc.)
-    raw = raw.filter(p => p.cat === 'MA-PD');
-    if(raw.length === 0) { PLANS = [...FALLBACK_PLANS]; return; }
+    if(raw.length === 0) return;
     // Sort: best stars first, then lowest premium, then lowest MOOP
     raw.sort((a,b) => (b.stars||0)-(a.stars||0) || a.premium-b.premium || a.moop-b.moop);
     PLANS = raw.map(cmsToWidget);
   } catch(e) {
     console.warn('CMS data load failed:', e.message);
-    PLANS = [...FALLBACK_PLANS];
+    PLANS=[];
   }
 }
 
@@ -1024,7 +1018,7 @@ async function flowResults(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
-    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\u2019s actual plans.':'Los planes mostrados son ejemplos. Ingrese un codigo postal valido para los planes reales de su area.'}</div>`:''}
+    ${!D._zipValid && D.zip?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#c00">${lang==='en'?'We could not find plans for this ZIP code. Please check your ZIP and try again.':'No pudimos encontrar planes para este codigo postal. Por favor verifique e intente de nuevo.'}</div>`:''}
     ${typeFilterBar(scored)}
     ${sortBar()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#888;font-size:14px">${lang==='en'?'No plans in this category. Try a different type above.':'No hay planes en esta categoria. Pruebe otro tipo arriba.'}</div>`:''}
