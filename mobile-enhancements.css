@@ -33,7 +33,7 @@ section.hero {
   body .hero,
   section.hero {
     padding-top: 4px !important;
-    padding-bottom: 80px !important;
+    padding-bottom: 12px !important;
     overflow: visible !important;
   }
   .hero h1 {
