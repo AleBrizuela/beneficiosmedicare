@@ -298,7 +298,7 @@ function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
 function bk(){return hist.length<=1?'':`<button class="btn-back" onclick="back()">${t('back')}</button>`}
 function bm(txt,cls=''){return `<div class="bot-msg ${cls}">${txt}</div>`}
-const SVG=(p,c='currentColor')=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const SVG=(p,c='currentColor')=>'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</s'+'vg>';
 const I={
   doctor:SVG('<path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><line x1="15" y1="3" x2="19" y2="3"/><line x1="17" y1="1" x2="17" y2="5"/>','#2E6BA4'),
   search:SVG('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>','#5B8A72'),
