@@ -10,6 +10,9 @@
    âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 /* ââ 0a. DESKTOP HERO FIX: Prevent h1 clipping on all screens ââ */
+/* Prevent horizontal scroll from fixed elements */
+html, body { overflow-x: hidden; }
+
 body .hero,
 section.hero {
   /* padding-top handled by brand.css */
@@ -232,8 +235,10 @@ section.hero {
   .wa-float {
     bottom: 72px !important;
     right: 12px !important;
-    width: 52px !important;
-    height: 52px !important;
+    width: 48px !important;
+    height: 48px !important;
+    outline: none !important;
+    animation: none !important;
   }
 }
 
