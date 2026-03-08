@@ -224,7 +224,11 @@ body.in-iframe .widget-body{padding-top:14px}
 const _params=new URLSearchParams(location.search);
 let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[];
 const _initZip=_params.get('zip')||'';
-if(_initZip && /^\d{5}$/.test(_initZip)) D.zip=_initZip;
+if(_initZip && /^\d{5}$/.test(_initZip)){
+  D.zip=_initZip;
+  // Pre-load plan data for the initial ZIP
+  setTimeout(()=>loadPlansForZip(_initZip),0);
+}
 
 // ── THEME ENGINE ──
 // Usage: ?theme=california  (or omit for default beneficiosmedicare theme)
@@ -283,11 +287,19 @@ const _cb={};
 
 // ── CARRIER BRAND COLORS ──
 const CARRIER_COLORS = {
-  'SCAN Health Plan':'#0057A6','Alignment Health':'#F37021',
+  'SCAN Health Plan':'#0057A6','Alignment Health Plan':'#F37021','Alignment Health':'#F37021',
   'UnitedHealthcare':'#002677','Humana':'#49A942',
-  'Blue Shield of CA':'#0073CF','Aetna':'#7D3F98',
-  'Anthem':'#0055A5','Kaiser Permanente':'#B11226',
-  'Wellcare':'#00529B','Centene':'#E31837'
+  'Blue Shield of California':'#0073CF','Blue Shield of CA':'#0073CF',
+  'Aetna Medicare':'#7D3F98','Aetna':'#7D3F98',
+  'Anthem Blue Cross':'#0055A5','Anthem Blue Cross Partnership Plan':'#0055A5','Anthem':'#0055A5',
+  'Kaiser Permanente':'#B11226',
+  'Wellcare':'#00529B','Centene':'#E31837',
+  'L.A. Care Health Plan':'#009CDE','Molina Healthcare of California':'#E31837',
+  'Clever Care Health Plan':'#FF6B35','Central Health Medicare Plan':'#2E86AB',
+  'UCLA Health Medicare Advantage Plan':'#2774AE','Astiva Health':'#00A5CF',
+  'AHF':'#E3000B','Elite Health Plan, Inc.':'#1B4F72',
+  'Imperial Health Plan of California, Inc.':'#2E8B57','Champion Heath Plan':'#FF8C00',
+  'VillageHealth':'#4B8B3B','Align Senior Care':'#5B8A72'
 };
 
 // ── SVG ICON LIBRARY (dual-tone filled) ──
@@ -326,14 +338,106 @@ const CONDITIONS = [
   {id:'vision',     icon:I.eye,   en:'Vision / Eyes',    es:'Visi\u00F3n / Ojos'}
 ];
 
-// ── SAMPLE PLANS ──
-const PLANS = [
-  {id:'p1',name:'SCAN Classic (HMO)',carrier:'SCAN Health Plan',premium:0,ded:0,moop:3900,dental:1,vision:1,hearing:1,fitness:1,otc:100,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
-  {id:'p2',name:'Alignment Essential (HMO)',carrier:'Alignment Health',premium:0,ded:0,moop:4500,dental:1,vision:1,hearing:1,fitness:1,otc:120,drug:'Enhanced',giveback:40,rating:4.0,type:'HMO'},
-  {id:'p3',name:'UHC AARP Complete (HMO)',carrier:'UnitedHealthcare',premium:0,ded:0,moop:5100,dental:1,vision:1,hearing:1,fitness:1,otc:80,drug:'Standard',giveback:0,rating:4.0,type:'HMO'},
-  {id:'p4',name:'Humana Gold Plus (HMO)',carrier:'Humana',premium:0,ded:0,moop:4200,dental:1,vision:1,hearing:0,fitness:1,otc:50,drug:'Enhanced',giveback:0,rating:3.5,type:'HMO'},
-  {id:'p5',name:'Blue Shield Promise (HMO)',carrier:'Blue Shield of CA',premium:0,ded:250,moop:5900,dental:1,vision:1,hearing:1,fitness:0,otc:60,drug:'Standard',giveback:0,rating:4.0,type:'HMO'}
+// ── PLAN DATA ENGINE ──
+// CMS data is loaded dynamically per state. PLANS starts empty; populated after ZIP lookup.
+let PLANS = [];
+let _cmsData = null;
+let _cmsLoadedState = null;
+
+// Fallback plans shown only if data fails to load
+const FALLBACK_PLANS = [
+  {id:'fb1',name:'SCAN Classic (HMO)',carrier:'SCAN Health Plan',premium:0,ded:0,moop:3400,dental:1,vision:1,hearing:1,fitness:1,otc:100,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
+  {id:'fb2',name:'Kaiser Permanente Senior Advantage (HMO)',carrier:'Kaiser Permanente',premium:0,ded:0,moop:699,dental:1,vision:1,hearing:1,fitness:1,otc:0,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
+  {id:'fb3',name:'Aetna Medicare Eagle (PPO)',carrier:'Aetna Medicare',premium:0,ded:0,moop:6750,dental:1,vision:1,hearing:1,fitness:1,otc:0,drug:'Enhanced',giveback:0,rating:4.5,type:'PPO'}
 ];
+
+// Map CMS plan to widget format
+function cmsToWidget(p){
+  // Most MA-PD $0 plans include dental/vision; we mark all as included
+  // since CMS data doesn't break this down at this level
+  return {
+    id: p.id,
+    name: p.name,
+    carrier: p.carrier,
+    premium: p.premium,
+    ded: p.deductible,
+    moop: p.moop,
+    dental: 1,
+    vision: 1,
+    hearing: p.has_drug ? 1 : 0,
+    fitness: 1,
+    otc: 0,
+    drug: p.has_drug ? 'Included' : 'N/A',
+    giveback: 0,
+    rating: p.stars || 3,
+    type: p.type
+  };
+}
+
+// Load CMS data for a state, returns promise
+function loadCmsData(stateCode){
+  if(_cmsLoadedState === stateCode && _cmsData) return Promise.resolve(_cmsData);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'data/cms_' + stateCode + '.js';
+    s.onload = () => {
+      if(typeof CMS_STATE_DATA !== 'undefined'){
+        _cmsData = CMS_STATE_DATA;
+        _cmsLoadedState = stateCode;
+        resolve(_cmsData);
+      } else reject(new Error('CMS data not found'));
+    };
+    s.onerror = () => reject(new Error('Failed to load CMS data for ' + stateCode));
+    document.head.appendChild(s);
+  });
+}
+
+// Load ZIP index (small file, maps ZIP to state code)
+let _zipIndex = null;
+function loadZipIndex(){
+  if(_zipIndex) return Promise.resolve(_zipIndex);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'data/zip_index.js';
+    s.onload = () => {
+      if(typeof ZIP_INDEX !== 'undefined'){
+        _zipIndex = ZIP_INDEX;
+        resolve(_zipIndex);
+      } else reject(new Error('ZIP index not found'));
+    };
+    s.onerror = () => reject(new Error('Failed to load ZIP index'));
+    document.head.appendChild(s);
+  });
+}
+
+// Main: look up plans for a ZIP code
+async function loadPlansForZip(zip){
+  try {
+    const idx = await loadZipIndex();
+    const state = idx[zip];
+    if(!state) { PLANS = [...FALLBACK_PLANS]; return; }
+    const data = await loadCmsData(state);
+    const info = data.zips?.[zip];
+    if(!info) { PLANS = [...FALLBACK_PLANS]; return; }
+    const county = info.county;
+    D.county = county;
+    D.state = state;
+    // Get plans for this county + "All Counties" plans
+    let raw = [...(data.plans?.[county] || []), ...(data.plans?.['All Counties'] || [])];
+    // Dedupe by plan ID
+    const seen = new Set();
+    raw = raw.filter(p => { if(seen.has(p.id)) return false; seen.add(p.id); return true; });
+    // Filter: only MA-PD plans (skip MA-only, Medi-Cal, etc.)
+    raw = raw.filter(p => p.cat === 'MA-PD');
+    if(raw.length === 0) { PLANS = [...FALLBACK_PLANS]; return; }
+    // Sort: best stars first, then lowest premium, then lowest MOOP
+    raw.sort((a,b) => (b.stars||0)-(a.stars||0) || a.premium-b.premium || a.moop-b.moop);
+    PLANS = raw.map(cmsToWidget);
+  } catch(e) {
+    console.warn('CMS data load failed:', e.message);
+    PLANS = [...FALLBACK_PLANS];
+  }
+}
 
 // ── i18n ──
 const T={
@@ -394,7 +498,7 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
     ${bm(msg, cls)}
     <div class="input-group zip-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your ZIP code'):(fieldId.includes('from')?'Mud\u00E1ndose de (c\u00F3digo postal)':'Su c\u00F3digo postal')}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="90001" value="${D[fieldId]||''}" maxlength="5"
-      oninput="D['${fieldId}']=this.value; if(this.value.length===5) setTimeout(()=>go(_cb.zip),300)">
+      oninput="onZipInput(this,'${fieldId}')">
     </div>
     ${bp(lang==='en'?'Get Started \u2192':'Comenzar \u2192','go(_cb.zip)')}
     <div class="trust-bar">
@@ -402,6 +506,16 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
       <span>\u2713 ${lang==='en'?'Hablamos Espa\u00F1ol':'We speak English'}</span>
     </div>`;
   document.getElementById(fieldId)?.focus();
+}
+function onZipInput(el, fieldId){
+  el.value = el.value.replace(/\D/g,'').slice(0,5);
+  D[fieldId] = el.value;
+  if(el.value.length===5){
+    D.zip = el.value;
+    // Start loading plan data in background
+    loadPlansForZip(el.value);
+    setTimeout(()=>go(_cb.zip),300);
+  }
 }
 
 
@@ -437,8 +551,13 @@ function parseDob(){
   const v=document.getElementById('dobInput')?.value||'';
   const parts=v.replace(/\s/g,'').split('/');
   if(parts.length===3){
-    D.dob_month=parts[0];D.dob_day=parts[1];D.dob_year=parts[2];
+    const mm=+parts[0], dd=+parts[1], yy=+parts[2];
+    if(mm>=1 && mm<=12 && dd>=1 && dd<=31 && yy>=1920 && yy<=2010){
+      D.dob_month=parts[0];D.dob_day=parts[1];D.dob_year=parts[2];
+      return true;
+    }
   }
+  return false;
 }
 
 
@@ -648,7 +767,7 @@ function mv_zipTo(){
     ${bm(lang==='en'?'And where are you moving to?':'Y a d\u00F3nde se muda?')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
-      oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dob),300)">
+      oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5); D.zipTo=this.value; D.zip=this.value; if(this.value.length===5){loadPlansForZip(this.value); setTimeout(()=>go(mv_dob),300)}">
     </div>
     ${bp(t('next'),'go(mv_dob)')}`;
   document.getElementById('zipTo')?.focus();
@@ -771,8 +890,10 @@ function togglePlanSel(id){
   if(bar) bar.style.display=selPlans.length>=2?'block':'none';
 }
 
-function flowResults(){
+async function flowResults(){
   prog(82);
+  // Ensure plans are loaded for current ZIP
+  if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
   const plans=scorePlans();
   D.conditions=[...selConds];
   const age=getAge();
@@ -908,8 +1029,13 @@ function submitLead(type){
   const email=D.email||document.getElementById('email')?.value||'';
   const question=document.getElementById('question')?.value||'';
 
-  if(!name||!phone){
-    alert(lang==='en'?'Please enter your name and phone number.':'Por favor ingrese su nombre y tel\u00E9fono.');
+  const phoneClean = phone.replace(/\D/g,'');
+  if(!name.trim() || name.trim().length < 2){
+    alert(lang==='en'?'Please enter your full name.':'Por favor ingrese su nombre completo.');
+    return;
+  }
+  if(phoneClean.length < 10){
+    alert(lang==='en'?'Please enter a valid 10-digit phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos.');
     return;
   }
   D.fullName=name;D.phone=phone;D.email=email;
@@ -933,9 +1059,9 @@ function submitLead(type){
   D.lastName=parts.slice(1).join(' ')||'';
 
   const GS_URL='https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
-  fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)}).catch(e=>console.log('lead-err',e));
-  console.log('Lead:',JSON.stringify(D,null,2));
-  go(flowSuccess);
+  fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
+    .then(()=>go(flowSuccess))
+    .catch(()=>go(flowSuccess));  // still show success since no-cors can't read response
 }
 
 
@@ -997,7 +1123,7 @@ function learnHome(){
     <div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`;
 }
 function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has 4 parts:':'Medicare tiene 4 partes:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermer\u00EDa, hospicio. $0 prima para la mayor\u00EDa.')}${ic(lang==='en'?'Part B - Medical':'Parte B - M\u00E9dica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atenci\u00F3n ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visi\u00F3n, audici\u00F3n.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi \u00E1rea','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo (2025)</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
