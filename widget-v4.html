@@ -489,8 +489,8 @@ function priorityStep(nextFn){
   priRank=[];
   const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What matters most? <strong>Tap in order</strong> of importance.':'\u00BFQu\u00E9 es lo m\u00E1s importante? <strong>Toque en orden</strong> de importancia.')}
-    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'1st tap = top priority. Tap again to remove.':'1er toque = prioridad #1. Toque de nuevo para quitar.'}</p>
+    ${bm(lang==='en'?'What <strong>matters most</strong> to you?':'\u00BFQu\u00E9 es lo m\u00E1s <strong>importante</strong> para usted?')}
+    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply.':'Seleccione todos los que apliquen.'}</p>
     <div class="opt-grid">${cards}</div>
     ${bp(t('next'),'savePriority();go(_cb.priority)')}
     ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority="benefits";D.priorities=[];go(_cb.priority)')}`;
@@ -506,7 +506,7 @@ function togglePri(id){
     if(old) old.remove();
     if(rank>=0){
       const b=document.createElement('span');
-      b.className='rank-badge';b.textContent=rank+1;
+      b.className='rank-badge';b.textContent='\u2713';
       el.appendChild(b);
     }
   });
@@ -520,7 +520,7 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-function startZip(){zipStep('explore',lang==='en'?"Let's find the <strong>best Medicare options</strong> in your area.":'Encontremos las <strong>mejores opciones de Medicare</strong> en su \u00E1rea.','zip',ft_dob)}
+function startZip(){zipStep('explore',lang==='en'?"Let's find your <strong>best options</strong> for Medicare.":'Encontremos sus <strong>mejores opciones</strong> de Medicare.','zip',ft_dob)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
