@@ -50,10 +50,10 @@ body.in-iframe .widget-body{padding-top:14px}
 .widget-body>*{animation:fadeUp .3s ease}
 
 /* ── BOT MSG ── */
-.bot-msg{background:none;border-radius:0;padding:2px 0 8px;margin-bottom:6px;font-size:14px;line-height:1.5;color:var(--gray)}
-.bot-msg strong{color:var(--navy)}
-.bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:24px;font-weight:700;color:var(--navy)}
-.bot-msg.hl{background:var(--lt-mint);border-left:4px solid var(--sage);padding:10px 14px;border-radius:8px}
+.bot-msg{background:none;border-radius:0;padding:4px 0 12px;margin-bottom:6px;font-size:18px;font-weight:600;line-height:1.45;color:var(--dark);text-align:center}
+.bot-msg strong{color:var(--green)}
+.bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:24px;font-weight:700;color:var(--navy);text-align:center}
+.bot-msg.hl{background:var(--lt-mint);border-left:4px solid var(--sage);padding:10px 14px;border-radius:8px;text-align:left;font-size:15px;font-weight:500;color:var(--gray)}
 
 /* ── OPT CARDS ── */
 .opt-grid{display:flex;flex-direction:column;gap:10px}
@@ -69,11 +69,12 @@ body.in-iframe .widget-body{padding-top:14px}
 .bg.co{background:var(--lt-green);color:var(--green)}.bg.le{background:#F3E8FF;color:#7C3AED}
 
 /* ── INPUTS ── */
-.input-group{margin-bottom:14px}
-.input-group label{display:block;font-size:14px;font-weight:600;color:var(--gray);margin-bottom:6px}
-.input-field{width:100%;padding:14px 16px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:var(--dark);transition:border-color .2s}
+.input-group{margin-bottom:14px;text-align:center}
+.input-group label{display:block;font-size:14px;font-weight:600;color:var(--gray);margin-bottom:6px;text-align:center}
+.input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:var(--dark);transition:border-color .2s;text-align:center;display:block;margin:0 auto}
 .input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
 .input-field::placeholder{color:#A0AEC0}
+.input-group.zip-group .input-field{width:140px;min-width:140px;font-size:22px;letter-spacing:3px}
 
 /* ── BUTTONS ── */
 .btn-p{width:100%;padding:16px;background:linear-gradient(135deg,var(--sage) 0%,var(--sage-dark) 100%);color:white;border:none;border-radius:var(--radius);font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
@@ -181,7 +182,7 @@ body.in-iframe .widget-body{padding-top:14px}
   body{padding:0;align-items:flex-start}
   .widget-wrap{border-radius:0;min-height:100vh}
   .widget-body{padding:20px 18px}
-  .bot-msg{font-size:15px;padding:2px 0 8px}
+  .bot-msg{font-size:19px;padding:4px 0 12px}
   .opt-card{padding:18px 16px;min-height:70px}
   .opt-card .ic{width:52px;height:52px;font-size:24px}
   .opt-card .tx h4{font-size:17px}
@@ -346,7 +347,7 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   _cb.zip=nextFn;
   wb().innerHTML=`${bk()}
     ${bm(msg, cls)}
-    <div class="input-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your ZIP code'):(fieldId.includes('from')?'Mud\u00E1ndose de (c\u00F3digo postal)':'Su c\u00F3digo postal')}</label>
+    <div class="input-group zip-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your ZIP code'):(fieldId.includes('from')?'Mud\u00E1ndose de (c\u00F3digo postal)':'Su c\u00F3digo postal')}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="90001" value="${D[fieldId]||''}" maxlength="5"
       oninput="D['${fieldId}']=this.value; if(this.value.length===5) setTimeout(()=>go(_cb.zip),300)">
     </div>
@@ -574,7 +575,7 @@ function mv_zipFrom(){
   prog(5); D.flow='moved';
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarse le da un <strong>Periodo de Inscripci\u00F3n Especial</strong>! 63 d\u00EDas para cambiar su plan.','hl')}
-    <div class="input-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mud\u00E1ndose DE (c\u00F3digo postal)'}</label>
+    <div class="input-group zip-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mud\u00E1ndose DE (c\u00F3digo postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
       oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
     </div>
@@ -585,7 +586,7 @@ function mv_zipTo(){
   prog(12);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'And where are you <strong>moving to</strong>?':'Y a d\u00F3nde se <strong>muda</strong>?')}
-    <div class="input-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
+    <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
       oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dob),300)">
     </div>
