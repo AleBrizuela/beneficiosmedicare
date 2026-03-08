@@ -948,7 +948,7 @@ async function flowResults(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
-    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\\'s actual plans.':'Los planes mostrados son ejemplos. Ingrese un código postal válido para los planes reales de su área.'}</div>`:''}
+    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\u2019s actual plans.':'Los planes mostrados son ejemplos. Ingrese un código postal válido para los planes reales de su área.'}</div>`:''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
     <div style="text-align:center;margin-top:8px">
