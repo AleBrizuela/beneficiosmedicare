@@ -61,7 +61,7 @@ body.in-iframe .widget-body{padding-top:14px}
 .opt-card:hover{border-color:var(--sage);background:#f8faf9;box-shadow:0 1px 6px rgba(60,64,67,.08)}
 .opt-card:active{transform:scale(.98)}
 .opt-card .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.ic.bl{background:var(--lt-blue)}.ic.gr{background:var(--lt-green)}.ic.mi{background:var(--lt-mint)}.ic.sg{background:#E0F2F1}
+.ic.bl{background:var(--lt-blue)}.ic.gr{background:var(--lt-green)}.ic.mi{background:var(--lt-mint)}.ic.sg{background:var(--lt-mint)}
 .opt-card .tx h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:2px}
 .opt-card .tx p{font-size:13px;color:#5f6368;line-height:1.45}
 .opt-card .bg{margin-left:auto;font-size:10px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
@@ -225,6 +225,51 @@ const _params=new URLSearchParams(location.search);
 let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[];
 const _initZip=_params.get('zip')||'';
 if(_initZip && /^\d{5}$/.test(_initZip)) D.zip=_initZip;
+
+// ── THEME ENGINE ──
+// Usage: ?theme=california  (or omit for default beneficiosmedicare theme)
+const THEMES = {
+  default: {}, // uses CSS :root as-is
+  california: {
+    '--sage':      '#0080D4',
+    '--sage-dark': '#0068B0',
+    '--navy':      '#1a1a1a',
+    '--slate':     '#4a4a4a',
+    '--lt-mint':   '#E8F2FC',
+    '--lt-green':  '#E8F2FC',
+    '--mint':      '#B3D4F0',
+    '--teal':      '#0080D4',
+    '--green':     '#0068B0',
+    '--blue':      '#3D9BE9',
+    '--lt-blue':   '#E8F2FC',
+  }
+};
+const _theme = _params.get('theme') || 'default';
+if (THEMES[_theme] && _theme !== 'default') {
+  const r = document.documentElement.style;
+  Object.entries(THEMES[_theme]).forEach(([k, v]) => r.setProperty(k, v));
+  // Also update hardcoded colors that reference sage/teal
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .opt-card:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
+    .input-field:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
+    .health-textarea:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
+    .btn-p:hover { box-shadow: 0 4px 16px rgba(0,128,212,.3) !important; }
+    .plan-card.rec { background: #f0f7fd !important; }
+    .opt-card.ranked { background: #f0f7fd !important; }
+    .cond-chip:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
+    .cond-chip.sel { background: var(--sage) !important; border-color: var(--sage) !important; }
+    .rank-badge { box-shadow: 0 2px 6px rgba(0,128,212,.3) !important; }
+    .plan-cta:hover { background: var(--sage) !important; }
+    .plan-cta.filled:hover { background: var(--sage-dark) !important; }
+    .btn-s:hover { background: var(--lt-mint) !important; }
+    .success-cta:hover { background: var(--sage-dark) !important; box-shadow: 0 4px 12px rgba(0,128,212,.3) !important; }
+    .plan-sel:hover { border-color: var(--sage) !important; }
+    .plan-sel.checked { background: var(--sage) !important; border-color: var(--sage) !important; }
+  `;
+  document.head.appendChild(styleEl);
+}
+
 if(window.self!==window.top){
   document.body.classList.add('in-iframe');
   const _ro=new ResizeObserver(()=>{

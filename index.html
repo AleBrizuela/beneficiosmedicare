@@ -32,23 +32,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-  /* ── V5: BLUE + SAGE + GRAY ── */
-  --navy: #002147;          /* Brand navy — matches all pages */
-  --green: #146A5D;          /* Brand green */
-  --blue: #2E6BA4;           /* Medium blue: trustworthy, warm */
-  --teal: #5B8A72;           /* Map teal to sage */
-  --mint: #B8D4C8;           /* Soft sage tint */
-  --lt-blue: #D6EAF7;        /* Very light blue wash */
-  --lt-green: #E4EDE8;       /* Sage background */
-  --lt-mint: #EAF6EE;        /* Lightest sage */
-  --lt-gray: #F3F5F7;        /* Cool light gray */
-  --gray: #5A6577;           /* Warm gray body text */
-  --dark: #1C2B3A;           /* Deep blue-gray */
+  /* ── V6: UNIFIED TEAL (matches widget-v4) ── */
+  --navy: #002147;
+  --green: #00897B;          /* Unified teal — matches widget */
+  --blue: #2E6BA4;
+  --teal: #00897B;
+  --mint: #B2DFDB;
+  --lt-blue: #D6EAF7;
+  --lt-green: #E0F2F1;
+  --lt-mint: #E0F2F1;
+  --lt-gray: #F3F5F7;
+  --gray: #5A6577;
+  --dark: #1C2B3A;
   --white: #FFFFFF;
   --wa-green: #25D366;
-  --sage: #5B8A72;           /* Sage accent */
-  --sage-dark: #4A7561;      /* Deeper sage for hover */
-  --slate: #3D5A80;          /* Slate blue for contrast */
+  --sage: #00897B;           /* Matches widget --sage */
+  --sage-dark: #00796B;      /* Matches widget --sage-dark */
+  --slate: #3D5A80;
   --radius: 12px;
   --shadow: 0 4px 24px rgba(30,58,95,0.10);
   --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
@@ -125,10 +125,10 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: var(--dark); 
 }
 .logo {
   font-family: 'Open Sans', sans-serif; font-size: 22px;
-  font-weight: 700; color: #146A5D !important; text-decoration: none;
+  font-weight: 700; color: #00897B !important; text-decoration: none;
   display: flex; align-items: center;
 }
-.logo span { color: #146A5D !important; }
+.logo span { color: #00897B !important; }
 .logo .logo-icon { width: 48px; height: 48px; margin-right: 6px; vertical-align: middle; }
 nav { display: flex; align-items: center; gap: 8px; }
 nav a {
@@ -359,8 +359,8 @@ section { padding: 80px 24px; }
   font-size: 16px; font-weight: 600; text-decoration: none;
   transition: all 0.2s; border: none; cursor: pointer;
 }
-.btn-primary { background: #146A5D; color: white; border: 2px solid #146A5D; }
-.btn-primary:hover { background: #0F524A; border-color: #0F524A; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn-primary { background: #00897B; color: white; border: 2px solid #00897B; }
+.btn-primary:hover { background: #00796B; border-color: #00796B; transform: translateY(-1px); box-shadow: var(--shadow); }
 /* Blue CTA for "Comparar Planes" */
 .btn-blue { background: var(--slate); color: white; border: 2px solid var(--slate); display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
 .btn-blue:hover { background: #2C4F72; border-color: #2C4F72; transform: translateY(-1px); box-shadow: var(--shadow); }
@@ -905,10 +905,10 @@ a[href^="tel"] { white-space: nowrap; }
 
 /* ── SINGLE DOMINANT CTA: green gradient ── */
 .btn-cta-main {
-  background: #146A5D !important;
+  background: #00897B !important;
   color: white !important;
   border: none !important;
-  box-shadow: 0 4px 20px rgba(20,106,93,0.35) !important;
+  box-shadow: 0 4px 20px rgba(0,137,123,0.35) !important;
   padding: 22px 44px !important;
   font-size: 20px !important;
   font-weight: 800 !important;
@@ -924,8 +924,8 @@ a[href^="tel"] { white-space: nowrap; }
   cursor: pointer !important;
 }
 .btn-cta-main:hover {
-  background: #0F524A !important;
-  box-shadow: 0 6px 28px rgba(20,106,93,0.45) !important;
+  background: #00796B !important;
+  box-shadow: 0 6px 28px rgba(0,137,123,0.45) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -956,16 +956,16 @@ a[href^="tel"] { white-space: nowrap; }
 .cta-banner h2 { color: var(--navy) !important; }
 .cta-banner p { color: #5A6577 !important; }
 .cta-banner .btn-primary {
-  background: #146A5D !important;
+  background: #00897B !important;
   color: white !important;
-  border: 2px solid #146A5D !important;
+  border: 2px solid #00897B !important;
   font-weight: 800 !important;
   font-size: 18px !important;
   padding: 20px 40px !important;
   border-radius: 12px !important;
   min-height: 60px !important;
 }
-.cta-banner .btn-primary:hover { background: #0F524A !important; border-color: #0F524A !important; }
+.cta-banner .btn-primary:hover { background: #00796B !important; border-color: #00796B !important; }
 
 /* ── STATS BAR ── */
 .stats-bar { background: #0C2340 !important; }
@@ -975,7 +975,7 @@ a[href^="tel"] { white-space: nowrap; }
   padding: 18px 24px !important;
   font-size: 17px !important;
   font-weight: 800 !important;
-  background: #146A5D !important;
+  background: #00897B !important;
   border-radius: 12px !important;
 }
 
@@ -1005,8 +1005,8 @@ a[href^="tel"] { white-space: nowrap; }
 }
 
 /* Logo: both words same navy, icon gets the green accent */
-.logo { color: #146A5D !important; }
-.logo span { color: #146A5D !important; }
+.logo { color: #00897B !important; }
+.logo span { color: #00897B !important; }
 .logo .logo-icon { width: 48px; height: 48px; margin-right: 6px; vertical-align: middle; }
 
 @keyframes pulse-wa { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
@@ -1366,7 +1366,7 @@ a[href^="tel"] { white-space: nowrap; }
           <i class="fas fa-search"></i> <span>Compare Planes Gratis</span>
         </a>
       </div>
-      <div style="display:flex;justify-content:center;width:100%"><span style="font-size:14px;color:#8896A6">O si prefiere: <a href="tel:+13105979142" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#146A5D;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Agende Cita Virtual</a></span></div>
+      <div style="display:flex;justify-content:center;width:100%"><span style="font-size:14px;color:#8896A6">O si prefiere: <a href="tel:+13105979142" style="color:#00897B;text-decoration:underline;font-weight:600"><i class="fas fa-phone-alt"></i> Llame</a> · <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#00897B;text-decoration:underline;font-weight:600"><i class="fas fa-video"></i> Agende Cita Virtual</a></span></div>
     </div>
   </section>
 </div>

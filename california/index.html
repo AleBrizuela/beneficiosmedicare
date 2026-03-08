@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2D2926">
+<meta name="theme-color" content="#0080D4">
 <title>Medicare California - Honest Medicare Guidance for Californians</title>
 <meta name="description" content="Find the right Medicare plan with free, personalized help from a licensed California family team. No cost, no pressure.">
 <meta name="keywords" content="medicare california, medicare plans california, medicare advantage california, medicare agent, free medicare help, medicare enrollment">
@@ -15,29 +15,31 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Medicare California">
 <link rel="icon" type="image/svg+xml" href="favicon-california.svg">
+<link rel="dns-prefetch" href="https://beneficiosmedicare.com">
+<link rel="preconnect" href="https://beneficiosmedicare.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ── RESET & VARIABLES ── */
 :root {
-  --cream:      #FDF8F3;
-  --warm-gray:  #F5F0EB;
-  --terra:      #C4704B;
-  --terra-dark: #A85A38;
-  --charcoal:   #2D2926;
-  --text:       #5C534A;
-  --soft-blue:  #6B8FAD;
-  --light-blue: #E8F0F6;
-  --sage:       #8BAF9C;
-  --sage-dark:  #6E9A87;
+  --cream:      #F5F8FC;
+  --warm-gray:  #EDF2F8;
+  --terra:      #0080D4;
+  --terra-dark: #0068B0;
+  --charcoal:   #1a1a1a;
+  --text:       #4a4a4a;
+  --soft-blue:  #3D9BE9;
+  --light-blue: #E8F2FC;
+  --sage:       #0080D4;
+  --sage-dark:  #0068B0;
   --white:      #FFFFFF;
   --radius:     14px;
-  --shadow:     0 4px 24px rgba(45,41,38,0.08);
-  --shadow-lg:  0 12px 48px rgba(45,41,38,0.12);
+  --shadow:     0 4px 24px rgba(0,80,160,0.08);
+  --shadow-lg:  0 12px 48px rgba(0,80,160,0.12);
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
 body {
   font-family: 'Open Sans', -apple-system, system-ui, sans-serif;
   background: var(--cream);
@@ -147,7 +149,7 @@ h1, h2, h3, h4 {
   font-size: 20px;
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
-  border: 2px solid #E8E3DD;
+  border: 2px solid #D4DEE8;
   border-radius: 12px;
   outline: none;
   text-align: center;
@@ -157,12 +159,12 @@ h1, h2, h3, h4 {
   background: var(--cream);
 }
 .zip-input::placeholder {
-  color: #C4BAB0;
+  color: #A0B0C0;
   font-weight: 400;
 }
 .zip-input:focus {
   border-color: var(--terra);
-  box-shadow: 0 0 0 4px rgba(196,112,75,0.12);
+  box-shadow: 0 0 0 4px rgba(0,128,212,0.12);
 }
 .zip-error {
   display: none;
@@ -287,9 +289,9 @@ h1, h2, h3, h4 {
   font-size: 26px;
   margin: 0 auto 14px;
 }
-.card-icon.family { background: #FDE8E0; }
-.card-icon.local  { background: #E0EDDF; }
-.card-icon.free   { background: #E0EDF7; }
+.card-icon.family { background: #E8F2FC; }
+.card-icon.local  { background: #E0F0E8; }
+.card-icon.free   { background: #E8F2FC; }
 .card h3 {
   font-size: 18px;
   font-family: 'Open Sans', sans-serif;
@@ -348,7 +350,7 @@ h1, h2, h3, h4 {
 }
 .step-arrow {
   font-size: 22px;
-  color: #C4BAB0;
+  color: #A0B0C0;
   padding-top: 10px;
   flex-shrink: 0;
 }
@@ -466,14 +468,14 @@ h1, h2, h3, h4 {
 <!-- ═══ HEADER ═══ -->
 <header class="site-header">
   <a href="/" class="logo">
-    <svg class="logo-full" viewBox="0 0 370 48" width="278" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGradCA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGradCA)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#3D9BE9">California</tspan></text></svg>
+    <svg class="logo-full" viewBox="0 0 370 48" width="278" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="Medicare California" role="img"><defs><linearGradient id="navShieldGradCA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGradCA)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#3D9BE9">California</tspan></text></svg>
   </a>
   <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
 </header>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
-  <h1 class="fade-up">Find the Right Medicare Plan<br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:#b8704b;display:block;margin-top:8px;">for you or someone you love</span></h1>
+  <h1 class="fade-up">Find the Right Medicare Plan<br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:#3D9BE9;display:block;margin-top:8px;">for you or someone you love</span></h1>
   <p class="hero-sub fade-up-d1">Honest guidance from a family team. No cost, no pressure.</p>
 
   <!-- ZIP FORM -->
@@ -510,8 +512,9 @@ h1, h2, h3, h4 {
 </section>
 
 <!-- ═══ WIDGET (hidden until ZIP submitted) ═══ -->
+<div id="widget-anchor"></div>
 <div class="widget-container" id="widget-container">
-  <iframe id="widget-frame" scrolling="no" title="Medicare Plan Guide"></iframe>
+  <iframe id="widget-frame" scrolling="no" title="Medicare plan comparison tool for your ZIP code"></iframe>
 </div>
 
 <!-- ═══ WHY US ═══ -->
@@ -617,13 +620,16 @@ zipInput.addEventListener('input', function() {
   zipError.style.display = 'none';
 });
 
+let submitted = false;
 function handleZipSubmit() {
+  if (submitted) return;
   const zip = zipInput.value.trim();
   if (!/^\d{5}$/.test(zip)) {
     zipError.style.display = 'block';
     zipInput.focus();
     return;
   }
+  submitted = true;
 
   // Hide the ZIP card, show widget
   zipCard.style.display = 'none';
@@ -631,21 +637,23 @@ function handleZipSubmit() {
   document.querySelector('.hero-sub').style.display = 'none';
 
   // Update heading
-  heroEl.querySelector('h1').innerHTML = 'Let\'s find your plan';
+  heroEl.querySelector('h1').textContent = "Let\u2019s find your plan";
 
   // Show widget container
   widgetC.classList.add('active');
 
-  // Load widget with lang=en and zip param
-  frame.src = 'https://beneficiosmedicare.com/widget-v4.html?lang=en&zip=' + zip;
+  // Load widget with lang=en, California theme, and zip param
+  frame.src = 'https://beneficiosmedicare.com/widget-v4.html?lang=en&theme=california&zip=' + zip;
 }
 
-// Auto-resize iframe
+// Auto-resize iframe (only accept messages from widget origin)
 window.addEventListener('message', function(e) {
-  if (e.data && e.data.type === 'widget-resize') {
+  if (e.origin !== 'https://beneficiosmedicare.com') return;
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === 'widget-resize') {
     frame.style.height = e.data.height + 'px';
   }
-  if (e.data && e.data.type === 'widget-scrolltop') {
+  if (e.data.type === 'widget-scrolltop') {
     var a = document.getElementById('widget-anchor') || frame;
     if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
   }
