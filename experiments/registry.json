@@ -1,0 +1,14 @@
+{
+  "experiments": [
+    {
+      "id": "drug-names",
+      "name": "Medication Checklist",
+      "status": "READY",
+      "hypothesis": "Asking users to select their specific medications (brand name drugs) will increase lead quality and agent conversion rate because agents can prepare formulary-specific recommendations before the call.",
+      "insertAfter": "health",
+      "metrics": ["lead_quality_score", "agent_conversion_rate", "time_to_complete"],
+      "created": "2026-03-08",
+      "notes": "Preserved from widget v3. Includes 25 common Medicare drugs for Latino 65+ population."
+    }
+  ]
+}

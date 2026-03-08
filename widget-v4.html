@@ -230,6 +230,41 @@ if(_initZip && /^\d{5}$/.test(_initZip)){
   setTimeout(()=>loadPlansForZip(_initZip),0);
 }
 
+// ── EXPERIMENT LOADER ──
+// Usage: ?exp=drug-names (single) or ?exp=drug-names,other-exp (comma-separated)
+const _expParam=_params.get('exp')||'';
+const _activeExps=_expParam?_expParam.split(',').map(s=>s.trim()).filter(Boolean):[];
+const _expModules={};  // loaded experiment step functions keyed by id
+
+// Load experiment module scripts
+_activeExps.forEach(expId=>{
+  const s=document.createElement('script');
+  s.src='experiments/'+expId+'/module.js';
+  s.onerror=()=>console.warn('Experiment module not found:',expId);
+  document.head.appendChild(s);
+});
+
+// Generic experiment step runner: inserts experiment steps after health, before nextFn
+// Checks at CALL TIME (not definition time) so dynamically loaded scripts are found
+function _runExperiments(nextFn){
+  const EXP_REGISTRY={
+    'drug-names':'expDrugNames'
+  };
+  for(const expId of _activeExps){
+    const fnName=EXP_REGISTRY[expId]||('exp_'+expId.replace(/-/g,'_'));
+    if(typeof window[fnName]==='function'){
+      window[fnName](lang, D, ()=>go(nextFn));
+      return true;
+    }
+  }
+  return false;
+}
+// Wrapper: run experiments if active, otherwise go directly to nextFn
+function expOrNext(nextFn){
+  if(_activeExps.length>0 && _runExperiments(nextFn)) return;
+  go(nextFn);
+}
+
 // ── THEME ENGINE ──
 // Usage: ?theme=california  (or omit for default beneficiosmedicare theme)
 const THEMES = {
@@ -748,7 +783,8 @@ function ft_eligibility(){
 }
 function ft_docAsk(){doctorAsk(ft_docName,ft_health)}
 function ft_docName(){doctorName(ft_health)}
-function ft_health(){healthStep(ft_priority)}
+function ft_health(){healthStep(_activeExps.length>0?ft_experiment:ft_priority)}
+function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
 
 
@@ -789,7 +825,8 @@ function mv_plan(){
       ${oc(I.shrug,'sg',lang==='en'?"I'm not sure":'No estoy seguro',lang==='en'?"No worries, we'll figure it out together":'No se preocupe, lo resolveremos juntos','','',"D.curPlan='unknown';go(mv_health)")}
     </div>`;
 }
-function mv_health(){healthStep(mv_priority)}
+function mv_health(){healthStep(_activeExps.length>0?mv_experiment:mv_priority)}
+function mv_experiment(){expOrNext(mv_priority)}
 function mv_priority(){priorityStep(flowResults)}
 
 
@@ -809,7 +846,8 @@ function bb_benefits(){
       ${oc(I.star,'sg',lang==='en'?'All of the above':'Todo lo anterior','','','',"D.priority='all';go(bb_health)")}
     </div>`;
 }
-function bb_health(){healthStep(flowResults)}
+function bb_health(){healthStep(_activeExps.length>0?bb_experiment:flowResults)}
+function bb_experiment(){expOrNext(flowResults)}
 
 
 // ═══════════════════════════════════════
