@@ -464,6 +464,19 @@ function monthName(m){
   const idx=Math.max(0,Math.min(11,(+m||1)-1));
   return (lang==='en'?en:es)[idx];
 }
+function timeAwayStr(months){
+  if(months<=18){
+    return lang==='en'?`about <strong>${months} months</strong> away`:`en aproximadamente <strong>${months} meses</strong>`;
+  }
+  const y=Math.floor(months/12), rm=months%12;
+  if(lang==='en'){
+    if(rm===0) return `about <strong>${y} year${y>1?'s':''}</strong> away`;
+    return `about <strong>${y} year${y>1?'s':''} and ${rm} month${rm>1?'s':''}</strong> away`;
+  } else {
+    if(rm===0) return `en aproximadamente <strong>${y} a\u00F1o${y>1?'s':''}</strong>`;
+    return `en aproximadamente <strong>${y} a\u00F1o${y>1?'s':''} y ${rm} mes${rm>1?'es':''}</strong>`;
+  }
+}
 
 
 // ═══════════════════════════════════════
@@ -590,7 +603,7 @@ function ft_eligibility(){
     const monthsAway=Math.round((iepDate-now)/(1000*60*60*24*30));
     if(monthsAway>8){
       wb().innerHTML=`${bk()}
-        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Su ventana de inscripci\u00F3n abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
+        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is ${timeAwayStr(monthsAway)}.`:`Su ventana de inscripci\u00F3n abre ${opensStr}. Eso es ${timeAwayStr(monthsAway)}.`)}
         <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
