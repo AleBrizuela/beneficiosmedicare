@@ -140,6 +140,12 @@ body.in-iframe .widget-body{padding-top:14px}
 .plan-sel{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;border:2px solid #CBD5E0;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .15s;z-index:2}
 .plan-sel:hover{border-color:var(--sage)}
 .plan-sel.checked{background:var(--sage);border-color:var(--sage);color:white}
+
+/* ── SORT BAR ── */
+.sort-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:0 2px}
+.sort-pill{padding:7px 12px;border:1.5px solid #dadce0;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
+.sort-pill:hover{border-color:var(--sage);color:var(--sage)}
+.sort-pill.active{background:var(--sage);color:white;border-color:var(--sage)}
 .compare-float{position:sticky;bottom:0;left:0;right:0;background:white;padding:10px 0 4px;border-top:1px solid #EDF2F7;margin-top:12px;text-align:center}
 
 /* ── COMPARE TABLE ── */
@@ -933,11 +939,42 @@ function togglePlanSel(id){
   if(bar) bar.style.display=selPlans.length>=2?'block':'none';
 }
 
+// ── SORT / FILTER BAR ──
+let _sortMode='best';
+const SORT_MODES=[
+  {id:'best',  en:'Best Match',     es:'Mejor Opci\u00F3n'},
+  {id:'cost',  en:'Lowest Cost',    es:'Menor Costo'},
+  {id:'star',  en:'Highest Rated',  es:'Mayor Calificaci\u00F3n'},
+  {id:'drug',  en:'Drug Coverage',  es:'Cobertura de Medicinas'},
+  {id:'extra', en:'Most Benefits',  es:'M\u00E1s Beneficios'},
+];
+function sortBar(){
+  return `<div class="sort-bar">${SORT_MODES.map(m=>
+    `<button class="sort-pill${_sortMode===m.id?' active':''}" onclick="applySortMode('${m.id}')">${m[lang]}</button>`
+  ).join('')}</div>`;
+}
+function sortPlans(plans, mode){
+  const s=[...plans];
+  if(mode==='cost')  s.sort((a,b)=>(a.premium+a.moop)-(b.premium+b.moop));
+  else if(mode==='star') s.sort((a,b)=>b.rating-a.rating||(a.premium-b.premium));
+  else if(mode==='drug') s.sort((a,b)=>(b.drug==='Included'?1:0)-(a.drug==='Included'?1:0)||(b.rating-a.rating));
+  else if(mode==='extra') s.sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50));
+  // 'best' keeps scorePlans() order
+  return s;
+}
+function applySortMode(mode){
+  _sortMode=mode;
+  // Re-render whichever results view is active
+  if(_inAllPlans) go(allPlans);
+  else go(flowResults);
+}
+let _inAllPlans=false;
+
 async function flowResults(){
-  prog(82);
-  // Ensure plans are loaded for current ZIP
+  prog(82); _inAllPlans=false;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
-  const plans=scorePlans();
+  const scored=scorePlans();
+  const plans=_sortMode==='best'?scored:sortPlans(scored,_sortMode);
   D.conditions=[...selConds];
   const age=getAge();
   let note='';
@@ -948,7 +985,8 @@ async function flowResults(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
-    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\u2019s actual plans.':'Los planes mostrados son ejemplos. Ingrese un código postal válido para los planes reales de su área.'}</div>`:''}
+    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\u2019s actual plans.':'Los planes mostrados son ejemplos. Ingrese un codigo postal valido para los planes reales de su area.'}</div>`:''}
+    ${sortBar()}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
     <div style="text-align:center;margin-top:8px">
@@ -1019,12 +1057,14 @@ function customCompare(){
 }
 
 function allPlans(){
-  prog(85);
+  prog(85); _inAllPlans=true;
   selPlans=[];
-  const plans=scorePlans();
+  const scored=scorePlans();
+  const plans=_sortMode==='best'?scored:sortPlans(scored,_sortMode);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
     <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el c\u00EDrculo en los planes que quiera comparar.'}</p>
+    ${sortBar()}
     ${plans.map((p,i)=>planCard(p,i,true)).join('')}
     ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}
     <div id="compareBar" class="compare-float" style="display:none">
