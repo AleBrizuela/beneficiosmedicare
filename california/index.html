@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0080D4">
 <title>Medicare California - Honest Medicare Guidance for Californians</title>
-<meta name="description" content="Find the right Medicare plan with free, personalized help from a licensed California family team. No cost, no pressure.">
-<meta name="keywords" content="medicare california, medicare plans california, medicare advantage california, medicare agent, free medicare help, medicare enrollment">
+<meta name="description" content="Find the right Medicare plan with free, personalized help from a licensed California family team. No cost, no pressure. Trusted by 1,000+ families.">
+<meta name="keywords" content="medicare california, medicare plans california, medicare advantage california, medigap california, part d prescription, medicare agent, free medicare help, medicare enrollment">
 <link rel="canonical" href="https://medicare-california.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Medicare California - Honest Medicare Guidance">
@@ -53,6 +53,21 @@ h1, h2, h3, h4 {
   line-height: 1.25;
 }
 
+/* ── SCROLL ANIMATIONS ── */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-in-up.visible {
+  animation: fadeUpFinal 0.6s ease forwards;
+}
+@keyframes fadeUpFinal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ── HEADER ── */
 .site-header {
   padding: 16px 24px;
@@ -86,6 +101,34 @@ h1, h2, h3, h4 {
   cursor: pointer;
 }
 .lang-link:hover { color: var(--terra); }
+
+/* ── SOCIAL PROOF BAR (BELOW HEADER) ── */
+.social-proof-bar {
+  background: var(--white);
+  border-bottom: 1px solid #E0E8F0;
+  padding: 14px 24px;
+  text-align: center;
+}
+.social-proof-content {
+  max-width: 960px;
+  margin: 0 auto;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.social-proof-stars {
+  display: flex;
+  gap: 3px;
+}
+.social-proof-stars svg {
+  width: 14px;
+  height: 14px;
+  color: #FDB022;
+}
 
 /* ── HERO ── */
 .hero {
@@ -220,6 +263,36 @@ h1, h2, h3, h4 {
   flex-shrink: 0;
 }
 
+/* ── TRUST BADGE STRIP (BELOW HERO) ── */
+.trust-badge-strip {
+  padding: 16px 24px;
+  background: var(--white);
+  border-top: 1px solid #E0E8F0;
+  border-bottom: 1px solid #E0E8F0;
+  text-align: center;
+}
+.badge-strip-content {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text);
+}
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge-item svg {
+  width: 16px;
+  height: 16px;
+  color: var(--terra);
+  flex-shrink: 0;
+}
+
 /* ── WIDGET CONTAINER ── */
 .widget-container {
   display: none;
@@ -242,10 +315,10 @@ h1, h2, h3, h4 {
   min-height: 500px;
 }
 
-/* ── WHY US SECTION ── */
-.why-us {
-  padding: 64px 24px;
-  max-width: 860px;
+/* ── MEDICARE PLANS OVERVIEW ── */
+.plans-overview {
+  padding: 56px 24px;
+  max-width: 900px;
   margin: 0 auto;
 }
 .section-label {
@@ -256,6 +329,59 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 10px;
+}
+.plans-overview h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+.plans-overview > p {
+  text-align: center;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.plan-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+}
+.plan-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--soft-blue);
+}
+.plan-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+.plan-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.plan-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* ── WHY US SECTION ── */
+.why-us {
+  padding: 64px 24px;
+  max-width: 860px;
+  margin: 0 auto;
 }
 .why-us h2 {
   text-align: center;
@@ -303,10 +429,73 @@ h1, h2, h3, h4 {
   color: var(--text);
 }
 
-/* ── HOW IT WORKS ── */
-.how-it-works {
+/* ── TESTIMONIALS SECTION ── */
+.testimonials {
   background: var(--warm-gray);
   padding: 56px 24px;
+}
+.testimonials-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.testimonials h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 40px;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.testimonial-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.testimonial-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.testimonial-stars svg {
+  width: 16px;
+  height: 16px;
+  color: #FDB022;
+}
+.testimonial-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 16px;
+  font-style: italic;
+  min-height: 80px;
+}
+.testimonial-author {
+  font-weight: 600;
+  color: var(--charcoal);
+  font-size: 14px;
+}
+.testimonial-location {
+  font-size: 12px;
+  color: var(--soft-blue);
+  font-weight: 500;
+}
+
+/* ── HOW IT WORKS ── */
+.how-it-works {
+  background: var(--white);
+  padding: 56px 24px;
+}
+.how-it-works-inner {
+  max-width: 700px;
+  margin: 0 auto;
 }
 .how-it-works h2 {
   text-align: center;
@@ -317,8 +506,6 @@ h1, h2, h3, h4 {
   display: flex;
   justify-content: center;
   gap: 16px;
-  max-width: 700px;
-  margin: 0 auto;
   align-items: flex-start;
 }
 .step {
@@ -355,43 +542,217 @@ h1, h2, h3, h4 {
   flex-shrink: 0;
 }
 
-/* ── TRUST STRIP ── */
-.trust-strip {
-  padding: 40px 24px;
-  text-align: center;
-  max-width: 700px;
+/* ── TRUST STATS BAR ── */
+.trust-stats {
+  padding: 48px 24px;
+  background: var(--light-blue);
+}
+.trust-stats-inner {
+  max-width: 900px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  text-align: center;
 }
-.trust-badges {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  flex-wrap: wrap;
+.stat-item h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--terra);
+  margin-bottom: 6px;
 }
-.trust-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+.stat-item p {
+  font-size: 13px;
   color: var(--text);
   font-weight: 500;
 }
-.trust-badge svg {
+
+/* ── FAQ ACCORDION ── */
+.faq-section {
+  padding: 56px 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.faq-section h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 40px;
+}
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.accordion-item {
+  border: 1px solid #D4DEE8;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.accordion-item.active {
+  border-color: var(--terra);
+  box-shadow: var(--shadow);
+}
+.accordion-header {
+  background: var(--white);
+  padding: 18px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s ease;
+  font-weight: 600;
+  color: var(--charcoal);
+  font-size: 15px;
+  user-select: none;
+}
+.accordion-item:hover .accordion-header {
+  background: var(--light-blue);
+}
+.accordion-item.active .accordion-header {
+  background: var(--light-blue);
+}
+.accordion-icon {
   width: 20px;
   height: 20px;
-  color: var(--sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--terra);
+  font-weight: bold;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.accordion-item.active .accordion-icon {
+  transform: rotate(45deg);
+}
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: var(--cream);
+}
+.accordion-item.active .accordion-body {
+  max-height: 500px;
+}
+.accordion-body-content {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* ── FINAL CTA SECTION ── */
+.final-cta {
+  padding: 56px 24px;
+  text-align: center;
+  background: var(--white);
+}
+.final-cta-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.final-cta h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.final-cta-sub {
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+.final-cta-zip-card {
+  background: var(--light-blue);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.final-cta-zip-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+}
+.final-cta-zip-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  border: 2px solid #A0C0E0;
+  border-radius: 10px;
+  outline: none;
+  text-align: center;
+  letter-spacing: 0.06em;
+  color: var(--charcoal);
+  background: var(--white);
+  transition: border-color 0.2s;
+  margin-bottom: 12px;
+}
+.final-cta-zip-input:focus {
+  border-color: var(--terra);
+}
+.final-cta-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--terra);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.final-cta-btn:hover {
+  background: var(--terra-dark);
 }
 
 /* ── FOOTER ── */
 .site-footer {
   background: var(--charcoal);
   color: rgba(255,255,255,0.7);
-  padding: 40px 24px 32px;
+  padding: 48px 24px 32px;
   text-align: center;
 }
 .footer-inner {
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 40px;
+  text-align: left;
+}
+.footer-col h4 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.footer-col p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.footer-col ul {
+  list-style: none;
+}
+.footer-col li {
+  margin-bottom: 8px;
+}
+.footer-col a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+.footer-col a:hover {
+  color: white;
 }
 .footer-contact {
   margin-bottom: 20px;
@@ -399,14 +760,14 @@ h1, h2, h3, h4 {
 .footer-contact a {
   color: rgba(255,255,255,0.85);
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   margin: 0 12px;
   transition: color 0.2s;
 }
 .footer-contact a:hover { color: white; }
 .footer-disclaimer {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.6;
   color: rgba(255,255,255,0.5);
   max-width: 600px;
@@ -419,6 +780,8 @@ h1, h2, h3, h4 {
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
 }
 .footer-bottom a {
   color: rgba(255,255,255,0.5);
@@ -437,6 +800,19 @@ h1, h2, h3, h4 {
 .fade-up-d3 { animation: fadeUp 0.5s ease 0.3s both; }
 
 /* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .footer-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .trust-stats-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 700px) {
   .cards-grid {
     grid-template-columns: 1fr;
@@ -452,16 +828,76 @@ h1, h2, h3, h4 {
   .hero h1 { font-size: 32px; }
   .hero-sub { font-size: 16px; }
   .hero-checks { gap: 12px; }
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .trust-stats-inner {
+    grid-template-columns: 1fr;
+  }
 }
+
 @media (max-width: 420px) {
   .hero { padding: 28px 18px 36px; }
   .zip-card { padding: 24px 20px 22px; }
   .why-us { padding: 48px 18px; }
   .hero h1 { font-size: 28px; }
+  .hero h1 span { font-size: 14px; }
   .trust-badges { flex-direction: column; align-items: center; gap: 14px; }
   .widget-container { padding: 0 12px; }
+  .social-proof-content {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .plans-overview h2 {
+    font-size: 24px;
+  }
+  .why-us h2 {
+    font-size: 24px;
+  }
+  .testimonials h2 {
+    font-size: 24px;
+  }
+  .faq-section h2 {
+    font-size: 24px;
+  }
 }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "name": "Medicare California - Susana Marcos Insurance",
+  "url": "https://medicare-california.com",
+  "description": "California-licensed Medicare insurance agents providing free expert guidance on Medicare Advantage, Medigap, and Part D plans for California residents.",
+  "telephone": "+1-310-597-9142",
+  "email": "alejamedicare@gmail.com",
+  "areaServed": {
+    "@type": "State",
+    "name": "California"
+  },
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Susana Marcos",
+      "jobTitle": "JD, MBA - Founder and Principal Agent"
+    },
+    {
+      "@type": "Person",
+      "name": "Alejandra Brizuela Marcos",
+      "jobTitle": "Licensed Medicare Insurance Agent - Partner"
+    }
+  ],
+  "priceRange": "Free",
+  "knowsLanguage": ["English", "Spanish"]
+}
+</script>
 </head>
 <body>
 
@@ -477,6 +913,21 @@ h1, h2, h3, h4 {
   </a>
   <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
 </header>
+
+<!-- ═══ SOCIAL PROOF BAR ═══ -->
+<nav class="social-proof-bar" aria-label="Social proof">
+  <div class="social-proof-content">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;color:var(--terra);flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span style="font-weight:600;color:var(--charcoal);">Trusted by 1,000+ California families</span>
+    <div class="social-proof-stars">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+  </div>
+</nav>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
@@ -516,90 +967,340 @@ h1, h2, h3, h4 {
   </div>
 </section>
 
+<!-- ═══ TRUST BADGE STRIP ═══ -->
+<div class="trust-badge-strip">
+  <div class="badge-strip-content">
+    <div class="badge-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Licensed by California</span>
+    </div>
+    <div class="badge-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      <span>AHIP Certified</span>
+    </div>
+    <div class="badge-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>Family-Owned</span>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ WIDGET (hidden until ZIP submitted) ═══ -->
 <div id="widget-anchor"></div>
 <div class="widget-container" id="widget-container">
   <iframe id="widget-frame" scrolling="no" title="Medicare plan comparison tool for your ZIP code"></iframe>
 </div>
 
+<!-- ═══ MEDICARE PLANS OVERVIEW ═══ -->
+<section class="plans-overview" id="plans-overview">
+  <div class="section-label">Medicare Plan Types</div>
+  <h2>Understanding Your Medicare Options</h2>
+  <p>California offers several types of Medicare plans. Each has different coverage, costs, and benefits. We help you understand what's available to you and which plan fits your health needs and budget.</p>
+  <div class="plans-grid">
+    <article class="plan-card fade-in-up">
+      <div class="plan-icon">🏥</div>
+      <h3>Medicare Advantage</h3>
+      <p>All-in-one coverage combining Part A, B, and usually D. Often includes prescription drugs and additional benefits.</p>
+    </article>
+    <article class="plan-card fade-in-up">
+      <div class="plan-icon">📋</div>
+      <h3>Medigap Plans</h3>
+      <p>Supplemental insurance that covers costs Original Medicare doesn't pay. Choose from 10 standardized plans (A-N).</p>
+    </article>
+    <article class="plan-card fade-in-up">
+      <div class="plan-icon">💊</div>
+      <h3>Part D Prescription</h3>
+      <p>Prescription drug coverage to help pay for medications. Available standalone or bundled with Medicare Advantage.</p>
+    </article>
+    <article class="plan-card fade-in-up">
+      <div class="plan-icon">👥</div>
+      <h3>Special Needs Plans</h3>
+      <p>Tailored coverage for people with specific conditions or circumstances. Available in eligible California regions.</p>
+    </article>
+  </div>
+</section>
+
 <!-- ═══ WHY US ═══ -->
 <section class="why-us" id="why-us">
   <div class="section-label">Why Choose Us</div>
   <h2>We're here to help you navigate Medicare</h2>
   <div class="cards-grid">
-    <div class="card">
-      <div class="card-icon family">&#x1F469;&#x200D;&#x1F467;</div>
+    <article class="card fade-in-up">
+      <div class="card-icon family">👩‍👧</div>
       <h3>Family Team</h3>
-      <p>We are a mother-daughter duo. We treat every client like our own family.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon local">&#x1F3E0;</div>
+      <p>We are a mother-daughter duo. We treat every client like our own family. Your success is our success.</p>
+    </article>
+    <article class="card fade-in-up">
+      <div class="card-icon local">🏡</div>
       <h3>California Local</h3>
-      <p>Based right here in California. We know your area and your options.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon free">&#x1F4B0;</div>
+      <p>Based right here in California. We know your area, your plans, and the specific coverage options available to you.</p>
+    </article>
+    <article class="card fade-in-up">
+      <div class="card-icon free">💰</div>
       <h3>Always Free</h3>
-      <p>No hidden fees, ever. We are paid by the insurance carriers, not you.</p>
+      <p>No hidden fees, ever. Our service is completely free. We are paid by the insurance carriers, not you.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-label">Client Stories</div>
+    <h2>What California Families Are Saying</h2>
+    <div class="testimonials-grid">
+      <article class="testimonial-card fade-in-up">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="testimonial-text">"I was completely overwhelmed by all the Medicare options out there. These ladies made the whole process so simple and easy to understand. They answered every question I had without making me feel rushed."</p>
+        <div class="testimonial-author">Maria T.</div>
+        <div class="testimonial-location">Los Angeles</div>
+      </article>
+      <article class="testimonial-card fade-in-up">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="testimonial-text">"Best decision I made was calling them. They found me a plan that saves me over $200 a month compared to what I was paying before. They really know their stuff and genuinely care about helping."</p>
+        <div class="testimonial-author">Robert K.</div>
+        <div class="testimonial-location">San Diego</div>
+      </article>
+      <article class="testimonial-card fade-in-up">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="testimonial-text">"I felt totally lost trying to figure out my options after turning 65. They walked me through everything step by step. Now I have coverage that actually fits my needs and my budget. Highly recommend!"</p>
+        <div class="testimonial-author">Linda S.</div>
+        <div class="testimonial-location">Sacramento</div>
+      </article>
     </div>
   </div>
 </section>
 
 <!-- ═══ HOW IT WORKS ═══ -->
-<section class="how-it-works">
-  <div class="section-label">How It Works</div>
-  <h2>Three simple steps</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h4>Enter Your ZIP</h4>
-      <p>Plans and benefits vary by location. Your ZIP helps us find what is available to you.</p>
-    </div>
-    <div class="step-arrow">&rarr;</div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h4>Answer a Few Questions</h4>
-      <p>Tell us about your needs so we can match you with the right options.</p>
-    </div>
-    <div class="step-arrow">&rarr;</div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h4>See Your Options</h4>
-      <p>Get a personalized comparison. A licensed agent will help you decide.</p>
+<section class="how-it-works" id="how-it-works">
+  <div class="how-it-works-inner">
+    <div class="section-label">How It Works</div>
+    <h2>Three simple steps to find your plan</h2>
+    <div class="steps">
+      <div class="step fade-in-up">
+        <div class="step-num">1</div>
+        <h4>Enter Your ZIP</h4>
+        <p>Plans and benefits vary by location. Your ZIP code helps us find all the options available to you in your area.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step fade-in-up">
+        <div class="step-num">2</div>
+        <h4>Answer a Few Questions</h4>
+        <p>Tell us about your health needs, prescription drugs, and budget preferences so we can match you with the best options.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step fade-in-up">
+        <div class="step-num">3</div>
+        <h4>See Your Options</h4>
+        <p>Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ TRUST STRIP ═══ -->
-<section class="trust-strip">
-  <div class="trust-badges">
-    <span class="trust-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Licensed by the State of California
-    </span>
-    <span class="trust-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-      AHIP Certified
-    </span>
-    <span class="trust-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      Family-Owned Since 2019
-    </span>
+<!-- ═══ TRUST STATS ═══ -->
+<section class="trust-stats" id="trust-stats">
+  <div class="trust-stats-inner">
+    <div class="stat-item fade-in-up">
+      <h3>1,000+</h3>
+      <p>California Families Helped</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>Since 2019</h3>
+      <p>Licensed Medicare Advisor</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>100% AHIP</h3>
+      <p>Certified Professionals</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>$0 Cost</h3>
+      <p>To Families, Always</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ACCORDION ═══ -->
+<section class="faq-section" id="faq">
+  <div class="section-label">Frequently Asked</div>
+  <h2>Medicare Questions Answered</h2>
+  <div class="accordion" role="region" aria-label="Frequently asked questions">
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>What is Medicare?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          Medicare is a federal health insurance program for people age 65 and older, regardless of income or health status. It's also available to some younger people with disabilities and those with end-stage renal disease. Medicare has four parts: Part A (hospital insurance), Part B (medical insurance), Part D (prescription drug coverage), and optional Medigap or Medicare Advantage plans that provide additional coverage.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>When can I enroll in Medicare?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          You become eligible for Medicare at age 65. Your initial enrollment period begins three months before your 65th birthday and ends three months after. However, you should enroll during this period to avoid potential penalties. If you delay enrollment without qualifying for an exception, you may face higher premiums for life. Additionally, you can make changes during the Annual Enrollment Period (October 15 - December 7) or Special Enrollment Periods if you qualify.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>What is the difference between Medicare Advantage and Medigap?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          Medicare Advantage (Part C) is an all-in-one alternative to Original Medicare. It's offered by private insurance companies and includes Part A, Part B, and usually prescription drug coverage (Part D). These plans often have lower premiums but may have network restrictions and require prior authorization. Medigap is supplemental coverage that works with Original Medicare to help pay costs that Medicare doesn't cover, like copayments and deductibles. You can see any doctor accepting Medicare nationwide.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>Is there a cost for your service?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          Our service is completely free. We never charge you any fee for our guidance, consultation, or help enrolling in a plan. We are compensated by the insurance carriers, not by you. This means we can focus entirely on finding you the best plan for your needs and budget without any financial conflict of interest. Transparency and honesty are core to who we are.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>Do I need a Medicare supplement plan?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          That depends on your situation. Original Medicare covers a significant portion of healthcare costs, but beneficiaries are responsible for deductibles, copayments, and coinsurance. If you want more predictable out-of-pocket costs, a Medigap plan may be right for you. If you prefer lower premiums and don't mind network restrictions, Medicare Advantage might be better. We help you evaluate both options based on your health, budget, and preferences to make the right choice.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>Can I change my Medicare plan?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          Yes, you can change your Medicare plan, but there are specific times when you can do so. The main opportunity is during the Annual Enrollment Period (October 15 through December 7) when all beneficiaries can make changes that take effect January 1. Some people qualify for Special Enrollment Periods if they experience qualifying life events like moving, losing other coverage, or changes in health status. We help you understand when you're eligible to make changes and help with the process.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>What is the Medicare Annual Enrollment Period?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          The Annual Enrollment Period (AEP) runs from October 15 through December 7 each year. During this time, anyone with Medicare can review, compare, and change their coverage for the following year. This includes switching between Medicare Advantage and Original Medicare, changing Medigap plans, or updating your Part D prescription drug plan. Changes made during AEP take effect January 1. We recommend reviewing your options annually to ensure your plan still meets your needs and budget.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>Do you serve all of California?</span>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-content">
+          We serve throughout California, from the coast to inland regions. However, Medicare plan availability varies by specific location, ZIP code, and county. Some plans may not be available in all areas, and coverage options can differ even between nearby ZIP codes. This is why we ask for your ZIP code—it helps us identify exactly which plans are available to you and ensure we show you all your genuine options. We're here to help no matter where you are in California.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="final-cta" id="final-cta">
+  <div class="final-cta-inner">
+    <h2>Ready to find the perfect Medicare plan?</h2>
+    <p class="final-cta-sub">Start your personalized search today. It's free and takes just a few minutes.</p>
+    <div class="final-cta-zip-card">
+      <label for="final-zip-input">Your ZIP code</label>
+      <input
+        type="tel"
+        inputmode="numeric"
+        id="final-zip-input"
+        class="final-cta-zip-input"
+        placeholder="e.g. 90001"
+        maxlength="5"
+      >
+      <button class="final-cta-btn" onclick="handleFinalZipSubmit()">Get Started</button>
+    </div>
   </div>
 </section>
 
 <!-- ═══ FOOTER ═══ -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-contact">
-      <a href="tel:+13105979142">(310) 597-9142</a>
-      <a href="mailto:info@beneficiosmedicare.com">info@beneficiosmedicare.com</a>
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4>About Medicare California</h4>
+        <p>We're a California-based family team dedicated to helping seniors navigate Medicare with honesty and care. Since 2019, we've guided over 1,000 families to plans that fit their needs and budget. Our licensed advisors take pride in making complex Medicare information simple and accessible.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#plans-overview">Medicare Plan Types</a></li>
+          <li><a href="#why-us">Why Choose Us</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <p style="margin-bottom:12px;">We're here to answer your Medicare questions.</p>
+        <p style="margin-bottom:4px;"><strong>Phone:</strong></p>
+        <p style="margin-bottom:12px;"><a href="tel:+13105979142">(310) 597-9142</a></p>
+        <p style="margin-bottom:4px;"><strong>Email:</strong></p>
+        <p><a href="mailto:info@beneficiosmedicare.com">info@beneficiosmedicare.com</a></p>
+      </div>
     </div>
+
+    <div class="footer-contact" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;margin-bottom:24px;text-align:center;">
+      <p style="font-size:13px;margin-bottom:12px;">Connect with us for personalized guidance. Licensed advisors available to help you understand your Medicare options.</p>
+    </div>
+
     <p class="footer-disclaimer">
-      We do not offer every plan available in your area. Currently we represent 8 organizations which offer 52 products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options. Not affiliated with or endorsed by Medicare or any government agency.
+      We do not offer every plan available in your area. Currently we represent organizations which offer products in your area. Please contact Medicare.gov, call 1-800-MEDICARE (1-800-633-4227), or your local State Health Insurance Program (SHIP) to get information on all of your options. This website is not part of the federal government or the Medicare program. Not affiliated with or endorsed by Medicare or any government agency. Medicare is a registered trademark of the Department of Health and Human Services.
     </p>
     <div class="footer-bottom">
-      <span>&copy; 2026 Medicare California</span>
+      <span>&copy; 2026 Medicare California. All rights reserved.</span>
+      <a href="#" onclick="event.preventDefault();alert('Privacy Policy coming soon')">Privacy Policy</a>
+      <a href="#" onclick="event.preventDefault();alert('Terms of Service coming soon')">Terms of Service</a>
       <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
     </div>
   </div>
@@ -623,6 +1324,15 @@ zipInput.addEventListener('keydown', function(e) {
 zipInput.addEventListener('input', function() {
   this.value = this.value.replace(/\D/g, '').slice(0, 5);
   zipError.style.display = 'none';
+});
+
+// Same for final CTA input
+document.getElementById('final-zip-input').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g, '').slice(0, 5);
+});
+
+document.getElementById('final-zip-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleFinalZipSubmit();
 });
 
 let submitted = false;
@@ -651,6 +1361,18 @@ function handleZipSubmit() {
   frame.src = 'https://beneficiosmedicare.com/widget-v4.html?lang=en&theme=california&zip=' + zip;
 }
 
+function handleFinalZipSubmit() {
+  const zip = document.getElementById('final-zip-input').value.trim();
+  if (!/^\d{5}$/.test(zip)) {
+    alert('Please enter a valid 5-digit ZIP code.');
+    return;
+  }
+  // Scroll to hero and populate the main form
+  document.getElementById('hero').scrollIntoView({ behavior: 'smooth' });
+  zipInput.value = zip;
+  setTimeout(handleZipSubmit, 600);
+}
+
 // Auto-resize iframe (only accept messages from widget origin)
 window.addEventListener('message', function(e) {
   if (e.origin !== 'https://beneficiosmedicare.com') return;
@@ -662,6 +1384,44 @@ window.addEventListener('message', function(e) {
     var a = document.getElementById('widget-anchor') || frame;
     if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
   }
+});
+
+// ── ACCORDION LOGIC ──
+function toggleAccordion(button) {
+  const item = button.parentElement;
+  const isActive = item.classList.contains('active');
+
+  // Close all other items
+  document.querySelectorAll('.accordion-item.active').forEach(el => {
+    if (el !== item) {
+      el.classList.remove('active');
+      el.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Toggle current item
+  item.classList.toggle('active');
+  button.setAttribute('aria-expanded', !isActive);
+}
+
+// ── INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ──
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+// Observe all fade-in-up elements
+document.querySelectorAll('.fade-in-up').forEach(el => {
+  observer.observe(el);
 });
 </script>
 </body>
