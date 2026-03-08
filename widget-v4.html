@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beneficios Medicare - Your Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1E3A5F; --green: #00796B; --blue: #2E6BA4;
+  --teal: #00897B; --mint: #B2DFDB;
+  --lt-blue: #D6EAF7; --lt-green: #E0F2F1;
+  --lt-mint: #E0F2F1; --lt-gray: #F3F5F7;
+  --gray: #5A6577; --dark: #1C2B3A; --white: #FFFFFF;
+  --sage: #00897B; --sage-dark: #00796B; --slate: #3D5A80;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(30,58,95,0.10);
+  --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,#E0F2F1 0%,#D6EAF7 50%,#E0F2F1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body.in-iframe{padding:0;min-height:auto;background:var(--white);align-items:flex-start}
+body.in-iframe .widget-wrap{border-radius:0;box-shadow:none}
+body.in-iframe .widget-header{display:none}
+body.in-iframe .widget-footer{display:none}
+body.in-iframe .widget-body{padding-top:14px}
+.widget-wrap{width:100%;max-width:480px;background:var(--white);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
+
+/* ── LANG BUBBLE ── */
+.lang-toggle{display:flex;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin-left:auto;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.lang-toggle button{padding:6px 12px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;background:transparent;color:rgba(255,255,255,.6);letter-spacing:.03em}
+.lang-toggle button.active{background:rgba(255,255,255,.95);color:var(--navy);border-radius:6px}
+.lang-toggle button:hover:not(.active){background:rgba(255,255,255,.1);color:white}
+
+/* ── HEADER ── */
+.widget-header{background:linear-gradient(135deg,var(--navy) 0%,var(--slate) 100%);padding:14px 20px 12px;color:white;display:flex;align-items:center;gap:12px}
+.widget-header .logo-icon{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.widget-header h2{font-size:18px;font-weight:600;line-height:1.2}
+.widget-header p{font-size:13px;opacity:.8;margin-top:2px}
+
+/* ── PROGRESS ── */
+.progress-bar{height:4px;background:rgba(0,0,0,.05)}
+.progress-fill{height:100%;background:var(--sage);transition:width .4s ease;border-radius:0 2px 2px 0}
+
+/* ── BODY ── */
+.widget-body{padding:18px 22px 8px}
+
+/* ── ANIM ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.widget-body>*{animation:fadeUp .3s ease}
+
+/* ── BOT MSG ── */
+.bot-msg{background:none;border-radius:0;padding:4px 0 12px;margin-bottom:6px;font-size:17px;font-weight:400;line-height:1.5;color:#3c4043;text-align:center}
+.bot-msg strong{font-weight:600;color:inherit}
+.bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:22px;font-weight:600;color:#202124;text-align:center}
+.bot-msg.hl{background:#f8f9fa;border-left:3px solid var(--sage);padding:10px 14px;border-radius:8px;text-align:left;font-size:14px;font-weight:400;color:#5f6368}
+
+/* ── OPT CARDS ── */
+.opt-grid{display:flex;flex-direction:column;gap:10px}
+.opt-card{display:flex;align-items:center;gap:14px;padding:16px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);min-height:64px}
+.opt-card:hover{border-color:var(--sage);background:#f8faf9;box-shadow:0 1px 6px rgba(60,64,67,.08)}
+.opt-card:active{transform:scale(.98)}
+.opt-card .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ic.bl{background:var(--lt-blue)}.ic.gr{background:var(--lt-green)}.ic.mi{background:var(--lt-mint)}.ic.sg{background:var(--lt-mint)}
+.opt-card .tx h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:2px}
+.opt-card .tx p{font-size:13px;color:#5f6368;line-height:1.45}
+.opt-card .bg{margin-left:auto;font-size:10px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
+.bg.st{background:#fef7e0;color:#b06000}.bg.ch{background:#e8f0fe;color:#1a73e8}
+.bg.co{background:#e6f4ea;color:#137333}.bg.le{background:#f3e8fd;color:#8430ce}
+
+/* ── INPUTS ── */
+.input-group{margin-bottom:14px;text-align:center}
+.input-group label{display:block;font-size:13px;font-weight:500;color:#5f6368;margin-bottom:6px;text-align:center}
+.input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:#202124;transition:border-color .2s;text-align:center;display:block;margin:0 auto}
+.input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
+.input-field::placeholder{color:#A0AEC0}
+.input-group.zip-group .input-field{width:140px;min-width:140px;font-size:22px;letter-spacing:3px}
+
+/* ── BUTTONS ── */
+.btn-p{width:100%;padding:16px;background:var(--sage);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,137,123,.3)}.btn-p:active{transform:translateY(0)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
+.btn-s:hover{background:var(--lt-mint)}
+.btn-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gray);font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:6px 0;min-height:36px}
+.btn-back:hover{color:var(--dark)}
+.btn-ghost{background:none;border:none;color:#1a73e8;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:none;min-height:44px}
+.btn-remind{width:100%;padding:14px;background:var(--lt-blue);color:var(--blue);border:2px solid var(--lt-blue);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
+.btn-remind:hover{border-color:var(--blue)}
+.btn-skip{display:block;width:100%;text-align:center;background:none;border:none;color:#999;font-size:13px;cursor:pointer;font-family:inherit;padding:10px 0;margin-top:4px;text-decoration:underline;text-underline-offset:2px;min-height:36px}
+.btn-skip:hover{color:var(--gray)}
+
+/* ── INFO CARDS ── */
+.info-card{background:#f8f9fa;border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.info-card h4{font-size:14px;font-weight:600;color:#202124;margin-bottom:5px}
+.info-card p{font-size:14px;color:#3c4043;line-height:1.55}
+.info-card.bl{background:#f8f9fa}.info-card.bl h4{color:#202124}
+
+/* ── CONDITION CHIPS (Option B) ── */
+.cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.cond-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border:1.5px solid #dadce0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);text-align:center;min-height:70px}
+.cond-chip:hover{border-color:var(--sage);background:#f8faf9}
+.cond-chip:active{transform:scale(.97)}
+.cond-chip.sel{border-color:var(--sage);background:var(--sage);color:white}
+.cond-chip .cond-icon{font-size:24px;line-height:0}
+.cond-chip .cond-label{font-size:13px;font-weight:500;line-height:1.3}
+.cond-chip.sel .cond-label{color:white}
+.cond-chip.sel .cond-icon svg{filter:brightness(0) invert(1)}
+.health-textarea{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--dark);resize:vertical;min-height:70px;transition:border-color .2s}
+.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
+.health-textarea::placeholder{color:#A0AEC0}
+
+/* ── RANK BADGES (priority step) ── */
+.opt-card{position:relative}
+.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,137,123,.3);animation:popIn .25s ease}
+.opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
+
+/* ── PLAN CARDS ── */
+.plan-card{border:1.5px solid #dadce0;border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all .2s;position:relative;border-left:4px solid #dadce0}
+.plan-card:hover{box-shadow:0 1px 6px rgba(60,64,67,.1)}
+.plan-card.rec{border-color:var(--sage);background:#f8faf9;border-left-color:var(--sage)}
+.plan-label{position:absolute;top:-10px;right:10px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;letter-spacing:.02em}
+.plan-label.best-match{background:var(--sage);color:white}
+.plan-label.best-value{background:#1a73e8;color:white}
+.plan-label.most-benefits{background:#8430ce;color:white}
+.plan-label.top-rated{background:#ea8600;color:white}
+.plan-card h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:3px}
+.plan-card .carrier{font-size:13px;color:#5f6368;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.carrier-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.plan-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid #EDF2F7}
+.plan-row:last-child{border:none}
+.plan-row .lb{color:#5f6368}.plan-row .vl{font-weight:500;color:#202124}
+.plan-row .vl.gd{color:#137333}
+.plan-cta{width:100%;padding:14px;margin-top:10px;border:1.5px solid #dadce0;background:var(--white);color:var(--sage);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;min-height:50px}
+.plan-cta:hover{background:var(--sage);color:white}
+.plan-cta.filled{background:var(--sage);color:white}
+.plan-cta.filled:hover{background:var(--sage-dark)}
+
+/* ── PLAN SELECT CHECKBOX ── */
+.plan-sel{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;border:2px solid #CBD5E0;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .15s;z-index:2}
+.plan-sel:hover{border-color:var(--sage)}
+.plan-sel.checked{background:var(--sage);border-color:var(--sage);color:white}
+.compare-float{position:sticky;bottom:0;left:0;right:0;background:white;padding:10px 0 4px;border-top:1px solid #EDF2F7;margin-top:12px;text-align:center}
+
+/* ── COMPARE TABLE ── */
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.compare-table th{background:#f8f9fa;color:#202124;padding:9px 6px;text-align:center;font-weight:600;font-size:12px;border-bottom:1px solid #dadce0}
+.compare-table th:first-child{text-align:left;color:#5f6368}
+.compare-table td{padding:8px 6px;border-bottom:1px solid #f1f3f4;text-align:center;color:#3c4043}
+.compare-table td:first-child{text-align:left;color:#5f6368;font-weight:400}
+.compare-table tr:hover td{background:#f8f9fa}
+
+/* ── COMPARE ROW ── */
+.cmp-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #EDF2F7;font-size:15px}
+.cmp-row:last-child{border:none}
+.cmp-lb{color:#5f6368}.cmp-vl{font-weight:500;color:#202124}
+
+/* ── SUCCESS ── */
+.success-icon{width:88px;height:88px;background:linear-gradient(135deg,#E8F5E9 0%,#C8E6C9 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 12px;box-shadow:0 4px 16px rgba(76,175,80,.25);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.success-wrap{text-align:center;padding:20px 8px 12px}
+.success-title{color:#202124;font-size:21px;font-weight:600;margin:0 0 4px;line-height:1.3}
+.success-subtitle{color:#5f6368;font-size:14px;font-weight:400;margin:0 0 16px}
+.success-bullets{text-align:left;background:var(--lt-gray);border-radius:var(--radius);padding:14px 16px;margin:0 0 16px;list-style:none}
+.success-bullets li{font-size:14px;color:#2D3748;line-height:1.5;padding:5px 0;display:flex;align-items:flex-start;gap:8px}
+.success-bullets li span.sb-icon{flex-shrink:0;font-size:16px;margin-top:1px}
+.success-cta{display:inline-block;background:var(--sage);color:white;font-size:15px;font-weight:600;padding:13px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
+.success-cta:hover{background:#1A8A6E;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,138,110,.3)}
+.success-links{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.success-links button{background:none;border:none;color:var(--navy);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px}
+
+/* ── FOOTER ── */
+.widget-footer{padding:8px 18px 10px;text-align:center;font-size:11px;color:var(--gray);line-height:1.45;border-top:1px solid #EDF2F7}
+.widget-footer a{color:var(--blue);text-decoration:none}
+
+/* ── TRUST BAR ── */
+.trust-bar{display:flex;justify-content:center;gap:16px;margin-top:8px;padding-bottom:0;font-size:12px;color:#888}
+.trust-bar span{display:flex;align-items:center;gap:4px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  body{padding:0;align-items:flex-start}
+  .widget-wrap{border-radius:0;min-height:100vh}
+  .widget-body{padding:20px 18px}
+  .bot-msg{font-size:17px;padding:4px 0 12px}
+  .opt-card{padding:16px 14px;min-height:64px}
+  .opt-card .ic{width:44px;height:44px;font-size:22px}
+  .opt-card .tx h4{font-size:15px}
+  .opt-card .tx p{font-size:13px}
+  .input-field{padding:14px 16px;font-size:18px}
+  .btn-p{padding:16px;font-size:16px;min-height:52px}
+  .btn-s{padding:14px;font-size:15px;min-height:48px}
+  .plan-row{font-size:14px;padding:7px 0}
+  .plan-card h4{font-size:15px}
+  .plan-cta{padding:14px;font-size:15px;min-height:50px}
+  .cond-chip{padding:16px 8px;min-height:76px}
+  .cond-chip .cond-icon{font-size:26px}
+  .cond-chip .cond-label{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="widget-wrap">
+  <div class="widget-header">
+    <div class="logo-icon">&#x1F6E1;</div>
+    <div><h2 id="hdr-title">Your Guide</h2><p id="hdr-sub">Beneficios Medicare</p></div>
+    <div class="lang-toggle" id="lang-toggle">
+      <button id="lang-en" onclick="setLang('en')">EN</button>
+      <button id="lang-es" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+  <div class="widget-body" id="wb"></div>
+  <div class="widget-footer" id="wf">
+    This website is not part of the federal government or the Medicare program.
+    For official information visit <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> or call 1-800-Medicare.
+  </div>
+</div>
+<script>
+// ═══════════════════════════════════════
+// WIDGET v4 - REDESIGNED
+// ═══════════════════════════════════════
+
+const _params=new URLSearchParams(location.search);
+let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[];
+const _initZip=_params.get('zip')||'';
+if(_initZip && /^\d{5}$/.test(_initZip)) D.zip=_initZip;
+
+// ── THEME ENGINE ──
+// Usage: ?theme=california  (or omit for default beneficiosmedicare theme)
+const THEMES = {
+  default: {}, // uses CSS :root as-is
+  california: {
+    '--sage':      '#0080D4',
+    '--sage-dark': '#0068B0',
+    '--navy':      '#1a1a1a',
+    '--slate':     '#4a4a4a',
+    '--lt-mint':   '#E8F2FC',
+    '--lt-green':  '#E8F2FC',
+    '--mint':      '#B3D4F0',
+    '--teal':      '#0080D4',
+    '--green':     '#0068B0',
+    '--blue':      '#3D9BE9',
+    '--lt-blue':   '#E8F2FC',
+  }
+};
+const _theme = _params.get('theme') || 'default';
+if (THEMES[_theme] && _theme !== 'default') {
+  const r = document.documentElement.style;
+  Object.entries(THEMES[_theme]).forEach(([k, v]) => r.setProperty(k, v));
+  // Also update hardcoded colors that reference sage/teal
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .opt-card:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
+    .input-field:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
+    .health-textarea:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
+    .btn-p:hover { box-shadow: 0 4px 16px rgba(0,128,212,.3) !important; }
+    .plan-card.rec { background: #f0f7fd !important; }
+    .opt-card.ranked { background: #f0f7fd !important; }
+    .cond-chip:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
+    .cond-chip.sel { background: var(--sage) !important; border-color: var(--sage) !important; }
+    .rank-badge { box-shadow: 0 2px 6px rgba(0,128,212,.3) !important; }
+    .plan-cta:hover { background: var(--sage) !important; }
+    .plan-cta.filled:hover { background: var(--sage-dark) !important; }
+    .btn-s:hover { background: var(--lt-mint) !important; }
+    .success-cta:hover { background: var(--sage-dark) !important; box-shadow: 0 4px 12px rgba(0,128,212,.3) !important; }
+    .plan-sel:hover { border-color: var(--sage) !important; }
+    .plan-sel.checked { background: var(--sage) !important; border-color: var(--sage) !important; }
+  `;
+  document.head.appendChild(styleEl);
+}
+
+if(window.self!==window.top){
+  document.body.classList.add('in-iframe');
+  const _ro=new ResizeObserver(()=>{
+    const h=document.querySelector('.widget-wrap').offsetHeight;
+    window.parent.postMessage({type:'widget-resize',height:h},'*');
+  });
+  document.addEventListener('DOMContentLoaded',()=>_ro.observe(document.querySelector('.widget-wrap')));
+}
+
+const _cb={};
+
+// ── CARRIER BRAND COLORS ──
+const CARRIER_COLORS = {
+  'SCAN Health Plan':'#0057A6','Alignment Health':'#F37021',
+  'UnitedHealthcare':'#002677','Humana':'#49A942',
+  'Blue Shield of CA':'#0073CF','Aetna':'#7D3F98',
+  'Anthem':'#0055A5','Kaiser Permanente':'#B11226',
+  'Wellcare':'#00529B','Centene':'#E31837'
+};
+
+// ── SVG ICON LIBRARY (dual-tone filled) ──
+const _s=(p)=>'<svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'+p+'</s'+'vg>';
+const I={
+  doctor:_s('<circle cx="12" cy="7" r="4" fill="#4A90D9" opacity=".2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#2563EB" stroke-width="2"/><path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/><path d="M17 3h4M19 1v4" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>'),
+  search:_s('<circle cx="11" cy="11" r="7" fill="#E0F2FE" stroke="#0369A1" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#0369A1" stroke-width="2.5" stroke-linecap="round"/>'),
+  cost:_s('<circle cx="12" cy="12" r="10" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/><path d="M12 6v12M16 8.5c0-1.4-1.8-2.5-4-2.5s-4 1.1-4 2.5 1.8 2.5 4 2.5 4 1.1 4 2.5-1.8 2.5-4 2.5-4-1.1-4-2.5" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>'),
+  pill:_s('<rect x="3" y="3" width="18" height="18" rx="4" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/><path d="M7 12h10M12 7v10" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"/>'),
+  star:_s('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" fill="#FCD34D" stroke="#D97706" stroke-width="1.5" stroke-linejoin="round"/>'),
+  heart:_s('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" fill="#FCA5A5" stroke="#DC2626" stroke-width="2"/>'),
+  lungs:_s('<path d="M12 4v8M7.5 12C4 12 4 16 4 18s1 3 3.5 3S12 20 12 16M16.5 12C20 12 20 16 20 18s-1 3-3.5 3S12 20 12 16" fill="none" stroke="#0F766E" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="4" r="2" fill="#0F766E"/>'),
+  bone:_s('<path d="M18.3 5.7a2.5 2.5 0 0 0-3.5 0l-9.1 9.1a2.5 2.5 0 1 0 3.5 3.5l9.1-9.1a2.5 2.5 0 0 0 0-3.5z" fill="#FED7AA" stroke="#C2410C" stroke-width="2"/>'),
+  brain:_s('<path d="M12 2a5 5 0 0 1 4.4 7.4A5 5 0 0 1 19 14a5 5 0 0 1-4 4.9V22h-6v-3.1A5 5 0 0 1 5 14a5 5 0 0 1 2.6-4.6A5 5 0 0 1 12 2z" fill="#E9D5FF" stroke="#7C3AED" stroke-width="2"/>'),
+  eye:_s('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#1D4ED8"/>'),
+  disability:_s('<circle cx="12" cy="4" r="2.5" fill="#2563EB"/><path d="M12 6.5v5.5M8 12h8M9 22a5 5 0 0 1-1-8h8a5 5 0 0 1-1 8" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>'),
+  kidney:_s('<path d="M8 2c-3 0-5 2.5-5 6s3 7 5 10c2-3 5-6 5-10S11 2 8 2z" fill="#BBF7D0" stroke="#15803D" stroke-width="1.5"/><path d="M16 2c-3 0-5 2.5-5 6s3 7 5 10c2-3 5-6 5-10S19 2 16 2z" fill="#BBF7D0" stroke="#15803D" stroke-width="1.5"/>'),
+  clipboard:_s('<rect x="5" y="5" width="14" height="17" rx="2" fill="#E0E7FF" stroke="#4338CA" stroke-width="2"/><rect x="8" y="2" width="8" height="4" rx="1" fill="#4338CA"/><path d="M9 12h6M9 15h4" stroke="#4338CA" stroke-width="1.5" stroke-linecap="round"/>'),
+  shrug:_s('<circle cx="12" cy="7" r="4" fill="#E5E7EB" stroke="#4B5563" stroke-width="2"/><path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/><path d="M7 13l-3-1.5M17 13l3-1.5" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/>'),
+  tooth:_s('<path d="M12 2C9 2 7 4 7 7c0 2.5.5 4 1 5.5S9 16 9 18c0 2 1 4 3 4s3-2 3-4c0-2 .5-3.5 1-5.5S17 9.5 17 7c0-3-2-5-5-5z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/>'),
+  fitness:_s('<rect x="2" y="7" width="4" height="10" rx="1" fill="#D1FAE5" stroke="#059669" stroke-width="1.5"/><rect x="18" y="7" width="4" height="10" rx="1" fill="#D1FAE5" stroke="#059669" stroke-width="1.5"/><path d="M6 12h12M6 4v16M18 4v16" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>'),
+  money:_s('<rect x="1" y="4" width="22" height="16" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#B45309"/>'),
+  book:_s('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#1D4ED8" stroke-width="2"/>'),
+  chart:_s('<rect x="3" y="12" width="5" height="9" rx="1" fill="#C7D2FE" stroke="#4338CA" stroke-width="1.5"/><rect x="10" y="6" width="5" height="15" rx="1" fill="#A5B4FC" stroke="#4338CA" stroke-width="1.5"/><rect x="17" y="2" width="5" height="19" rx="1" fill="#818CF8" stroke="#4338CA" stroke-width="1.5"/>'),
+  calendar:_s('<rect x="3" y="4" width="18" height="18" rx="2" fill="#FFEDD5" stroke="#C2410C" stroke-width="2"/><rect x="3" y="4" width="18" height="6" rx="2" fill="#C2410C"/><path d="M8 2v4M16 2v4" stroke="#C2410C" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="15" r="1.5" fill="#C2410C"/><circle cx="12" cy="15" r="1.5" fill="#C2410C"/>'),
+  hospital:_s('<path d="M5 21V7l7-4 7 4v14" fill="#DCFCE7" stroke="#15803D" stroke-width="2" stroke-linejoin="round"/><path d="M3 21h18" stroke="#15803D" stroke-width="2" stroke-linecap="round"/><rect x="9" y="17" width="6" height="4" fill="#15803D"/><path d="M10 10h4M12 8v4" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>'),
+};
+
+// ── HEALTH CONDITIONS ──
+const CONDITIONS = [
+  {id:'diabetes',   icon:I.pill,  en:'Diabetes',               es:'Diabetes'},
+  {id:'heart',      icon:I.heart, en:'Heart / Blood Pressure', es:'Coraz\u00F3n / Presi\u00F3n'},
+  {id:'breathing',  icon:I.lungs, en:'Breathing / Lungs',      es:'Respiraci\u00F3n / Pulmones'},
+  {id:'bones',      icon:I.bone,  en:'Bones / Joints',         es:'Huesos / Articulaciones'},
+  {id:'mental',     icon:I.brain, en:'Memory / Mental Health',  es:'Memoria / Salud Mental'},
+  {id:'vision',     icon:I.eye,   en:'Vision / Eyes',    es:'Visi\u00F3n / Ojos'}
+];
+
+// ── SAMPLE PLANS ──
+const PLANS = [
+  {id:'p1',name:'SCAN Classic (HMO)',carrier:'SCAN Health Plan',premium:0,ded:0,moop:3900,dental:1,vision:1,hearing:1,fitness:1,otc:100,drug:'Enhanced',giveback:0,rating:4.5,type:'HMO'},
+  {id:'p2',name:'Alignment Essential (HMO)',carrier:'Alignment Health',premium:0,ded:0,moop:4500,dental:1,vision:1,hearing:1,fitness:1,otc:120,drug:'Enhanced',giveback:40,rating:4.0,type:'HMO'},
+  {id:'p3',name:'UHC AARP Complete (HMO)',carrier:'UnitedHealthcare',premium:0,ded:0,moop:5100,dental:1,vision:1,hearing:1,fitness:1,otc:80,drug:'Standard',giveback:0,rating:4.0,type:'HMO'},
+  {id:'p4',name:'Humana Gold Plus (HMO)',carrier:'Humana',premium:0,ded:0,moop:4200,dental:1,vision:1,hearing:0,fitness:1,otc:50,drug:'Enhanced',giveback:0,rating:3.5,type:'HMO'},
+  {id:'p5',name:'Blue Shield Promise (HMO)',carrier:'Blue Shield of CA',premium:0,ded:250,moop:5900,dental:1,vision:1,hearing:1,fitness:0,otc:60,drug:'Standard',giveback:0,rating:4.0,type:'HMO'}
+];
+
+// ── i18n ──
+const T={
+  title:{en:'Your Guide',es:'Su Gu\u00EDa'},
+  sub:{en:'Beneficios Medicare',es:'Beneficios Medicare'},
+  back:{en:'\u2190 Back',es:'\u2190 Atr\u00E1s'},
+  next:{en:'Continue',es:'Continuar'},
+  disc:{
+    en:'This website is not part of the federal government or the Medicare program. For official information visit <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> or call 1-800-Medicare.',
+    es:'Este sitio web no es parte del gobierno federal ni del programa de Medicare. Para informaci\u00F3n oficial visite <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> o llame al 1-800-Medicare.'
+  }
+};
+const t=k=>T[k]?.[lang]||k;
+
+// ── LANG ──
+function setLang(l){
+  lang=l;
+  document.getElementById('lang-en').classList.toggle('active',l==='en');
+  document.getElementById('lang-es').classList.toggle('active',l==='es');
+  document.getElementById('hdr-title').textContent=t('title');
+  document.getElementById('hdr-sub').textContent=t('sub');
+  document.getElementById('wf').innerHTML=t('disc');
+  if(hist.length>0)hist[hist.length-1]();
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('lang-en').classList.toggle('active',lang==='en');
+  document.getElementById('lang-es').classList.toggle('active',lang==='es');
+});
+
+// ── NAV ──
+function go(fn){hist.push(fn);fn();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function back(){if(hist.length>1){hist.pop();hist[hist.length-1]()}}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
+function prog(p){document.getElementById('progress').style.width=p+'%'}
+const wb=()=>document.getElementById('wb');
+function bk(){return hist.length<=1?'':`<button class="btn-back" onclick="back()">${t('back')}</button>`}
+function bm(txt,cls=''){return `<div class="bot-msg ${cls}">${txt}</div>`}
+function oc(icon,icls,title,desc,btxt,bcls,onclick){
+  return `<div class="opt-card" onclick="${onclick}"><div class="ic ${icls}">${icon}</div><div class="tx"><h4>${title}</h4><p>${desc}</p></div>${btxt?`<span class="bg ${bcls}">${btxt}</span>`:''}</div>`}
+function inp(id,label,ph,type='text'){
+  const v=D[id]||'';
+  const im=type==='tel'?' inputmode="numeric"':type==='email'?' inputmode="email"':'';
+  return `<div class="input-group"><label for="${id}">${label}</label><input class="input-field" type="${type}"${im} id="${id}" placeholder="${ph}" value="${v}" oninput="D['${id}']=this.value"></div>`
+}
+function bp(txt,onclick){return `<button class="btn-p" onclick="${onclick}">${txt}</button>`}
+function bs(txt,onclick){return `<button class="btn-s" onclick="${onclick}">${txt}</button>`}
+function ic(title,text,cls=''){return `<div class="info-card ${cls}"><h4>${title}</h4><p>${text}</p></div>`}
+function skip(txt,onclick){return `<button class="btn-skip" onclick="${onclick}">${txt}</button>`}
+
+
+// ═══════════════════════════════════════
+//  STEP: ZIP (now the FIRST step, no home screen)
+// ═══════════════════════════════════════
+function zipStep(flowName, msg, fieldId, nextFn, cls=''){
+  prog(5); D.flow=flowName;
+  _cb.zip=nextFn;
+  wb().innerHTML=`${bk()}
+    ${bm(msg, cls)}
+    <div class="input-group zip-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your ZIP code'):(fieldId.includes('from')?'Mud\u00E1ndose de (c\u00F3digo postal)':'Su c\u00F3digo postal')}</label>
+    <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="90001" value="${D[fieldId]||''}" maxlength="5"
+      oninput="D['${fieldId}']=this.value; if(this.value.length===5) setTimeout(()=>go(_cb.zip),300)">
+    </div>
+    ${bp(lang==='en'?'Get Started \u2192':'Comenzar \u2192','go(_cb.zip)')}
+    <div class="trust-bar">
+      <span>\u2713 ${lang==='en'?'Free guidance':'Gu\u00EDa gratis'}</span>
+      <span>\u2713 ${lang==='en'?'Hablamos Espa\u00F1ol':'We speak English'}</span>
+    </div>`;
+  document.getElementById(fieldId)?.focus();
+}
+
+
+// ═══════════════════════════════════════
+//  STEP: DOB (single screen)
+// ═══════════════════════════════════════
+function dobStep(nextFn){
+  prog(15);
+  _cb.dob=nextFn;
+  const existing = (D.dob_month&&D.dob_day&&D.dob_year) ? `${D.dob_month}/${D.dob_day}/${D.dob_year}` : '';
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'When is your date of birth?':'\u00BFCu\u00E1l es su fecha de nacimiento?')}
+    <div class="input-group"><label>${lang==='en'?'Date of birth':'Fecha de nacimiento'}</label>
+    <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="MM / DD / YYYY" value="${existing}" maxlength="14"
+      oninput="formatDob(this)">
+    </div>
+    ${bp(t('next'),'parseDob();go(_cb.dob)')}
+    ${skip(lang==='en'?"I'd rather not say":'Prefiero no decir',"D.dob_month='';D.dob_day='';D.dob_year='';go(_cb.dob)")}`;
+  document.getElementById('dobInput')?.focus();
+}
+
+function formatDob(el){
+  let raw=el.value.replace(/[^\d]/g,'');
+  if(raw.length>8) raw=raw.slice(0,8);
+  const mm=raw.slice(0,2), dd=raw.slice(2,4), yyyy=raw.slice(4,8);
+  let v=mm;
+  if(raw.length>2) v+=(' / '+dd);
+  if(raw.length>4) v+=(' / '+yyyy);
+  el.value=v;
+  el.setSelectionRange(v.length,v.length);
+}
+function parseDob(){
+  const v=document.getElementById('dobInput')?.value||'';
+  const parts=v.replace(/\s/g,'').split('/');
+  if(parts.length===3){
+    D.dob_month=parts[0];D.dob_day=parts[1];D.dob_year=parts[2];
+  }
+}
+
+
+// ── AGE / ENROLLMENT CALC ──
+function getAge(){
+  const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
+  if(!m||!d||!y)return null;
+  const now=new Date();let age=now.getFullYear()-y;
+  if(now.getMonth()+1<m||(now.getMonth()+1===m&&now.getDate()<d))age--;
+  return age;
+}
+function getEnrollmentWindow(){
+  const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
+  if(!m||!d||!y||y<1900||y>2010)return null;
+  let iepMonth=m-3, iepYear=y+65;
+  if(iepMonth<=0){iepMonth+=12;iepYear--;}
+  if(iepMonth<1||iepMonth>12)return null;
+  return {month:iepMonth, year:iepYear};
+}
+function monthName(m){
+  const en=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const es=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const idx=Math.max(0,Math.min(11,(+m||1)-1));
+  return (lang==='en'?en:es)[idx];
+}
+
+
+// ═══════════════════════════════════════
+//  STEP: DOCTOR
+// ═══════════════════════════════════════
+function doctorAsk(nextYes,nextNo){
+  prog(35);
+  _cb.docY=nextYes; _cb.docN=nextNo;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'\u00BFTiene un doctor que quiere mantener?')}
+    <div class="opt-grid">
+      ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
+      ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
+    </div>`;
+}
+
+function doctorName(nextFn){
+  prog(40);
+  _cb.docName=nextFn;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?"What is your doctor's last name?":'\u00BFCu\u00E1l es el apellido de su doctor?')}
+    ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
+    ${bp(t('next'),'go(_cb.docName)')}
+    ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
+}
+
+
+// ═══════════════════════════════════════
+//  STEP: HEALTH CONDITIONS (Option B)
+// ═══════════════════════════════════════
+function healthStep(nextFn){
+  prog(55);
+  _cb.health=nextFn;
+  let chips='';
+  CONDITIONS.forEach(c=>{
+    const sel=selConds.includes(c.id)?'sel':'';
+    chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
+  });
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFAlguna de estas le aplica?')}
+    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply. This helps us find the right plan.':'Seleccione todo lo que aplique. Esto nos ayuda a encontrar el plan correcto.'}</p>
+    <div class="cond-grid">${chips}</div>
+    <div class="input-group" style="margin-top:4px">
+      <label>${lang==='en'?'Anything else you\'d like us to know? (optional)':'\u00BFAlgo m\u00E1s que quiera contarnos? (opcional)'}</label>
+      <textarea class="health-textarea" id="healthNotes" placeholder="${lang==='en'?'e.g. I take a few medications but don\'t remember the names, I need dental work, my knees hurt...':'ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental, me duelen las rodillas...'}" oninput="D.healthNotes=this.value">${D.healthNotes||''}</textarea>
+    </div>
+    ${bp(t('next'),'D.conditions=[...selConds];go(_cb.health)')}
+    ${skip(lang==='en'?'Skip this step':'Saltar este paso','D.conditions=[];D.healthNotes="";go(_cb.health)')}`;
+}
+
+function toggleCond(id){
+  const i=selConds.indexOf(id);
+  if(i>=0)selConds.splice(i,1);else selConds.push(id);
+  document.querySelectorAll('.cond-chip').forEach(c=>c.classList.toggle('sel',selConds.includes(c.dataset.cid)));
+}
+
+
+// ═══════════════════════════════════════
+//  STEP: PRIORITY
+// ═══════════════════════════════════════
+const PRI_OPTIONS=[
+  {id:'cost',icon:I.cost,icls:'bl',en:'Pay the least',es:'Pagar lo menos',enD:'Lowest monthly cost.',esD:'Menor costo mensual.'},
+  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'Doctor choice matters.',esD:'La elecci\u00F3n de doctor importa.'},
+  {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My meds covered.',esD:'Mis medicinas cubiertas.'},
+  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision, hearing, gym.',esD:'Dental, visi\u00F3n, audici\u00F3n, gimnasio.'}
+];
+function priorityStep(nextFn){
+  prog(68);
+  _cb.priority=nextFn;
+  priRank=[];
+  const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'What matters most to you?':'\u00BFQu\u00E9 es lo m\u00E1s importante para usted?')}
+    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply.':'Seleccione todos los que apliquen.'}</p>
+    <div class="opt-grid">${cards}</div>
+    ${bp(t('next'),'savePriority();go(_cb.priority)')}
+    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority="benefits";D.priorities=[];go(_cb.priority)')}`;
+}
+function togglePri(id){
+  const i=priRank.indexOf(id);
+  if(i>=0) priRank.splice(i,1); else priRank.push(id);
+  PRI_OPTIONS.forEach(o=>{
+    const el=document.getElementById('pri-'+o.id);
+    const rank=priRank.indexOf(o.id);
+    el.classList.toggle('ranked',rank>=0);
+    const old=el.querySelector('.rank-badge');
+    if(old) old.remove();
+    if(rank>=0){
+      const b=document.createElement('span');
+      b.className='rank-badge';b.textContent='\u2713';
+      el.appendChild(b);
+    }
+  });
+}
+function savePriority(){
+  D.priorities=[...priRank];
+  D.priority=priRank[0]||'benefits';
+}
+
+
+// ═══════════════════════════════════════
+//  FLOW: MAIN (replaces all 3 old flows)
+// ═══════════════════════════════════════
+function startZip(){zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
+function ft_dob(){dobStep(ft_eligibility)}
+function ft_eligibility(){
+  prog(25);
+  const age=getAge();
+  const ew=getEnrollmentWindow();
+  if(age===null){
+    // No DOB provided (skipped), go straight to doctor
+    go(ft_docAsk);
+    return;
+  }
+  if(age>=65){
+    wb().innerHTML=`${bk()}
+      ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
+      ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
+    setTimeout(()=>go(ft_docAsk),1500);
+  } else if(ew){
+    const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
+    const now=new Date();
+    const iepDate=new Date(ew.year,ew.month-1,1);
+    const monthsAway=Math.round((iepDate-now)/(1000*60*60*24*30));
+    if(monthsAway>8){
+      wb().innerHTML=`${bk()}
+        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is about <strong>${monthsAway} months</strong> away.`:`Su ventana de inscripci\u00F3n abre ${opensStr}. Eso es en aproximadamente <strong>${monthsAway} meses</strong>.`)}
+        <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
+        ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
+        <div class="opt-grid">
+          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
+          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
+          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
+        </div>
+        ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
+    } else {
+      wb().innerHTML=`${bk()}
+        ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Su ventana de inscripci\u00F3n abre ${opensStr}!`,'hl')}
+        ${ic(lang==='en'?'Good timing':'Buen momento', lang==='en'?'Now is a great time to start comparing plans.':'Ahora es un gran momento para empezar a comparar planes.')}`;
+      setTimeout(()=>go(ft_docAsk),1200);
+    }
+  } else {
+    go(ft_docAsk);
+  }
+}
+function ft_docAsk(){doctorAsk(ft_docName,ft_health)}
+function ft_docName(){doctorName(ft_health)}
+function ft_health(){healthStep(ft_priority)}
+function ft_priority(){priorityStep(flowResults)}
+
+
+// ═══════════════════════════════════════
+//  FLOW: RECENTLY MOVED
+// ═══════════════════════════════════════
+function mv_zipFrom(){
+  prog(5); D.flow='moved';
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Moving gives you a Special Enrollment Period. 63 days to change your plan.':'Mudarse le da un Periodo de Inscripci\u00F3n Especial. 63 d\u00EDas para cambiar su plan.','hl')}
+    <div class="input-group zip-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mud\u00E1ndose DE (c\u00F3digo postal)'}</label>
+    <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
+      oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
+    </div>
+    ${bp(t('next'),'go(mv_zipTo)')}`;
+  document.getElementById('zipFrom')?.focus();
+}
+function mv_zipTo(){
+  prog(12);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'And where are you moving to?':'Y a d\u00F3nde se muda?')}
+    <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
+    <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
+      oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dob),300)">
+    </div>
+    ${bp(t('next'),'go(mv_dob)')}`;
+  document.getElementById('zipTo')?.focus();
+}
+function mv_dob(){dobStep(mv_plan)}
+function mv_plan(){
+  prog(35);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'What kind of Medicare plan do you have now?':'\u00BFQu\u00E9 tipo de plan de Medicare tiene ahora?')}
+    <div class="opt-grid">
+      ${oc(I.clipboard,'bl',lang==='en'?'One plan that covers everything':'Un plan que cubre todo',lang==='en'?'Sometimes called Medicare Advantage or Part C':'A veces llamado Medicare Advantage o Parte C','','',"D.curPlan='advantage';go(mv_health)")}
+      ${oc(I.clipboard,'gr',lang==='en'?'Separate plans I picked myself':'Planes separados que yo eleg\u00ED',lang==='en'?'Original Medicare + a supplement':'Medicare Original + un suplemento','','',"D.curPlan='medigap';go(mv_health)")}
+      ${oc(I.clipboard,'mi',lang==='en'?'Just basic Medicare':'Solo Medicare b\u00E1sico',lang==='en'?'Parts A and B only, nothing extra':'Solo Partes A y B, nada extra','','',"D.curPlan='original';go(mv_health)")}
+      ${oc(I.shrug,'sg',lang==='en'?"I'm not sure":'No estoy seguro',lang==='en'?"No worries, we'll figure it out together":'No se preocupe, lo resolveremos juntos','','',"D.curPlan='unknown';go(mv_health)")}
+    </div>`;
+}
+function mv_health(){healthStep(mv_priority)}
+function mv_priority(){priorityStep(flowResults)}
+
+
+// ═══════════════════════════════════════
+//  FLOW: BETTER BENEFITS (Compare)
+// ═══════════════════════════════════════
+function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
+function bb_dob(){dobStep(bb_benefits)}
+function bb_benefits(){
+  prog(35);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'What benefits matter most?':'\u00BFQu\u00E9 beneficios le importan m\u00E1s?')}
+    <div class="opt-grid">
+      ${oc(I.tooth,'bl',lang==='en'?'Dental & Vision':'Dental y Visi\u00F3n','','','',"D.priority='dental';go(bb_health)")}
+      ${oc(I.pill,'gr',lang==='en'?'Drug Savings':'Ahorros en Medicinas','','','',"D.priority='drugs';go(bb_health)")}
+      ${oc(I.fitness,'mi',lang==='en'?'Fitness & Wellness':'Fitness y Bienestar','','','',"D.priority='wellness';go(bb_health)")}
+      ${oc(I.star,'sg',lang==='en'?'All of the above':'Todo lo anterior','','','',"D.priority='all';go(bb_health)")}
+    </div>`;
+}
+function bb_health(){healthStep(flowResults)}
+
+
+// ═══════════════════════════════════════
+//  SNOOZE / REMIND ME
+// ═══════════════════════════════════════
+function snoozeStep(){
+  prog(35);
+  const ew=getEnrollmentWindow();
+  const opensStr=ew?`${monthName(ew.month)} ${ew.year}`:'';
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?`We will remind you before ${opensStr} so you can compare plans at the right time.`:`Le recordaremos antes de ${opensStr} para que pueda comparar planes en el momento correcto.`)}
+    ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
+    ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
+    ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
+    ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead("snooze")')}`;
+}
+
+
+// ═══════════════════════════════════════
+//  PLAN RESULTS
+// ═══════════════════════════════════════
+function scorePlans(){
+  let plans=[...PLANS];
+  const ranked=D.priorities&&D.priorities.length?D.priorities:[D.priority||'benefits'];
+  plans.forEach(p=>{
+    p.score=0;
+    ranked.forEach((pri,idx)=>{
+      const w=ranked.length-idx; // 1st pick gets highest weight
+      if(pri==='cost')p.score+=w*((6000-p.moop)/1000+(p.premium===0?3:0)+(p.giveback>0?2:0));
+      if(pri==='benefits'||pri==='all')p.score+=w*((p.dental+p.vision+p.hearing+p.fitness)+p.otc/50);
+      if(pri==='drugs')p.score+=w*(p.drug==='Enhanced'?3:1);
+      if(pri==='dental')p.score+=w*((p.dental?3:0)+(p.vision?2:0));
+      if(pri==='wellness')p.score+=w*((p.fitness?3:0)+p.otc/30);
+      if(pri==='doctor')p.score+=w*(p.type==='PPO'?3:1);
+    });
+    // Boost for matching conditions
+    if(selConds.includes('vision')&&p.vision)p.score+=1;
+    if(selConds.includes('bones')&&p.fitness)p.score+=1;
+    p.score+=p.rating;
+  });
+  plans.sort((a,b)=>b.score-a.score);
+  plans[0].label=lang==='en'?'Closest Match':'Mayor Coincidencia';plans[0].labelCls='best-match';
+  const bv=[...plans].sort((a,b)=>a.moop-b.moop)[0];
+  if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Lowest Cost':'Menor Costo';p.labelCls='best-value';}
+  const mb=[...plans].sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50))[0];
+  if(!mb.label){mb.label=lang==='en'?'Most Included':'M\u00E1s Incluido';mb.labelCls='most-benefits';}
+  const tr=[...plans].sort((a,b)=>b.rating-a.rating)[0];
+  if(!tr.label){tr.label=lang==='en'?'Highest Rated':'Mayor Calificaci\u00F3n';tr.labelCls='top-rated';}
+  return plans;
+}
+
+function planCard(p,i,selectable){
+  const color=CARRIER_COLORS[p.carrier]||'#999';
+  const ck='\u2705',no='\u274C';
+  const checked=selPlans.includes(p.id);
+  const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'\u2713':''}</div>`:'';
+  return `<div class="plan-card ${i===0?'rec':''}" style="border-left-color:${color}">
+    ${selBtn}
+    ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
+    <h4>${p.name}</h4>
+    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type} | \u2B50 ${p.rating}</div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium}/mo</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded}</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${p.drug}</span></div>
+    <div class="plan-row"><span class="lb">Dental/Vision/${lang==='en'?'Hearing':'Audici\u00F3n'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
+    <div class="plan-row"><span class="lb">OTC</span><span class="vl gd">$${p.otc}/qtr</span></div>
+    ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devoluci\u00F3n Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
+    <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
+  </div>`;
+}
+function togglePlanSel(id){
+  const i=selPlans.indexOf(id);
+  if(i>=0)selPlans.splice(i,1);else if(selPlans.length<4)selPlans.push(id);
+  // re-render checkboxes and floating bar
+  document.querySelectorAll('.plan-sel').forEach(el=>{
+    const pid=el.getAttribute('onclick').match(/'([^']+)'/)[1];
+    const on=selPlans.includes(pid);
+    el.classList.toggle('checked',on);
+    el.textContent=on?'\u2713':'';
+  });
+  const bar=document.getElementById('compareBar');
+  if(bar) bar.style.display=selPlans.length>=2?'block':'none';
+}
+
+function flowResults(){
+  prog(82);
+  const plans=scorePlans();
+  D.conditions=[...selConds];
+  const age=getAge();
+  let note='';
+  if(age!==null){
+    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
+    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
+  }
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
+    ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
+    ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
+    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
+    </div>
+    ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}`;
+}
+
+function flowCompare(){
+  prog(88);
+  const plans=scorePlans().slice(0,3);
+  const ck='\u2705',no='\u274C';
+  const rows=[
+    [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
+    [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
+    [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
+    ['Dental',...plans.map(p=>p.dental?ck:no)],
+    ['Vision',...plans.map(p=>p.vision?ck:no)],
+    [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
+    ['Fitness',...plans.map(p=>p.fitness?ck:no)],
+    ['OTC',...plans.map(p=>'$'+p.otc)],
+    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
+    ['Rating',...plans.map(p=>'\u2B50 '+p.rating)],
+  ];
+  let tbl=`<table class="compare-table"><thead><tr><th></th>`;
+  plans.forEach((p,i)=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}${p.label?' \u2B50':''}</th>`;});
+  tbl+=`</tr></thead><tbody>`;
+  rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
+  tbl+=`</tbody></table>`;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Side-by-side comparison:':'Comparaci\u00F3n lado a lado:')}
+    <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
+    ${bs(lang==='en'?'Back to plans':'Volver a planes','back()')}`;
+}
+
+function customCompare(){
+  prog(88);
+  const all=scorePlans();
+  const plans=all.filter(p=>selPlans.includes(p.id));
+  if(plans.length<2){back();return;}
+  const ck='\u2705',no='\u274C';
+  const rows=[
+    [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
+    [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
+    [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
+    ['Dental',...plans.map(p=>p.dental?ck:no)],
+    ['Vision',...plans.map(p=>p.vision?ck:no)],
+    [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
+    ['Fitness',...plans.map(p=>p.fitness?ck:no)],
+    ['OTC',...plans.map(p=>'$'+p.otc)],
+    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
+    ['Rating',...plans.map(p=>'\u2B50 '+p.rating)],
+  ];
+  let tbl=`<table class="compare-table"><thead><tr><th></th>`;
+  plans.forEach(p=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}</th>`;});
+  tbl+=`</tr></thead><tbody>`;
+  rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
+  tbl+=`</tbody></table>`;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Your custom comparison:':'Su comparaci\u00F3n personalizada:')}
+    <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
+    ${bs(lang==='en'?'Back to all plans':'Volver a todos los planes','back()')}`;
+}
+
+function allPlans(){
+  prog(85);
+  selPlans=[];
+  const plans=scorePlans();
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
+    <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el c\u00EDrculo en los planes que quiera comparar.'}</p>
+    ${plans.map((p,i)=>planCard(p,i,true)).join('')}
+    ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}
+    <div id="compareBar" class="compare-float" style="display:none">
+      <button class="btn-s" onclick="go(customCompare)">${lang==='en'?'Compare Selected':'Comparar Seleccionados'}</button>
+    </div>`;
+}
+
+
+// ═══════════════════════════════════════
+//  PLAN ENROLL / HELP CHOOSE
+// ═══════════════════════════════════════
+function planEnroll(){
+  prog(92);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'
+      ?`We recorded your choice: ${D.selectedPlan}. We will review this plan with you and answer all your questions. Free, no obligation.`
+      :`Registramos su elecci\u00F3n: ${D.selectedPlan}. Revisaremos este plan con usted y responderemos todas sus preguntas. Gratis, sin compromiso.`)}
+    ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
+    ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
+    ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
+    ${bp(lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir',"submitLead('enroll')")}
+    <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
+      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
+    </p>`;
+}
+
+function helpChoose(){
+  prog(92);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'
+      ?'We can review these plans with you and help you decide. Free, no obligation.'
+      :'Una de nosotras le llamar\u00E1 para revisar estos planes y ayudarle a decidir. Gratis, sin compromiso.')}
+    ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
+    ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
+    ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
+    ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
+    <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
+      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
+    </p>`;
+}
+
+
+// ═══════════════════════════════════════
+//  SUBMIT LEAD
+// ═══════════════════════════════════════
+function submitLead(type){
+  const name=D.fullName||document.getElementById('fullName')?.value||'';
+  const phone=D.phone||document.getElementById('phone')?.value||'';
+  const email=D.email||document.getElementById('email')?.value||'';
+  const question=document.getElementById('question')?.value||'';
+
+  if(!name||!phone){
+    alert(lang==='en'?'Please enter your name and phone number.':'Por favor ingrese su nombre y tel\u00E9fono.');
+    return;
+  }
+  D.fullName=name;D.phone=phone;D.email=email;
+  if(question) D.question=question;
+  D.lang=lang;D.conditions=[...selConds];
+  D.timestamp=new Date().toISOString();
+  D.leadType=type;
+
+  const host=window.location.hostname||'';
+  const parentHost=(window.self!==window.top)?document.referrer:'';
+  const path=window.location.pathname||'';
+  if(parentHost.includes('medicare-california')||parentHost.includes('/california')||host.includes('medicare-california')||host.includes('california')||path.includes('/california')){
+    D.source='medicare-california';
+  } else {
+    D.source='beneficiosmedicare';
+  }
+  D.url=parentHost||window.location.href;
+
+  const parts=name.trim().split(/\s+/);
+  D.firstName=parts[0]||'';
+  D.lastName=parts.slice(1).join(' ')||'';
+
+  const GS_URL='https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
+  fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)}).catch(e=>console.log('lead-err',e));
+  console.log('Lead:',JSON.stringify(D,null,2));
+  go(flowSuccess);
+}
+
+
+// ═══════════════════════════════════════
+//  SUCCESS
+// ═══════════════════════════════════════
+function flowSuccess(){
+  prog(100);
+  const isSnooze=D.leadType==='snooze';
+  const firstName=(D.fullName||'').split(' ')[0]||'';
+  if(isSnooze){
+    wb().innerHTML=`<div class="success-wrap">
+      <div class="success-icon">\u23F0</div>
+      <h3 class="success-title">${lang==='en'?'Reminder Set!':'Recordatorio Programado!'}</h3>
+      <p class="success-subtitle">${lang==='en'?'We have you covered, '+firstName:'Le tenemos cubierto, '+firstName}</p>
+      <ul class="success-bullets">
+        <li><span class="sb-icon">\uD83D\uDCC5</span>${lang==='en'?'We will contact you before your enrollment window opens':'Le contactaremos antes de que abra su ventana de inscripci\u00F3n'}</li>
+        <li><span class="sb-icon">\uD83D\uDCDE</span>${lang==='en'?'A licensed agent will call you personally':'Un agente licenciado le llamar\u00E1 personalmente'}</li>
+        <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
+      </ul>
+      <div class="success-links">
+        <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
+        <button onclick="hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
+      </div>
+    </div>`;
+  } else {
+    wb().innerHTML=`<div class="success-wrap">
+      <div class="success-icon">\u2705</div>
+      <h3 class="success-title">\uD83C\uDF89 ${lang==='en'?'Great News, '+firstName+'!':'\u00A1Excelentes Noticias, '+firstName+'!'}</h3>
+      <p class="success-subtitle">${lang==='en'?'Your personalized help is on the way':'Su ayuda personalizada va en camino'}</p>
+      <ul class="success-bullets">
+        <li><span class="sb-icon">\uD83D\uDC69\uD83C\uDFFB\u200D\uD83D\uDCBC</span>${lang==='en'?'A dedicated agent will call you personally':'Una agente dedicada le llamar\u00E1 personalmente'}</li>
+        <li><span class="sb-icon">\u2764\uFE0F</span>${lang==='en'?'We are a family team that treats you like family':'Somos un equipo familiar que le trata como familia'}</li>
+        <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
+      </ul>
+      <button class="success-cta" onclick="back();back()">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
+      <div class="success-links">
+        <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
+        <button onclick="hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
+      </div>
+    </div>`;
+  }
+}
+
+
+// ═══════════════════════════════════════
+//  LEARN (educational)
+// ═══════════════════════════════════════
+function learnHome(){
+  prog(5);
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}
+    <div class="opt-grid">
+      ${oc(I.book,'bl',lang==='en'?'Medicare Parts (A,B,C,D)':'Partes de Medicare (A,B,C,D)',lang==='en'?'What each covers.':'Que cubre cada una.','','','go(lParts)')}
+      ${oc(I.cost,'gr',lang==='en'?'Costs & Premiums':'Costos y Primas',lang==='en'?'What you will pay.':'Lo que pagar\u00E1.','','','go(lCosts)')}
+      ${oc(I.chart,'mi',lang==='en'?'Advantage vs. Supplement':'Advantage vs. Suplemento',lang==='en'?'Which type fits you.':'Cu\u00E1l tipo le conviene.','','','go(lAdvVsMed)')}
+      ${oc(I.calendar,'sg',lang==='en'?'Enrollment Periods':'Periodos de Inscripcion',lang==='en'?'When to sign up.':'Cu\u00E1ndo inscribirse.','','','go(lEnroll)')}
+    </div>
+    <div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`;
+}
+function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has 4 parts:':'Medicare tiene 4 partes:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermer\u00EDa, hospicio. $0 prima para la mayor\u00EDa.')}${ic(lang==='en'?'Part B - Medical':'Parte B - M\u00E9dica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atenci\u00F3n ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visi\u00F3n, audici\u00F3n.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi \u00E1rea','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+
+
+// ═══════════════════════════════════════
+//  INIT - Start with ZIP (no home screen!)
+// ═══════════════════════════════════════
+go(startZip);
+</script>
+</body>
+</html>

@@ -37,8 +37,8 @@
   --shadow-lg: 0 8px 40px rgba(0,60,113,0.16);
 
   /* Typography */
-  --font-heading: 'Playfair Display', serif;
-  --font-body:    'Inter', sans-serif;
+  --font-heading: 'Open Sans', sans-serif;
+  --font-body:    'Open Sans', sans-serif;
 
   /* ── Hero — edit these two lines to move ALL hero sections at once */
   --hero-pt:  60px;   /* padding-top — desktop (static header)  */
@@ -59,15 +59,13 @@
   color: var(--navy);
   text-decoration: none;
 }
-.logo span { color: var(--blue); }
+.logo span { color: #26A69A; }
 
 /* The favicon icon inside the logo */
 .logo-icon {
-  height: 32px;
+  height: 36px;
   width:  32px;
-  border-radius: 50%;
   flex-shrink: 0;
-  object-fit: cover;
 }
 
 /* ── 3. BUTTONS ──────────────────────────── */
