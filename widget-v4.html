@@ -222,7 +222,7 @@ body.in-iframe .widget-body{padding-top:14px}
 // ═══════════════════════════════════════
 
 const _params=new URLSearchParams(location.search);
-let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[];
+let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[], _submitting=false;
 const _initZip=_params.get('zip')||'';
 if(_initZip && /^\d{5}$/.test(_initZip)){
   D.zip=_initZip;
@@ -415,13 +415,14 @@ async function loadPlansForZip(zip){
   try {
     const idx = await loadZipIndex();
     const state = idx[zip];
-    if(!state) { PLANS = [...FALLBACK_PLANS]; return; }
+    if(!state) { D._zipValid=false; PLANS = [...FALLBACK_PLANS]; return; }
     const data = await loadCmsData(state);
     const info = data.zips?.[zip];
-    if(!info) { PLANS = [...FALLBACK_PLANS]; return; }
+    if(!info) { D._zipValid=false; PLANS = [...FALLBACK_PLANS]; return; }
     const county = info.county;
     D.county = county;
     D.state = state;
+    D._zipValid = true;
     // Get plans for this county + "All Counties" plans
     let raw = [...(data.plans?.[county] || []), ...(data.plans?.['All Counties'] || [])];
     // Dedupe by plan ID
@@ -476,7 +477,7 @@ const wb=()=>document.getElementById('wb');
 function bk(){return hist.length<=1?'':`<button class="btn-back" onclick="back()">${t('back')}</button>`}
 function bm(txt,cls=''){return `<div class="bot-msg ${cls}">${txt}</div>`}
 function oc(icon,icls,title,desc,btxt,bcls,onclick){
-  return `<div class="opt-card" onclick="${onclick}"><div class="ic ${icls}">${icon}</div><div class="tx"><h4>${title}</h4><p>${desc}</p></div>${btxt?`<span class="bg ${bcls}">${btxt}</span>`:''}</div>`}
+  return `<div class="opt-card" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${onclick}}" onclick="${onclick}"><div class="ic ${icls}">${icon}</div><div class="tx"><h4>${title}</h4><p>${desc}</p></div>${btxt?`<span class="bg ${bcls}">${btxt}</span>`:''}</div>`}
 function inp(id,label,ph,type='text'){
   const v=D[id]||'';
   const im=type==='tel'?' inputmode="numeric"':type==='email'?' inputmode="email"':'';
@@ -565,8 +566,12 @@ function parseDob(){
 function getAge(){
   const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
   if(!m||!d||!y)return null;
-  const now=new Date();let age=now.getFullYear()-y;
-  if(now.getMonth()+1<m||(now.getMonth()+1===m&&now.getDate()<d))age--;
+  const now=new Date();
+  const bday=new Date(y,m-1,d);
+  if(isNaN(bday.getTime()))return null;
+  let age=now.getFullYear()-y;
+  const thisYearBday=new Date(now.getFullYear(),m-1,d);
+  if(now<thisYearBday)age--;
   return age;
 }
 function getEnrollmentWindow(){
@@ -632,7 +637,7 @@ function healthStep(nextFn){
   let chips='';
   CONDITIONS.forEach(c=>{
     const sel=selConds.includes(c.id)?'sel':'';
-    chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
+    chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCond('${c.id}')}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
   });
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFAlguna de estas le aplica?')}
@@ -640,7 +645,7 @@ function healthStep(nextFn){
     <div class="cond-grid">${chips}</div>
     <div class="input-group" style="margin-top:4px">
       <label>${lang==='en'?'Anything else you\'d like us to know? (optional)':'\u00BFAlgo m\u00E1s que quiera contarnos? (opcional)'}</label>
-      <textarea class="health-textarea" id="healthNotes" placeholder="${lang==='en'?'e.g. I take a few medications but don\'t remember the names, I need dental work, my knees hurt...':'ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental, me duelen las rodillas...'}" oninput="D.healthNotes=this.value">${D.healthNotes||''}</textarea>
+      <textarea class="health-textarea" id="healthNotes" maxlength="500" placeholder="${lang==='en'?'e.g. I take a few medications but don\'t remember the names, I need dental work, my knees hurt...':'ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental, me duelen las rodillas...'}" oninput="D.healthNotes=this.value">${D.healthNotes||''}</textarea>
     </div>
     ${bp(t('next'),'D.conditions=[...selConds];go(_cb.health)')}
     ${skip(lang==='en'?'Skip this step':'Saltar este paso','D.conditions=[];D.healthNotes="";go(_cb.health)')}`;
@@ -905,6 +910,7 @@ async function flowResults(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
+    ${!D._zipValid && D.zip?`<div style="background:#fff9e6;border:1px solid #f0e6c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">${lang==='en'?'Plans shown are examples. Enter a valid ZIP for your area\\'s actual plans.':'Los planes mostrados son ejemplos. Ingrese un código postal válido para los planes reales de su área.'}</div>`:''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
     <div style="text-align:center;margin-top:8px">
@@ -1024,6 +1030,11 @@ function helpChoose(){
 //  SUBMIT LEAD
 // ═══════════════════════════════════════
 function submitLead(type){
+  if(_submitting) return;
+  _submitting=true;
+  const btn=document.querySelector('.btn-p:not(:disabled)');
+  if(btn){btn.disabled=true;btn.textContent=btn.textContent.includes('Obtener')?'Procesando...':'Processing...'}
+
   const name=D.fullName||document.getElementById('fullName')?.value||'';
   const phone=D.phone||document.getElementById('phone')?.value||'';
   const email=D.email||document.getElementById('email')?.value||'';
@@ -1032,10 +1043,14 @@ function submitLead(type){
   const phoneClean = phone.replace(/\D/g,'');
   if(!name.trim() || name.trim().length < 2){
     alert(lang==='en'?'Please enter your full name.':'Por favor ingrese su nombre completo.');
+    _submitting=false;
+    if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
   }
   if(phoneClean.length < 10){
     alert(lang==='en'?'Please enter a valid 10-digit phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos.');
+    _submitting=false;
+    if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
   }
   D.fullName=name;D.phone=phone;D.email=email;
@@ -1060,8 +1075,8 @@ function submitLead(type){
 
   const GS_URL='https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
   fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
-    .then(()=>go(flowSuccess))
-    .catch(()=>go(flowSuccess));  // still show success since no-cors can't read response
+    .then(()=>{_submitting=false;go(flowSuccess)})
+    .catch(()=>{_submitting=false;go(flowSuccess)});  // still show success since no-cors can't read response
 }
 
 
@@ -1097,7 +1112,7 @@ function flowSuccess(){
         <li><span class="sb-icon">\u2764\uFE0F</span>${lang==='en'?'We are a family team that treats you like family':'Somos un equipo familiar que le trata como familia'}</li>
         <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
       </ul>
-      <button class="success-cta" onclick="back();back()">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
+      <button class="success-cta" onclick="hist=[];go(startZip)">${lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir'}</button>
       <div class="success-links">
         <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
         <button onclick="hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
