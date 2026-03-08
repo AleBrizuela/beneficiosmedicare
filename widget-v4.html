@@ -35,7 +35,7 @@ body.in-iframe .widget-body{padding-top:14px}
 /* ── HEADER ── */
 .widget-header{background:linear-gradient(135deg,var(--navy) 0%,var(--slate) 100%);padding:14px 20px 12px;color:white;display:flex;align-items:center;gap:12px}
 .widget-header .logo-icon{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
-.widget-header h2{font-size:19px;font-weight:700;line-height:1.2}
+.widget-header h2{font-size:18px;font-weight:600;line-height:1.2}
 .widget-header p{font-size:13px;opacity:.8;margin-top:2px}
 
 /* ── PROGRESS ── */
@@ -50,60 +50,60 @@ body.in-iframe .widget-body{padding-top:14px}
 .widget-body>*{animation:fadeUp .3s ease}
 
 /* ── BOT MSG ── */
-.bot-msg{background:none;border-radius:0;padding:4px 0 12px;margin-bottom:6px;font-size:18px;font-weight:600;line-height:1.45;color:var(--dark);text-align:center}
-.bot-msg strong{color:var(--green)}
-.bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:24px;font-weight:700;color:var(--navy);text-align:center}
-.bot-msg.hl{background:var(--lt-mint);border-left:4px solid var(--sage);padding:10px 14px;border-radius:8px;text-align:left;font-size:15px;font-weight:500;color:var(--gray)}
+.bot-msg{background:none;border-radius:0;padding:4px 0 12px;margin-bottom:6px;font-size:17px;font-weight:400;line-height:1.5;color:#3c4043;text-align:center}
+.bot-msg strong{font-weight:600;color:inherit}
+.bot-msg.plain{background:none;border-radius:0;padding:4px 0 10px;font-size:22px;font-weight:600;color:#202124;text-align:center}
+.bot-msg.hl{background:#f8f9fa;border-left:3px solid var(--sage);padding:10px 14px;border-radius:8px;text-align:left;font-size:14px;font-weight:400;color:#5f6368}
 
 /* ── OPT CARDS ── */
 .opt-grid{display:flex;flex-direction:column;gap:10px}
-.opt-card{display:flex;align-items:center;gap:14px;padding:16px 16px;border:2px solid var(--lt-gray);border-radius:var(--radius);cursor:pointer;transition:all .2s;background:var(--white);min-height:64px}
-.opt-card:hover{border-color:var(--sage);background:var(--lt-mint);transform:translateY(-1px);box-shadow:0 2px 10px rgba(0,137,123,.12)}
+.opt-card{display:flex;align-items:center;gap:14px;padding:16px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);min-height:64px}
+.opt-card:hover{border-color:var(--sage);background:#f8faf9;box-shadow:0 1px 6px rgba(60,64,67,.08)}
 .opt-card:active{transform:scale(.98)}
 .opt-card .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .ic.bl{background:var(--lt-blue)}.ic.gr{background:var(--lt-green)}.ic.mi{background:var(--lt-mint)}.ic.sg{background:#E0F2F1}
-.opt-card .tx h4{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:2px}
-.opt-card .tx p{font-size:14px;color:var(--gray);line-height:1.45}
-.opt-card .bg{margin-left:auto;font-size:10px;font-weight:700;padding:4px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
-.bg.st{background:#FFF3E0;color:#E65100}.bg.ch{background:var(--lt-blue);color:var(--blue)}
-.bg.co{background:var(--lt-green);color:var(--green)}.bg.le{background:#F3E8FF;color:#7C3AED}
+.opt-card .tx h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:2px}
+.opt-card .tx p{font-size:13px;color:#5f6368;line-height:1.45}
+.opt-card .bg{margin-left:auto;font-size:10px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
+.bg.st{background:#fef7e0;color:#b06000}.bg.ch{background:#e8f0fe;color:#1a73e8}
+.bg.co{background:#e6f4ea;color:#137333}.bg.le{background:#f3e8fd;color:#8430ce}
 
 /* ── INPUTS ── */
 .input-group{margin-bottom:14px;text-align:center}
-.input-group label{display:block;font-size:14px;font-weight:600;color:var(--gray);margin-bottom:6px;text-align:center}
-.input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:var(--dark);transition:border-color .2s;text-align:center;display:block;margin:0 auto}
+.input-group label{display:block;font-size:13px;font-weight:500;color:#5f6368;margin-bottom:6px;text-align:center}
+.input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:#202124;transition:border-color .2s;text-align:center;display:block;margin:0 auto}
 .input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
 .input-field::placeholder{color:#A0AEC0}
 .input-group.zip-group .input-field{width:140px;min-width:140px;font-size:22px;letter-spacing:3px}
 
 /* ── BUTTONS ── */
-.btn-p{width:100%;padding:16px;background:linear-gradient(135deg,var(--sage) 0%,var(--sage-dark) 100%);color:white;border:none;border-radius:var(--radius);font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
+.btn-p{width:100%;padding:16px;background:var(--sage);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
 .btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,137,123,.3)}.btn-p:active{transform:translateY(0)}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:2px solid var(--sage);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
+.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
 .btn-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gray);font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:6px 0;min-height:36px}
 .btn-back:hover{color:var(--dark)}
-.btn-ghost{background:none;border:none;color:var(--blue);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:underline;text-underline-offset:3px;min-height:44px}
+.btn-ghost{background:none;border:none;color:#1a73e8;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:none;min-height:44px}
 .btn-remind{width:100%;padding:14px;background:var(--lt-blue);color:var(--blue);border:2px solid var(--lt-blue);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-remind:hover{border-color:var(--blue)}
 .btn-skip{display:block;width:100%;text-align:center;background:none;border:none;color:#999;font-size:13px;cursor:pointer;font-family:inherit;padding:10px 0;margin-top:4px;text-decoration:underline;text-underline-offset:2px;min-height:36px}
 .btn-skip:hover{color:var(--gray)}
 
 /* ── INFO CARDS ── */
-.info-card{background:var(--lt-mint);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.info-card h4{font-size:15px;font-weight:700;color:var(--green);margin-bottom:5px}
-.info-card p{font-size:15px;color:var(--dark);line-height:1.55}
-.info-card.bl{background:var(--lt-blue)}.info-card.bl h4{color:var(--blue)}
+.info-card{background:#f8f9fa;border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.info-card h4{font-size:14px;font-weight:600;color:#202124;margin-bottom:5px}
+.info-card p{font-size:14px;color:#3c4043;line-height:1.55}
+.info-card.bl{background:#f8f9fa}.info-card.bl h4{color:#202124}
 
 /* ── CONDITION CHIPS (Option B) ── */
 .cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.cond-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border:2px solid #E2E8F0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);text-align:center;min-height:70px}
-.cond-chip:hover{border-color:var(--sage);background:var(--lt-mint)}
-.cond-chip:active{transform:scale(.96)}
+.cond-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border:1.5px solid #dadce0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);text-align:center;min-height:70px}
+.cond-chip:hover{border-color:var(--sage);background:#f8faf9}
+.cond-chip:active{transform:scale(.97)}
 .cond-chip.sel{border-color:var(--sage);background:var(--sage);color:white}
 .cond-chip .cond-icon{font-size:24px;line-height:0}
-.cond-chip .cond-label{font-size:13px;font-weight:600;line-height:1.3}
+.cond-chip .cond-label{font-size:13px;font-weight:500;line-height:1.3}
 .cond-chip.sel .cond-label{color:white}
 .cond-chip.sel .cond-icon svg{filter:brightness(0) invert(1)}
 .health-textarea{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--dark);resize:vertical;min-height:70px;transition:border-color .2s}
@@ -116,22 +116,22 @@ body.in-iframe .widget-body{padding-top:14px}
 .opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
 
 /* ── PLAN CARDS ── */
-.plan-card{border:2px solid #E2E8F0;border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all .2s;position:relative;border-left:5px solid #E2E8F0}
-.plan-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.plan-card.rec{border-color:var(--sage);background:var(--lt-mint);border-left-color:var(--sage)}
-.plan-label{position:absolute;top:-10px;right:10px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.03em}
+.plan-card{border:1.5px solid #dadce0;border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all .2s;position:relative;border-left:4px solid #dadce0}
+.plan-card:hover{box-shadow:0 1px 6px rgba(60,64,67,.1)}
+.plan-card.rec{border-color:var(--sage);background:#f8faf9;border-left-color:var(--sage)}
+.plan-label{position:absolute;top:-10px;right:10px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;letter-spacing:.02em}
 .plan-label.best-match{background:var(--sage);color:white}
-.plan-label.best-value{background:#2E6BA4;color:white}
-.plan-label.most-benefits{background:#7C3AED;color:white}
-.plan-label.top-rated{background:#E65100;color:white}
-.plan-card h4{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:3px}
-.plan-card .carrier{font-size:13px;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.plan-label.best-value{background:#1a73e8;color:white}
+.plan-label.most-benefits{background:#8430ce;color:white}
+.plan-label.top-rated{background:#ea8600;color:white}
+.plan-card h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:3px}
+.plan-card .carrier{font-size:13px;color:#5f6368;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .carrier-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 .plan-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid #EDF2F7}
 .plan-row:last-child{border:none}
-.plan-row .lb{color:var(--gray)}.plan-row .vl{font-weight:600;color:var(--dark)}
-.plan-row .vl.gd{color:var(--green)}
-.plan-cta{width:100%;padding:14px;margin-top:10px;border:2px solid var(--sage);background:var(--white);color:var(--sage);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;min-height:50px}
+.plan-row .lb{color:#5f6368}.plan-row .vl{font-weight:500;color:#202124}
+.plan-row .vl.gd{color:#137333}
+.plan-cta{width:100%;padding:14px;margin-top:10px;border:1.5px solid #dadce0;background:var(--white);color:var(--sage);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;min-height:50px}
 .plan-cta:hover{background:var(--sage);color:white}
 .plan-cta.filled{background:var(--sage);color:white}
 .plan-cta.filled:hover{background:var(--sage-dark)}
@@ -144,27 +144,27 @@ body.in-iframe .widget-body{padding-top:14px}
 
 /* ── COMPARE TABLE ── */
 .compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
-.compare-table th{background:var(--navy);color:white;padding:9px 6px;text-align:center;font-weight:700;font-size:12px}
-.compare-table th:first-child{text-align:left;background:var(--lt-gray);color:var(--dark)}
-.compare-table td{padding:8px 6px;border-bottom:1px solid #EDF2F7;text-align:center;color:var(--dark)}
-.compare-table td:first-child{text-align:left;color:var(--gray);font-weight:500}
-.compare-table tr:hover td{background:var(--lt-mint)}
+.compare-table th{background:#f8f9fa;color:#202124;padding:9px 6px;text-align:center;font-weight:600;font-size:12px;border-bottom:1px solid #dadce0}
+.compare-table th:first-child{text-align:left;color:#5f6368}
+.compare-table td{padding:8px 6px;border-bottom:1px solid #f1f3f4;text-align:center;color:#3c4043}
+.compare-table td:first-child{text-align:left;color:#5f6368;font-weight:400}
+.compare-table tr:hover td{background:#f8f9fa}
 
 /* ── COMPARE ROW ── */
 .cmp-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #EDF2F7;font-size:15px}
 .cmp-row:last-child{border:none}
-.cmp-lb{color:var(--gray)}.cmp-vl{font-weight:600;color:var(--dark)}
+.cmp-lb{color:#5f6368}.cmp-vl{font-weight:500;color:#202124}
 
 /* ── SUCCESS ── */
 .success-icon{width:88px;height:88px;background:linear-gradient(135deg,#E8F5E9 0%,#C8E6C9 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 12px;box-shadow:0 4px 16px rgba(76,175,80,.25);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
 .success-wrap{text-align:center;padding:20px 8px 12px}
-.success-title{color:var(--navy);font-size:22px;font-weight:800;margin:0 0 4px;line-height:1.3}
-.success-subtitle{color:var(--teal);font-size:15px;font-weight:600;margin:0 0 16px}
+.success-title{color:#202124;font-size:21px;font-weight:600;margin:0 0 4px;line-height:1.3}
+.success-subtitle{color:#5f6368;font-size:14px;font-weight:400;margin:0 0 16px}
 .success-bullets{text-align:left;background:var(--lt-gray);border-radius:var(--radius);padding:14px 16px;margin:0 0 16px;list-style:none}
 .success-bullets li{font-size:14px;color:#2D3748;line-height:1.5;padding:5px 0;display:flex;align-items:flex-start;gap:8px}
 .success-bullets li span.sb-icon{flex-shrink:0;font-size:16px;margin-top:1px}
-.success-cta{display:inline-block;background:var(--teal);color:white;font-size:15px;font-weight:700;padding:13px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
+.success-cta{display:inline-block;background:var(--sage);color:white;font-size:15px;font-weight:600;padding:13px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
 .success-cta:hover{background:#1A8A6E;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,138,110,.3)}
 .success-links{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .success-links button{background:none;border:none;color:var(--navy);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px}
@@ -182,17 +182,17 @@ body.in-iframe .widget-body{padding-top:14px}
   body{padding:0;align-items:flex-start}
   .widget-wrap{border-radius:0;min-height:100vh}
   .widget-body{padding:20px 18px}
-  .bot-msg{font-size:19px;padding:4px 0 12px}
-  .opt-card{padding:18px 16px;min-height:70px}
-  .opt-card .ic{width:52px;height:52px;font-size:24px}
-  .opt-card .tx h4{font-size:17px}
-  .opt-card .tx p{font-size:15px}
-  .input-field{padding:16px 18px;font-size:20px}
-  .btn-p{padding:18px;font-size:18px;min-height:56px}
-  .btn-s{padding:16px;font-size:17px;min-height:54px}
-  .plan-row{font-size:15px;padding:8px 0}
-  .plan-card h4{font-size:17px}
-  .plan-cta{padding:16px;font-size:16px;min-height:54px}
+  .bot-msg{font-size:17px;padding:4px 0 12px}
+  .opt-card{padding:16px 14px;min-height:64px}
+  .opt-card .ic{width:44px;height:44px;font-size:22px}
+  .opt-card .tx h4{font-size:15px}
+  .opt-card .tx p{font-size:13px}
+  .input-field{padding:14px 16px;font-size:18px}
+  .btn-p{padding:16px;font-size:16px;min-height:52px}
+  .btn-s{padding:14px;font-size:15px;min-height:48px}
+  .plan-row{font-size:14px;padding:7px 0}
+  .plan-card h4{font-size:15px}
+  .plan-cta{padding:14px;font-size:15px;min-height:50px}
   .cond-chip{padding:16px 8px;min-height:76px}
   .cond-chip .cond-icon{font-size:26px}
   .cond-chip .cond-label{font-size:14px}
@@ -368,7 +368,7 @@ function dobStep(nextFn){
   _cb.dob=nextFn;
   const existing = (D.dob_month&&D.dob_day&&D.dob_year) ? `${D.dob_month}/${D.dob_day}/${D.dob_year}` : '';
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'When is your <strong>date of birth</strong>?':'\u00BFCu\u00E1l es su <strong>fecha de nacimiento</strong>?')}
+    ${bm(lang==='en'?'When is your date of birth?':'\u00BFCu\u00E1l es su fecha de nacimiento?')}
     <div class="input-group"><label>${lang==='en'?'Date of birth':'Fecha de nacimiento'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="MM / DD / YYYY" value="${existing}" maxlength="14"
       oninput="formatDob(this)">
@@ -428,7 +428,7 @@ function doctorAsk(nextYes,nextNo){
   prog(35);
   _cb.docY=nextYes; _cb.docN=nextNo;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you have a <strong>doctor</strong> you want to keep?':'\u00BFTiene un <strong>doctor</strong> que quiere mantener?')}
+    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'\u00BFTiene un doctor que quiere mantener?')}
     <div class="opt-grid">
       ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
       ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
@@ -439,7 +439,7 @@ function doctorName(nextFn){
   prog(40);
   _cb.docName=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?"What is your <strong>doctor's</strong> last name?":'\u00BFCu\u00E1l es el apellido de su <strong>doctor</strong>?')}
+    ${bm(lang==='en'?"What is your doctor's last name?":'\u00BFCu\u00E1l es el apellido de su doctor?')}
     ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
     ${bp(t('next'),'go(_cb.docName)')}
     ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
@@ -458,7 +458,7 @@ function healthStep(nextFn){
     chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
   });
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do any of these <strong>apply to you</strong>?':'\u00BFAlguna de estas le <strong>aplica</strong>?')}
+    ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFAlguna de estas le aplica?')}
     <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply. This helps us find the right plan.':'Seleccione todo lo que aplique. Esto nos ayuda a encontrar el plan correcto.'}</p>
     <div class="cond-grid">${chips}</div>
     <div class="input-group" style="margin-top:4px">
@@ -491,7 +491,7 @@ function priorityStep(nextFn){
   priRank=[];
   const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What <strong>matters most</strong> to you?':'\u00BFQu\u00E9 es lo m\u00E1s <strong>importante</strong> para usted?')}
+    ${bm(lang==='en'?'What matters most to you?':'\u00BFQu\u00E9 es lo m\u00E1s importante para usted?')}
     <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply.':'Seleccione todos los que apliquen.'}</p>
     <div class="opt-grid">${cards}</div>
     ${bp(t('next'),'savePriority();go(_cb.priority)')}
@@ -522,7 +522,7 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-function startZip(){zipStep('explore',lang==='en'?"Let's find your <strong>options</strong>.":'Encontremos sus <strong>opciones</strong>.','zip',ft_dob)}
+function startZip(){zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
@@ -576,7 +576,7 @@ function ft_priority(){priorityStep(flowResults)}
 function mv_zipFrom(){
   prog(5); D.flow='moved';
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Moving gives you a <strong>Special Enrollment Period</strong>! 63 days to change your plan.':'Mudarse le da un <strong>Periodo de Inscripci\u00F3n Especial</strong>! 63 d\u00EDas para cambiar su plan.','hl')}
+    ${bm(lang==='en'?'Moving gives you a Special Enrollment Period. 63 days to change your plan.':'Mudarse le da un Periodo de Inscripci\u00F3n Especial. 63 d\u00EDas para cambiar su plan.','hl')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mud\u00E1ndose DE (c\u00F3digo postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
       oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
@@ -587,7 +587,7 @@ function mv_zipFrom(){
 function mv_zipTo(){
   prog(12);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'And where are you <strong>moving to</strong>?':'Y a d\u00F3nde se <strong>muda</strong>?')}
+    ${bm(lang==='en'?'And where are you moving to?':'Y a d\u00F3nde se muda?')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
       oninput="D.zipTo=this.value; D.zip=this.value; if(this.value.length===5) setTimeout(()=>go(mv_dob),300)">
@@ -599,7 +599,7 @@ function mv_dob(){dobStep(mv_plan)}
 function mv_plan(){
   prog(35);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'What kind of Medicare plan do you have <strong>now</strong>?':'\u00BFQu\u00E9 tipo de plan de Medicare tiene <strong>ahora</strong>?')}
+    ${bm(lang==='en'?'What kind of Medicare plan do you have now?':'\u00BFQu\u00E9 tipo de plan de Medicare tiene ahora?')}
     <div class="opt-grid">
       ${oc(I.clipboard,'bl',lang==='en'?'One plan that covers everything':'Un plan que cubre todo',lang==='en'?'Sometimes called Medicare Advantage or Part C':'A veces llamado Medicare Advantage o Parte C','','',"D.curPlan='advantage';go(mv_health)")}
       ${oc(I.clipboard,'gr',lang==='en'?'Separate plans I picked myself':'Planes separados que yo eleg\u00ED',lang==='en'?'Original Medicare + a supplement':'Medicare Original + un suplemento','','',"D.curPlan='medigap';go(mv_health)")}
@@ -614,7 +614,7 @@ function mv_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 //  FLOW: BETTER BENEFITS (Compare)
 // ═══════════════════════════════════════
-function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for <strong>$0 premium plans</strong> with dental, vision, and hearing.':'Muchas personas califican para <strong>planes $0 prima</strong> con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
+function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
 function bb_dob(){dobStep(bb_benefits)}
 function bb_benefits(){
   prog(35);
@@ -724,7 +724,7 @@ function flowResults(){
     else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
   }
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Planes disponibles</strong> en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
+    ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
@@ -814,8 +814,8 @@ function planEnroll(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?`We recorded your choice: <strong>${D.selectedPlan}</strong>. We will review this plan with you and answer all your questions. <strong>Free, no obligation.</strong>`
-      :`Registramos su elecci\u00F3n: <strong>${D.selectedPlan}</strong>. Revisaremos este plan con usted y responderemos todas sus preguntas. <strong>Gratis, sin compromiso.</strong>`)}
+      ?`We recorded your choice: ${D.selectedPlan}. We will review this plan with you and answer all your questions. Free, no obligation.`
+      :`Registramos su elecci\u00F3n: ${D.selectedPlan}. Revisaremos este plan con usted y responderemos todas sus preguntas. Gratis, sin compromiso.`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -829,8 +829,8 @@ function helpChoose(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?'We can review these plans with you and help you decide. <strong>Free, no obligation.</strong>'
-      :'Una de nosotras le llamar\u00E1 para revisar estos planes y ayudarle a decidir. <strong>Gratis, sin compromiso.</strong>')}
+      ?'We can review these plans with you and help you decide. Free, no obligation.'
+      :'Una de nosotras le llamar\u00E1 para revisar estos planes y ayudarle a decidir. Gratis, sin compromiso.')}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -938,11 +938,11 @@ function learnHome(){
     </div>
     <div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`;
 }
-function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has <strong>4 parts</strong>:':'Medicare tiene <strong>4 partes</strong>:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermer\u00EDa, hospicio. $0 prima para la mayor\u00EDa.')}${ic(lang==='en'?'Part B - Medical':'Parte B - M\u00E9dica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atenci\u00F3n ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visi\u00F3n, audici\u00F3n.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi \u00E1rea','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Medicare costs</strong> breakdown:':'Resumen de <strong>costos de Medicare</strong>:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has 4 parts:':'Medicare tiene 4 partes:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermer\u00EDa, hospicio. $0 prima para la mayor\u00EDa.')}${ic(lang==='en'?'Part B - Medical':'Parte B - M\u00E9dica',lang==='en'?'Doctor visits, outpatient care, preventive services. $185/mo (2025).':'Visitas al doctor, atenci\u00F3n ambulatoria, preventivos. $185/mes (2025).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visi\u00F3n, audici\u00F3n.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi \u00E1rea','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'<strong>Enrollment periods</strong>:':'<strong>Periodos de inscripcion</strong>:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. <strong>Free, no obligation.</strong>':'Podemos responder sus preguntas. <strong>Gratis, sin compromiso.</strong>')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
 
 
 // ═══════════════════════════════════════
