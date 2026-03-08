@@ -426,7 +426,7 @@ function doctorAsk(nextYes,nextNo){
   prog(35);
   _cb.docY=nextYes; _cb.docN=nextNo;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you have a doctor you want to <strong>keep</strong>?':'\u00BFTiene un doctor que quiere <strong>mantener</strong>?')}
+    ${bm(lang==='en'?'Do you have a <strong>doctor</strong> you want to keep?':'\u00BFTiene un <strong>doctor</strong> que quiere mantener?')}
     <div class="opt-grid">
       ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
       ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
@@ -437,7 +437,7 @@ function doctorName(nextFn){
   prog(40);
   _cb.docName=nextFn;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?"What is your doctor's <strong>last name</strong>?":'\u00BFCu\u00E1l es el <strong>apellido</strong> de su doctor?')}
+    ${bm(lang==='en'?"What is your <strong>doctor's</strong> last name?":'\u00BFCu\u00E1l es el apellido de su <strong>doctor</strong>?')}
     ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
     ${bp(t('next'),'go(_cb.docName)')}
     ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
