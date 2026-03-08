@@ -721,7 +721,7 @@ function flowResults(){
   let note='';
   if(age!==null){
     if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
-    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>.`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>.`;}
+    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
   }
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`<strong>Top plans</strong> in your area${D.zip?' ('+D.zip+')':''}:`:`<strong>Planes disponibles</strong> en su \u00E1rea${D.zip?' ('+D.zip+')':''}:`)}
