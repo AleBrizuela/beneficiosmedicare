@@ -37,8 +37,8 @@
   --shadow-lg: 0 8px 40px rgba(0,60,113,0.16);
 
   /* Typography */
-  --font-heading: 'Playfair Display', serif;
-  --font-body:    'Inter', sans-serif;
+  --font-heading: 'Open Sans', sans-serif;
+  --font-body:    'Open Sans', sans-serif;
 
   /* ── Hero — edit these two lines to move ALL hero sections at once */
   --hero-pt:  60px;   /* padding-top — desktop (static header)  */
