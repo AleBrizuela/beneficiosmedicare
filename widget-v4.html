@@ -964,23 +964,25 @@ function togglePlanSel(id){
 // ── PLAN TYPE FILTER ──
 let _typeFilter='all';
 function classifyType(t){
-  if(!t) return 'ma';
+  if(!t) return 'hmo';
   if(t==='PDP') return 'pdp';
+  if(t.includes('D-SNP')||t.includes('DSNP')||t.includes('Medicaid')) return 'medicaid';
   if(t.includes('SNP')) return 'snp';
   if(t==='Medigap'||t==='Supplement') return 'supp';
-  if(t.includes('DSNP')||t.includes('Medicaid')) return 'medicaid';
-  return 'ma'; // HMO, PPO, HMO-POS = Medicare Advantage
+  if(t.includes('PPO')) return 'ppo';
+  return 'hmo'; // HMO, HMO-POS
 }
 function typeFilterBar(allPlans){
-  const counts={all:allPlans.length, ma:0, snp:0, pdp:0, supp:0, medicaid:0};
+  const counts={all:allPlans.length, hmo:0, ppo:0, snp:0, pdp:0, supp:0, medicaid:0};
   allPlans.forEach(p=>{counts[classifyType(p.type)]++});
   const TYPES=[
     {id:'all',      en:'All Plans',           es:'Todos'},
-    {id:'ma',       en:'Medicare Advantage',  es:'Medicare Advantage'},
-    {id:'supp',     en:'Supplement',          es:'Suplemento'},
-    {id:'snp',      en:'Special Needs',       es:'Necesidades Especiales'},
-    {id:'pdp',      en:'Drug Plans (PDP)',    es:'Medicamentos (PDP)'},
-    {id:'medicaid', en:'Medicaid',            es:'Medicaid'},
+    {id:'hmo',      en:'HMO',                 es:'HMO'},
+    {id:'ppo',      en:'PPO',                 es:'PPO'},
+    {id:'supp',     en:'Supplement',           es:'Suplemento'},
+    {id:'snp',      en:'Special Needs (SNP)',  es:'Necesidades Especiales (SNP)'},
+    {id:'pdp',      en:'Drug Plans (PDP)',     es:'Medicamentos (PDP)'},
+    {id:'medicaid', en:'Medicaid / Medi-Cal',  es:'Medicaid / Medi-Cal'},
   ];
   return `<div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
     `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
