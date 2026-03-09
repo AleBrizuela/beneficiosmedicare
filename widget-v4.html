@@ -925,12 +925,12 @@ function planCard(p,i,selectable){
     ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
     <h4>${p.name}</h4>
     <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type} | \u2B50 ${p.rating}</div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium}/mo</span></div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded}</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium.toLocaleString()}/${lang==='en'?'mo':'mes'}</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${p.drug}</span></div>
-    <div class="plan-row"><span class="lb">Dental/Vision/${lang==='en'?'Hearing':'Audici\u00F3n'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
-    <div class="plan-row"><span class="lb">OTC</span><span class="vl gd">$${p.otc}/qtr</span></div>
+    <div class="plan-row"><span class="lb">Dental/${lang==='en'?'Vision':'Visi\u00F3n'}/${lang==='en'?'Hearing':'Audici\u00F3n'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
+    <div class="plan-row"><span class="lb">${lang==='en'?'OTC Allowance':'OTC Mensual'}</span><span class="vl gd">$${p.otc}/${lang==='en'?'qtr':'trim'}</span></div>
     ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devoluci\u00F3n Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
     <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
   </div>`;
@@ -1050,12 +1050,12 @@ function flowCompare(){
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
     ['Dental',...plans.map(p=>p.dental?ck:no)],
-    ['Vision',...plans.map(p=>p.vision?ck:no)],
+    [lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>p.vision?ck:no)],
     [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
-    ['Fitness',...plans.map(p=>p.fitness?ck:no)],
-    ['OTC',...plans.map(p=>'$'+p.otc)],
+    [lang==='en'?'Fitness':'Ejercicio',...plans.map(p=>p.fitness?ck:no)],
+    [lang==='en'?'OTC Allowance':'OTC Mensual',...plans.map(p=>'$'+p.otc)],
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    ['Rating',...plans.map(p=>'\u2B50 '+p.rating)],
+    [lang==='en'?'Rating':'Calificaci\u00F3n',...plans.map(p=>'\u2B50 '+p.rating)],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach((p,i)=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}${p.label?' \u2B50':''}</th>`;});
@@ -1080,12 +1080,12 @@ function customCompare(){
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
     ['Dental',...plans.map(p=>p.dental?ck:no)],
-    ['Vision',...plans.map(p=>p.vision?ck:no)],
+    [lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>p.vision?ck:no)],
     [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
-    ['Fitness',...plans.map(p=>p.fitness?ck:no)],
-    ['OTC',...plans.map(p=>'$'+p.otc)],
+    [lang==='en'?'Fitness':'Ejercicio',...plans.map(p=>p.fitness?ck:no)],
+    [lang==='en'?'OTC Allowance':'OTC Mensual',...plans.map(p=>'$'+p.otc)],
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    ['Rating',...plans.map(p=>'\u2B50 '+p.rating)],
+    [lang==='en'?'Rating':'Calificaci\u00F3n',...plans.map(p=>'\u2B50 '+p.rating)],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach(p=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}</th>`;});
