@@ -567,6 +567,101 @@ h1, h2, h3, h4 {
   font-weight: 500;
 }
 
+/* ── MEET THE TEAM ── */
+.team-section {
+  padding: 56px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.team-section h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+.team-section > p {
+  text-align: center;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 36px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.team-photo-banner {
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.team-photo-banner img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+.team-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.team-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.team-card-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 14px;
+  display: block;
+  border: 3px solid var(--light-blue);
+  box-shadow: 0 4px 12px rgba(0,80,160,0.12);
+}
+.team-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 2px;
+}
+.team-card .team-role {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--terra);
+  margin-bottom: 12px;
+}
+.team-card .team-bio {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.team-card .team-creds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+.team-cred {
+  display: inline-block;
+  background: var(--light-blue);
+  color: var(--terra);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+@media (max-width: 600px) {
+  .team-cards { grid-template-columns: 1fr; }
+  .team-card-photo { width: 72px; height: 72px; }
+}
+
 /* ── FAQ ACCORDION ── */
 .faq-section {
   padding: 56px 24px;
@@ -911,14 +1006,14 @@ h1, h2, h3, h4 {
   <a href="/" class="logo">
     <svg class="logo-full" viewBox="0 0 370 48" width="278" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="Medicare California" role="img"><defs><linearGradient id="navShieldGradCA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGradCA)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#3D9BE9">California</tspan></text></svg>
   </a>
-  <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
+  <a class="lang-link" onclick="toggleLang()" id="header-lang-link">En Espa&ntilde;ol</a>
 </header>
 
 <!-- ═══ SOCIAL PROOF BAR ═══ -->
 <nav class="social-proof-bar" aria-label="Social proof">
   <div class="social-proof-content">
     <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;color:var(--terra);flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-    <span style="font-weight:600;color:var(--charcoal);">Trusted by 1,000+ California families</span>
+    <span style="font-weight:600;color:var(--charcoal);"><span data-i18n="social-proof">Trusted by 1,000+ California families</span></span>
     <div class="social-proof-stars">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -931,12 +1026,12 @@ h1, h2, h3, h4 {
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
-  <h1 class="fade-up">Find the Right Medicare Plan<br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:#3D9BE9;display:block;margin-top:8px;">for you or someone you love</span></h1>
-  <p class="hero-sub fade-up-d1">Honest guidance from a family team. No cost, no pressure.</p>
+  <h1 class="fade-up"><span data-i18n="hero-h1">Find the Right Medicare Plan</span><br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:#3D9BE9;display:block;margin-top:8px;" data-i18n="hero-h1-sub">for you or someone you love</span></h1>
+  <p class="hero-sub fade-up-d1" data-i18n="hero-sub">Honest guidance from a family team. No cost, no pressure.</p>
 
   <!-- ZIP FORM -->
   <div class="zip-card fade-up-d2" id="zip-card">
-    <label for="zip-input">Enter your ZIP code to get started</label>
+    <label for="zip-input"><span data-i18n="zip-label">Enter your ZIP code to get started</span></label>
     <div class="zip-input-wrap">
       <input
         type="tel"
@@ -947,7 +1042,7 @@ h1, h2, h3, h4 {
         maxlength="5"
         autocomplete="postal-code"
       >
-      <div class="zip-error" id="zip-error">Please enter a valid 5-digit California ZIP code.</div>
+      <div class="zip-error" id="zip-error" data-i18n="zip-error">Please enter a valid 5-digit California ZIP code.</div>
     </div>
     <button class="zip-btn" id="zip-btn" onclick="handleZipSubmit()">
       Get Started
@@ -972,15 +1067,15 @@ h1, h2, h3, h4 {
   <div class="badge-strip-content">
     <div class="badge-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>Licensed by California</span>
+      <span data-i18n="badge-1">Licensed by California</span>
     </div>
     <div class="badge-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-      <span>AHIP Certified</span>
+      <span data-i18n="badge-2">AHIP Certified</span>
     </div>
     <div class="badge-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <span>Family-Owned</span>
+      <span data-i18n="badge-3">Family-Owned</span>
     </div>
   </div>
 </div>
@@ -993,52 +1088,52 @@ h1, h2, h3, h4 {
 
 <!-- ═══ MEDICARE PLANS OVERVIEW ═══ -->
 <section class="plans-overview" id="plans-overview">
-  <div class="section-label">Medicare Plan Types</div>
-  <h2>Understanding Your Medicare Options</h2>
+  <div class="section-label"><span data-i18n="plans-label">Medicare Plan Types</span></div>
+  <h2><span data-i18n="plans-h2">Understanding Your Medicare Options</span></h2>
   <p>California offers several types of Medicare plans. Each has different coverage, costs, and benefits. We help you understand what's available to you and which plan fits your health needs and budget.</p>
   <div class="plans-grid">
     <article class="plan-card fade-in-up">
       <div class="plan-icon">🏥</div>
-      <h3>Medicare Advantage</h3>
-      <p>All-in-one coverage combining Part A, B, and usually D. Often includes prescription drugs and additional benefits.</p>
+      <h3 data-i18n="plan-ma-h">Medicare Advantage</h3>
+      <p data-i18n="plan-ma-p">All-in-one coverage combining Part A, B, and usually D. Often includes prescription drugs and additional benefits.</p>
     </article>
     <article class="plan-card fade-in-up">
       <div class="plan-icon">📋</div>
-      <h3>Medigap Plans</h3>
-      <p>Supplemental insurance that covers costs Original Medicare doesn't pay. Choose from 10 standardized plans (A-N).</p>
+      <h3 data-i18n="plan-mg-h">Medigap Plans</h3>
+      <p data-i18n="plan-mg-p">Supplemental insurance that covers costs Original Medicare doesn't pay. Choose from 10 standardized plans (A-N).</p>
     </article>
     <article class="plan-card fade-in-up">
       <div class="plan-icon">💊</div>
-      <h3>Part D Prescription</h3>
-      <p>Prescription drug coverage to help pay for medications. Available standalone or bundled with Medicare Advantage.</p>
+      <h3 data-i18n="plan-pd-h">Part D Prescription</h3>
+      <p data-i18n="plan-pd-p">Prescription drug coverage to help pay for medications. Available standalone or bundled with Medicare Advantage.</p>
     </article>
     <article class="plan-card fade-in-up">
       <div class="plan-icon">👥</div>
-      <h3>Special Needs Plans</h3>
-      <p>Tailored coverage for people with specific conditions or circumstances. Available in eligible California regions.</p>
+      <h3 data-i18n="plan-sn-h">Special Needs Plans</h3>
+      <p data-i18n="plan-sn-p">Tailored coverage for people with specific conditions or circumstances. Available in eligible California regions.</p>
     </article>
   </div>
 </section>
 
 <!-- ═══ WHY US ═══ -->
 <section class="why-us" id="why-us">
-  <div class="section-label">Why Choose Us</div>
-  <h2>We're here to help you navigate Medicare</h2>
+  <div class="section-label"><span data-i18n="why-label">Why Choose Us</span></div>
+  <h2><span data-i18n="why-h2">We're here to help you navigate Medicare</span></h2>
   <div class="cards-grid">
     <article class="card fade-in-up">
       <div class="card-icon family">👩‍👧</div>
-      <h3>Family Team</h3>
-      <p>We are a mother-daughter duo. We treat every client like our own family. Your success is our success.</p>
+      <h3 data-i18n="why-fam-h">Family Team</h3>
+      <p data-i18n="why-fam-p">We are a mother-daughter duo. We treat every client like our own family. Your success is our success.</p>
     </article>
     <article class="card fade-in-up">
       <div class="card-icon local">🏡</div>
-      <h3>California Local</h3>
-      <p>Based right here in California. We know your area, your plans, and the specific coverage options available to you.</p>
+      <h3 data-i18n="why-loc-h">California Local</h3>
+      <p data-i18n="why-loc-p">Based right here in California. We know your area, your plans, and the specific coverage options available to you.</p>
     </article>
     <article class="card fade-in-up">
       <div class="card-icon free">💰</div>
-      <h3>Always Free</h3>
-      <p>No hidden fees, ever. Our service is completely free. We are paid by the insurance carriers, not you.</p>
+      <h3 data-i18n="why-free-h">Always Free</h3>
+      <p data-i18n="why-free-p">No hidden fees, ever. Our service is completely free. We are paid by the insurance carriers, not you.</p>
     </article>
   </div>
 </section>
@@ -1089,27 +1184,63 @@ h1, h2, h3, h4 {
   </div>
 </section>
 
+<!-- ═══ MEET THE TEAM ═══ -->
+<section class="team-section" id="team">
+  <div class="section-label"><span data-i18n="team-label">Who You'll Talk To</span></div>
+  <h2><span data-i18n="team-h2">Meet the Team Helping Your Family</span></h2>
+  <p>We're a licensed mother-daughter team. We help adult children find the right Medicare plan for their parents, in English or Spanish.</p>
+
+  <div class="team-photo-banner fade-in-up">
+    <img src="images/family-yosemite.jpg" alt="Alejandra and Susana at Yosemite" loading="lazy">
+  </div>
+
+  <div class="team-cards">
+    <div class="team-card fade-in-up">
+      <img class="team-card-photo" src="images/susana-headshot.jpg" alt="Susana Marcos" loading="lazy">
+      <h3>Susana Marcos</h3>
+      <div class="team-role">Founder &amp; Licensed Agent</div>
+      <p class="team-bio">Former attorney from Argentina and mother of six. Susana brings decades of experience and treats every client like family. She stays obsessively up to date on every plan detail.</p>
+      <div class="team-creds">
+        <span class="team-cred">Licensed in 8 States</span>
+        <span class="team-cred">AHIP Certified</span>
+        <span class="team-cred">Bilingual</span>
+      </div>
+    </div>
+    <div class="team-card fade-in-up">
+      <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy">
+      <h3>Alejandra Brizuela Marcos</h3>
+      <div class="team-role">Licensed Agent</div>
+      <p class="team-bio">Alejandra's mission: make Medicare accessible for every family, especially Spanish-speaking communities and adult children navigating the system for their parents.</p>
+      <div class="team-creds">
+        <span class="team-cred">Licensed in CA</span>
+        <span class="team-cred">AHIP Certified</span>
+        <span class="team-cred">Bilingual</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ HOW IT WORKS ═══ -->
 <section class="how-it-works" id="how-it-works">
   <div class="how-it-works-inner">
-    <div class="section-label">How It Works</div>
-    <h2>Three simple steps to find your plan</h2>
+    <div class="section-label"><span data-i18n="how-label">How It Works</span></div>
+    <h2><span data-i18n="how-h2">Three simple steps to find your plan</span></h2>
     <div class="steps">
       <div class="step fade-in-up">
         <div class="step-num">1</div>
-        <h4>Enter Your ZIP</h4>
+        <h4 data-i18n="how-1-h">Enter Your ZIP</h4>
         <p>Plans and benefits vary by location. Your ZIP code helps us find all the options available to you in your area.</p>
       </div>
       <div class="step-arrow">→</div>
       <div class="step fade-in-up">
         <div class="step-num">2</div>
-        <h4>Answer a Few Questions</h4>
+        <h4 data-i18n="how-2-h">Answer a Few Questions</h4>
         <p>Tell us about your health needs, prescription drugs, and budget preferences so we can match you with the best options.</p>
       </div>
       <div class="step-arrow">→</div>
       <div class="step fade-in-up">
         <div class="step-num">3</div>
-        <h4>See Your Options</h4>
+        <h4 data-i18n="how-3-h">See Your Options</h4>
         <p>Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.</p>
       </div>
     </div>
@@ -1298,10 +1429,10 @@ h1, h2, h3, h4 {
       We do not offer every plan available in your area. Currently we represent organizations which offer products in your area. Please contact Medicare.gov, call 1-800-MEDICARE (1-800-633-4227), or your local State Health Insurance Program (SHIP) to get information on all of your options. This website is not part of the federal government or the Medicare program. Not affiliated with or endorsed by Medicare or any government agency. Medicare is a registered trademark of the Department of Health and Human Services.
     </p>
     <div class="footer-bottom">
-      <span>&copy; 2026 Medicare California. All rights reserved.</span>
+      <span data-i18n="footer-copy">&copy; 2026 Medicare California. All rights reserved.</span>
       <a href="#" onclick="event.preventDefault();alert('Privacy Policy coming soon')">Privacy Policy</a>
       <a href="#" onclick="event.preventDefault();alert('Terms of Service coming soon')">Terms of Service</a>
-      <a class="lang-link" title="Coming soon">En Espa&ntilde;ol</a>
+      <a class="lang-link" onclick="toggleLang()" id="footer-lang-link">En Espa&ntilde;ol</a>
     </div>
   </div>
 </footer>
@@ -1352,13 +1483,13 @@ function handleZipSubmit() {
   document.querySelector('.hero-sub').style.display = 'none';
 
   // Update heading
-  heroEl.querySelector('h1').textContent = "Let\u2019s find your plan";
+  heroEl.querySelector('h1').textContent = currentLang === 'en' ? "Let\u2019s find your plan" : "Encontremos su plan";
 
   // Show widget container
   widgetC.classList.add('active');
 
-  // Load widget with lang=en, California theme, and zip param
-  frame.src = 'https://beneficiosmedicare.com/widget-v4.html?lang=en&theme=california&v=20260308b&zip=' + zip;
+  // Load widget with current language, California theme, and zip param
+  frame.src = 'https://beneficiosmedicare.com/widget-v4.html?lang=' + currentLang + '&theme=california&v=20260308b&zip=' + zip;
 }
 
 function handleFinalZipSubmit() {
@@ -1402,6 +1533,92 @@ function toggleAccordion(button) {
   // Toggle current item
   item.classList.toggle('active');
   button.setAttribute('aria-expanded', !isActive);
+}
+
+// ── LANGUAGE TOGGLE ──
+let currentLang = 'en';
+const I18N = {
+  // Hero
+  'hero-h1': { en:'Find the Right Medicare Plan', es:'Encuentre el Plan Medicare Correcto' },
+  'hero-h1-sub': { en:'for you or someone you love', es:'para usted o alguien que quiere' },
+  'hero-sub': { en:'Honest guidance from a family team. No cost, no pressure.', es:'Asesor\u00eda honesta de un equipo familiar. Sin costo, sin presi\u00f3n.' },
+  'zip-label': { en:'Enter your ZIP code to get started', es:'Ingrese su c\u00f3digo postal para comenzar' },
+  'zip-btn': { en:'Get Started', es:'Comenzar' },
+  'zip-error': { en:'Please enter a valid 5-digit California ZIP code.', es:'Ingrese un c\u00f3digo postal v\u00e1lido de 5 d\u00edgitos.' },
+  'hero-check-1': { en:'Free personalized guidance', es:'Asesor\u00eda personalizada gratis' },
+  'hero-check-2': { en:'Hablamos Espa\u00f1ol', es:'We Speak English' },
+  // Social proof
+  'social-proof': { en:'Trusted by 1,000+ California families', es:'M\u00e1s de 1,000 familias en California conf\u00edan en nosotros' },
+  // Trust badges
+  'badge-1': { en:'Licensed by California', es:'Licenciadas en California' },
+  'badge-2': { en:'AHIP Certified', es:'Certificadas AHIP' },
+  'badge-3': { en:'Family-Owned', es:'Negocio Familiar' },
+  // Plan types
+  'plans-label': { en:'Medicare Plan Types', es:'Tipos de Planes Medicare' },
+  'plans-h2': { en:'Understanding Your Medicare Options', es:'Conozca Sus Opciones de Medicare' },
+  'plans-desc': { en:'California offers several types of Medicare plans. Each has different coverage, costs, and benefits. We help you understand what\u2019s available to you and which plan fits your health needs and budget.', es:'California ofrece varios tipos de planes Medicare. Cada uno tiene diferente cobertura, costos y beneficios. Le ayudamos a entender qu\u00e9 est\u00e1 disponible y cu\u00e1l plan se adapta a sus necesidades.' },
+  'plan-ma-h': { en:'Medicare Advantage', es:'Medicare Advantage' },
+  'plan-ma-p': { en:'All-in-one coverage combining Part A, B, and usually D. Often includes prescription drugs and additional benefits.', es:'Cobertura todo-en-uno combinando Parte A, B y usualmente D. Frecuentemente incluye medicinas y beneficios adicionales.' },
+  'plan-mg-h': { en:'Medigap Plans', es:'Planes Medigap' },
+  'plan-mg-p': { en:'Supplemental insurance that covers costs Original Medicare doesn\u2019t pay. Choose from 10 standardized plans (A-N).', es:'Seguro suplementario que cubre costos que Medicare Original no paga. Elija entre 10 planes estandarizados (A-N).' },
+  'plan-pd-h': { en:'Part D Prescription', es:'Parte D Medicinas' },
+  'plan-pd-p': { en:'Prescription drug coverage to help pay for medications. Available standalone or bundled with Medicare Advantage.', es:'Cobertura de medicinas para ayudar a pagar medicamentos. Disponible individual o con Medicare Advantage.' },
+  'plan-sn-h': { en:'Special Needs Plans', es:'Planes de Necesidades Especiales' },
+  'plan-sn-p': { en:'Tailored coverage for people with specific conditions or circumstances. Available in eligible California regions.', es:'Cobertura especializada para personas con condiciones espec\u00edficas. Disponible en regiones elegibles de California.' },
+  // Why us
+  'why-label': { en:'Why Choose Us', es:'Por Qu\u00e9 Elegirnos' },
+  'why-h2': { en:'We\u2019re here to help you navigate Medicare', es:'Estamos aqu\u00ed para ayudarle con Medicare' },
+  'why-fam-h': { en:'Family Team', es:'Equipo Familiar' },
+  'why-fam-p': { en:'We are a mother-daughter duo. We treat every client like our own family. Your success is our success.', es:'Somos un d\u00fao madre-hija. Tratamos a cada cliente como familia. Su \u00e9xito es nuestro \u00e9xito.' },
+  'why-loc-h': { en:'California Local', es:'Locales en California' },
+  'why-loc-p': { en:'Based right here in California. We know your area, your plans, and the specific coverage options available to you.', es:'Basadas aqu\u00ed en California. Conocemos su \u00e1rea, sus planes y las opciones de cobertura disponibles.' },
+  'why-free-h': { en:'Always Free', es:'Siempre Gratis' },
+  'why-free-p': { en:'No hidden fees, ever. Our service is completely free. We are paid by the insurance carriers, not you.', es:'Sin cargos ocultos, nunca. Nuestro servicio es gratis. Las aseguradoras nos pagan, no usted.' },
+  // Team
+  'team-label': { en:'Who You\u2019ll Talk To', es:'Con Qui\u00e9n Hablar\u00e1' },
+  'team-h2': { en:'Meet the Team Helping Your Family', es:'Conozca al Equipo que Ayuda a Su Familia' },
+  'team-desc': { en:'We\u2019re a licensed mother-daughter team. We help adult children find the right Medicare plan for their parents, in English or Spanish.', es:'Somos un equipo madre-hija licenciadas. Ayudamos a hijos adultos a encontrar el plan Medicare correcto para sus padres, en ingl\u00e9s o espa\u00f1ol.' },
+  'team-s-role': { en:'Founder & Licensed Agent', es:'Fundadora y Agente Licenciada' },
+  'team-s-bio': { en:'Former attorney from Argentina and mother of six. Susana brings decades of experience and treats every client like family. She stays obsessively up to date on every plan detail.', es:'Abogada argentina y madre de seis hijos. Susana aporta d\u00e9cadas de experiencia y trata a cada cliente como familia. Se mantiene obsesivamente actualizada en cada detalle.' },
+  'team-a-role': { en:'Licensed Agent', es:'Agente Licenciada' },
+  'team-a-bio': { en:'Alejandra\u2019s mission: make Medicare accessible for every family, especially Spanish-speaking communities and adult children navigating the system for their parents.', es:'La misi\u00f3n de Alejandra: hacer que Medicare sea accesible para cada familia, especialmente las comunidades hispanas y los hijos adultos que ayudan a sus padres.' },
+  // How it works
+  'how-label': { en:'How It Works', es:'C\u00f3mo Funciona' },
+  'how-h2': { en:'Three simple steps to find your plan', es:'Tres pasos simples para encontrar su plan' },
+  'how-1-h': { en:'Enter Your ZIP', es:'Ingrese Su C\u00f3digo Postal' },
+  'how-1-p': { en:'Plans and benefits vary by location. Your ZIP code helps us find all the options available to you in your area.', es:'Los planes y beneficios var\u00edan por ubicaci\u00f3n. Su c\u00f3digo postal nos ayuda a encontrar todas las opciones disponibles.' },
+  'how-2-h': { en:'Answer a Few Questions', es:'Responda Unas Preguntas' },
+  'how-2-p': { en:'Tell us about your health needs, prescription drugs, and budget preferences so we can match you with the best options.', es:'Cu\u00e9ntenos sobre sus necesidades de salud, medicinas y presupuesto para encontrar las opciones adecuadas.' },
+  'how-3-h': { en:'See Your Options', es:'Vea Sus Opciones' },
+  'how-3-p': { en:'Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.', es:'Obtenga una comparaci\u00f3n personalizada de planes. Nuestra agente licenciada le ayudar\u00e1 a entender y decidir.' },
+  // CTA
+  'cta-h2': { en:'Ready to find the perfect Medicare plan?', es:'\u00bfLista para encontrar su plan Medicare?' },
+  'cta-sub': { en:'Start your personalized search today. It\u2019s free and takes just a few minutes.', es:'Comience su b\u00fasqueda personalizada hoy. Es gratis y toma solo unos minutos.' },
+  'cta-zip-label': { en:'Enter your ZIP code', es:'Ingrese su c\u00f3digo postal' },
+  'cta-zip-btn': { en:'Find My Plan', es:'Encontrar Mi Plan' },
+  // Footer
+  'footer-copy': { en:'\u00a9 2026 Medicare California. All rights reserved.', es:'\u00a9 2026 Medicare California. Todos los derechos reservados.' },
+};
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'es' : 'en';
+  // Update all i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (I18N[key] && I18N[key][currentLang]) {
+      el.textContent = I18N[key][currentLang];
+    }
+  });
+  // Update lang links
+  var linkText = currentLang === 'en' ? 'En Espa\u00f1ol' : 'English';
+  document.getElementById('header-lang-link').textContent = linkText;
+  document.getElementById('footer-lang-link').textContent = linkText;
+  // Update html lang attribute
+  document.documentElement.lang = currentLang;
+  // Update widget if already loaded
+  if (frame.src && frame.src.indexOf('widget-v4') > -1) {
+    frame.src = frame.src.replace(/lang=(en|es)/, 'lang=' + currentLang);
+  }
 }
 
 // ── INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ──
