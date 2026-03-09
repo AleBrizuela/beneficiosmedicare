@@ -605,6 +605,9 @@ function parseDob(){
   if(parts.length===3){
     const mm=+parts[0], dd=+parts[1], yy=+parts[2];
     if(mm>=1 && mm<=12 && dd>=1 && dd<=31 && yy>=1920 && yy<=2010){
+      // Validate actual calendar date (catches Feb 30, Apr 31, etc.)
+      const test=new Date(yy,mm-1,dd);
+      if(test.getFullYear()!==yy||test.getMonth()!==mm-1||test.getDate()!==dd) return false;
       D.dob_month=parts[0];D.dob_day=parts[1];D.dob_year=parts[2];
       return true;
     }

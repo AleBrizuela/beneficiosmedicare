@@ -8,6 +8,9 @@
 <meta name="description" content="Find the right Medicare plan with free, personalized help from a licensed California family team. No cost, no pressure. Trusted by 1,000+ families.">
 <meta name="keywords" content="medicare california, medicare plans california, medicare advantage california, medigap california, part d prescription, medicare agent, free medicare help, medicare enrollment">
 <link rel="canonical" href="https://medicare-california.com/">
+<link rel="alternate" hreflang="en" href="https://medicare-california.com/">
+<link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/">
+<link rel="alternate" hreflang="x-default" href="https://medicare-california.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Medicare California - Honest Medicare Guidance">
 <meta property="og:description" content="Find the right Medicare plan with free, personalized help from a licensed California family team.">
@@ -1098,7 +1101,21 @@ h1, h2, h3, h4 {
     }
   ],
   "priceRange": "Free",
-  "knowsLanguage": ["English", "Spanish"]
+  "knowsLanguage": ["English", "Spanish"],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "07:00",
+      "closes": "16:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "08:00",
+      "closes": "12:00"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -1275,7 +1292,7 @@ h1, h2, h3, h4 {
       <div class="step fade-in-up">
         <div class="step-icon">
           <!-- Map Pin -->
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="currentColor"/><circle cx="12" cy="9" r="2.5" fill="none" stroke="currentColor"/></svg>
           <span class="step-badge">1</span>
         </div>
         <h4 data-i18n="how-1-h">Enter Your ZIP</h4>
@@ -1285,7 +1302,7 @@ h1, h2, h3, h4 {
       <div class="step fade-in-up">
         <div class="step-icon">
           <!-- Clipboard Checklist -->
-          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" fill="none" stroke="currentColor"/><rect x="9" y="2" width="6" height="4" rx="1" fill="none" stroke="currentColor"/><path d="M9 14l2 2 4-4" fill="none" stroke="currentColor"/></svg>
           <span class="step-badge">2</span>
         </div>
         <h4 data-i18n="how-2-h">Answer a Few Questions</h4>
@@ -1295,7 +1312,7 @@ h1, h2, h3, h4 {
       <div class="step fade-in-up">
         <div class="step-icon">
           <!-- Bar Chart / Compare -->
-          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="15" rx="1"/><rect x="17" y="2" width="4" height="19" rx="1"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1" fill="none" stroke="currentColor"/><rect x="10" y="6" width="4" height="15" rx="1" fill="none" stroke="currentColor"/><rect x="17" y="2" width="4" height="19" rx="1" fill="none" stroke="currentColor"/></svg>
           <span class="step-badge">3</span>
         </div>
         <h4 data-i18n="how-3-h">See Your Options</h4>
@@ -1665,8 +1682,16 @@ h1, h2, h3, h4 {
     </p>
     <div class="footer-bottom">
       <span data-i18n="footer-copy">&copy; 2026 Medicare California. All rights reserved.</span>
-      <a href="#" onclick="event.preventDefault();alert('Privacy Policy coming soon')">Privacy Policy</a>
-      <a href="#" onclick="event.preventDefault();alert('Terms of Service coming soon')">Terms of Service</a>
+      <a href="#" onclick="event.preventDefault();document.getElementById('footer-privacy').style.display=document.getElementById('footer-privacy').style.display==='block'?'none':'block'">Privacy Policy</a>
+      <a href="#" onclick="event.preventDefault();document.getElementById('footer-terms').style.display=document.getElementById('footer-terms').style.display==='block'?'none':'block'">Terms of Service</a>
+    </div>
+    <div id="footer-privacy" style="display:none;padding:16px 0;font-size:12px;color:#9ca3af;line-height:1.6;border-top:1px solid rgba(255,255,255,0.1);margin-top:12px">
+      <strong style="color:#d1d5db">Privacy Policy</strong><br>
+      We collect only the information you voluntarily provide (name, phone, email, ZIP code, date of birth, health preferences) to help match you with Medicare plans. We do not sell your personal information to third parties. Your data is shared only with licensed insurance carriers for the purpose of plan enrollment. We use industry-standard security measures to protect your information. By using this site, you consent to this policy. For questions, contact us at (310) 597-9142.
+    </div>
+    <div id="footer-terms" style="display:none;padding:16px 0;font-size:12px;color:#9ca3af;line-height:1.6;border-top:1px solid rgba(255,255,255,0.1);margin-top:12px">
+      <strong style="color:#d1d5db">Terms of Service</strong><br>
+      This website provides Medicare plan information and guidance from licensed insurance agents. Plan details, premiums, and benefits shown are based on publicly available CMS data and may change. We strive for accuracy but cannot guarantee all information is current. Our service is free to consumers. By using this site, you acknowledge that final plan details should be verified with the insurance carrier before enrollment. This site is not connected to or endorsed by the federal government or Medicare program.
       <a class="lang-link" onclick="toggleLang()" id="footer-lang-link">En Espa&ntilde;ol</a>
     </div>
   </div>
