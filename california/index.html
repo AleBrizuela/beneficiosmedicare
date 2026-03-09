@@ -832,10 +832,59 @@ h1, h2, h3, h4 {
 }
 
 /* ── FOOTER ── */
+/* ── SECTION NAV ── */
+.section-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  z-index: 900;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  padding: 0;
+}
+.section-nav.visible { transform: translateY(0); }
+.section-nav-inner {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.section-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.section-nav a:hover,
+.section-nav a.active { color: var(--blue); }
+.section-nav a svg { width: 18px; height: 18px; opacity: 0.6; }
+.section-nav a:hover svg,
+.section-nav a.active svg { opacity: 1; }
+@media (min-width:768px) {
+  .section-nav a { padding: 10px 20px; font-size: 11px; }
+}
+
 .site-footer {
   background: var(--charcoal);
   color: rgba(255,255,255,0.7);
   padding: 48px 24px 32px;
+  padding-bottom: 80px; /* extra space for sticky nav */
   text-align: center;
 }
 .footer-inner {
@@ -1023,7 +1072,7 @@ h1, h2, h3, h4 {
 
 <!-- ═══ CMS DISCLAIMER ═══ -->
 <div style="background:#f0f4f8;text-align:center;padding:8px 16px;font-size:11px;color:#6b7280;line-height:1.5">
-  This website is not part of the federal government or the Medicare program. For official information visit <a href="https://www.medicare.gov" target="_blank" rel="noopener" style="color:#0080D4;text-decoration:underline">Medicare.gov</a> or call <a href="tel:18006337488" style="color:#0080D4;text-decoration:underline">1-800-Medicare</a>.
+  Site is not part of the federal government or Medicare. For official information visit Medicare or call 1-800-Medicare.
 </div>
 
 <!-- ═══ HEADER ═══ -->
@@ -1110,6 +1159,55 @@ h1, h2, h3, h4 {
 <div class="widget-container" id="widget-container">
   <iframe id="widget-frame" scrolling="no" title="Medicare plan comparison tool for your ZIP code"></iframe>
 </div>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-it-works" id="how-it-works">
+  <div class="how-it-works-inner">
+    <div class="section-label"><span data-i18n="how-label">How It Works</span></div>
+    <h2><span data-i18n="how-h2">Three simple steps to find your plan</span></h2>
+    <div class="steps">
+      <div class="step fade-in-up">
+        <div class="step-num">1</div>
+        <h4 data-i18n="how-1-h">Enter Your ZIP</h4>
+        <p>Plans and benefits vary by location. Your ZIP code helps us find all the options available to you in your area.</p>
+      </div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step fade-in-up">
+        <div class="step-num">2</div>
+        <h4 data-i18n="how-2-h">Answer a Few Questions</h4>
+        <p>Tell us about your health needs, prescription drugs, and budget preferences so we can match you with the best options.</p>
+      </div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step fade-in-up">
+        <div class="step-num">3</div>
+        <h4 data-i18n="how-3-h">See Your Options</h4>
+        <p>Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST STATS ═══ -->
+<section class="trust-stats" id="trust-stats">
+  <div class="trust-stats-inner">
+    <div class="stat-item fade-in-up">
+      <h3>1,000+</h3>
+      <p>California Families Helped</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>Since 2019</h3>
+      <p>Licensed Medicare Advisor</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>100% AHIP</h3>
+      <p>Certified Professionals</p>
+    </div>
+    <div class="stat-item fade-in-up">
+      <h3>$0 Cost</h3>
+      <p>To Families, Always</p>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ MEDICARE PLANS OVERVIEW ═══ -->
 <section class="plans-overview" id="plans-overview">
@@ -1258,55 +1356,6 @@ h1, h2, h3, h4 {
   </div>
 </section>
 
-<!-- ═══ HOW IT WORKS ═══ -->
-<section class="how-it-works" id="how-it-works">
-  <div class="how-it-works-inner">
-    <div class="section-label"><span data-i18n="how-label">How It Works</span></div>
-    <h2><span data-i18n="how-h2">Three simple steps to find your plan</span></h2>
-    <div class="steps">
-      <div class="step fade-in-up">
-        <div class="step-num">1</div>
-        <h4 data-i18n="how-1-h">Enter Your ZIP</h4>
-        <p>Plans and benefits vary by location. Your ZIP code helps us find all the options available to you in your area.</p>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step fade-in-up">
-        <div class="step-num">2</div>
-        <h4 data-i18n="how-2-h">Answer a Few Questions</h4>
-        <p>Tell us about your health needs, prescription drugs, and budget preferences so we can match you with the best options.</p>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step fade-in-up">
-        <div class="step-num">3</div>
-        <h4 data-i18n="how-3-h">See Your Options</h4>
-        <p>Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ TRUST STATS ═══ -->
-<section class="trust-stats" id="trust-stats">
-  <div class="trust-stats-inner">
-    <div class="stat-item fade-in-up">
-      <h3>1,000+</h3>
-      <p>California Families Helped</p>
-    </div>
-    <div class="stat-item fade-in-up">
-      <h3>Since 2019</h3>
-      <p>Licensed Medicare Advisor</p>
-    </div>
-    <div class="stat-item fade-in-up">
-      <h3>100% AHIP</h3>
-      <p>Certified Professionals</p>
-    </div>
-    <div class="stat-item fade-in-up">
-      <h3>$0 Cost</h3>
-      <p>To Families, Always</p>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ FAQ ACCORDION ═══ -->
 <section class="faq-section" id="faq">
   <div class="section-label">Frequently Asked</div>
@@ -1431,6 +1480,36 @@ h1, h2, h3, h4 {
   </div>
 </section>
 
+<!-- ═══ SECTION NAV (sticky bottom) ═══ -->
+<nav class="section-nav" id="section-nav" aria-label="Page sections">
+  <div class="section-nav-inner">
+    <a href="#hero">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>
+      Top
+    </a>
+    <a href="#how-it-works">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+      How It Works
+    </a>
+    <a href="#plans-overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Plans
+    </a>
+    <a href="#why-us">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Why Us
+    </a>
+    <a href="#team">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Team
+    </a>
+    <a href="#faq">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      FAQ
+    </a>
+  </div>
+</nav>
+
 <!-- ═══ FOOTER ═══ -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -1453,9 +1532,9 @@ h1, h2, h3, h4 {
         <h4>Get In Touch</h4>
         <p style="margin-bottom:12px;">We're here to answer your Medicare questions.</p>
         <p style="margin-bottom:4px;"><strong>Phone:</strong></p>
-        <p style="margin-bottom:12px;"><a href="tel:+13105979142">(310) 597-9142</a></p>
+        <p style="margin-bottom:12px;">(310) 597-9142</p>
         <p style="margin-bottom:4px;"><strong>Email:</strong></p>
-        <p><a href="mailto:info@beneficiosmedicare.com">info@beneficiosmedicare.com</a></p>
+        <p>info@beneficiosmedicare.com</p>
       </div>
     </div>
 
@@ -1680,6 +1759,47 @@ const observer = new IntersectionObserver(function(entries) {
 document.querySelectorAll('.fade-in-up').forEach(el => {
   observer.observe(el);
 });
+
+// ── SECTION NAV: show after scrolling past hero ──
+(function(){
+  const nav = document.getElementById('section-nav');
+  const hero = document.getElementById('hero');
+  if(!nav || !hero) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        const heroBottom = hero.getBoundingClientRect().bottom;
+        if(heroBottom < 0) {
+          nav.classList.add('visible');
+        } else {
+          nav.classList.remove('visible');
+        }
+
+        // Highlight active section
+        const links = nav.querySelectorAll('a[href^="#"]');
+        let current = '';
+        links.forEach(function(link){
+          const id = link.getAttribute('href').slice(1);
+          const section = document.getElementById(id);
+          if(section){
+            const rect = section.getBoundingClientRect();
+            if(rect.top <= 200) current = id;
+          }
+        });
+        links.forEach(function(link){
+          const id = link.getAttribute('href').slice(1);
+          if(id === current) link.classList.add('active');
+          else link.classList.remove('active');
+        });
+
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
 </script>
 </body>
 </html>
