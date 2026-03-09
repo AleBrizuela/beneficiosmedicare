@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicare en Texas - Asesoria Gratuita y Bilingue | Beneficios Medicare</title>
+    <meta name="description" content="Asesoria gratuita de Medicare en Texas. Compare planes Medicare Advantage y Medigap en Houston, Dallas, San Antonio, Austin y mas. Agentes bilingues licenciadas.">
+    <meta name="keywords" content="Medicare Texas, planes Medicare TX, Medicare en espanol Texas, Medicare Advantage Texas, Medigap Texas">
+    <link rel="canonical" href="https://beneficiosmedicare.com/estados/texas.html">
+
+    <meta property="og:title" content="Medicare en Texas - Asesoria Gratuita y Bilingue">
+    <meta property="og:description" content="Asesoria gratuita de Medicare en Texas. Agentes bilingues licenciadas le ayudan a comparar planes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://beneficiosmedicare.com/estados/texas.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #002147;
+            --green: #00897B;
+            --teal: #00897B;
+            --mint: #B2DFDB;
+            --lt-green: #E0F2F1;
+            --lt-mint: #EDF8F7;
+            --gray: #5A6577;
+            --dark: #1C2B3A;
+            --white: #FFFFFF;
+            --bg: #F5F8F7;
+            --radius: 14px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--gray);
+            background-color: var(--bg);
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--green); }
+
+        .nav-cta {
+            background-color: var(--green);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .nav-cta:hover { background-color: #00796B; }
+
+        .hero {
+            background: linear-gradient(135deg, var(--lt-mint) 0%, #F0F4F3 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content { max-width: 900px; margin: 0 auto; }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .zip-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .zip-input {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: 2px solid var(--mint);
+            border-radius: var(--radius);
+            width: 250px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .zip-button {
+            padding: 1rem 2rem;
+            background-color: var(--green);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .zip-button:hover { background-color: #00796B; }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .trust-badge::before {
+            content: "\2713";
+            font-size: 1.5rem;
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .stats-section {
+            background-color: var(--navy);
+            color: var(--white);
+            padding: 4rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--green);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--mint);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label { font-size: 1rem; font-weight: 500; }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .benefits-section { padding: 4rem 2rem; background-color: var(--white); }
+        .benefits-container { max-width: 1200px; margin: 0 auto; }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            padding: 2rem;
+            background-color: var(--bg);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--green);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .benefit-card h3 { color: var(--green); margin-bottom: 1rem; font-size: 1.3rem; }
+        .benefit-card p { color: var(--gray); line-height: 1.8; }
+
+        .info-section { padding: 4rem 2rem; background-color: var(--white); }
+        .info-container { max-width: 900px; margin: 0 auto; }
+        .info-content {
+            font-size: 1.05rem;
+            color: var(--gray);
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+        .info-content strong { color: var(--dark); }
+
+        .faq-section { padding: 4rem 2rem; background-color: var(--bg); }
+        .faq-container { max-width: 900px; margin: 0 auto; }
+        .faq-item {
+            background-color: var(--white);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--green);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .faq-item h3 { color: var(--dark); margin-bottom: 1rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--gray); line-height: 1.8; }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--green) 0%, var(--navy) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .cta-container { max-width: 800px; margin: 0 auto; }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+        .cta-section p { font-size: 1.1rem; margin-bottom: 2rem; }
+        .cta-button {
+            background-color: var(--white);
+            color: var(--green);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .cta-button:hover { background-color: var(--lt-mint); }
+
+        footer {
+            background-color: var(--navy);
+            color: var(--white);
+            padding: 2rem;
+            font-size: 0.9rem;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .footer-disclaimer {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 2rem;
+            margin-top: 1rem;
+            text-align: center;
+            color: #B0B0B0;
+            font-size: 0.85rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .zip-input { width: 100%; max-width: 300px; }
+            .nav-links { gap: 1rem; font-size: 0.9rem; }
+        }
+
+        @media (max-width: 480px) {
+            nav { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-direction: column; width: 100%; gap: 0.5rem; }
+            .hero h1 { font-size: 1.5rem; }
+            .hero { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="https://beneficiosmedicare.com" class="nav-brand"><i class="fas fa-shield-alt"></i> Beneficios Medicare</a>
+        <ul class="nav-links">
+            <li><a href="https://beneficiosmedicare.com/estados/">Todos los Estados</a></li>
+            <li><a href="https://beneficiosmedicare.com/#widget-anchor" class="nav-cta">Comenzar</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Medicare en Texas</h1>
+            <p class="hero-subtitle">Asesoria gratuita y bilingue para beneficiarios de Medicare en Houston, Dallas, San Antonio, Austin, Fort Worth, El Paso, Arlington y Corpus Christi</p>
+
+            <div class="zip-form">
+                <input type="text" id="state-zip" class="zip-input" placeholder="Ingrese su codigo postal" maxlength="5" inputmode="numeric">
+                <button class="zip-button" onclick="handleZip()">Comenzar</button>
+            </div>
+
+            <div class="trust-badges">
+                <div class="trust-badge">100% Gratis</div>
+                <div class="trust-badge">Hablamos Espanol</div>
+                <div class="trust-badge">Agentes Licenciadas</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">4.3M+</div>
+                <div class="stat-label">Beneficiarios de Medicare en Texas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Planes Medicare Advantage Disponibles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Anos de Experiencia</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits-section">
+        <div class="benefits-container">
+            <h2 class="section-title">Por Que Elegirnos en Texas</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>Conocimiento Local</h3>
+                    <p>Conocemos el mercado Medicare de Texas. Entendemos que planes funcionan mejor en Houston, Dallas y que opciones existen para comunidades mas pequenas.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Servicio Bilingue</h3>
+                    <p>Agentes que hablan ingles y espanol, listas para ayudarle. Servimos a la comunidad hispana de Texas con asesoria culturalmente sensible y personalizada.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Asesoria Gratuita</h3>
+                    <p>Sin costo para usted. Comparamos todos los planes disponibles en su area y le ayudamos a encontrar la mejor cobertura sin cargos ocultos ni sorpresas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-section">
+        <div class="info-container">
+            <h2 class="section-title">Medicare en Texas (TX)</h2>
+            <div class="info-content">Texas es el segundo estado con mas beneficiarios de Medicare en el pais, con mas de 4.3 millones de personas elegibles. El mercado Medicare de Texas es diverso, desde las grandes ciudades como Houston y Dallas hasta las comunidades rurales del oeste de Texas. Los principales sistemas de salud incluyen Memorial Hermann, Baylor Scott & White, MD Anderson Cancer Center y UT Southwestern.</div>
+            <div class="info-content">Los planes Medicare Advantage en Texas ofrecen opciones competitivas con primas bajas y beneficios adicionales. Muchos planes incluyen cobertura dental, vision y audicion. La amplia geografia de Texas significa que la disponibilidad de planes varia significativamente entre areas urbanas y rurales, por lo que su codigo postal es clave para identificar sus opciones reales.</div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="section-title">Preguntas Frecuentes sobre Medicare en Texas</h2>
+            <div class="faq-item">
+                <h3>¿Cuantos planes Medicare hay en Texas?</h3>
+                <p>Texas generalmente ofrece mas de 50 planes Medicare Advantage, variando por codigo postal. Las areas metropolitanas como Houston y Dallas tienen la mayor seleccion. Tambien puede optar por Medicare Original con un plan Medigap suplementario y cobertura de medicamentos Parte D.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Hay asesoria Medicare en espanol en Texas?</h3>
+                <p>Si. Nuestras agentes son bilingues (ingles y espanol) y estan licenciadas en Texas. Ofrecemos asesoria gratuita y personalizada para ayudarle a comparar planes y encontrar la mejor cobertura para sus necesidades y presupuesto.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Cuando puedo cambiar mi plan Medicare en Texas?</h3>
+                <p>Puede hacer cambios durante el Periodo Anual de Inscripcion (AEP), del 15 de octubre al 7 de diciembre. Si tiene Medicare Advantage, tambien tiene el Periodo Abierto de Inscripcion (OEP) del 1 de enero al 31 de marzo. Eventos de vida como mudanza o perdida de cobertura laboral pueden calificarle para un Periodo Especial de Inscripcion (SEP).</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>¿Lista para encontrar su plan Medicare en Texas?</h2>
+            <p>Nuestras agentes licenciadas le ayudan a comparar opciones y encontrar la mejor cobertura. Sin costo, sin compromiso.</p>
+            <a href="https://beneficiosmedicare.com/#widget-anchor" class="cta-button">Comparar Planes Gratis</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div style="font-family:'Open Sans',sans-serif;font-size:18px;color:var(--mint);margin-bottom:10px">Susana Marcos LLC</div>
+            <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:13px">
+                <a href="https://beneficiosmedicare.com" style="color:#B0B0B0;text-decoration:none"><i class="fas fa-home"></i> Inicio</a>
+                <a href="https://beneficiosmedicare.com/estados/" style="color:#B0B0B0;text-decoration:none"><i class="fas fa-map-marked-alt"></i> Todos los Estados</a>
+                <a href="tel:+13105979142" style="color:#B0B0B0;text-decoration:none"><i class="fas fa-phone-alt"></i> Llamar</a>
+                <a href="https://wa.me/13105979142" target="_blank" style="color:#B0B0B0;text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            <p>No ofrecemos todos los planes disponibles en su area. Visite <a href="https://www.medicare.gov" target="_blank" rel="noopener" style="color:#B0B0B0">Medicare.gov</a> o llame al 1-800-Medicare para ver todas las opciones. Este sitio no esta respaldado por el gobierno federal ni por el programa Medicare.</p>
+        </div>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Beneficios Medicare - Texas",
+        "description": "Asesoria gratuita de Medicare para residentes de Texas",
+        "areaServed": {
+            "@type": "AdministrativeArea",
+            "name": "Texas, US"
+        },
+        "url": "https://beneficiosmedicare.com/estados/texas.html",
+        "telephone": "+13105979142",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "US",
+            "addressRegion": "TX"
+        },
+        "availableLanguage": ["es", "en"]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "¿Cuantos planes Medicare hay en Texas?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Texas generalmente ofrece mas de 50 planes Medicare Advantage, variando por codigo postal. Las areas metropolitanas como Houston y Dallas tienen la mayor seleccion. Tambien puede optar por Medicare Original con un plan Medigap suplementario y cobertura de medicamentos Parte D."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Hay asesoria Medicare en espanol en Texas?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Si. Nuestras agentes son bilingues (ingles y espanol) y estan licenciadas en Texas. Ofrecemos asesoria gratuita y personalizada para ayudarle a comparar planes y encontrar la mejor cobertura para sus necesidades y presupuesto."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Cuando puedo cambiar mi plan Medicare en Texas?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Puede hacer cambios durante el Periodo Anual de Inscripcion (AEP), del 15 de octubre al 7 de diciembre. Si tiene Medicare Advantage, tambien tiene el Periodo Abierto de Inscripcion (OEP) del 1 de enero al 31 de marzo. Eventos de vida como mudanza o perdida de cobertura laboral pueden calificarle para un Periodo Especial de Inscripcion (SEP)."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://beneficiosmedicare.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Estados",
+                "item": "https://beneficiosmedicare.com/estados/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Texas",
+                "item": "https://beneficiosmedicare.com/estados/texas.html"
+            }
+        ]
+    }
+    </script>
+
+    <script>
+        function handleZip() {
+            var zip = document.getElementById('state-zip').value.replace(/\D/g,'');
+            if(zip.length === 5) {
+                window.location.href = 'https://beneficiosmedicare.com/?zip=' + zip;
+            }
+        }
+        document.getElementById('state-zip').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') { handleZip(); }
+        });
+    </script>
+</body>
+</html>
