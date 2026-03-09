@@ -26,6 +26,78 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Expertos en Beneficios","alternateName":"Beneficios Medicare","url":"https://beneficiosmedicare.com","description":"Expertos en seguros de Medicare. Asesoría gratuita en español sobre Medicare Advantage y Medigap.","telephone":"+1-310-597-9142","areaServed":["CA","FL","TX","AZ","NV","UT","ID","OR"],"member":[{"@type":"Person","name":"Susana Marcos","jobTitle":"Fundadora"},{"@type":"Person","name":"Alejandra Brizuela Marcos","jobTitle":"Agente Licenciada"}]}
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Puede mi familiar conservar a su doctor actual?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "En muchos casos, sí. Verificamos que sus doctores y medicinas estén cubiertos antes de recomendar cualquier plan. Eso es lo primero que revisamos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuándo puede mi familiar inscribirse en Medicare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La mayoría puede inscribirse 3 meses antes de cumplir 65 años, durante el mes de su cumpleaños, o 3 meses después. También hay periodos especiales si se muda o pierde otra cobertura. Le guiamos en cada paso."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es la diferencia entre Medicare Advantage y Medigap?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Medicare Advantage (Parte C) reemplaza a Original Medicare y frecuentemente incluye dental, visión y medicamentos. Medigap complementa a Original Medicare cubriendo copagos y deducibles. Le ayudamos a decidir cuál conviene más según su situación."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mi familiar tiene Medi-Cal. ¿Eso cambia las cosas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, y puede ser una gran ventaja. Muchos californianos califican para Medicare y Medi-Cal al mismo tiempo (llamado doble elegible), lo cual puede significar costos muy bajos o cero por la mayoría de los servicios. Alejandra se especializa en ayudar a clientes con doble elegibilidad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto cuesta Medicare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depende del tipo de plan. Muchos planes Medicare Advantage tienen prima mensual de $0, aunque todavía paga la prima de Parte B. Los planes Medigap tienen primas mensuales que varían según su edad y ubicación. Nosotras le ayudamos a encontrar la mejor cobertura dentro de su presupuesto."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cobran por su servicio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, nuestro servicio es 100% gratuito para usted. Las compañías de seguros nos compensan directamente. Esto significa que podemos enfocarnos completamente en encontrar el mejor plan para sus necesidades sin ningún conflicto de interés."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué pasa si no me inscribo a tiempo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Si no se inscribe durante su periodo inicial de elegibilidad, puede enfrentar penalidades permanentes en sus primas mensuales. También tendría que esperar hasta el próximo Periodo de Inscripción Anual (15 de octubre al 7 de diciembre). Por eso es importante actuar a tiempo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puedo cambiar de plan si no estoy contento?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Puede cambiar su plan durante el Periodo de Inscripción Anual (15 de octubre al 7 de diciembre) cada año. También existe un Periodo Abierto de Inscripción de Medicare Advantage (1 de enero al 31 de marzo). Si tiene circunstancias especiales, puede calificar para un cambio fuera de estos periodos."
+      }
+    }
+  ]
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="beneficiosmedicare-brand.css">
 
@@ -1307,6 +1379,46 @@ a[href^="tel"] { white-space: nowrap; }
           </button>
           <div class="faq-answer" style="max-height:0;overflow:hidden;padding:0 24px;background:white;transition:max-height 0.4s ease-out,padding 0.3s ease">
             <p style="margin:0;font-size:15px;color:var(--gray);line-height:1.7">Sí, y puede ser una gran ventaja. Muchos californianos califican para Medicare y Medi-Cal al mismo tiempo (llamado 'doble elegible'), lo cual puede significar costos muy bajos o cero por la mayoría de los servicios. Alejandra se especializa en ayudar a clientes con doble elegibilidad.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+            <span>¿Cuánto cuesta Medicare?</span>
+            <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;padding:0 24px;background:white;transition:max-height 0.4s ease-out,padding 0.3s ease">
+            <p style="margin:0;font-size:15px;color:var(--gray);line-height:1.7">Depende del tipo de plan. Muchos planes Medicare Advantage tienen prima mensual de $0, aunque todavía paga la prima de Parte B (que la mayoría paga a través del Seguro Social). Los planes Medigap tienen primas mensuales que varían según su edad y ubicación. Nosotras le ayudamos a encontrar la mejor cobertura dentro de su presupuesto.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+            <span>¿Cobran por su servicio?</span>
+            <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;padding:0 24px;background:white;transition:max-height 0.4s ease-out,padding 0.3s ease">
+            <p style="margin:0;font-size:15px;color:var(--gray);line-height:1.7">No, nuestro servicio es 100% gratuito para usted. Las compañías de seguros nos compensan directamente. Esto significa que podemos enfocarnos completamente en encontrar el mejor plan para sus necesidades sin ningún conflicto de interés.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+            <span>¿Qué pasa si no me inscribo a tiempo?</span>
+            <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;padding:0 24px;background:white;transition:max-height 0.4s ease-out,padding 0.3s ease">
+            <p style="margin:0;font-size:15px;color:var(--gray);line-height:1.7">Si no se inscribe durante su periodo inicial de elegibilidad, puede enfrentar penalidades permanentes en sus primas mensuales. También tendría que esperar hasta el próximo Periodo de Inscripción Anual (15 de octubre al 7 de diciembre) para inscribirse. Por eso es importante actuar a tiempo. Le ayudamos a no perder ninguna fecha importante.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+            <span>¿Puedo cambiar de plan si no estoy contento?</span>
+            <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;padding:0 24px;background:white;transition:max-height 0.4s ease-out,padding 0.3s ease">
+            <p style="margin:0;font-size:15px;color:var(--gray);line-height:1.7">Sí. Puede cambiar su plan durante el Periodo de Inscripción Anual (15 de octubre al 7 de diciembre) cada año. También existe un Periodo Abierto de Inscripción de Medicare Advantage (1 de enero al 31 de marzo) donde puede cambiar a un plan diferente o regresar a Original Medicare. Si tiene circunstancias especiales, puede calificar para un cambio fuera de estos periodos.</p>
           </div>
         </div>
       </div>
