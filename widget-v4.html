@@ -402,6 +402,57 @@ let _cmsLoadedState = null;
 
 // No fallback plans -- only real CMS data is shown
 
+// ── MEDIGAP DATA ──
+let _medigapData = null;
+function loadMedigapData(){
+  if(_medigapData) return Promise.resolve(_medigapData);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'data/medigap_all.js';
+    s.onload = () => {
+      if(typeof MEDIGAP_ALL_DATA !== 'undefined'){
+        _medigapData = MEDIGAP_ALL_DATA;
+        resolve(_medigapData);
+      } else { _medigapData = {}; resolve({}); }
+    };
+    s.onerror = () => { _medigapData = {}; resolve({}); }; // graceful fallback
+    document.head.appendChild(s);
+  });
+}
+
+// Convert Medigap plan type to widget-compatible plan objects
+function medigapToWidgetPlans(stateData){
+  if(!stateData || !stateData.plans) return [];
+  const result = [];
+  stateData.plans.forEach(plan => {
+    // Create one widget entry per plan letter (showing cheapest carrier)
+    const letter = plan.type.replace('HIGH_','High-');
+    const cheapest = plan.policies.length > 0 ? plan.policies.reduce((a,b) => a.min < b.min ? a : b) : null;
+    result.push({
+      id: 'medigap-' + plan.type + '-' + stateData.state,
+      name: 'Medigap Plan ' + letter,
+      carrier: cheapest ? cheapest.co.split('(')[0].trim() : 'Multiple carriers',
+      premium: plan.premium_min,
+      ded: 0,
+      moop: 0,
+      dental: 0,
+      vision: 0,
+      hearing: 0,
+      fitness: 0,
+      otc: 0,
+      drug: 'N/A',
+      giveback: 0,
+      rating: 0,
+      type: 'Medigap',
+      _medigap: true,
+      _premiumRange: '$' + Math.round(plan.premium_min) + '-$' + Math.round(plan.premium_max) + '/mo',
+      _carrierCount: plan.policies.length,
+      _planLetter: letter
+    });
+  });
+  return result;
+}
+
 // Map CMS plan to widget format
 function cmsToWidget(p){
   const isPDP = p.cat==='PDP';
@@ -480,10 +531,18 @@ async function loadPlansForZip(zip){
     // Dedupe by plan ID
     const seen = new Set();
     raw = raw.filter(p => { if(seen.has(p.id)) return false; seen.add(p.id); return true; });
-    if(raw.length === 0) return;
     // Sort: best stars first, then lowest premium, then lowest MOOP
     raw.sort((a,b) => (b.stars||0)-(a.stars||0) || a.premium-b.premium || a.moop-b.moop);
     PLANS = raw.map(cmsToWidget);
+
+    // Merge Medigap / Supplement plans (state-level data)
+    try {
+      const mgData = await loadMedigapData();
+      if(mgData[state]){
+        const mgPlans = medigapToWidgetPlans(mgData[state]);
+        PLANS = PLANS.concat(mgPlans);
+      }
+    } catch(e2){ console.warn('Medigap data merge skipped:', e2.message); }
   } catch(e) {
     console.warn('CMS data load failed:', e.message);
     PLANS=[];
@@ -938,6 +997,24 @@ function planCard(p,i,selectable){
   const ck='\u2705',no='\u274C';
   const checked=selPlans.includes(p.id);
   const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'\u2713':''}</div>`:'';
+
+  // Medigap / Supplement cards have a different layout
+  if(p._medigap){
+    const carrierLabel = lang==='en'?'Starting from':'Desde';
+    const carriersLabel = lang==='en'?`${p._carrierCount} carriers available`:`${p._carrierCount} aseguradoras disponibles`;
+    return `<div class="plan-card ${i===0?'rec':''}" style="border-left-color:#00897B">
+      ${selBtn}
+      ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
+      <h4>${p.name}</h4>
+      <div class="carrier"><span class="carrier-dot" style="background:#00897B"></span>Medigap ${lang==='en'?'Supplement':'Suplemento'} | ${carriersLabel}</div>
+      <div class="plan-row"><span class="lb">${lang==='en'?'Premium Range':'Rango de Prima'}</span><span class="vl gd">${p._premiumRange}</span></div>
+      <div class="plan-row"><span class="lb">${carrierLabel}</span><span class="vl">${p.carrier}</span></div>
+      <div class="plan-row"><span class="lb">${lang==='en'?'What it covers':'Qu\u00E9 cubre'}</span><span class="vl">${lang==='en'?'Gaps in Original Medicare':'Costos no cubiertos por Medicare Original'}</span></div>
+      <div class="plan-row"><span class="lb">${lang==='en'?'Drug Coverage':'Cobertura de Medicinas'}</span><span class="vl">${lang==='en'?'Separate Part D needed':'Necesita Parte D por separado'}</span></div>
+      <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
+    </div>`;
+  }
+
   return `<div class="plan-card ${i===0?'rec':''}" style="border-left-color:${color}">
     ${selBtn}
     ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
