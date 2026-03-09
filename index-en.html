@@ -318,12 +318,7 @@ section { padding: 80px 24px; }
   background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
   position: relative; overflow: visible;
 }
-/* Floating decorative shapes */
-.hero-decor { position:absolute; border-radius:50%; z-index:0; }
-.hero-decor-1 { width:280px; height:280px; background:radial-gradient(circle,rgba(0,121,107,0.12),rgba(0,121,107,0.03)); top:-80px; right:-60px; animation:float 8s ease-in-out infinite; }
-.hero-decor-2 { width:200px; height:200px; background:radial-gradient(circle,rgba(46,107,164,0.10),rgba(46,107,164,0.02)); bottom:20px; left:-40px; animation:float 10s ease-in-out infinite reverse; }
-.hero-decor-3 { width:140px; height:140px; background:radial-gradient(circle,rgba(0,121,107,0.08),transparent); top:30%; right:10%; animation:float 6s ease-in-out infinite 1s; }
-@keyframes float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.03)} }
+/* (decorative hero shapes removed for clean look) */
 .hero::after { display: none; }
 /* Widget pushes forward over the arc into white section */
 #widget-anchor {
@@ -1069,11 +1064,6 @@ a[href^="tel"] { white-space: nowrap; }
 
   <!-- HERO -->
   <section class="hero" style="padding-top:0">
-    <!-- Floating decorative shapes -->
-    <div class="hero-decor hero-decor-1"></div>
-    <div class="hero-decor hero-decor-2"></div>
-    <div class="hero-decor hero-decor-3"></div>
-
     <div class="container" style="position:relative;z-index:2">
       <div class="hero-grid">
         <!-- FULL WIDGET on LEFT (desktop) / TOP (mobile) -->
