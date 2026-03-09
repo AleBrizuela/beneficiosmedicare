@@ -216,7 +216,7 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 <body>
 <div class="widget-wrap">
   <div class="widget-header">
-    <div class="logo-icon">&#x1F6E1;</div>
+    <div class="logo-icon"><svg viewBox="0 0 48 48" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wsg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M24 3 L44 12 L44 28 C44 39 35 45 24 50 C13 45 4 39 4 28 L4 12 Z" fill="url(#wsg)"/><polyline points="15,28 21,34 34,20" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div><h2 id="hdr-title">Your Guide</h2><p id="hdr-sub">Beneficios Medicare</p></div>
     <div class="lang-toggle" id="lang-toggle">
       <button id="lang-en" onclick="setLang('en')">EN</button>
@@ -375,16 +375,20 @@ const I={
   chart:_s('<rect x="3" y="12" width="5" height="9" rx="1" fill="#C7D2FE" stroke="#4338CA" stroke-width="1.5"/><rect x="10" y="6" width="5" height="15" rx="1" fill="#A5B4FC" stroke="#4338CA" stroke-width="1.5"/><rect x="17" y="2" width="5" height="19" rx="1" fill="#818CF8" stroke="#4338CA" stroke-width="1.5"/>'),
   calendar:_s('<rect x="3" y="4" width="18" height="18" rx="2" fill="#FFEDD5" stroke="#C2410C" stroke-width="2"/><rect x="3" y="4" width="18" height="6" rx="2" fill="#C2410C"/><path d="M8 2v4M16 2v4" stroke="#C2410C" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="15" r="1.5" fill="#C2410C"/><circle cx="12" cy="15" r="1.5" fill="#C2410C"/>'),
   hospital:_s('<path d="M5 21V7l7-4 7 4v14" fill="#DCFCE7" stroke="#15803D" stroke-width="2" stroke-linejoin="round"/><path d="M3 21h18" stroke="#15803D" stroke-width="2" stroke-linecap="round"/><rect x="9" y="17" width="6" height="4" fill="#15803D"/><path d="M10 10h4M12 8v4" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>'),
+  shield:_s('<path d="M12 2l8 4v5c0 5.5-3.4 10.3-8 12-4.6-1.7-8-6.5-8-12V6l8-4z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/><polyline points="9,12 11,14 15,10" fill="none" stroke="#1D4ED8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'),
+  droplet:_s('<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/><path d="M8 13h8" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/><path d="M9 16h6" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/>'),
 };
 
 // ── HEALTH CONDITIONS ──
 const CONDITIONS = [
-  {id:'diabetes',   icon:I.pill,  en:'Diabetes',               es:'Diabetes'},
-  {id:'heart',      icon:I.heart, en:'Heart / Blood Pressure', es:'Coraz\u00F3n / Presi\u00F3n'},
-  {id:'breathing',  icon:I.lungs, en:'Breathing / Lungs',      es:'Respiraci\u00F3n / Pulmones'},
-  {id:'bones',      icon:I.bone,  en:'Bones / Joints',         es:'Huesos / Articulaciones'},
-  {id:'mental',     icon:I.brain, en:'Memory / Mental Health',  es:'Memoria / Salud Mental'},
-  {id:'vision',     icon:I.eye,   en:'Vision / Eyes',    es:'Visi\u00F3n / Ojos'}
+  {id:'heart',      icon:I.heart,   en:'Heart / Blood Pressure', es:'Coraz\u00F3n / Presi\u00F3n'},
+  {id:'cholesterol',icon:I.droplet,  en:'Cholesterol',            es:'Colesterol'},
+  {id:'diabetes',   icon:I.pill,    en:'Diabetes',               es:'Diabetes'},
+  {id:'bones',      icon:I.bone,    en:'Bones / Joints',         es:'Huesos / Articulaciones'},
+  {id:'vision',     icon:I.eye,     en:'Vision / Eyes',          es:'Visi\u00F3n / Ojos'},
+  {id:'breathing',  icon:I.lungs,   en:'Breathing / Lungs',      es:'Respiraci\u00F3n / Pulmones'},
+  {id:'mental',     icon:I.brain,   en:'Memory / Mental Health',  es:'Memoria / Salud Mental'},
+  {id:'kidney',     icon:I.kidney,  en:'Kidney / Renal',         es:'Ri\u00F1ones'}
 ];
 
 // ── PLAN DATA ENGINE ──
@@ -541,7 +545,7 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   wb().innerHTML=`${bk()}
     ${bm(msg, cls)}
     <div class="input-group zip-group"><label for="${fieldId}">${lang==='en'?(fieldId.includes('from')?'Moving from (zip code)':'Your ZIP code'):(fieldId.includes('from')?'Mud\u00E1ndose de (c\u00F3digo postal)':'Su c\u00F3digo postal')}</label>
-    <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="90001" value="${D[fieldId]||''}" maxlength="5"
+    <input class="input-field" type="tel" inputmode="numeric" id="${fieldId}" placeholder="" value="${D[fieldId]||''}" maxlength="5"
       oninput="onZipInput(this,'${fieldId}')">
     </div>
     ${bp(lang==='en'?'Get Started \u2192':'Comenzar \u2192','go(_cb.zip)')}
@@ -583,8 +587,9 @@ function dobStep(nextFn){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'When is your date of birth?':'\u00BFCu\u00E1l es su fecha de nacimiento?')}
     <div class="input-group"><label>${lang==='en'?'Date of birth':'Fecha de nacimiento'}</label>
-    <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="MM / DD / YYYY" value="${existing}" maxlength="14"
+    <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="${lang==='en'?'MM / DD / YYYY':'MM / DD / AAAA'}" value="${existing}" maxlength="14"
       oninput="formatDob(this)">
+    <p style="font-size:11px;color:#999;margin-top:4px">${lang==='en'?'month / day / year':'mes / d\u00EDa / a\u00F1o'}</p>
     </div>
     ${bp(t('next'),'parseDob();go(_cb.dob)')}
     ${skip(lang==='en'?"I'd rather not say":'Prefiero no decir',"D.dob_month='';D.dob_day='';D.dob_year='';go(_cb.dob)")}`;
@@ -696,7 +701,7 @@ function healthStep(nextFn){
     chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCond('${c.id}')}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
   });
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFAlguna de estas le aplica?')}
+    ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFQu\u00E9 condiciones de salud tiene?')}
     <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply. This helps us find the right plan.':'Seleccione todo lo que aplique. Esto nos ayuda a encontrar el plan correcto.'}</p>
     <div class="cond-grid">${chips}</div>
     <div class="input-group" style="margin-top:4px">
@@ -718,10 +723,11 @@ function toggleCond(id){
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
 const PRI_OPTIONS=[
-  {id:'cost',icon:I.cost,icls:'bl',en:'Pay the least',es:'Pagar lo menos',enD:'Lowest monthly cost.',esD:'Menor costo mensual.'},
-  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'Doctor choice matters.',esD:'La elecci\u00F3n de doctor importa.'},
-  {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My meds covered.',esD:'Mis medicinas cubiertas.'},
-  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision, hearing, gym.',esD:'Dental, visi\u00F3n, audici\u00F3n, gimnasio.'}
+  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'My current doctor accepts the plan.',esD:'Que mi doctor acepte el plan.'},
+  {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
+  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision, hearing, gym.',esD:'Dental, visi\u00F3n, audici\u00F3n, gimnasio.'},
+  {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
+  {id:'medicaid',icon:I.shield,icls:'bl',en:'I have Medicaid / Medi-Cal',es:'Tengo Medicaid / Medi-Cal',enD:'Show me dual-eligible plans (DSNP).',esD:'Quiero ver planes para quienes tienen Medicaid / Medi-Cal.'}
 ];
 function priorityStep(nextFn){
   prog(68);
@@ -817,7 +823,7 @@ function mv_zipFrom(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Moving gives you a Special Enrollment Period. 63 days to change your plan.':'Mudarse le da un Periodo de Inscripci\u00F3n Especial. 63 d\u00EDas para cambiar su plan.','hl')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving FROM (zip code)':'Mud\u00E1ndose DE (c\u00F3digo postal)'}</label>
-    <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="90001" value="${D.zipFrom||''}" maxlength="5"
+    <input class="input-field" type="tel" inputmode="numeric" id="zipFrom" placeholder="" value="${D.zipFrom||''}" maxlength="5"
       oninput="D.zipFrom=this.value; if(this.value.length===5) setTimeout(()=>go(mv_zipTo),300)">
     </div>
     ${bp(t('next'),'go(mv_zipTo)')}`;
@@ -961,16 +967,20 @@ function classifyType(t){
   if(!t) return 'ma';
   if(t==='PDP') return 'pdp';
   if(t.includes('SNP')) return 'snp';
+  if(t==='Medigap'||t==='Supplement') return 'supp';
+  if(t.includes('DSNP')||t.includes('Medicaid')) return 'medicaid';
   return 'ma'; // HMO, PPO, HMO-POS = Medicare Advantage
 }
 function typeFilterBar(allPlans){
-  const counts={all:allPlans.length, ma:0, snp:0, pdp:0};
+  const counts={all:allPlans.length, ma:0, snp:0, pdp:0, supp:0, medicaid:0};
   allPlans.forEach(p=>{counts[classifyType(p.type)]++});
   const TYPES=[
-    {id:'all', en:'All Plans',           es:'Todos'},
-    {id:'ma',  en:'Medicare Advantage',  es:'Medicare Advantage'},
-    {id:'snp', en:'Special Needs',       es:'Necesidades Especiales'},
-    {id:'pdp', en:'Drug Plans (PDP)',    es:'Medicamentos (PDP)'},
+    {id:'all',      en:'All Plans',           es:'Todos'},
+    {id:'ma',       en:'Medicare Advantage',  es:'Medicare Advantage'},
+    {id:'supp',     en:'Supplement',          es:'Suplemento'},
+    {id:'snp',      en:'Special Needs',       es:'Necesidades Especiales'},
+    {id:'pdp',      en:'Drug Plans (PDP)',    es:'Medicamentos (PDP)'},
+    {id:'medicaid', en:'Medicaid',            es:'Medicaid'},
   ];
   return `<div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
     `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
