@@ -991,7 +991,7 @@ function typeFilterBar(allPlans){
     {id:'pdp',      en:'Drug Plans (PDP)',     es:'Medicamentos (PDP)'},
     {id:'medicaid', en:'Medicaid / Medi-Cal',  es:'Medicaid / Medi-Cal'},
   ];
-  return `<div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
+  return `<div class="filter-label" style="font-size:11px;color:#888;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Filter by plan type':'Filtrar por tipo de plan'}</div><div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
     `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
   ).join('')}</div>`;
 }
@@ -1014,7 +1014,7 @@ const SORT_MODES=[
   {id:'extra', en:'Added Benefits',  es:'Beneficios Adicionales'},
 ];
 function sortBar(){
-  return `<div class="sort-bar">${SORT_MODES.map(m=>
+  return `<div class="filter-label" style="font-size:11px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${SORT_MODES.map(m=>
     `<button class="sort-pill${_sortMode===m.id?' active':''}" onclick="applySortMode('${m.id}')">${m[lang]}</button>`
   ).join('')}</div>`;
 }
