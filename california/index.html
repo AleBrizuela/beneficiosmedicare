@@ -105,15 +105,32 @@ h1, h2, h3, h4 {
   height: 36px;
   flex-shrink: 0;
 }
-.lang-link {
-  font-size: 14px;
-  color: var(--soft-blue);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-  cursor: pointer;
+.lang-pill {
+  display: inline-flex;
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
-.lang-link:hover { color: var(--terra); }
+.lang-pill button {
+  background: none;
+  border: none;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+  transition: background 0.18s, color 0.18s;
+  line-height: 1;
+}
+.lang-pill button.lp-active {
+  background: var(--navy);
+  color: #fff;
+}
+.lang-pill button:not(.lp-active):hover {
+  background: var(--lt-blue);
+}
 
 /* ── HERO ── */
 .hero {
@@ -1259,10 +1276,10 @@ h1, h2, h3, h4 {
 
 <!-- ═══ HEADER ═══ -->
 <header class="site-header">
-  <a href="/" class="logo">
+  <a href="https://medicare-california.com" target="_top" class="logo">
     <svg class="logo-full" viewBox="0 0 370 48" width="278" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="Medicare California" role="img"><defs><linearGradient id="navShieldGradCA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGradCA)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#3D9BE9">California</tspan></text></svg>
   </a>
-  <a class="lang-link" onclick="toggleLang()" id="header-lang-link">Espa&ntilde;ol</a>
+  <div class="lang-pill" id="header-lang-pill"><button class="lp-active" onclick="setLang('en')">EN</button><button onclick="setLang('es')">ES</button></div>
 </header>
 
 <!-- Social proof moved inside widget (widget-v4.html) -->
@@ -1765,7 +1782,7 @@ h1, h2, h3, h4 {
     <div id="footer-terms" style="display:none;padding:16px 0;font-size:12px;color:#9ca3af;line-height:1.6;border-top:1px solid rgba(255,255,255,0.1);margin-top:12px">
       <strong style="color:#d1d5db">Terms of Service</strong><br>
       This website provides Medicare plan information and guidance from licensed insurance agents. Plan details, premiums, and benefits shown are based on publicly available CMS data and may change. We strive for accuracy but cannot guarantee all information is current. Our service is free to consumers. By using this site, you acknowledge that final plan details should be verified with the insurance carrier before enrollment. This site is not connected to or endorsed by the federal government or Medicare program.
-      <a class="lang-link" onclick="toggleLang()" id="footer-lang-link">Espa&ntilde;ol</a>
+      <div class="lang-pill" id="footer-lang-pill"><button class="lp-active" onclick="setLang('en')">EN</button><button onclick="setLang('es')">ES</button></div>
     </div>
   </div>
 </footer>
@@ -2000,8 +2017,9 @@ const I18N = {
   'footer-copy': { en:'\u00a9 2026 Medicare California. All rights reserved.', es:'\u00a9 2026 Medicare California. Todos los derechos reservados.' },
 };
 
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'es' : 'en';
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
   // Update all i18n elements
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
@@ -2009,10 +2027,12 @@ function toggleLang() {
       el.innerHTML = I18N[key][currentLang];
     }
   });
-  // Update lang links
-  var linkText = currentLang === 'en' ? 'Espa\u00f1ol' : 'English';
-  document.getElementById('header-lang-link').textContent = linkText;
-  document.getElementById('footer-lang-link').textContent = linkText;
+  // Update pill toggles
+  document.querySelectorAll('.lang-pill').forEach(function(pill) {
+    pill.querySelectorAll('button').forEach(function(btn) {
+      btn.classList.toggle('lp-active', btn.textContent === lang.toUpperCase());
+    });
+  });
   // Update html lang attribute
   document.documentElement.lang = currentLang;
   // Update widget if already loaded
@@ -2020,6 +2040,8 @@ function toggleLang() {
     frame.src = frame.src.replace(/lang=(en|es)/, 'lang=' + currentLang);
   }
 }
+// Keep toggleLang for backward compat
+function toggleLang() { setLang(currentLang === 'en' ? 'es' : 'en'); }
 
 // ── INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ──
 const observerOptions = {
