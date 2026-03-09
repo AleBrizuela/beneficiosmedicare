@@ -495,15 +495,19 @@ section { padding: 80px 24px; }
   background: white; border-radius: var(--radius); padding: 40px;
   box-shadow: var(--shadow); text-align: center;
 }
-/* team avatars now inline */
+/* team avatars */
 .team-photo-wrap { width:140px;height:140px;margin:0 auto 20px;position:relative; }
+.team-card-photo { width:88px;height:88px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block;border:3px solid var(--lt-blue);box-shadow:0 4px 12px rgba(12,35,64,0.12); }
 .team-card h3 { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .team-card .role { font-size: 14px; color: var(--teal); font-weight: 600; margin-bottom: 16px; }
+.team-card .team-bio { font-size: 15px; color: var(--gray); line-height: 1.7; margin-bottom: 12px; }
 .team-card p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .team-card .credentials {
   display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
   margin-top: 16px;
 }
+.team-photo-banner { border-radius:var(--radius);overflow:hidden;margin-bottom:32px;box-shadow:var(--shadow);max-width:520px;margin-left:auto;margin-right:auto; }
+.team-photo-banner img { width:100%;display:block;aspect-ratio:4/3;object-fit:cover;object-position:center 20%; }
 .credential-tag {
   background: var(--lt-gray); padding: 6px 14px; border-radius: 20px;
   font-size: 12px; font-weight: 600; color: var(--navy);
@@ -1149,52 +1153,38 @@ a[href^="tel"] { white-space: nowrap; }
   </section>
 
   <!-- Team Section -->
-  <section style="padding:60px 24px">
-    <div class="container">
-      
-      <div style="margin-bottom:48px;text-align:center">
-        <div class="section-label">OUR STORY</div>
-        <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,40px);font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:16px">The Family Behind Beneficios Medicare</h2>
-        <p style="font-size:17px;color:var(--gray);line-height:1.75;max-width:680px;margin:0 auto">We're a mother-daughter team of licensed Medicare agents. We started Beneficios Medicare because we saw how overwhelming this process can be - and we believe every family deserves clear, honest guidance.</p>
+  <section style="padding:56px 24px;max-width:900px;margin:0 auto">
+    <div class="section-label">WHO WE ARE</div>
+    <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">The Family Behind Your Guide</h2>
+    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">We're a licensed mother-daughter team. We help you find the right Medicare plan in English or Spanish.</p>
 
-      </div>
-<div class="team-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:56px">
+    <div class="team-photo-banner">
+      <img src="images/family-yosemite.jpg" alt="Alejandra and Susana at Yosemite" loading="lazy">
+    </div>
 
-        <!-- Susana - primary/highlighted -->
-        <div style="background:var(--lt-blue);border-radius:16px;padding:32px;border:2px solid var(--navy);order:-1">
-          <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px">
-            <div style="width:80px;height:80px;border-radius:50%;background:var(--navy);flex-shrink:0;overflow:hidden;border:3px solid white;box-shadow:0 4px 16px rgba(30,58,95,0.25)"><img src="images/susana-headshot.jpg" alt="Susana Marcos - Licensed Medicare Insurance Agent and Founder" style="width:100%;height:100%;object-fit:cover;object-position:center top"></div>
-            <div>
-              <div style="font-weight:800;font-size:18px;color:var(--navy)">Susana Marcos</div>
-              <div style="font-size:13px;color:var(--blue);font-weight:600;margin-top:2px">Founder · Licensed in 8 States</div>
-              <div style="font-size:12px;color:var(--slate);margin-top:2px">Susana Marcos LLC</div>
-            </div>
-          </div>
-          <p style="font-size:15px;color:var(--slate);line-height:1.7;margin-bottom:12px">Argentina-born lawyer and mother of six, Susana brings decades of family law experience to insurance. Her approach: stay obsessively current, and treat every client like family. Licensed in 8 states.</p>
-          <p style="font-size:14px;color:var(--navy);font-style:italic;font-weight:500">"Every person who calls us is someone's parent, someone's partner. We never forget that."</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <img class="team-card-photo" src="images/susana-headshot.jpg" alt="Susana Marcos" loading="lazy">
+        <h3>Susana Marcos</h3>
+        <div class="role">Founder · Licensed Agent</div>
+        <p class="team-bio">Argentina-born lawyer and mother of six. Susana brings decades of experience and treats every client like family. She stays obsessively up to date on every plan detail.</p>
+        <div class="credentials">
+          <span class="credential-tag">Licensed in 8 States</span>
+          <span class="credential-tag">AHIP Certified</span>
+          <span class="credential-tag">Bilingual</span>
         </div>
-
-        <!-- Alejandra -->
-        <div style="background:var(--lt-gray);border-radius:16px;padding:32px">
-          <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px">
-            <div style="width:80px;height:80px;border-radius:50%;background:var(--teal);flex-shrink:0;overflow:hidden;border:3px solid white;box-shadow:0 4px 16px rgba(13,148,136,0.18)"><img src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos - Licensed Medicare Benefits Advisor" style="width:100%;height:100%;object-fit:cover;object-position:center top"></div>
-            <div>
-              <div style="font-weight:800;font-size:18px;color:var(--navy)">Alejandra Brizuela Marcos</div>
-              <div style="font-size:13px;color:var(--teal);font-weight:600;margin-top:2px">Lead Agent · California Specialist</div>
-              <div style="font-size:12px;color:var(--slate);margin-top:2px">Susana Marcos LLC · CA Licensed</div>
-            </div>
-          </div>
-          <p style="font-size:15px;color:var(--slate);line-height:1.7;margin-bottom:12px">Alejandra's mission: make Medicare genuinely accessible for every family - especially Spanish-speaking communities and adult children helping aging parents.</p>
-          <p style="font-size:14px;color:var(--teal);font-style:italic;font-weight:500">"We pay attention to all the details our clients shouldn't have to. That's the job."</p>
+      </div>
+      <div class="team-card">
+        <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy">
+        <h3>Alejandra Brizuela Marcos</h3>
+        <div class="role">Licensed Agent</div>
+        <p class="team-bio">Alejandra's mission: make Medicare accessible for every family, especially Spanish-speaking communities and adult children helping aging parents.</p>
+        <div class="credentials">
+          <span class="credential-tag">Licensed in CA</span>
+          <span class="credential-tag">AHIP Certified</span>
+          <span class="credential-tag">Bilingual</span>
         </div>
-
       </div>
-
-      <!-- Yosemite team photo -->
-<div style="border-radius:16px;overflow:hidden;margin-top:40px;margin-bottom:0;box-shadow:0 8px 32px rgba(0,0,0,0.12);aspect-ratio:4/3;max-width:700px;margin-left:auto;margin-right:auto">
-        <img src="images/family-yosemite.jpg" alt="Alejandra and Susana at Yosemite" style="width:100%;height:100%;object-fit:cover;object-position:center 20%">
-      </div>
-      <p style="text-align:center;font-size:0.9rem;color:var(--slate);font-style:italic;margin-top:12px">Us hiking in Yosemite - we love the outdoors.</p>
     </div>
   </section>
 
