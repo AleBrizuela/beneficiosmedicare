@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
 Sitemap: https://beneficiosmedicare.com/sitemap.xml
+
+# AI search engine discovery
+# See https://llmstxt.org for the llms.txt standard
+LLMsTxt: https://beneficiosmedicare.com/llms.txt
