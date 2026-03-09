@@ -1026,7 +1026,7 @@ async function flowResults(){
   }
   const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`Top plans in your area${D.zip?' ('+D.zip+(D.county?', '+D.county:'')+')':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' ('+D.zip+(D.county?', '+D.county:'')+')':''}:`)}
+    ${bm(lang==='en'?`Top plans in your area${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${!D._zipValid && D.zip?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#c00">${lang==='en'?'We could not find plans for this ZIP code. Please check your ZIP and try again.':'No pudimos encontrar planes para este codigo postal. Por favor verifique e intente de nuevo.'}</div>`:''}
     ${typeFilterBar(scored)}
