@@ -1191,9 +1191,30 @@ function submitLead(type){
   D.lastName=parts.slice(1).join(' ')||'';
 
   const GS_URL='https://script.google.com/macros/s/AKfycbxgZUyi28Vg5ya__EAzfP3eR1BHmoRwzNva23evP2KzUfAlHtpIgihasIQi3-FFlU7k/exec';
-  fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
-    .then(()=>{_submitting=false;go(flowSuccess)})
-    .catch(()=>{_submitting=false;go(flowSuccess)});  // still show success since no-cors can't read response
+
+  // Primary: try Google Sheets with CORS
+  fetch(GS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
+    .then(r=>{
+      if(!r.ok) throw new Error('GS response '+r.status);
+      console.log('[Widget] Lead saved to Google Sheets');
+      _submitting=false;go(flowSuccess);
+    })
+    .catch(err=>{
+      console.warn('[Widget] Google Sheets failed:',err.message,'. Trying fallback...');
+      // Fallback: re-try with no-cors (send goes through even if response is opaque)
+      fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
+        .then(()=>console.log('[Widget] Fallback no-cors sent'))
+        .catch(()=>console.warn('[Widget] Fallback also failed'));
+      // Email fallback via FormSubmit
+      const fd=new FormData();
+      fd.append('name',D.fullName);fd.append('phone',D.phone);
+      fd.append('email',D.email||'N/A');fd.append('_subject','New Medicare Lead - '+D.source);
+      fd.append('message','Type: '+D.leadType+' | ZIP: '+(D.zip||'N/A')+' | County: '+(D.county||'N/A')+' | Age: '+(D.age||'N/A')+' | Conditions: '+(D.conditions||[]).join(', ')+' | Lang: '+D.lang+' | Question: '+(D.question||'N/A'));
+      fetch('https://formsubmit.co/ajax/brizuela@gmail.com',{method:'POST',body:fd})
+        .then(()=>console.log('[Widget] Email fallback sent'))
+        .catch(()=>console.warn('[Widget] Email fallback also failed'));
+      _submitting=false;go(flowSuccess);
+    });
 }
 
 
