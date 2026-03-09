@@ -548,7 +548,16 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
       <span>\u2713 ${lang==='en'?'Free guidance':'Gu\u00EDa gratis'}</span>
       <span>\u2713 ${lang==='en'?'Hablamos Espa\u00F1ol':'We speak English'}</span>
     </div>`;
-  document.getElementById(fieldId)?.focus();
+  const _zipEl=document.getElementById(fieldId);
+  if(_zipEl){
+    _zipEl.focus();
+    // If ZIP was pre-filled via URL param, auto-advance
+    if(_zipEl.value.length===5){
+      D.zip=_zipEl.value;
+      loadPlansForZip(_zipEl.value);
+      setTimeout(()=>go(_cb.zip),400);
+    }
+  }
 }
 function onZipInput(el, fieldId){
   el.value = el.value.replace(/\D/g,'').slice(0,5);
