@@ -1224,7 +1224,7 @@ h1, h2, h3, h4 {
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
   <h1 class="fade-up"><span data-i18n="hero-h1">Find the Right Medicare Plan</span><br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:#3D9BE9;display:block;margin-top:8px;" data-i18n="hero-h1-sub">for you or someone you love</span></h1>
-  <p class="hero-sub fade-up-d1" data-i18n="hero-sub">Honest guidance from a family team. No cost, no pressure.</p>
+  <p class="hero-sub fade-up-d1" data-i18n="hero-sub">Honest guidance from a family team.<br>No cost, no pressure.</p>
 
   <!-- ZIP FORM -->
   <div class="zip-card fade-up-d2" id="zip-card">
@@ -1290,9 +1290,9 @@ h1, h2, h3, h4 {
     <h2><span data-i18n="how-h2">Three simple steps to find your plan</span></h2>
     <div class="steps">
       <div class="step fade-in-up">
-        <div class="step-icon">
+        <div class="step-icon" style="background:#FFF0EB">
           <!-- Map Pin -->
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="currentColor"/><circle cx="12" cy="9" r="2.5" fill="none" stroke="currentColor"/></svg>
+          <svg viewBox="0 0 24 24" style="stroke:#C4704B"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="currentColor"/><circle cx="12" cy="9" r="2.5" fill="none" stroke="currentColor"/></svg>
           <span class="step-badge">1</span>
         </div>
         <h4 data-i18n="how-1-h">Enter Your ZIP</h4>
@@ -1300,20 +1300,20 @@ h1, h2, h3, h4 {
       </div>
       <div class="step-arrow">&rarr;</div>
       <div class="step fade-in-up">
-        <div class="step-icon">
+        <div class="step-icon" style="background:#EBF5F0">
           <!-- Clipboard Checklist -->
-          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" fill="none" stroke="currentColor"/><rect x="9" y="2" width="6" height="4" rx="1" fill="none" stroke="currentColor"/><path d="M9 14l2 2 4-4" fill="none" stroke="currentColor"/></svg>
-          <span class="step-badge">2</span>
+          <svg viewBox="0 0 24 24" style="stroke:#5A9E78"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" fill="none" stroke="currentColor"/><rect x="9" y="2" width="6" height="4" rx="1" fill="none" stroke="currentColor"/><path d="M9 14l2 2 4-4" fill="none" stroke="currentColor"/></svg>
+          <span class="step-badge" style="background:#5A9E78">2</span>
         </div>
         <h4 data-i18n="how-2-h">Answer a Few Questions</h4>
         <p>Tell us about your health needs, prescriptions, and budget so we can match you with the best options.</p>
       </div>
       <div class="step-arrow">&rarr;</div>
       <div class="step fade-in-up">
-        <div class="step-icon">
+        <div class="step-icon" style="background:#E8F0F6">
           <!-- Bar Chart / Compare -->
-          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1" fill="none" stroke="currentColor"/><rect x="10" y="6" width="4" height="15" rx="1" fill="none" stroke="currentColor"/><rect x="17" y="2" width="4" height="19" rx="1" fill="none" stroke="currentColor"/></svg>
-          <span class="step-badge">3</span>
+          <svg viewBox="0 0 24 24" style="stroke:#6B8FAD"><rect x="3" y="12" width="4" height="9" rx="1" fill="none" stroke="currentColor"/><rect x="10" y="6" width="4" height="15" rx="1" fill="none" stroke="currentColor"/><rect x="17" y="2" width="4" height="19" rx="1" fill="none" stroke="currentColor"/></svg>
+          <span class="step-badge" style="background:#6B8FAD">3</span>
         </div>
         <h4 data-i18n="how-3-h">See Your Options</h4>
         <p>Get a personalized comparison showing plans side-by-side. Our licensed agent will help you understand and decide.</p>
@@ -1326,19 +1326,19 @@ h1, h2, h3, h4 {
 <section class="trust-stats" id="trust-stats">
   <div class="trust-stats-inner">
     <div class="stat-item fade-in-up">
-      <h3>1,000+</h3>
+      <h3 class="counter" data-target="1000" data-suffix="+" data-prefix="">0</h3>
       <p>California Families Helped</p>
     </div>
     <div class="stat-item fade-in-up">
-      <h3>Since 2019</h3>
+      <h3 class="counter" data-target="2019" data-suffix="" data-prefix="Since " data-no-comma="true">Since 2019</h3>
       <p>Licensed Medicare Advisor</p>
     </div>
     <div class="stat-item fade-in-up">
-      <h3>100% AHIP</h3>
+      <h3 class="counter" data-target="100" data-suffix="% AHIP" data-prefix="">0</h3>
       <p>Certified Professionals</p>
     </div>
     <div class="stat-item fade-in-up">
-      <h3>$0 Cost</h3>
+      <h3 class="counter" data-target="0" data-suffix="" data-prefix="$" data-static="$0 Cost">$0 Cost</h3>
       <p>To Families, Always</p>
     </div>
   </div>
@@ -1801,7 +1801,7 @@ const I18N = {
   // Hero
   'hero-h1': { en:'Find the Right Medicare Plan', es:'Encuentre el Plan Medicare Correcto' },
   'hero-h1-sub': { en:'for you or someone you love', es:'para usted o alguien que quiere' },
-  'hero-sub': { en:'Honest guidance from a family team. No cost, no pressure.', es:'Asesor\u00eda honesta de un equipo familiar. Sin costo, sin presi\u00f3n.' },
+  'hero-sub': { en:'Honest guidance from a family team.<br>No cost, no pressure.', es:'Asesor\u00eda honesta de un equipo familiar.<br>Sin costo, sin presi\u00f3n.' },
   'zip-label': { en:'Enter your ZIP code to get started', es:'Ingrese su c\u00f3digo postal para comenzar' },
   'zip-btn': { en:'Get Started', es:'Comenzar' },
   'zip-error': { en:'Please enter a valid 5-digit California ZIP code.', es:'Ingrese un c\u00f3digo postal v\u00e1lido de 5 d\u00edgitos.' },
@@ -1942,6 +1942,38 @@ document.querySelectorAll('.fade-in-up').forEach(el => {
       ticking = true;
     }
   });
+})();
+
+// ── ANIMATED STAT COUNTERS ──
+(function(){
+  const counters = document.querySelectorAll('.counter');
+  let animated = false;
+  function animateCounters(){
+    if(animated) return;
+    animated = true;
+    counters.forEach(el => {
+      const staticVal = el.dataset.static;
+      if(staticVal){ el.textContent = staticVal; return; }
+      const target = +el.dataset.target;
+      const suffix = el.dataset.suffix || '';
+      const prefix = el.dataset.prefix || '';
+      const noComma = el.dataset.noComma === 'true';
+      const duration = 1600;
+      const step = Math.max(1, target / (duration / 16));
+      let current = 0;
+      const timer = setInterval(() => {
+        current += step;
+        if(current >= target){ current = target; clearInterval(timer); }
+        const num = Math.floor(current);
+        el.textContent = prefix + (noComma ? num : num.toLocaleString()) + suffix;
+      }, 16);
+    });
+  }
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) animateCounters(); });
+  }, {threshold: 0.3});
+  const statsSection = document.querySelector('.trust-stats');
+  if(statsSection) statsObs.observe(statsSection);
 })();
 </script>
 </body>
