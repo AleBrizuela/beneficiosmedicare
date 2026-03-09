@@ -72,9 +72,14 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: var(--dark); 
   text-transform: uppercase; font-weight: 700;
 }
 .carrier-logos {
-  display: flex; flex-wrap: nowrap; justify-content: center; gap: 12px;
-  overflow-x: auto;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: 28px 48px;
 }
+.carrier-logos img {
+  height: 28px; width: auto; opacity: 0.6;
+  transition: opacity 0.3s; filter: grayscale(30%);
+}
+.carrier-logos img:hover { opacity: 1; filter: grayscale(0%); }
 .carrier-pill {
   padding: 10px 22px; border-radius: 50px;
   border: 2.5px solid var(--brand-color, #D1D5DB);
@@ -1197,42 +1202,13 @@ a[href^="tel"] { white-space: nowrap; }
   <section class="carrier-trust-bar">
     <div class="container">
       <p class="trust-bar-label">Representamos a las principales aseguradoras</p>
-      <div class="carrier-logos" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:28px 40px">
-        <!-- Kaiser -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#E31837"/><path d="M9 8h4v6l5-6h5l-6 7 7 9h-5l-5-7-1 1v6H9V8z" fill="white"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">Kaiser Permanente</span>
-        </div>
-        <!-- SCAN -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#007B7B"/><text x="16" y="21" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="white">SCAN</text></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">SCAN Health</span>
-        </div>
-        <!-- Humana -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#007B40"/><circle cx="16" cy="14" r="5" fill="none" stroke="white" stroke-width="2"/><path d="M12 22c0-2.2 1.8-4 4-4s4 1.8 4 4" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">Humana</span>
-        </div>
-        <!-- Aetna -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#7B1FA2"/><path d="M16 8l8 16H8z" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="18" r="2" fill="white"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">Aetna</span>
-        </div>
-        <!-- UHC -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1565C0"/><circle cx="16" cy="16" r="8" fill="none" stroke="white" stroke-width="2"/><path d="M12 16h8M16 12v8" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">UnitedHealthcare</span>
-        </div>
-        <!-- Anthem -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#C62828"/><path d="M10 16c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2" fill="white"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">Anthem Blue Cross</span>
-        </div>
-        <!-- Blue Shield -->
-        <div class="carrier-logo-item" style="display:flex;align-items:center;gap:8px;opacity:0.7;transition:opacity .3s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
-          <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1565C0"/><path d="M16 6 L24 10 L24 18 C24 23 20 27 16 28 C12 27 8 23 8 18 L8 10 Z" fill="none" stroke="white" stroke-width="2"/><path d="M12 16l3 3 5-6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span style="font-size:14px;font-weight:600;color:#333">Blue Shield</span>
-        </div>
+      <div class="carrier-logos">
+        <img src="images/carriers/unitedhealthcare.svg" alt="UnitedHealthcare" loading="lazy">
+        <img src="images/carriers/humana.svg" alt="Humana" loading="lazy">
+        <img src="images/carriers/aetna.svg" alt="Aetna" loading="lazy">
+        <img src="images/carriers/bcbs.svg" alt="Blue Cross Blue Shield" loading="lazy">
+        <img src="images/carriers/kaiser.svg" alt="Kaiser Permanente" loading="lazy">
+        <img src="images/carriers/wellcare.svg" alt="Wellcare" loading="lazy">
       </div>
     </div>
   </section>
