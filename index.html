@@ -1438,7 +1438,7 @@ a[href^="tel"] { white-space: nowrap; }
         <a href="estados/illinois.html" style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:white;border-radius:10px;text-decoration:none;color:var(--navy);font-weight:600;border:1px solid #E0E0E0;transition:all 0.2s"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Illinois</a>
         <a href="estados/oklahoma.html" style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:white;border-radius:10px;text-decoration:none;color:var(--navy);font-weight:600;border:1px solid #E0E0E0;transition:all 0.2s"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Oklahoma</a>
       </div>
-      <div style="text-align:center"><a href="estados/" style="color:var(--green);font-weight:600;text-decoration:none;font-size:0.95rem">Ver todos los estados â</a></div>
+      <div style="text-align:center"><a href="estados/" style="color:var(--green);font-weight:600;text-decoration:none;font-size:0.95rem">Ver todos los estados →</a></div>
     </div>
   </section>
 
@@ -1803,7 +1803,7 @@ function getChecked(name) {
   return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c=>c.value);
 }
 
-// ââ ZIP â STATE AUTO-GUESS ââââââââââââââââââââââââââââââââ
+// ââ ZIP → STATE AUTO-GUESS ââââââââââââââââââââââââââââââââ
 function zipToState(zip) {
   if (!zip || zip.length < 3) return '';
   const p = parseInt(zip.substring(0, 3), 10);
