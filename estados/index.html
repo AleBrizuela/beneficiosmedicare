@@ -93,14 +93,14 @@
             list-style: none;
         }
 
-        .nav-links a {
+        .nav-links a:not(.nav-cta) {
             color: var(--dark);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
-        .nav-links a:hover { color: var(--green); }
+        .nav-links a:not(.nav-cta):hover { color: var(--green); }
 
         .cta-button {
             background-color: var(--navy);
