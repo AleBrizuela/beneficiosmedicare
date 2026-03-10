@@ -70,14 +70,14 @@
             list-style: none;
         }
 
-        .nav-links a {
+        .nav-links a:not(.nav-cta) {
             text-decoration: none;
             color: var(--gray);
             font-weight: 500;
             transition: color 0.3s;
         }
 
-        .nav-links a:hover { color: var(--green); }
+        .nav-links a:not(.nav-cta):hover { color: var(--green); }
 
         .nav-cta {
             background-color: var(--navy);
@@ -350,7 +350,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number">15+</div>
-                <div class="stat-label">Anos de Experiencia</div>
+                <div class="stat-label">Años de Experiencia</div>
             </div>
         </div>
     </section>
