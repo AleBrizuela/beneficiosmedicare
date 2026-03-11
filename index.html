@@ -1292,6 +1292,36 @@ a[href^="tel"] { white-space: nowrap; }
       </div>
     </div>
   </section>
+
+  <!-- Plan Types Section -->
+  <section style="padding:56px 24px;max-width:900px;margin:0 auto">
+    <div class="section-label">TIPOS DE PLANES</div>
+    <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">Conozca Sus Opciones de Medicare</h2>
+    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:620px;margin-left:auto;margin-right:auto">Existen varios tipos de planes de Medicare. Cada uno tiene diferente cobertura, costo y beneficios. Le ayudamos a entender cuál le conviene.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+        <div style="font-size:2.5rem;margin-bottom:12px">🏥</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Medicare Advantage</h3>
+        <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Cobertura integral que combina Parte A, B y usualmente D. Incluye medicinas y beneficios adicionales.</p>
+      </div>
+      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+        <div style="font-size:2.5rem;margin-bottom:12px">📋</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Planes Medigap</h3>
+        <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Seguro suplementario que cubre costos que Medicare Original no paga. Elija entre 10 planes estandarizados.</p>
+      </div>
+      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+        <div style="font-size:2.5rem;margin-bottom:12px">💊</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Parte D Medicinas</h3>
+        <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Cobertura de medicamentos recetados. Disponible como plan individual o incluido en Medicare Advantage.</p>
+      </div>
+      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+        <div style="font-size:2.5rem;margin-bottom:12px">👥</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Planes Especiales (SNP)</h3>
+        <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Cobertura a medida para personas con condiciones o circunstancias específicas. Disponible en ciertas regiones.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Team Section -->
   <section id="equipo" style="padding:56px 24px;max-width:900px;margin:0 auto">
     <div class="section-label">QUIÉNES SOMOS</div>
@@ -2673,7 +2703,7 @@ function updateWidgetProgress(pct) {
       const target = +el.dataset.target;
       const suffix = el.dataset.suffix || '';
       const duration = 1600;
-      const step = target / (duration / 16);
+      const step = Math.max(1, target / (duration / 16));
       let current = 0;
       const timer = setInterval(() => {
         current += step;
@@ -2682,11 +2712,22 @@ function updateWidgetProgress(pct) {
       }, 16);
     });
   }
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) animateCounters(); });
-  }, {threshold: 0.3});
   const statsBar = document.querySelector('.stats-bar');
-  if(statsBar) observer.observe(statsBar);
+  if(!statsBar) return;
+  // Fallback: if already in viewport on load, animate immediately
+  function checkVisible(){
+    const rect = statsBar.getBoundingClientRect();
+    if(rect.top < window.innerHeight && rect.bottom > 0) animateCounters();
+  }
+  if('IntersectionObserver' in window){
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) animateCounters(); });
+    }, {threshold: 0.2});
+    observer.observe(statsBar);
+  }
+  // Also check on load and scroll as fallback
+  window.addEventListener('load', checkVisible);
+  window.addEventListener('scroll', checkVisible, {passive:true});
 })();
 </script>
 
