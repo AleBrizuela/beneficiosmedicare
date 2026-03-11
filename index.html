@@ -1275,7 +1275,7 @@ a[href^="tel"] { white-space: nowrap; }
       <div class="steps-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative">
         <div style="text-align:center;padding:2.5rem 2rem">
           <div style="margin:0 auto 1rem;position:relative;width:88px;height:88px">
-            <span style="font-size:4rem;line-height:1">ð£ï¸</span>
+            <span style="font-size:4rem;line-height:1">🗣ï¸</span>
             <div style="position:absolute;top:-6px;right:-6px;width:30px;height:30px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(91,138,114,.3);border:2px solid white">
               <span style="font-size:0.75rem;font-weight:800;color:white;line-height:1">1</span>
             </div>
@@ -1285,7 +1285,7 @@ a[href^="tel"] { white-space: nowrap; }
         </div>
         <div style="text-align:center;padding:2.5rem 2rem;border-left:1px dashed #e2e8f0;border-right:1px dashed #e2e8f0">
           <div style="margin:0 auto 1rem;position:relative;width:88px;height:88px">
-            <span style="font-size:4rem;line-height:1">ð¬</span>
+            <span style="font-size:4rem;line-height:1">🔬</span>
             <div style="position:absolute;top:-6px;right:-6px;width:30px;height:30px;background:var(--slate);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(61,90,128,.3);border:2px solid white">
               <span style="font-size:0.75rem;font-weight:800;color:white;line-height:1">2</span>
             </div>
@@ -1295,7 +1295,7 @@ a[href^="tel"] { white-space: nowrap; }
         </div>
         <div style="text-align:center;padding:2.5rem 2rem">
           <div style="margin:0 auto 1rem;position:relative;width:88px;height:88px">
-            <span style="font-size:4rem;line-height:1">ð</span>
+            <span style="font-size:4rem;line-height:1">📋</span>
             <div style="position:absolute;top:-6px;right:-6px;width:30px;height:30px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(46,107,164,.3);border:2px solid white">
               <span style="font-size:0.75rem;font-weight:800;color:white;line-height:1">3</span>
             </div>
@@ -2371,12 +2371,12 @@ function renderContactForm(containerId, flow) {
   wPush(function(){ renderContactForm(containerId, flow); });
   const es = currentLang === 'es';
   const badges = {
-    'first-time': { icon:'ð¨', lbl_es:'Primera Inscripción Medicare', lbl_en:'First Time Medicare Enrollment' },
+    'first-time': { icon:'🚨', lbl_es:'Primera Inscripción Medicare', lbl_en:'First Time Medicare Enrollment' },
     'moving':     { icon:'â¡', lbl_es:'Mudanza - Cambio de Plan', lbl_en:'Moving - Plan Change' },
-    'better':     { icon:'ð', lbl_es:'Comparar / Mejorar Plan', lbl_en:'Compare / Improve Plan' },
-    'parent':     { icon:'ð', lbl_es:'Ayudando a un Familiar', lbl_en:'Helping a Family Member' },
+    'better':     { icon:'🔍', lbl_es:'Comparar / Mejorar Plan', lbl_en:'Compare / Improve Plan' },
+    'parent':     { icon:'💚', lbl_es:'Ayudando a un Familiar', lbl_en:'Helping a Family Member' },
   };
-  const b = badges[flow] || { icon:'ð', lbl_es:'Consulta', lbl_en:'Consultation' };
+  const b = badges[flow] || { icon:'📋', lbl_es:'Consulta', lbl_en:'Consultation' };
   document.getElementById(containerId).innerHTML = `
     <button class="widget-back" onclick="wBack()"><i class="fas fa-arrow-left"></i> ${es?'Atrás':'Back'}</button>
     <div style="background:var(--lt-green);border-radius:var(--radius);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px">
@@ -2505,8 +2505,8 @@ function submitWidget(flow) {
 }
 
 function buildEmailSubject() {
-  const fl={'first-time':'ð¨ PRIMERA INSCRIPCIÓN','moving':'â¡ MUDANZA','better':'COMPARAR PLAN','parent':'ð AYUDA FAMILIAR'};
-  return `${fl[wData.flow]||'ð NUEVO LEAD'}: ${wData.name}`;
+  const fl={'first-time':'🚨 PRIMERA INSCRIPCIÓN','moving':'â¡ MUDANZA','better':'COMPARAR PLAN','parent':'💚 AYUDA FAMILIAR'};
+  return `${fl[wData.flow]||'📋 NUEVO LEAD'}: ${wData.name}`;
 }
 
 function chronicLabel(v) {
