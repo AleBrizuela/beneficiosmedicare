@@ -1683,7 +1683,7 @@ function toggleFAQ(button) {
     button.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
   } else {
     answer.style.padding = '24px';
-    answer.offsetHeight; // force reflow so scrollHeight is accurate
+    getComputedStyle(answer).paddingTop; // force synchronous reflow
     answer.style.maxHeight = answer.scrollHeight + 'px';
     button.style.background = 'var(--green)';
     button.style.color = 'white';
