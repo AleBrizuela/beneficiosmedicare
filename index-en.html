@@ -1076,10 +1076,23 @@ a[href^="tel"] { white-space: nowrap; }
         <div style="order:-1">
           <h1 class="widget-hero-heading" style="font-family:'Open Sans',sans-serif;font-size:clamp(20px,5.2vw,34px);font-weight:800;color:#002147;text-align:center;margin-top:0;margin-bottom:4px;letter-spacing:-0.5px">Trusted Benefit Experts</h1>
           <p class="hero-subtitle" style="text-align:center;font-size:13px;color:#4A5568;margin-bottom:10px;font-weight:400">Professional guidance to choose your Medicare plan</p>
-                <div class="hero-widget" id="widget-anchor" style="padding:0;background:none;box-shadow:none;border:none">
-          <iframe id="widget-frame" src="widget-v4.html?lang=en&v=20260308b" style="width:100%;height:380px;border:none;border-radius:16px;display:block;overflow:hidden;transition:height .3s ease" scrolling="no" title="Medicare Plan Guide"></iframe>
-          <script>window.addEventListener('message',function(e){if(e.data&&e.data.type==='widget-resize'){document.getElementById('widget-frame').style.height=e.data.height+'px'}if(e.data&&e.data.type==='widget-scrolltop'){var a=document.getElementById('widget-anchor');if(a)a.scrollIntoView({behavior:'smooth',block:'start'})}});</script>
-        </div>
+                <!-- ZIP FORM (inline, crawlable by search engines and LLMs) -->
+          <div class="zip-card" id="zip-card" style="background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,121,107,0.15),0 2px 12px rgba(0,0,0,0.06);padding:32px 28px 28px;max-width:400px;margin:0 auto">
+            <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:#002147;margin-bottom:8px">Your ZIP code</label>
+            <div style="position:relative;margin-bottom:16px">
+              <input type="tel" inputmode="numeric" id="zip-input" placeholder="e.g. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:#002147;background:#E8F2FA;box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
+              <div id="zip-error" style="display:none;font-size:13px;color:#C0392B;margin-top:6px;text-align:center">Please enter a valid 5-digit ZIP code.</div>
+            </div>
+            <button id="zip-btn" onclick="handleZipSubmit()" style="width:100%;padding:16px 24px;background:#00897B;color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
+              <span>Get Started</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <!-- WIDGET (hidden until ZIP submitted) -->
+          <div class="hero-widget" id="widget-anchor" style="padding:0;background:none;box-shadow:none;border:none;display:none">
+            <iframe id="widget-frame" scrolling="no" title="Medicare Plan Guide" style="width:100%;border:none;border-radius:16px;display:block;overflow:hidden;transition:height .3s ease;min-height:500px;box-shadow:0 8px 40px rgba(0,121,107,0.15),0 2px 12px rgba(0,0,0,0.06)"></iframe>
+          </div>
         </div>
         <!-- Hero text on RIGHT (desktop) / BOTTOM (mobile) -->
         <div style="position:relative;z-index:2">
@@ -1450,8 +1463,9 @@ function toggleFAQ(button) {
 
   // Toggle current FAQ
   if (!isActive) {
-    answer.style.maxHeight = answer.scrollHeight + 'px';
     answer.style.padding = '24px';
+    answer.offsetHeight; // force reflow so scrollHeight includes new padding
+    answer.style.maxHeight = answer.scrollHeight + 'px';
     button.style.background = 'var(--green)';
     button.style.color = 'white';
     button.querySelector('.faq-icon').style.transform = 'rotate(180deg)';
@@ -1462,6 +1476,55 @@ function toggleFAQ(button) {
 window.addEventListener('scroll', () => {
   document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
 });
+
+
+// --- ZIP FORM LOGIC (EN) ---
+(function() {
+  var zipInput = document.getElementById('zip-input');
+  var zipError = document.getElementById('zip-error');
+  var zipCard  = document.getElementById('zip-card');
+  var widgetC  = document.getElementById('widget-anchor');
+  var frame    = document.getElementById('widget-frame');
+  var heroHeading = document.querySelector('.widget-hero-heading');
+
+  zipInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleZipSubmit();
+  });
+
+  zipInput.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+    zipError.style.display = 'none';
+  });
+
+  var submitted = false;
+  window.handleZipSubmit = function() {
+    if (submitted) return;
+    var zip = zipInput.value.trim();
+    if (!/^\d{5}$/.test(zip)) {
+      zipError.style.display = 'block';
+      zipInput.focus();
+      return;
+    }
+    submitted = true;
+
+    zipCard.style.display = 'none';
+    if (heroHeading) heroHeading.textContent = "Let\u2019s find your plan";
+
+    widgetC.style.display = 'block';
+    frame.src = 'widget-v4.html?lang=en&v=20260309b&zip=' + zip;
+  };
+
+  window.addEventListener('message', function(e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'widget-resize') {
+      frame.style.height = e.data.height + 'px';
+    }
+    if (e.data.type === 'widget-scrolltop') {
+      var a = widgetC || frame;
+      if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+})();
 
 // ═══════════════════════════════════════════════════════════
 // WIDGET SYSTEM - 4 Full Flows (Enhanced)

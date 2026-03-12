@@ -622,7 +622,7 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
     </div>`;
   const _zipEl=document.getElementById(fieldId);
   if(_zipEl){
-    _zipEl.focus();
+    _zipEl.focus({preventScroll:true});
     // If ZIP was pre-filled via URL param, auto-advance
     if(_zipEl.value.length===5){
       D.zip=_zipEl.value;
