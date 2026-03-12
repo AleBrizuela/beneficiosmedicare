@@ -1231,25 +1231,25 @@ a[href^="tel"] { white-space: nowrap; }
   <!-- HERO -->
   <section class="hero" id="hero" style="padding-top:40px;padding-bottom:48px">
     <div style="max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:2">
-      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(32px,5.5vw,42px);font-weight:800;color:var(--navy);line-height:1.15;margin-bottom:14px;letter-spacing:-0.5px">Expertos en Beneficios<br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:var(--green);display:block;margin-top:8px">de Medicare para su familia</span></h1>
+      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(28px,4.5vw,40px);font-weight:800;color:var(--navy);line-height:1.15;margin-bottom:14px;letter-spacing:-0.5px">Expertos en Beneficios<br><span style="font-size:0.6em;font-weight:300;font-style:italic;color:var(--green);display:block;margin-top:8px">de Medicare para su familia</span></h1>
       <p style="font-size:18px;color:var(--gray);max-width:440px;margin:0 auto 28px;line-height:1.6">Asesoría profesional y gratuita. Sin costo, sin presión.</p>
 
-      <div class="hero-widget" id="widget-anchor" style="padding:0;background:white;box-shadow:var(--shadow-lg);border:none;border-radius:20px;max-width:400px;margin:0 auto">
-        <iframe id="widget-frame" src="widget-v4.html?lang=es&v=20260309b" style="width:100%;height:280px;border:none;border-radius:16px;display:block;overflow:hidden;transition:height .3s ease" scrolling="no" title="Guía de Planes Medicare"></iframe>
-        <script>
-    // Auto-resize iframe (only accept messages from widget origin)
-    window.addEventListener('message', function(e) {
-      if (e.origin !== 'https://beneficiosmedicare.com') return;
-      if (!e.data || typeof e.data !== 'object') return;
-      if (e.data.type === 'widget-resize') {
-        document.getElementById('widget-frame').style.height = e.data.height + 'px';
-      }
-      if (e.data.type === 'widget-scrolltop') {
-        var a = document.getElementById('widget-anchor') || document.getElementById('widget-frame');
-        if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    });
-    </script>
+      <!-- ZIP FORM (inline, crawlable by search engines and LLMs) -->
+      <div class="zip-card" id="zip-card" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:32px 28px 28px;max-width:400px;margin:0 auto">
+        <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px">Su código postal</label>
+        <div style="position:relative;margin-bottom:16px">
+          <input type="tel" inputmode="numeric" id="zip-input" placeholder="ej. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
+          <div id="zip-error" style="display:none;font-size:13px;color:#C0392B;margin-top:6px;text-align:center">Ingrese un código postal válido de 5 dígitos.</div>
+        </div>
+        <button id="zip-btn" onclick="handleZipSubmit()" style="width:100%;padding:16px 24px;background:var(--green);color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
+          <span>Comenzar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- WIDGET (hidden until ZIP submitted) -->
+      <div id="widget-anchor" style="display:none;max-width:520px;margin:0 auto">
+        <iframe id="widget-frame" scrolling="no" title="Guía de Planes Medicare" style="width:100%;border:none;border-radius:var(--radius);box-shadow:var(--shadow-lg);display:block;overflow:hidden;transition:height .3s ease;min-height:500px"></iframe>
       </div>
 
       <!-- hero-checks removed: consolidated into widget inline + trust badge strip -->
@@ -1682,8 +1682,9 @@ function toggleFAQ(button) {
     button.style.color = 'var(--navy)';
     button.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
   } else {
-    answer.style.maxHeight = answer.scrollHeight + 'px';
     answer.style.padding = '24px';
+    answer.offsetHeight; // force reflow so scrollHeight is accurate
+    answer.style.maxHeight = answer.scrollHeight + 'px';
     button.style.background = 'var(--green)';
     button.style.color = 'white';
     button.querySelector('.faq-icon').style.transform = 'rotate(180deg)';
@@ -1694,6 +1695,64 @@ function toggleFAQ(button) {
 window.addEventListener('scroll', () => {
   document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
 });
+
+
+// --- ZIP FORM LOGIC ---
+(function() {
+  var zipInput = document.getElementById('zip-input');
+  var zipError = document.getElementById('zip-error');
+  var zipCard  = document.getElementById('zip-card');
+  var widgetC  = document.getElementById('widget-anchor');
+  var frame    = document.getElementById('widget-frame');
+  var heroEl   = document.getElementById('hero');
+
+  // Allow Enter key
+  zipInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleZipSubmit();
+  });
+
+  // Only allow digits
+  zipInput.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+    zipError.style.display = 'none';
+  });
+
+  var submitted = false;
+  window.handleZipSubmit = function() {
+    if (submitted) return;
+    var zip = zipInput.value.trim();
+    if (!/^\d{5}$/.test(zip)) {
+      zipError.style.display = 'block';
+      zipInput.focus();
+      return;
+    }
+    submitted = true;
+
+    // Hide ZIP card, show widget
+    zipCard.style.display = 'none';
+
+    // Update heading
+    heroEl.querySelector('h1').innerHTML = 'Encontremos su plan';
+
+    // Show widget container
+    widgetC.style.display = 'block';
+
+    // Load widget with zip param
+    frame.src = 'widget-v4.html?lang=es&v=20260309b&zip=' + zip;
+  };
+
+  // Auto-resize iframe
+  window.addEventListener('message', function(e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'widget-resize') {
+      frame.style.height = e.data.height + 'px';
+    }
+    if (e.data.type === 'widget-scrolltop') {
+      var a = widgetC || frame;
+      if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+})();
 
 // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // WIDGET SYSTEM - 4 Full Flows (Enhanced)
