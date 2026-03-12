@@ -45,7 +45,7 @@
   --hero-pb:  60px;   /* padding-bottom */
 
   /* ── Hero heading — edit this one line to resize ALL hero headings */
-  --hero-h-size: clamp(30px, 4vw, 52px);
+  --hero-h-size: clamp(20px, 4vw, 30px);
 }
 
 /* ── 2. LOGO & NAV ───────────────────────── */
