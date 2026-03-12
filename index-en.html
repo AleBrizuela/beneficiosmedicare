@@ -1463,9 +1463,15 @@ function toggleFAQ(button) {
 
   // Toggle current FAQ
   if (!isActive) {
+    // Temporarily remove constraints to measure true content height
+    answer.style.transition = 'none';
     answer.style.padding = '24px';
-    getComputedStyle(answer).paddingTop; // force synchronous reflow
-    answer.style.maxHeight = answer.scrollHeight + 'px';
+    answer.style.maxHeight = 'none';
+    var h = answer.scrollHeight;
+    answer.style.maxHeight = '0px';
+    answer.offsetHeight; // force reflow at 0
+    answer.style.transition = '';
+    answer.style.maxHeight = h + 'px';
     button.style.background = 'var(--green)';
     button.style.color = 'white';
     button.querySelector('.faq-icon').style.transform = 'rotate(180deg)';
