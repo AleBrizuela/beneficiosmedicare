@@ -639,9 +639,9 @@ input, select, textarea { font-size: 16px !important; }
   .cta-banner { padding: 40px 16px !important; }
 }
 
-/* iOS safe-area for sticky bar (notch/home bar) */
+/* iOS safe-área for sticky bar (notch/home bar) */
 .mobile-sticky-cta {
-  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+  padding-bottom: calc(12px + env(safe-área-inset-bottom, 0px)) !important;
 }
 
 /* Focus visible for keyboard/accessibility */
@@ -665,7 +665,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--green); }
   min-height: 52px;
 }
 
-/* Widget options: full-width tap area on mobile */
+/* Widget options: full-width tap área on mobile */
 @media (max-width: 768px) {
   .widget-opt { min-height: 70px; }
   .widget-container { padding: 24px 16px !important; }
@@ -816,6 +816,7 @@ a[href^="tel"] { white-space: nowrap; }
     <nav id="desktop-nav">
       <a href="index.html">Inicio</a>
       <a href="beneficios.html" class="active">Beneficios</a>
+      <a href="/blog/">Blog</a>
       <a href="contacto.html">Contáctenos</a>
 
       <div class="lang-pill"><button class="lp-active" onclick="goLang('es')" aria-label="Español">ES</button><button class="" onclick="goLang('en')" aria-label="English">EN</button></div>
@@ -828,6 +829,7 @@ a[href^="tel"] { white-space: nowrap; }
 <div class="mobile-nav" id="mobile-nav">
   <a href="index.html">Inicio</a>
   <a href="beneficios.html">Beneficios</a>
+  <a href="/blog/">Blog</a>
   <a href="contacto.html">Contáctenos</a>
 
   <div class="lang-pill"><button class="lp-active" onclick="goLang('es')" aria-label="Español">ES</button><button class="" onclick="goLang('en')" aria-label="English">EN</button></div>
@@ -1100,7 +1102,7 @@ a[href^="tel"] { white-space: nowrap; }
         <div class="service-card">
           <div class="service-card-icon" style="background:var(--navy)"><i class="fas fa-file-medical"></i></div>
           <h3>Medicare Advantage (Parte C)</h3>
-          <p>Planes todo-en-uno que incluyen hospital, doctor, y a veces vision, dental y medicinas. Muchos con prima de $0.</p>
+          <p>Planes todo-en-uno que incluyen hospital, doctor, y a veces visión, dental y medicinas. Muchos con prima de $0.</p>
         </div>
         <div class="service-card">
           <div class="service-card-icon" style="background:var(--green)"><i class="fas fa-pills"></i></div>
@@ -1110,7 +1112,7 @@ a[href^="tel"] { white-space: nowrap; }
         <div class="service-card">
           <div class="service-card-icon" style="background:var(--teal)"><i class="fas fa-shield-alt"></i></div>
           <h3>Medigap (Suplementario)</h3>
-          <p>Seguros que cubren lo que Medicare Original no paga: copagos, deducibles, y emergencias fuera del pais.</p>
+          <p>Seguros que cubren lo que Medicare Original no paga: copagos, deducibles, y emergencias fuera del país.</p>
         </div>
       </div>
     </div>
@@ -1698,7 +1700,7 @@ function bt_step2_self() {
     opt('Los costos son muy altos (prima, copagos, deducibles)','Costs are too high (premium, copays, deductibles)',"bt_issue('cost')") +
     opt('Mis médicos ya no están en la red del plan','My doctors are no longer in the plan network',"bt_issue('doctors')") +
     opt('Mis medicamentos cuestan demasiado con este plan','My medications cost too much with this plan',"bt_issue('drugs')") +
-    opt('Me falta cobertura dental, visión o auditiva','I am missing dental, vision, or hearing coverage',"bt_issue('extras')") +
+    opt('Me falta cobertura dental, visión o auditiva','I am missing dental, visión, or hearing coverage',"bt_issue('extras')") +
     opt('Recibí carta que dice que mi plan cambia o se cancela','I received a letter saying my plan is changing or cancelled',"bt_issue('cancelled')",'¡Actúa rápido!','Act fast!')
   );
 }
@@ -1721,7 +1723,7 @@ function bt_issue(i) {
   const es = currentLang === 'es';
   shell('flow-better','flow-better','fas fa-id-card','var(--teal)',
     '¿Ya tiene Medicare Parte A y Parte B?', 'Do you already have Medicare Part A and Part B?',
-    'Necesitamos confirmarlo para comparar las opciones correctas disponibles en su área.', 'We need to confirm this to compare the right options available in your area.',
+    'Necesitamos confirmarlo para comparar las opciones correctas disponibles en su área.', 'We need to confirm this to compare the right options available in your área.',
     partABQuestion() + nextBtn('Continuar','Continue','bt_step3_self()')
   );
 }
