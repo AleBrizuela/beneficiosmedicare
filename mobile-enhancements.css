@@ -40,8 +40,8 @@ section.hero {
     overflow: visible !important;
   }
   .hero h1 {
-    font-size: 40px !important;
-    line-height: 1.1 !important;
+    font-size: 24px !important;
+    line-height: 1.2 !important;
     font-weight: 800 !important;
     margin-bottom: 12px !important;
     white-space: normal !important;
