@@ -74,7 +74,7 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .ic.bl{background:var(--lt-blue)}.ic.gr{background:var(--lt-green)}.ic.mi{background:var(--lt-mint)}.ic.sg{background:var(--lt-mint)}
 .opt-card .tx h4{font-size:15px;font-weight:600;color:#202124;margin-bottom:2px}
 .opt-card .tx p{font-size:13px;color:#5f6368;line-height:1.45}
-.opt-card .bg{margin-left:auto;font-size:10px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
+.opt-card .bg{margin-left:auto;font-size:12px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
 .bg.st{background:#fef7e0;color:#b06000}.bg.ch{background:#e8f0fe;color:#1a73e8}
 .bg.co{background:#e6f4ea;color:#137333}.bg.le{background:#f3e8fd;color:#8430ce}
 
@@ -129,7 +129,7 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .plan-card{border:1.5px solid #dadce0;border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all .2s;position:relative;border-left:4px solid #dadce0}
 .plan-card:hover{box-shadow:0 1px 6px rgba(60,64,67,.1)}
 .plan-card.rec{border-color:var(--sage);background:#f8faf9;border-left-color:var(--sage)}
-.plan-label{position:absolute;top:-10px;right:10px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;letter-spacing:.02em}
+.plan-label{position:absolute;top:-10px;right:10px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:8px;letter-spacing:.02em}
 .plan-label.best-match{background:var(--sage);color:white}
 .plan-label.best-value{background:#1a73e8;color:white}
 .plan-label.most-benefits{background:#8430ce;color:white}
@@ -156,10 +156,10 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .type-pill{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border:1.5px solid #dadce0;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
 .type-pill:hover{border-color:var(--sage);color:var(--sage)}
 .type-pill.active{background:var(--sage);color:white;border-color:var(--sage)}
-.type-count{font-size:11px;font-weight:700;background:rgba(0,0,0,.08);padding:1px 6px;border-radius:10px}
+.type-count{font-size:12px;font-weight:700;background:rgba(0,0,0,.08);padding:1px 6px;border-radius:10px}
 .type-pill.active .type-count{background:rgba(255,255,255,.25)}
 .sort-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:0 2px}
-.sort-pill{padding:6px 10px;border:1.5px solid #dadce0;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
+.sort-pill{padding:6px 10px;border:1.5px solid #dadce0;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:var(--white);color:#5f6368;transition:all .15s;font-family:inherit;white-space:nowrap}
 .sort-pill:hover{border-color:var(--sage);color:var(--sage)}
 .sort-pill.active{background:var(--sage);color:white;border-color:var(--sage)}
 .compare-float{position:sticky;bottom:0;left:0;right:0;background:white;padding:10px 0 4px;border-top:1px solid #EDF2F7;margin-top:12px;text-align:center}
@@ -192,7 +192,7 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .success-links button{background:none;border:none;color:var(--navy);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px}
 
 /* ── FOOTER ── */
-.widget-footer{padding:8px 18px 10px;text-align:center;font-size:11px;color:var(--gray);line-height:1.45;border-top:1px solid #EDF2F7}
+.widget-footer{padding:8px 18px 10px;text-align:center;font-size:12px;color:var(--gray);line-height:1.45;border-top:1px solid #EDF2F7}
 .widget-footer a{color:var(--blue);text-decoration:none}
 
 /* ── TRUST BAR ── */
@@ -663,7 +663,7 @@ function dobStep(nextFn){
     <div class="input-group"><label>${lang==='en'?'Date of birth':'Fecha de nacimiento'}</label>
     <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="${lang==='en'?'MM / DD / YYYY':'MM / DD / AAAA'}" value="${existing}" maxlength="14"
       oninput="formatDob(this)">
-    <p style="font-size:11px;color:#999;margin-top:4px">${lang==='en'?'month / day / year':'mes / d\u00EDa / a\u00F1o'}</p>
+    <p style="font-size:12px;color:#999;margin-top:4px">${lang==='en'?'month / day / year':'mes / d\u00EDa / a\u00F1o'}</p>
     </div>
     ${bp(t('next'),'parseDob();go(_cb.dob)')}
     ${skip(lang==='en'?"I'd rather not say":'Prefiero no decir',"D.dob_month='';D.dob_day='';D.dob_year='';go(_cb.dob)")}`;
@@ -1076,7 +1076,7 @@ function typeFilterBar(allPlans){
     {id:'pdp',      en:'Drug Plans (PDP)',     es:'Medicamentos (PDP)'},
     {id:'medicaid', en:'Medicaid / Medi-Cal',  es:'Medicaid / Medi-Cal'},
   ];
-  return `<div class="filter-label" style="font-size:11px;color:#888;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Filter by plan type':'Filtrar por tipo de plan'}</div><div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
+  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Filter by plan type':'Filtrar por tipo de plan'}</div><div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
     `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
   ).join('')}</div>`;
 }
@@ -1099,7 +1099,7 @@ const SORT_MODES=[
   {id:'extra', en:'Added Benefits',  es:'Beneficios Adicionales'},
 ];
 function sortBar(){
-  return `<div class="filter-label" style="font-size:11px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${SORT_MODES.map(m=>
+  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${SORT_MODES.map(m=>
     `<button class="sort-pill${_sortMode===m.id?' active':''}" onclick="applySortMode('${m.id}')">${m[lang]}</button>`
   ).join('')}</div>`;
 }
@@ -1240,7 +1240,7 @@ function planEnroll(){
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir',"submitLead('enroll')")}
-    <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
+    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
       ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
     </p>`;
 }
@@ -1255,7 +1255,7 @@ function helpChoose(){
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
-    <p style="text-align:center;font-size:11px;color:var(--gray);margin-top:8px">
+    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
       ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
     </p>`;
 }
