@@ -1681,7 +1681,7 @@ function wPush(fn) { widgetHistory.push(fn); }
 // Navigation handled by href links
 // âââ LANGUAGE TOGGLE âââââââââââââââââââââââââââââââââââââ
 function goLang(lang) {
-  localStorage.setItem('beneficiosmedicare_lang', lang);
+  
   if (lang !== 'es') window.location.href = 'index-en.html';
 }
 function toggleLang() { goLang('en'); }

@@ -142,7 +142,7 @@
         </div>
     </footer>
 <script>
-function goLang(lang){localStorage.setItem('beneficiosmedicare_lang',lang);if(lang!=='es')window.location.href='/index-en.html';}
+function goLang(lang){if(lang!=='es')window.location.href='/index-en.html';}
 window.addEventListener('scroll',function(){document.getElementById('header').classList.toggle('scrolled',window.scrollY>10)});
 </script>
 </body>
