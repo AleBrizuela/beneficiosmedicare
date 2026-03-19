@@ -195,23 +195,23 @@
   /* ââ V6: UNIFIED TEAL (matches widget-v4) ââ */
   --navy: #002147;
   --green: #00897B;          /* Unified teal — matches widget */
-  --blue: #2E6BA4;
+  --blue: #1D72B8;
   --teal: #00897B;
   --mint: #B2DFDB;
   --lt-blue: #E8F2FA;
   --lt-green: #E0F2F1;
   --lt-mint: #EDF8F7;
-  --lt-gray: #F3F5F7;
-  --gray: #5A6577;
-  --dark: #1C2B3A;
+  --lt-gray: #F0F3F6;
+  --gray: #4A5568;
+  --dark: #1a202c;
   --white: #FFFFFF;
   --wa-green: #25D366;
   --sage: #00897B;           /* Matches widget --sage */
   --sage-dark: #00796B;      /* Matches widget --sage-dark */
   --slate: #3D5A80;
   --radius: 12px;
-  --shadow: 0 4px 24px rgba(30,58,95,0.10);
-  --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
+  --shadow: 0 4px 24px rgba(0,60,113,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,60,113,0.16);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -221,15 +221,15 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: var(--dark); 
 
 /* ââ CARRIER TRUST BAR âââââââââââââââââââââââââââââââââââââââ */
 .carrier-trust-bar {
-  padding: 44px 24px;
-  background: #F8FAFB;
+  padding: 40px 24px;
+  background: #F8FAFC;
   border-top: 1px solid rgba(30,58,95,0.08);
   border-bottom: 1px solid rgba(30,58,95,0.08);
 }
 .trust-bar-label {
-  text-align: center; font-size: 13px; color: var(--teal);
-  margin-bottom: 24px; letter-spacing: 0.12em;
-  text-transform: uppercase; font-weight: 700;
+  text-align: center; font-size: 13px; color: var(--gray);
+  margin-bottom: 28px; letter-spacing: 0.12em;
+  text-transform: uppercase; font-weight: 600;
 }
 .carrier-logos {
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
@@ -241,9 +241,9 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: var(--dark); 
 }
 .carrier-logos img:hover { opacity: 1; }
 .carrier-pill {
-  padding: 10px 22px; border-radius: 50px;
-  border: 2.5px solid var(--brand-color, #D1D5DB);
-  font-weight: 700; font-size: 15px;
+  padding: 11px 24px; border-radius: 32px;
+  border: 2px solid var(--brand-color, #D1D5DB);
+  font-weight: 700; font-size: 14px;
   font-family: 'Open Sans', sans-serif;
   background: white; color: var(--brand-color, #6B7280);
   transition: all 0.25s ease;
@@ -460,11 +460,11 @@ section { padding: 80px 24px; }
 .section-title {
   font-family: 'Open Sans', sans-serif; font-size: 40px;
   font-weight: 700; color: var(--navy); line-height: 1.2;
-  margin-bottom: 16px;
+  margin-bottom: 16px; text-align: center;
 }
 .section-subtitle {
   font-size: 18px; color: var(--gray); max-width: 600px;
-  line-height: 1.6;
+  line-height: 1.6; text-align: center; margin-left: auto; margin-right: auto;
 }
 
 /* ââ HERO ââââââââââââââââââââââââââââââââââââââââââââââââ */
@@ -537,7 +537,7 @@ section { padding: 80px 24px; }
 .widget-opt-text { display: flex; flex-direction: column; justify-content: flex-start; flex: 1; min-width: 0; }
 .widget-opt-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 .widget-opt-row p { flex: 1; margin: 0; }
-.widget-opt:hover { transform: translateY(-2px); border-color: #cbd5e0; }
+.widget-opt:hover { transform: translateX(4px); border-color: var(--green); }
 .widget-opt:nth-child(1):hover { box-shadow: inset 10px 0 0 0 var(--navy), 0 4px 12px rgba(0,0,0,0.08); background: #f8faff; }
 .widget-opt:nth-child(2):hover { box-shadow: inset 10px 0 0 0 var(--blue), 0 4px 12px rgba(0,0,0,0.08); background: #f5faff; }
 .widget-opt:nth-child(3):hover { box-shadow: inset 10px 0 0 0 var(--teal), 0 4px 12px rgba(0,0,0,0.08); background: #f0faf7; }
@@ -547,12 +547,12 @@ section { padding: 80px 24px; }
   display: flex; align-items: center; justify-content: center;
   font-size: 20px; color: white; flex-shrink: 0;
 }
-.widget-opt-text h4 { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.2; margin: 0; white-space: nowrap; }
-.widget-opt-text p { font-size: 17px; color: #3D4A5C; margin-top: 2px; margin-bottom: 0; }
+.widget-opt-text h4 { font-size: 17px; font-weight: 600; color: var(--navy); line-height: 1.2; margin: 0; white-space: nowrap; }
+.widget-opt-text p { font-size: 14px; color: #3D4A5C; margin-top: 2px; margin-bottom: 0; }
 .widget-opt-badge {
   padding: 5px 14px; border-radius: 20px;
   font-size: 13px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;
+  letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap; margin-left: auto;
 }
 .badge-urgent { background: #FEE2E2; color: #DC2626; }
 .badge-soon { background: #FEF3C7; color: #D97706; }
@@ -570,7 +570,7 @@ section { padding: 80px 24px; }
 }
 .stat-item h3 {
   font-family: 'Open Sans', sans-serif; font-size: 44px;
-  font-weight: 700; color: #A8C8E8;
+  font-weight: 700; color: var(--mint);
 }
 .stat-item p { font-size: 14px; color: var(--lt-blue); margin-top: 4px; }
 
@@ -595,20 +595,16 @@ section { padding: 80px 24px; }
 
 /* ââ CTA BANNER ââââââââââââââââââââââââââââââââââââââââââ */
 .cta-banner {
-  background: linear-gradient(135deg, #1E3A5F 0%, #3D5A80 50%, #00897B 100%);
+  background: var(--lt-blue);
   padding: 60px 24px; text-align: center;
 }
 .cta-banner h2 {
   font-family: 'Open Sans', sans-serif; font-size: 36px;
-  color: white; margin-bottom: 16px;
+  color: var(--navy); margin-bottom: 16px;
 }
-.cta-banner p { font-size: 18px; color: var(--lt-blue); margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center; }
+.cta-banner p { font-size: 18px; color: var(--gray); margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center; }
 .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-/* CTA banner dark-bg button overrides */
-.cta-banner .btn-primary { background: #B8D4C8; color: #1E3A5F; border-color: #B8D4C8; font-weight: 700; }
-.cta-banner .btn-primary:hover { background: #fff; color: #1E3A5F; border-color: #fff; }
-.cta-banner .btn-secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
-.cta-banner .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.6); }
+/* CTA banner button styles */
 
 /* ââ ABOUT PAGE ââââââââââââââââââââââââââââââââââââââââââ */
 .about-hero {
@@ -669,7 +665,7 @@ section { padding: 80px 24px; }
   flex: 1; height: 5px; border-radius: 3px;
   background: var(--lt-gray);
 }
-.widget-progress-dot.filled { background: var(--blue); }
+.widget-progress-dot.filled { background: var(--green); }
 .widget-back {
   background: var(--lt-blue); border: 2px solid var(--blue);
   color: var(--blue); font-size: 14px; font-weight: 600;
