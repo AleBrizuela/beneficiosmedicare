@@ -439,6 +439,8 @@ function switchLang(lang) {
     b.classList.toggle('lp-active', b.textContent.trim() === (lang === 'es' ? 'ES' : 'EN'));
   });
 }
+// Default to Spanish on load (matching beneficiosmedicare.com)
+switchLang('es');
 
 // ── Form submission → Google Sheets ──
 // SETUP: Replace GOOGLE_SCRIPT_URL with your Google Apps Script web app URL.
