@@ -5,6 +5,7 @@
  * Edit this file to update styles site-wide.
  *
  * SECTIONS:
+ *   0. View Transitions (cross-page smooth nav)
  *   1. CSS Variables  (colors, fonts, spacing)
  *   2. Logo & Nav
  *   3. Buttons
@@ -13,6 +14,40 @@
  *   6. Cards & Badges
  * ============================================
  */
+
+/* ── 0. VIEW TRANSITIONS ────────────────────
+   Keeps header/footer stable across page navigations.
+   Falls back gracefully in older browsers.
+   ─────────────────────────────────────────── */
+@view-transition {
+  navigation: auto;
+}
+
+/* Tag persistent elements so the browser holds them in place */
+.header  { view-transition-name: site-header; }
+.wa-float { view-transition-name: wa-float; }
+footer   { view-transition-name: site-footer; }
+
+/* Instant crossfade for persistent elements (no slide/morph) */
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-old(site-footer),
+::view-transition-new(site-footer),
+::view-transition-old(wa-float),
+::view-transition-new(wa-float) {
+  animation-duration: 0s;
+}
+
+/* Smooth fade for the page content area */
+::view-transition-old(root) {
+  animation: fade-out 0.15s ease-out;
+}
+::view-transition-new(root) {
+  animation: fade-in 0.15s ease-in;
+}
+
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes fade-in  { from { opacity: 0; } to { opacity: 1; } }
 
 /* ── 1. CSS VARIABLES ─────────────────────── */
 :root {
