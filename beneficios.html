@@ -804,16 +804,9 @@ a[href^="tel"] { white-space: nowrap; }
 
 
 <body>
-<div id="cms-disclaimer" style="background:#ffffff;color:#9CA3AF;text-align:center;padding:4px 16px;font-size:12px;line-height:1.4;font-weight:400;position:relative;z-index:1100">
-  Sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
+<div id="cms-disclaimer">
+  Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
 </div>
-<style>
-  .header { transition: top 0.25s ease; }
-  .header.disclaimer-gone { top: 0 !important; }
-  #cms-disclaimer.hidden { transform: translateY(-100%); }
-  @media(max-width:768px){ #cms-disclaimer { font-size:12px; padding:3px 12px; } }
-</style>
-<script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function setTop(){h.style.top=d.offsetHeight+'px';}setTop();window.addEventListener('resize',setTop);function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone');setTop();}}window.addEventListener('scroll',c,{passive:true});c()})</script>
 
 <header class="header" id="header">
   <div class="header-inner">

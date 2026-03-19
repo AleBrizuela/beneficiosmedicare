@@ -754,15 +754,9 @@ a[href^="tel"] { white-space: nowrap; }
 </head>
 
 <body>
-<div id="cms-disclaimer" style="background:#ffffff;color:#9CA3AF;text-align:center;padding:4px 16px;font-size:12px;line-height:1.4;font-weight:400;position:relative;z-index:1100">
-  Site is not part of the federal government or Medicare. For official information visit Medicare or call 1-800-Medicare.
+<div id="cms-disclaimer">
+  This site is not part of the federal government or the Medicare program. For official information visit Medicare.gov or call 1-800-Medicare.
 </div>
-<style>
-  .header { transition: top 0.25s ease; }
-  .header.disclaimer-gone { top: 0 !important; }
-  @media(max-width:768px){ #cms-disclaimer { font-size:12px; padding:3px 12px; } }
-</style>
-<script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function setTop(){h.style.top=d.offsetHeight+'px';}setTop();window.addEventListener('resize',setTop);function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone');setTop();}}window.addEventListener('scroll',c,{passive:true});c()})</script>
 <header class="header" id="header">
   <div class="header-inner">
     <a href="index-en.html" class="logo"><svg class="logo-full" viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
