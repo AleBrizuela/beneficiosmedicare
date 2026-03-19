@@ -6,8 +6,6 @@
 <title>Carreras | Beneficios Medicare</title>
 <meta name="description" content="Join Beneficios Medicare. Commission-based Medicare agent roles. We provide leads. You work remotely. Bilingual preferred.">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="beneficiosmedicare-brand.css?v=20260319">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -20,7 +18,8 @@
 }
 body{font-family:var(--font);color:var(--body);background:var(--bg);font-size:16px;line-height:1.65}
 
-/* ── Disclaimer — now styled via beneficiosmedicare-brand.css ── */
+/* ── Disclaimer (same as main site) ── */
+.disc{background:#fff;text-align:center;font-size:11px;padding:6px 16px;color:#9CA3AF;border-bottom:1px solid #f0f0f0}
 
 /* ── Header (same as main site) ── */
 .header{position:relative;z-index:1000;background:rgba(255,255,255,.97)}
@@ -94,7 +93,16 @@ nav a:hover,nav a.active{color:var(--navy);background:var(--hero-from)}
 .sbtn{background:var(--teal);color:#fff;padding:12px 32px;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .sbtn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,137,123,.3)}
 
-/* Footer is now inline-styled to match main site exactly */
+/* ── Footer (matches main site) ── */
+footer{background:var(--navy);color:#E8F2FA;padding:28px 24px 20px;text-align:center}
+.ftr{max-width:1100px;margin:0 auto}
+.ftr-brand{font-size:15px;font-weight:700;margin-bottom:10px}
+.ftr-brand span{color:var(--teal-light)}
+.ftr-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-bottom:10px}
+.ftr-row a{color:#E8F2FA;text-decoration:none;font-size:13px;opacity:.7;transition:opacity .2s;display:flex;align-items:center;gap:4px}
+.ftr-row a:hover{opacity:1}
+.ftr-hrs{font-size:12px;opacity:.4;margin-bottom:8px}
+.ftr-legal{font-size:10px;opacity:.35;max-width:600px;margin:0 auto;line-height:1.5}
 
 /* ── Bilingual ── */
 body .es{display:none}
@@ -114,7 +122,7 @@ body.es .jc-detail .fit-item.en{display:none}body.es .jc-detail .fit-item.es{dis
 <body>
 
 <!-- Disclaimer -->
-<div id="cms-disclaimer">
+<div class="disc">
   <span class="en">This site is not part of the federal government or the Medicare program. For official information visit Medicare.gov or call 1-800-Medicare.</span>
   <span class="es">Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.</span>
 </div>
@@ -402,25 +410,25 @@ body.es .jc-detail .fit-item.en{display:none}body.es .jc-detail .fit-item.es{dis
 </section>
 
 <!-- Footer (matches main site + Blog & Careers in footer links) -->
-<footer style="background:#002147;padding:20px 24px 16px">
-  <div style="max-width:960px;margin:0 auto;text-align:center">
-    <div style="font-family:'Open Sans',sans-serif;font-size:18px;color:#B2DFDB;margin-bottom:10px">Susana Marcos LLC</div>
-    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:6px;font-size:13px">
-      <a href="/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-home"></i> <span class="en">Home</span><span class="es">Inicio</span></a>
-      <a href="/beneficios.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-heart"></i> <span class="en">Benefits</span><span class="es">Beneficios</span></a>
-      <a href="/estados/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-map-marked-alt"></i> <span class="en">States</span><span class="es">Estados</span></a>
-      <a href="/blog/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-pen"></i> Blog</a>
-      <a href="/careers.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-briefcase"></i> <span class="en">Careers</span><span class="es">Carreras</span></a>
+<footer>
+  <div class="ftr">
+    <div class="ftr-brand">Susana Marcos <span>LLC</span></div>
+    <div class="ftr-row">
+      <a href="https://beneficiosmedicare.com">Inicio</a>
+      <a href="https://beneficiosmedicare.com/beneficios.html">Beneficios</a>
+      <a href="https://beneficiosmedicare.com/estados/">Estados</a>
+      <a href="https://beneficiosmedicare.com/blog/">Blog</a>
+      <a href="careers.html"><span class="en">Careers</span><span class="es">Carreras</span></a>
     </div>
-    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:13px">
-      <a href="tel:+13105979142" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-phone-alt"></i> <span class="en">Call</span><span class="es">Llame</span></a>
-      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-video"></i> <span class="en">Schedule Virtual Appointment</span><span class="es">Agende Cita Virtual</span></a>
-      <a href="mailto:alejamedicare@gmail.com" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-envelope"></i> Email</a>
-      <a href="https://wa.me/13105979142" target="_blank" style="color:#E8F2FA;text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <div class="ftr-row">
+      <a href="tel:+13105979142"><span class="en">Call</span><span class="es">Llame</span></a>
+      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7"><span class="en">Virtual Appointment</span><span class="es">Agende Cita Virtual</span></a>
+      <a href="mailto:alejamedicare@gmail.com">Email</a>
+      <a href="https://wa.me/13105979142">WhatsApp</a>
     </div>
-    <p style="font-size:12px;margin-bottom:8px"><a href="/privacidad.html" style="color:rgba(255,255,255,0.5);text-decoration:none"><i class="fas fa-lock" style="font-size:12px"></i> <span class="en">Privacy Policy</span><span class="es">Política de Privacidad</span></a></p>
-    <p class="en" style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">We do not offer every plan available in your area. Visit Medicare.gov or call 1-800-Medicare. Site is not part of the federal government or Medicare.</p>
-    <p class="es" style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">No ofrecemos todos los planes disponibles en su área. Visite Medicare.gov o llame al 1-800-Medicare. Sitio no es parte del gobierno federal ni del programa de Medicare.</p>
+    <!-- no office hours: we're AI-powered 24/7 -->
+    <p class="ftr-legal en">Not affiliated with or endorsed by the U.S. government or Medicare. We do not offer every plan available in your area. Visit Medicare.gov or call 1-800-Medicare.</p>
+    <p class="ftr-legal es">No afiliado ni respaldado por el gobierno de EE.UU. ni Medicare. No ofrecemos todos los planes disponibles en su área. Visite Medicare.gov o llame al 1-800-Medicare.</p>
   </div>
 </footer>
 
@@ -490,5 +498,6 @@ window.addEventListener('scroll', function() {
   document.querySelector('.header').classList.toggle('scrolled', window.scrollY > 0);
 });
 </script>
+<script src="/shared-footer.js"></script>
 </body>
 </html>
