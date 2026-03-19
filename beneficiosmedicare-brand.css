@@ -96,12 +96,14 @@ footer   { view-transition-name: site-footer; }
 }
 .logo span { color: #26A69A; }
 
-/* Active nav indicator — subtle teal underline */
-nav a.active {
+/* Active nav indicator — subtle teal underline (header nav only) */
+#desktop-nav a.active,
+#blog-desktop-nav a.active {
   color: var(--navy) !important;
   position: relative;
 }
-nav a.active::after {
+#desktop-nav a.active::after,
+#blog-desktop-nav a.active::after {
   content: '';
   position: absolute;
   bottom: -2px;
