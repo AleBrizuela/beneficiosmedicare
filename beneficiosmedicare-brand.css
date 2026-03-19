@@ -24,26 +24,29 @@
 }
 
 /* Tag persistent elements so the browser holds them in place */
+#cms-disclaimer { view-transition-name: cms-disc; }
 .header  { view-transition-name: site-header; }
 .wa-float { view-transition-name: wa-float; }
 footer   { view-transition-name: site-footer; }
 
-/* Instant crossfade for persistent elements (no slide/morph) */
+/* Instant swap for persistent elements (no animation at all) */
+::view-transition-old(cms-disc),
+::view-transition-new(cms-disc),
 ::view-transition-old(site-header),
 ::view-transition-new(site-header),
 ::view-transition-old(site-footer),
 ::view-transition-new(site-footer),
 ::view-transition-old(wa-float),
 ::view-transition-new(wa-float) {
-  animation-duration: 0s;
+  animation: none;
 }
 
-/* Smooth fade for the page content area */
+/* Fast crossfade for the page content */
 ::view-transition-old(root) {
-  animation: fade-out 0.15s ease-out;
+  animation: fade-out 80ms ease-out;
 }
 ::view-transition-new(root) {
-  animation: fade-in 0.15s ease-in;
+  animation: fade-in 80ms ease-in;
 }
 
 @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
@@ -83,6 +86,23 @@ footer   { view-transition-name: site-footer; }
   --hero-h-size: clamp(20px, 4vw, 30px);
 }
 
+/* ── 1b. CMS DISCLAIMER BAR ──────────────── */
+#cms-disclaimer {
+  background: #fff;
+  text-align: center;
+  font-size: 11px;
+  padding: 6px 16px;
+  color: #9CA3AF;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 1.4;
+  font-weight: 400;
+  position: relative;
+  z-index: 1100;
+}
+@media (max-width: 768px) {
+  #cms-disclaimer { font-size: 10px; padding: 4px 12px; }
+}
+
 /* ── 2. LOGO & NAV ───────────────────────── */
 .logo {
   display: inline-flex;
@@ -95,6 +115,24 @@ footer   { view-transition-name: site-footer; }
   text-decoration: none;
 }
 .logo span { color: #26A69A; }
+
+/* Active nav indicator — subtle teal underline (header nav only) */
+#desktop-nav a.active,
+#blog-desktop-nav a.active {
+  color: var(--navy) !important;
+  position: relative;
+}
+#desktop-nav a.active::after,
+#blog-desktop-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 14px;
+  right: 14px;
+  height: 2.5px;
+  background: var(--green);
+  border-radius: 2px;
+}
 
 /* The favicon icon inside the logo */
 .logo-icon {
