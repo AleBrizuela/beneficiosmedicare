@@ -22,14 +22,16 @@ body{font-family:var(--font);color:var(--body);background:var(--bg);font-size:16
 .disc{background:#f3f5f7;text-align:center;font-size:11px;padding:6px 16px;color:#5a6a7a;border-bottom:1px solid #e8ecf0}
 
 /* ── Header (same as main site) ── */
-header{background:rgba(255,255,255,.97);padding:14px 24px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,0,0,.06)}
-.hdr{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-nav{display:flex;align-items:center;gap:24px}
-nav a{font-size:15px;font-weight:600;color:var(--navy);text-decoration:none;transition:color .2s}
-nav a:hover,nav a.on{color:var(--teal)}
-.lt{display:flex;background:#edf0f3;border-radius:8px;overflow:hidden;margin-left:8px}
-.lb{border:none;background:transparent;padding:7px 14px;font-family:var(--font);font-size:13px;font-weight:600;color:#5a6a7a;cursor:pointer;transition:all .2s}
-.lb.on{background:var(--teal);color:#fff;border-radius:8px}
+.header{position:relative;z-index:1000;background:rgba(255,255,255,.97)}
+.header.scrolled{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:70px}
+nav{display:flex;align-items:center;gap:8px}
+nav a{text-decoration:none;font-size:14px;font-weight:500;color:#5a6a7a;padding:8px 14px;border-radius:8px;transition:.2s}
+nav a:hover,nav a.active{color:var(--navy);background:var(--hero-from)}
+.lang-pill{display:inline-flex;border:2px solid var(--navy);border-radius:999px;overflow:hidden;margin-left:8px;flex-shrink:0}
+.lang-pill button{background:none;border:none;padding:5px 14px;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--navy);letter-spacing:.04em;transition:background .18s,color .18s;line-height:1}
+.lang-pill button.lp-active{background:var(--navy);color:#fff}
+.lang-pill button:not(.lp-active):hover{background:var(--hero-from)}
 .mob{display:none;background:none;border:none;cursor:pointer;padding:8px}
 .mob svg{width:24px;height:24px;stroke:var(--navy);fill:none;stroke-width:2}
 
@@ -125,9 +127,8 @@ body.es .jc-detail .fit-item.en{display:none}body.es .jc-detail .fit-item.es{dis
   <span class="es">Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.</span>
 </div>
 
-<!-- Header (same nav as main site, NO careers in top nav) -->
-<header>
-  <div class="hdr">
+<header class="header">
+  <div class="header-inner">
     <a href="https://beneficiosmedicare.com">
       <svg viewBox="0 0 380 48" width="220" height="28" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs>
@@ -140,10 +141,7 @@ body.es .jc-detail .fit-item.en{display:none}body.es .jc-detail .fit-item.es{dis
       <a href="https://beneficiosmedicare.com">Inicio</a>
       <a href="https://beneficiosmedicare.com/beneficios.html">Beneficios</a>
       <a href="https://beneficiosmedicare.com/contacto.html"><span class="en">Contact</span><span class="es">Contáctenos</span></a>
-      <div class="lt">
-        <button class="lb" data-l="es">ES</button>
-        <button class="lb on" data-l="en">EN</button>
-      </div>
+      <div class="lang-pill"><button class="lp-active" onclick="switchLang('es')" aria-label="Español">ES</button><button onclick="switchLang('en')" aria-label="English">EN</button></div>
     </nav>
     <button class="mob" onclick="document.getElementById('mn').classList.toggle('open')">
       <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -436,13 +434,12 @@ body.es .jc-detail .fit-item.en{display:none}body.es .jc-detail .fit-item.es{dis
 </footer>
 
 <script>
-(function(){
-  // Language toggle
-  document.querySelectorAll('.lb').forEach(b=>b.addEventListener('click',function(){
-    document.body.classList.toggle('es',this.dataset.l==='es');
-    document.querySelectorAll('.lb').forEach(x=>x.classList.toggle('on',x.dataset.l===this.dataset.l));
-  }));
-})();
+function switchLang(lang) {
+  document.body.classList.toggle('es', lang === 'es');
+  document.querySelectorAll('.lang-pill button').forEach(function(b) {
+    b.classList.toggle('lp-active', b.textContent.trim() === (lang === 'es' ? 'ES' : 'EN'));
+  });
+}
 
 // ── Form submission → Google Sheets ──
 // SETUP: Replace GOOGLE_SCRIPT_URL with your Google Apps Script web app URL.
@@ -494,6 +491,11 @@ function submitForm(e) {
   });
   return false;
 }
+
+// Header scroll shadow
+window.addEventListener('scroll', function() {
+  document.querySelector('.header').classList.toggle('scrolled', window.scrollY > 0);
+});
 </script>
 </body>
 </html>
