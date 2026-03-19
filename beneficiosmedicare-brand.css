@@ -24,26 +24,29 @@
 }
 
 /* Tag persistent elements so the browser holds them in place */
+#cms-disclaimer { view-transition-name: cms-disc; }
 .header  { view-transition-name: site-header; }
 .wa-float { view-transition-name: wa-float; }
 footer   { view-transition-name: site-footer; }
 
-/* Instant crossfade for persistent elements (no slide/morph) */
+/* Instant swap for persistent elements (no animation at all) */
+::view-transition-old(cms-disc),
+::view-transition-new(cms-disc),
 ::view-transition-old(site-header),
 ::view-transition-new(site-header),
 ::view-transition-old(site-footer),
 ::view-transition-new(site-footer),
 ::view-transition-old(wa-float),
 ::view-transition-new(wa-float) {
-  animation-duration: 0s;
+  animation: none;
 }
 
-/* Smooth fade for the page content area */
+/* Fast crossfade for the page content */
 ::view-transition-old(root) {
-  animation: fade-out 0.15s ease-out;
+  animation: fade-out 80ms ease-out;
 }
 ::view-transition-new(root) {
-  animation: fade-in 0.15s ease-in;
+  animation: fade-in 80ms ease-in;
 }
 
 @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
