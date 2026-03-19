@@ -96,6 +96,22 @@ footer   { view-transition-name: site-footer; }
 }
 .logo span { color: #26A69A; }
 
+/* Active nav indicator — subtle teal underline */
+nav a.active {
+  color: var(--navy) !important;
+  position: relative;
+}
+nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 14px;
+  right: 14px;
+  height: 2.5px;
+  background: var(--green);
+  border-radius: 2px;
+}
+
 /* The favicon icon inside the logo */
 .logo-icon {
   height: 36px;
