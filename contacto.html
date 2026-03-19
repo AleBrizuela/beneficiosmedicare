@@ -39,12 +39,12 @@
 {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Susana Marcos LLC","description":"Bilingual Medicare insurance agency. Independent brokers comparing top carriers at no cost.","url":"https://beneficiosmedicare.com","email":"alejamedicare@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA","addressCountry":"US"},"areaServed":[{"@type":"State","name":"California"},{"@type":"State","name":"Illinois"},{"@type":"State","name":"Texas"},{"@type":"State","name":"Oklahoma"},{"@type":"State","name":"Florida"},{"@type":"State","name":"Iowa"}],"openingHours":"Mo-Fr 07:00-16:00 PST, Sa 08:00-12:00 PST","priceRange":"Free","knowsLanguage":["Spanish","English"],"founder":[{"@type":"Person","name":"Susana Marcos","jobTitle":"JD, MBA - Founder and Principal Agent"},{"@type":"Person","name":"Alejandra Brizuela Marcos","jobTitle":"Licensed Medicare Insurance Agent - Partner"}]}
 </script>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preload" href="beneficiosmedicare-brand.css?v=20260319" as="style">
 <link rel="stylesheet" href="beneficiosmedicare-brand.css?v=20260319">
 
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
   --navy: #002147;
@@ -125,7 +125,7 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: var(--dark); 
 
 /* ── HEADER ─────────────────────────────────────────────── */
 .header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
   background: rgba(255,255,255,0.97); backdrop-filter: blur(8px);
   transition: box-shadow 0.3s;
 }
@@ -218,7 +218,7 @@ nav a:hover, nav a.active { color: var(--navy); background: var(--lt-blue); }
 /* ── MOBILE FIRST ────────────────────────────────────────── */
 @media (max-width: 768px) {
   body { font-size: 16px !important; line-height: 1.65 !important; }
-  .hero, .contact-hero, .page-hero { padding-top: 150px !important; padding-bottom: 40px !important; }
+  .hero, .contact-hero, .page-hero { padding-top: 80px !important; padding-bottom: 40px !important; }
   .hero h1, .page-hero h1, .contact-hero h1 { font-size: 28px !important; line-height: 1.25 !important; }
   .hero-grid { grid-template-columns: 1fr !important; }
   .hero p { font-size: 15px !important; line-height: 1.6 !important; }
@@ -263,7 +263,7 @@ section { padding: 80px 24px; }
 
 /* ── HERO ──────────────────────────────────────────────── */
 .hero {
-  padding-top: 140px; padding-bottom: 60px;
+  padding-top: 60px; padding-bottom: 60px;
   background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
   position: relative; overflow: hidden;
 }
@@ -424,7 +424,7 @@ section { padding: 80px 24px; }
 
 /* ── ABOUT PAGE ────────────────────────────────────────── */
 .about-hero {
-  padding-top: 140px; padding-bottom: 60px;
+  padding-top: 60px; padding-bottom: 60px;
   background: linear-gradient(135deg, var(--lt-blue) 0%, var(--lt-mint) 100%);
 }
 .team-grid {
@@ -462,7 +462,7 @@ section { padding: 80px 24px; }
 .part-card p { font-size: 15px; line-height: 1.7; }
 
 /* ── WIDGET PAGE ───────────────────────────────────────── */
-.widget-page { padding-top: 140px; }
+.widget-page { padding-top: 60px; }
 .widget-container {
   max-width: 640px; margin: 0 auto; position: relative; overflow: hidden;
   background: white; border-radius: 20px; padding: 48px;
@@ -752,22 +752,16 @@ a[href^="tel"] { white-space: nowrap; }
 
 <body>
 <!-- CMS Disclaimer Banner -->
-<div id="cms-disclaimer" style="background:#ffffff;color:#9CA3AF;text-align:center;padding:4px 16px;font-size:12px;line-height:1.4;font-weight:400;position:relative;z-index:1100">
-  Sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
+<div id="cms-disclaimer" style="background:#fff;text-align:center;font-size:11px;padding:6px 16px;color:#9CA3AF;border-bottom:1px solid #f0f0f0;line-height:1.4">
+  Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
 </div>
-<style>
-  .header { transition: top 0.25s ease; }
-  .header.disclaimer-gone { top: 0 !important; }
-  @media(max-width:768px){ #cms-disclaimer { font-size:12px; padding:3px 12px; } }
-</style>
-<script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('cms-disclaimer'),h=document.getElementById('header');if(!d||!h)return;function setTop(){h.style.top=d.offsetHeight+'px';}setTop();window.addEventListener('resize',setTop);function c(){if(window.scrollY>60){d.style.transform='translateY(-100%)';d.style.transition='transform 0.25s ease';h.classList.add('disclaimer-gone')}else{d.style.transform='translateY(0)';h.classList.remove('disclaimer-gone');setTop();}}window.addEventListener('scroll',c,{passive:true});c()})</script>
 <header class="header" id="header">
   <div class="header-inner">
     <a href="index.html" class="logo"><svg class="logo-full" viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
     <nav id="desktop-nav">
       <a href="index.html">Inicio</a>
       <a href="beneficios.html">Beneficios</a>
-      <a href="contacto.html" class="active">Contáctenos</a>
+      <a href="contacto.html">Contáctenos</a>
       <div class="lang-pill"><button class="lp-active" onclick="goLang('es')" aria-label="Español">ES</button><button class="" onclick="goLang('en')" aria-label="English">EN</button></div>
     </nav>
     <button class="mobile-menu-btn" onclick="toggleMobile()"><i class="fas fa-bars"></i></button>
@@ -794,7 +788,7 @@ a[href^="tel"] { white-space: nowrap; }
 <!-- ═══════════════════════════════════════════════════════ -->
 
   <!-- Hero -->
-  <section class="hero" style="padding-top:150px;padding-bottom:48px">
+  <section class="hero" style="padding-top:60px;padding-bottom:48px">
     <div class="container" style="text-align:center;position:relative;z-index:2">
       <div class="section-label">HABLEMOS</div>
       <h1 class="section-title">Contáctenos</h1>
@@ -1067,6 +1061,8 @@ a[href^="tel"] { white-space: nowrap; }
     <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:6px;font-size:13px">
       <a href="index.html" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-home"></i> Inicio</a>
       <a href="beneficios.html" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-heart"></i> Beneficios</a>
+      <a href="estados/" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-map-marked-alt"></i> Estados</a>
+      <a href="blog/" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-pen"></i> Blog</a>
       <a href="careers.html" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-briefcase"></i> Carreras</a>
     </div>
     <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:13px">
