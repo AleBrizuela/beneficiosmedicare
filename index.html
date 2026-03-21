@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VG5N9NKWPF"></script>
+<!-- Google tag (gtag.js) - deferred to load after page renders -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-VG5N9NKWPF');
+  setTimeout(function(){
+    var s=document.createElement('script');
+    s.src='https://www.googletagmanager.com/gtag/js?id=G-VG5N9NKWPF';
+    document.head.appendChild(s);
+  },3000);
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -185,15 +189,244 @@
   }
 }
 </script>
+<!-- Deferred CSS loading with print/onload technique -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="images/family-yosemite.jpg">
-<link rel="preload" href="beneficiosmedicare-brand.css?v=20260319" as="style">
-<link rel="stylesheet" href="beneficiosmedicare-brand.css?v=20260319">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 
-<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="beneficiosmedicare-brand.css?v=20260319" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="beneficiosmedicare-brand.css?v=20260319"></noscript>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+<link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/styles.css"></noscript>
+
+<!-- Critical CSS for above-fold content (CMS disclaimer, header, hero section) -->
+<style>
+:root {
+  --navy: #002147;
+  --green: #00897B;
+  --blue: #1D72B8;
+  --teal: #00897B;
+  --mint: #B2DFDB;
+  --lt-blue: #E8F2FA;
+  --lt-green: #E0F2F1;
+  --lt-mint: #EDF8F7;
+  --gray: #4A5568;
+  --white: #FFFFFF;
+  --wa-green: #25D366;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,60,113,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,60,113,0.16);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Open Sans', -apple-system, sans-serif; color: #1a202c; font-size: 16px; line-height: 1.65; background: var(--white); }
+
+/* CMS Disclaimer - LCP element */
+#cms-disclaimer {
+  background: #fff;
+  text-align: center;
+  font-size: 11px;
+  padding: 6px 16px;
+  color: #9CA3AF;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 1.4;
+  font-weight: 400;
+  position: relative;
+  z-index: 1100;
+}
+@media (max-width: 768px) {
+  #cms-disclaimer { font-size: 10px; padding: 4px 12px; }
+}
+
+/* Header */
+.header {
+  position: relative;
+  z-index: 1000;
+  background: rgba(255,255,255,0.97);
+}
+@media (max-width: 768px) {
+  .header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(8px);
+    transition: box-shadow 0.3s;
+  }
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 70px;
+}
+.logo {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #00897B !important;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.logo span { color: #00897B !important; }
+#desktop-nav { display: flex; align-items: center; gap: 8px; }
+#desktop-nav a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray);
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+#desktop-nav a:hover, #desktop-nav a.active { color: var(--navy); background: var(--lt-blue); }
+.lang-pill {
+  display: inline-flex;
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+.lang-pill button {
+  background: none;
+  border: none;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--navy);
+  transition: background 0.18s, color 0.18s;
+}
+.lang-pill button.lp-active { background: var(--navy); color: #fff; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer; }
+
+@media (max-width: 768px) {
+  #desktop-nav { display: none !important; }
+  .mobile-menu-btn { display: inline-block; }
+}
+
+/* Hero Section */
+.hero {
+  padding-top: 60px;
+  padding-bottom: 48px;
+  background: linear-gradient(135deg, var(--lt-mint) 0%, var(--lt-blue) 100%);
+  position: relative;
+  overflow: visible;
+}
+.hero h1 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero p { font-size: 18px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+.section-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ZIP Card */
+.zip-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 32px 28px 28px;
+}
+.zip-card label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+#zip-input {
+  width: 100%;
+  padding: 16px 18px;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  border: 2px solid #D4DEE8;
+  border-radius: 12px;
+  outline: none;
+  text-align: center;
+  letter-spacing: 0.08em;
+  color: var(--navy);
+  background: var(--lt-blue);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  margin-bottom: 16px;
+}
+#zip-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--green);
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.1s;
+}
+#zip-btn:hover { background: #007366; }
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: #28a745;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  z-index: 9999;
+  transition: top 0.2s;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+/* Mobile nav */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 12px 16px;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 900;
+  box-shadow: var(--shadow);
+}
+.mobile-nav.active { display: flex; }
+.mobile-nav a { text-decoration: none; color: var(--navy); padding: 12px 16px; font-size: 16px; }
+
+/* Basic main */
+main { display: block; }
+</style>
   <link rel="icon" type="image/svg+xml" href="favicon-beneficios.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
   <link rel="shortcut icon" href="favicon-beneficios.svg">
@@ -391,12 +624,18 @@
     <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">Somos un equipo de madre e hija, agentes licenciadas. Le ayudamos a encontrar el plan correcto en inglés o español.</p>
 
     <div class="team-photo-banner">
-      <img src="images/family-yosemite.jpg" alt="Alejandra y Susana en Yosemite" fetchpriority="high" width="600" height="600">
+      <picture>
+        <source srcset="images/family-yosemite.webp" type="image/webp">
+        <img src="images/family-yosemite.jpg" alt="Alejandra y Susana en Yosemite" fetchpriority="high" width="600" height="600">
+      </picture>
     </div>
 
     <div class="team-grid">
       <div class="team-card">
-        <img class="team-card-photo" src="images/susana-headshot.jpg" alt="Susana Marcos" loading="lazy" width="200" height="200">
+        <picture>
+          <source srcset="images/susana-headshot.webp" type="image/webp">
+          <img class="team-card-photo" src="images/susana-headshot.jpg" alt="Susana Marcos" loading="lazy" width="200" height="200">
+        </picture>
         <h3>Susana Marcos</h3>
         <div class="role">Fundadora · Agente Licenciada</div>
         <p class="team-bio">Abogada argentina y madre de seis. Susana aporta décadas de experiencia y trata a cada cliente como familia. Se mantiene obsesivamente actualizada en cada detalle de los planes.</p>
@@ -407,7 +646,10 @@
         </div>
       </div>
       <div class="team-card">
-        <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy" width="200" height="200">
+        <picture>
+          <source srcset="images/alejandra-headshot.webp" type="image/webp">
+          <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy" width="200" height="200">
+        </picture>
         <h3>Alejandra Brizuela Marcos</h3>
         <div class="role">Agente Licenciada</div>
         <p class="team-bio">La misión de Alejandra: hacer que Medicare sea accesible para cada familia, especialmente las comunidades hispanas y los hijos adultos que ayudan a sus padres.</p>
@@ -1819,7 +2061,8 @@ function updateWidgetProgress(pct) {
 
 </script>
 
-  <link rel="stylesheet" href="mobile-enhancements.css?v=2">
+  <link rel="stylesheet" href="mobile-enhancements.css?v=2" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="mobile-enhancements.css?v=2"></noscript>
 
 <!-- Animated stat counters -->
 <script>
