@@ -115,25 +115,24 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--teal); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--teal); }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('es')">Espanol</a> | <a onclick="switchLang('en')">English</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/turning-65-medicare-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- ═══════════════════════════════════════════════════════ VERSION EN ESPANOL -->
-  <div class="es">
+<!-- ═══════════════════════════════════════════════════════ VERSION EN ESPANOL -->
+  
 
     <h1>Vas a Cumplir 65 Anos en California? Guia Completa de Medicare</h1>
     <p class="byline">Publicado el 24 de marzo de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -256,35 +255,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres: un padre, tio, o amigo que se acerque a los 65 anos.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ═══════════════════════════════════════════════════════ ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Turning 65 in California? Complete Medicare Guide</h1>
-    <p class="byline">Published March 24, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>Turning 65 is a milestone, and in California it also marks the start of one of the most important health decisions of your life: enrolling in Medicare. Done right, you get excellent coverage without overpaying. Done wrong, you could face permanent penalties and gaps in your medical coverage.</p>
-
-    <p>For the full English version of this guide, visit <a href="https://medicare-california.com/blog/turning-65-medicare-california">medicare-california.com/blog/turning-65-medicare-california</a>.</p>
-
-    <h2>Key Dates: Your Initial Enrollment Period</h2>
-    <p>You have a 7-month window that begins 3 months before your birthday month, includes your birthday month, and ends 3 months after. Enrolling in the first 3 months gives you the earliest possible start date and avoids coverage gaps.</p>
-
-    <h2>Your Two Main Options at 65</h2>
-    <p>You can choose between Original Medicare (Parts A and B) plus a standalone Part D drug plan and an optional Medigap supplement, or a Medicare Advantage plan (Part C) that bundles hospital, medical, and often drug coverage in one private plan. Many Advantage plans in California carry $0 additional premiums.</p>
-
-    <h2>California Assistance Programs</h2>
-    <p>If your income is limited, California programs like QMB, SLMB, and Extra Help can pay your Part B premium, drug costs, or copays. Dual-eligible beneficiaries (Medicare plus Medi-Cal) may qualify for D-SNP plans that coordinate both coverages.</p>
-
-    <div class="cta">
-      <p><strong>Turning 65 soon?</strong> Talk to a bilingual Medicare agent in California today, at no cost and with no obligation.</p>
-      <p><a href="https://beneficiosmedicare.com/contacto">Talk to an Agent &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love who is approaching 65.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/turning-65-medicare-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

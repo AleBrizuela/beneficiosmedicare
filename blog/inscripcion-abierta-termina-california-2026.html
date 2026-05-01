@@ -89,25 +89,24 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--terra); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--terra); }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('es')">Espanol</a> | <a onclick="switchLang('en')">English</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/oep-ending-california-2026.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- ═══════════════════════════════════════════════════════ VERSION EN ESPANOL -->
-  <div class="es">
+<!-- ═══════════════════════════════════════════════════════ VERSION EN ESPANOL -->
+  
 
     <h1>La Inscripcion Abierta de Medicare Termina el 31 de Marzo en California: Que Hacer Ahora</h1>
     <p class="byline">Publicado el 24 de marzo de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -194,30 +193,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres: un vecino, un padre, o un amigo que quiza no sepa que se acerca el plazo.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ═══════════════════════════════════════════════════════ ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Medicare Open Enrollment Ends March 31 in California: What to Do Now</h1>
-    <p class="byline">Published March 24, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>The clock is ticking. The Medicare Open Enrollment Period (OEP) closes on <strong>March 31, 2026</strong>, and California beneficiaries have just one week left to make plan changes. If your current Medicare Advantage plan is not working for you, this is your last chance until fall to switch.</p>
-
-    <p>This article walks you through what you can still do before the deadline, who this window applies to, and how to make a smart, last-minute decision without regret.</p>
-
-    <h2>What Is the Medicare Open Enrollment Period?</h2>
-
-    <p>The OEP runs every year from January 1 through March 31. During the OEP, you can switch from one <a href="https://medicare-california.com/medicare-advantage">Medicare Advantage plan</a> to another, return to Original Medicare and add a <a href="https://medicare-california.com/part-d-drug-plans">Part D plan</a>, but you cannot move from Original Medicare into Medicare Advantage. For the full English guide, see the <a href="https://medicare-california.com/blog/oep-ending-california-2026">English version of this article</a>.</p>
-
-    <div class="cta">
-      <p><strong>Do not let March 31 sneak up on you.</strong> Our licensed California Medicare agents can review your options in a free 15-minute call.</p>
-      <p><a href="https://medicare-california.com/contact">Schedule a Free Review &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love who might not know the deadline is coming.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/oep-ending-california-2026.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

@@ -73,27 +73,26 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--terra); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--terra); }
     .check { color: #27ae60; font-weight: bold; }
     .x { color: #c0392b; font-weight: bold; }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('es')">Espa&ntilde;ol</a> | <a onclick="switchLang('en')">English</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-vaccine-coverage-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- SPANISH VERSION -->
-  <div class="es">
+<!-- SPANISH VERSION -->
+  
 
     <h1>Cobertura de Vacunas de Medicare en California 2026: Culebrilla, RSV, Influenza y Otras Vacunas Cubiertas a $0</h1>
     <p class="byline">Publicado el 28 de abril de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -178,95 +177,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres. Un padre, vecino o amigo con Medicare en California no deberia pagar un solo dolar por una vacuna que la ley ya hizo gratis.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Medicare Vaccine Coverage in California 2026: Shingles, RSV, Flu and Other Shots Covered at $0</h1>
-    <p class="byline">Published April 28, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>Vaccines are one of the few corners of the Medicare system where the rules actually got better in the last three years. Since the Inflation Reduction Act took effect in 2023, every adult vaccine recommended by the CDC is free for people on Medicare in California, no deductible and no copay. The catch is that vaccines split between Part B and Part D, and pharmacies sometimes get the billing wrong. Knowing which shot falls under which part is what protects you from a $200 charge for something that should cost zero.</p>
-
-    <h2>How Medicare Splits Vaccines Between Part B and Part D</h2>
-
-    <p>Original Medicare divides vaccines into two buckets. Part B covers four specific preventive vaccines plus any shot you need because of an injury or direct exposure. Part D, your prescription drug plan, covers everything else on the adult vaccine list. Medicare Advantage plans in California include both buckets in one card, but the same split happens behind the scenes when the plan pays your pharmacy.</p>
-
-    <p>The split matters because Part B vaccines are billed through your medical benefits and Part D vaccines through your drug benefits. If a pharmacy tries to bill your Part B card for a shingles shot, the claim will be denied, and you may be asked to pay up front. Always confirm the pharmacist is using the right side of your coverage before they vaccinate you.</p>
-
-    <h2>The Four Vaccines Medicare Part B Covers</h2>
-
-    <p>Part B pays at $0 for the flu shot once each season, the COVID-19 vaccine and approved boosters, pneumococcal vaccines such as Prevnar 20 and Pneumovax 23, and the Hepatitis B vaccine if you have medium or high risk like diabetes, end-stage renal disease, or a healthcare job. Part B also covers a tetanus or rabies shot when given after a wound or animal bite, even at an emergency room. For the full list of preventive services covered by Part B, see our guide on <a href="https://medicare-california.com/blog/free-medicare-preventive-services-california">free Medicare preventive services in California</a>.</p>
-
-    <h2>What Part D Covers in 2026</h2>
-
-    <p>Every other adult vaccine on the CDC list runs through your Part D plan or your Medicare Advantage drug benefit. That includes the shingles vaccine Shingrix, the RSV vaccines Arexvy, Abrysvo, and mResvia, the Tdap booster every 10 years, the MMR vaccine for adults who are not immune, the chickenpox vaccine, the HPV vaccine if your doctor recommends it, and travel vaccines like typhoid or yellow fever in some plans. As of 2023, all of these are $0 with no deductible.</p>
-
-    <div class="callout">
-      <strong>California tip:</strong> If a pharmacy tells you the shingles shot has a copay, stop and call the plan number on your card. The most common reason for a charge is that the pharmacy ran the claim through Part B by mistake. The fix is fast and saves you the full price of the dose.
-    </div>
-
-    <h2>Quick Reference Table for California Medicare Beneficiaries</h2>
-
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Vaccine</th>
-          <th>Which Medicare part pays</th>
-          <th>Your cost in 2026</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Flu (seasonal)</td><td>Part B</td><td class="check">$0</td></tr>
-        <tr><td>COVID-19 and boosters</td><td>Part B</td><td class="check">$0</td></tr>
-        <tr><td>Pneumococcal (Prevnar, Pneumovax)</td><td>Part B</td><td class="check">$0</td></tr>
-        <tr><td>Hepatitis B (medium or high risk)</td><td>Part B</td><td class="check">$0</td></tr>
-        <tr><td>Shingles (Shingrix)</td><td>Part D</td><td class="check">$0</td></tr>
-        <tr><td>RSV (Arexvy, Abrysvo, mResvia)</td><td>Part D</td><td class="check">$0</td></tr>
-        <tr><td>Tdap (tetanus and pertussis booster)</td><td>Part D</td><td class="check">$0</td></tr>
-        <tr><td>MMR, chickenpox, HPV</td><td>Part D</td><td class="check">$0</td></tr>
-        <tr><td>Travel vaccines (typhoid, yellow fever)</td><td>Part D, plan dependent</td><td>Varies</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Where to Get Vaccines in California</h2>
-
-    <p>For Part B vaccines, your primary care office, a county clinic, or a network pharmacy all work. For Part D vaccines, the simplest path in California is a chain pharmacy that has direct billing to your plan. CVS, Walgreens, Rite Aid, Costco, Albertsons, Sam's Club, and Vons all bill Part D plans on the spot, so you walk out with no charge. Kaiser Permanente Senior Advantage members get every vaccine through Kaiser facilities, which keeps the records clean and avoids the Part B and Part D confusion altogether.</p>
-
-    <h3>What to Bring</h3>
-
-    <p>Bring your Medicare red, white, and blue card and your Part D or Medicare Advantage card. If you are on a stand-alone Part D plan and the pharmacy does not have your drug plan in the system, ask them to pull your Medicare Beneficiary Identifier from the Part B card and try again. Most billing problems clear up at that point.</p>
-
-    <h2>Special Situations for California Retirees</h2>
-
-    <p>If you are working past 65 and have employer coverage on top of Medicare, your employer plan often pays vaccines first and Medicare pays second. The pharmacist can run both cards. If you have a Medigap plan, vaccines covered under Part B are paid in full by Medicare plus your supplement, and Part D vaccines run through your stand-alone Part D plan. If you have <a href="https://medicare-california.com/blog/medi-cal-y-medicare-beneficios-dobles-california">Medi-Cal and Medicare together</a>, vaccines are still $0 and you have extra protection on travel vaccines through Medi-Cal in some counties.</p>
-
-    <h2>Spanish-Speaking Family Members</h2>
-
-    <p>If you are translating Medicare paperwork for a Spanish-speaking parent or grandparent, our sister site <a href="https://beneficiosmedicare.com" target="_blank">BeneficiosMedicare.com</a> has the same California Medicare guides in Spanish, written for families who prefer to read and ask questions in their first language.</p>
-
-    <h2>Frequently Asked Questions</h2>
-
-    <h3>Is the shingles shot really free for California Medicare beneficiaries?</h3>
-    <p>Yes. Since 2023, Shingrix is $0 on every Part D and Medicare Advantage plan in California, both doses included. If a pharmacy quotes a price, the most common reason is incorrect billing. Ask them to run it as a Part D vaccine.</p>
-
-    <h3>How often do I need the RSV vaccine?</h3>
-    <p>The current CDC guidance is a single dose for adults 75 and older, and for adults 60 to 74 with chronic conditions like heart disease, lung disease, or diabetes. There is no annual booster, only the one shot, until guidance changes.</p>
-
-    <h3>Can I get the flu and shingles shot on the same day?</h3>
-    <p>Yes. CDC says it is safe to get multiple adult vaccines in one visit, and most California pharmacies offer this. Each vaccine still bills through the correct part of Medicare without affecting the other.</p>
-
-    <h3>Does Medicare cover travel vaccines for trips to Mexico or Latin America?</h3>
-    <p>Some Part D plans cover travel vaccines like typhoid and hepatitis A, others do not. Always check the plan formulary before paying for a travel vaccine. If you are headed abroad, also see our guide on <a href="https://medicare-california.com/blog/medicare-viajes-fuera-estados-unidos-california">Medicare and travel outside the United States</a>.</p>
-
-    <div class="cta">
-      <p><strong>Not sure if your California Medicare plan is set up right for vaccines?</strong> A free 15-minute review with a licensed California Medicare agent can confirm both your Part B and Part D coverage, and find a pharmacy that bills correctly for shingles, RSV, and the rest.</p>
-      <p><a href="https://medicare-california.com/contact">Request a Free Plan Review &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love. A parent, neighbor, or friend on Medicare in California should not pay a dime for a shot the law already made free.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-vaccine-coverage-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

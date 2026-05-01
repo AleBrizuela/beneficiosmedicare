@@ -67,27 +67,26 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--teal); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--teal); }
     .check { color: #27ae60; font-weight: bold; }
     .x { color: #c0392b; font-weight: bold; }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('es')">Espa&ntilde;ol</a> | <a onclick="switchLang('en')">English</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-viajes-fuera-estados-unidos-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- VERSION EN ESPANOL -->
-  <div class="es">
+<!-- VERSION EN ESPANOL -->
+  
 
     <h1>Medicare y Viajes Fuera de Estados Unidos para Californianos 2026: Que Cubre y Como Protegerse</h1>
     <p class="byline">Publicado el 21 de abril de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -171,94 +170,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres. Un padre, tio o vecino que esta planeando un viaje este ano merece saber que Medicare no lo acompana cruzando la frontera.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Medicare and International Travel for Californians 2026: What Is Covered and How to Protect Yourself</h1>
-    <p class="byline">Published April 21, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>As spring ends and summer approaches, many California families begin planning a trip to the country of origin. Mexico, Guatemala, El Salvador, Colombia, Peru, the list is long. And every year we get the same questions. Does Medicare cover me if I get sick there? If I need emergency surgery in Tijuana, will Medicare pay? Can I stay three months without losing my plan? The short answer is that Medicare was designed to be used inside the United States, but there are options to travel with peace of mind if you know them before you leave.</p>
-
-    <h2>The General Rule: Medicare Only Pays Inside the United States</h2>
-
-    <p>Original Medicare, meaning Part A and Part B, covers medical services provided inside the United States and its territories. Puerto Rico, the U.S. Virgin Islands, Guam, American Samoa, and the Northern Mariana Islands count as the United States for Medicare purposes. Mexico and every country in Latin America do not. That means a doctor visit, a surgery, a prescription drug, or a hospital stay outside that zone is not paid by Medicare and you cover the full cost.</p>
-
-    <p>This rule surprises many Californians who drive to Baja California or Sonora thinking the border crossing changes something. It changes nothing. The moment you cross into Mexico, Medicare stops paying.</p>
-
-    <h2>The Three Medicare Exceptions Abroad</h2>
-
-    <p>Federal law recognizes three very specific situations where Original Medicare will pay at a foreign hospital:</p>
-
-    <p>First, when you have a medical emergency inside the United States but the nearest foreign hospital can treat you faster. This most often applies to Alaska residents crossing into Canada. Second, when you live in the United States and the foreign hospital is closer to your home than any U.S. hospital, whether it is an emergency or not. Third, when you are on a cruise ship within U.S. territorial waters. Outside these exceptions, which are uncommon for a typical Californian, foreign coverage is the job of a different kind of plan.</p>
-
-    <div class="callout">
-      <strong>Common mistake:</strong> Many families believe that if they show the red, white, and blue Medicare card at a hospital in Tijuana or Monterrey, someone in Washington will pay the bill. That does not happen. The hospital collects in cash or by card at the time of service and Medicare does not reimburse later.
-    </div>
-
-    <h2>Medigap Plans That Cover Foreign Emergencies</h2>
-
-    <p>Medicare Supplement plans, also called Medigap, were designed to fill the gaps in Original Medicare. Six plans include a specific Foreign Travel Emergency benefit: plans C, D, F, G, M, and N. In 2026 the benefit works like this: you pay a $250 annual deductible, then the plan pays 80 percent of medically necessary costs during the first 60 days of the trip. There is a lifetime maximum of $50,000 for this benefit.</p>
-
-    <p>For a California retiree visiting family in Latin America each year, this benefit is worth more than it looks. A single hospitalization avoided can cover many years of Medigap premiums. If you are deciding between Medicare Advantage and Medigap, this travel coverage is one of the points to compare. See our <a href="https://beneficiosmedicare.com/blog/medicare-supplement-plans-california">analysis of Medicare Supplement plans in California</a>.</p>
-
-    <h2>What Medicare Advantage Plans Cover Abroad</h2>
-
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Plan Type</th>
-          <th>Routine Care Abroad</th>
-          <th>Emergency Abroad</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Original Medicare only</td><td class="x">Not covered</td><td class="x">Not covered (with narrow exceptions)</td></tr>
-        <tr><td>Original Medicare + Medigap C/D/F/G/M/N</td><td class="x">Not covered</td><td class="check">80% up to $50,000 lifetime</td></tr>
-        <tr><td>Typical California Medicare Advantage HMO</td><td class="x">Not covered</td><td class="check">Covered as emergency</td></tr>
-        <tr><td>Typical California Medicare Advantage PPO</td><td class="x">Not covered</td><td class="check">Covered as emergency</td></tr>
-      </tbody>
-    </table>
-
-    <p>Most Medicare Advantage plans in California cover emergencies and urgent care in any country but do not cover routine care like a checkup or blood pressure visit. Some binational focused plans in Southern California include dental clinic networks in Mexico, but that is the exception and not the rule. Before you travel, call the number on your plan card and ask for the specific international benefits.</p>
-
-    <h2>What Can Happen to the Plan If You Are Away Too Long</h2>
-
-    <p>Medicare as a federal program does not cancel because you travel. You keep paying the Part B premium and keep your right to return to U.S. care whenever you want. What you can lose is a Medicare Advantage plan or a Part D plan if you live outside the service area for more than six consecutive months. The plan can cancel your membership and you return to Original Medicare until the next enrollment period.</p>
-
-    <p>For Californians who spend winters in Mexico or long summers in the country of origin, this rule is decisive. Original Medicare plus a Medigap plan is usually the safest combination for someone who travels a lot, because Medigap stays with you regardless of where you spend the months.</p>
-
-    <h2>Practical Tips Before You Leave California</h2>
-
-    <p>Before every trip abroad, follow this short list. Confirm whether you have Medigap or Medicare Advantage and read the international coverage section. Save the plan emergency numbers and the U.S. embassy contact for your destination. Consider a separate medical travel insurance policy, which usually costs $50 to $150 per trip and covers what Medicare does not pay. Carry a written list of your medications with the generic name, because brand names change from country to country. And if you plan to be away more than three months, check in advance whether your Advantage or Part D plan has an absence rule.</p>
-
-    <h2>For English Speaking Family Members</h2>
-
-    <p>If an English speaking family member is helping plan the trip, our sister site <a href="https://medicare-california.com/blog/medicare-wellness-visit-vs-physical-california" target="_blank">Medicare-California.com</a> covers California Medicare rules in English with the same local detail.</p>
-
-    <h2>Frequently Asked Questions</h2>
-
-    <h3>Will Medicare pay for affordable dental surgery in Tijuana?</h3>
-    <p>No. Original Medicare does not pay for that surgery, not even as an emergency. A few Medicare Advantage plans in Southern California have dental networks in Mexico, but they are the exception.</p>
-
-    <h3>If my Medigap covers emergencies up to $50,000, what happens if the hospital charges more?</h3>
-    <p>You pay the difference. $50,000 is the lifetime maximum for the benefit. That is why extra travel medical insurance is a good idea for long trips or for people with chronic conditions.</p>
-
-    <h3>Can I keep seeing my California doctor by telemedicine while I travel?</h3>
-    <p>It depends on the plan. Original Medicare only pays for telemedicine when both you and the provider are in the United States at the time of the visit. Some Medicare Advantage plans allow limited telemedicine from abroad, but not all.</p>
-
-    <h3>Is Medicare Advantage or Medigap better if I travel often to Latin America?</h3>
-    <p>For frequent or long trips, Medigap with the foreign emergency benefit is usually the more peaceful option. Medicare Advantage covers emergencies, but with networks and rules that can complicate a multi-month trip.</p>
-
-    <div class="cta">
-      <p><strong>Planning a long trip home this summer?</strong> A free 15-minute review with a licensed California Medicare agent can review your current coverage and recommend adjustments before you buy the ticket.</p>
-      <p><a href="https://beneficiosmedicare.com/contacto">Request a Free Review &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love. A parent, uncle, or neighbor planning a trip this year deserves to know that Medicare does not cross the border with them.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-viajes-fuera-estados-unidos-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

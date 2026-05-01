@@ -89,25 +89,24 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--terra); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--terra); }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('en')">English</a> | <a onclick="switchLang('es')">Espa&ntilde;ol</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-special-enrollment-periods-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- ═══════════════════════════════════════════════════════ SPANISH VERSION (default) -->
-  <div class="es">
+<!-- ═══════════════════════════════════════════════════════ SPANISH VERSION (default) -->
+  
 
     <h1>Periodos de Inscripcion Especial de Medicare en California: Cuando Todavia Puede Cambiar de Plan</h1>
     <p class="byline">Publicado el 31 de marzo de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -205,100 +204,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres. Un vecino, padre, o amigo que perdio el plazo puede todavia tener opciones.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ═══════════════════════════════════════════════════════ ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Medicare Special Enrollment Periods in California: When You Can Still Change Plans</h1>
-    <p class="byline">Published March 31, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>The Medicare Open Enrollment Period ended today, March 31. If you missed it, you might think you are stuck in your current plan until the Annual Enrollment Period in October. But that is not always the case. California residents who experience certain life changes may qualify for a <strong>Special Enrollment Period (SEP)</strong> that allows them to switch plans outside the normal enrollment windows.</p>
-
-    <p>This guide covers who qualifies, how each SEP works, and what steps to take so you do not miss your chance.</p>
-
-    <h2>What Is a Special Enrollment Period?</h2>
-
-    <p>A Special Enrollment Period is a time-limited window that Medicare grants when a qualifying life event happens. During an SEP, you can switch Medicare Advantage plans, move from Medicare Advantage back to Original Medicare, enroll in or change your Part D drug plan, or (in some cases) sign up for a Medigap supplement policy with guaranteed-issue rights.</p>
-
-    <p>SEPs exist because Medicare recognizes that life does not always follow the enrollment calendar. Moves, job changes, health status changes, and income shifts can all create situations where your current coverage no longer fits.</p>
-
-    <h2>Common Qualifying Events for California Residents</h2>
-
-    <h3>Moving to a new address</h3>
-
-    <p>If you relocate to an area in California where your current <a href="https://medicare-california.com/medicare-advantage">Medicare Advantage plan</a> does not operate, you qualify for an SEP. This is especially relevant in California, where plan service areas can vary by county. Someone moving from San Francisco to Fresno, for example, may find that their Bay Area HMO is not available in the Central Valley.</p>
-
-    <p>You have up to 2 months after your move to enroll in a new plan at your new address. This SEP also applies if you move out of state or if you move into a plan's service area for the first time.</p>
-
-    <h3>Losing employer or union coverage</h3>
-
-    <p>Many Californians delay enrolling in Medicare Part B because they have health insurance through their employer or a spouse's employer. When that coverage ends, whether because of retirement, a layoff, or the employer dropping the plan, you get an <strong>8-month SEP</strong> to sign up for Part B and choose a Medicare plan without late enrollment penalties.</p>
-
-    <div class="callout">
-      <strong>Important:</strong> COBRA coverage does not count as employer coverage for this purpose. If you are on COBRA and have not enrolled in Medicare, do not wait for COBRA to end. Your SEP may have already started when your active employment ended.
-    </div>
-
-    <h3>Qualifying for Medi-Cal (California Medicaid)</h3>
-
-    <p>If you become eligible for both Medicare and Medi-Cal, you are considered "dual-eligible." Dual-eligible beneficiaries in California get one of the most flexible SEPs available: you can change your Medicare Advantage or Part D plan <strong>once per quarter</strong> during the first three quarters of the year (January through September). This gives you up to three opportunities each year to find the right plan.</p>
-
-    <p>California also offers <a href="https://medicare-california.com/dual-eligible-special-needs-plans">Dual-Eligible Special Needs Plans (D-SNPs)</a> designed specifically for people who have both programs.</p>
-
-    <h3>Qualifying for Extra Help (Low Income Subsidy)</h3>
-
-    <p>If your income and resources fall below certain thresholds, you may qualify for Medicare Extra Help, which significantly reduces your Part D drug costs. Qualifying for Extra Help (or losing it) triggers an SEP that lets you switch your Part D or Medicare Advantage plan once per quarter.</p>
-
-    <h3>Your plan leaves your area or loses its Medicare contract</h3>
-
-    <p>Occasionally, an insurance company decides to stop offering a plan in a particular California county, or Medicare terminates the plan's contract. If this happens to your plan, you receive an SEP to choose new coverage. Medicare will notify you in writing if your plan is being discontinued.</p>
-
-    <h3>You move into or out of a skilled nursing facility</h3>
-
-    <p>If you move into a nursing home, assisted living facility, or similar institution, you qualify for an SEP that lasts for as long as you reside there and for 2 months after you leave. This allows you to adjust your coverage to match the care you need.</p>
-
-    <h2>How to Use Your Special Enrollment Period</h2>
-
-    <h3>Step 1: Confirm your qualifying event</h3>
-    <p>Before making any changes, verify that your situation matches one of Medicare's recognized SEPs. If you are not sure, a <a href="https://medicare-california.com/contact">licensed Medicare agent</a> can review your circumstances at no cost.</p>
-
-    <h3>Step 2: Know your timeline</h3>
-    <p>Each SEP has a specific start date and end date. Most last 2 to 3 months, but some (like losing employer coverage) last up to 8 months. Acting quickly ensures you do not have a gap in coverage.</p>
-
-    <h3>Step 3: Compare plans available in your area</h3>
-    <p>Use <a href="https://www.medicare.gov/plan-compare" target="_blank" rel="noopener">Medicare.gov/plan-compare</a> to see which plans are available at your new address or in your updated situation. Enter your zip code and medications for personalized results.</p>
-
-    <h3>Step 4: Enroll in your new plan</h3>
-    <p>You can enroll online, by phone, or with the help of a licensed agent. Make sure to complete enrollment before your SEP window closes.</p>
-
-    <h2>What If You Do Not Qualify for an SEP?</h2>
-
-    <p>If none of the qualifying events apply to you, you will need to wait for the <a href="https://medicare-california.com/annual-enrollment-period">Annual Enrollment Period (October 15 through December 7)</a> to make changes to your Medicare coverage for the following year. In the meantime, make sure you understand your current plan's benefits and use them fully.</p>
-
-    <p>If you are approaching 65 or helping a parent prepare for Medicare, our sister site <a href="https://beneficiosmedicare.com/cumplir-65-anos-medicare-california" target="_blank">BeneficiosMedicare.com</a> offers bilingual guides to help Spanish-speaking families navigate the enrollment process.</p>
-
-    <h2>Frequently Asked Questions</h2>
-
-    <h3>What is a Medicare Special Enrollment Period?</h3>
-    <p>An SEP is a window outside of standard enrollment periods when you can change your Medicare coverage. It is triggered by a qualifying life event such as moving, losing employer coverage, or becoming eligible for Medi-Cal.</p>
-
-    <h3>How long does a Medicare Special Enrollment Period last in California?</h3>
-    <p>It depends on the event. Most SEPs last 2 to 3 months. The employer-coverage SEP lasts 8 months. Dual-eligible and Extra Help SEPs allow quarterly changes.</p>
-
-    <h3>Can I switch Medicare Advantage plans after the Open Enrollment Period ends?</h3>
-    <p>Only if you qualify for an SEP. Common triggers include moving, losing employer insurance, or qualifying for both Medicare and Medi-Cal.</p>
-
-    <h3>Do I qualify for a Special Enrollment Period if I move within California?</h3>
-    <p>Yes, if your current plan does not serve your new address. You have 2 months after your move to enroll in a plan available in your new area.</p>
-
-    <div class="cta">
-      <p><strong>Not sure if you qualify for a Special Enrollment Period?</strong> Our licensed California Medicare agents can review your situation in a free consultation.</p>
-      <p><a href="https://medicare-california.com/contact">Schedule a Free Review &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love. A neighbor, parent, or friend who missed the deadline may still have options.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-special-enrollment-periods-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

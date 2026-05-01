@@ -137,28 +137,27 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--terra); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--terra); }
     .check { color: #27ae60; font-weight: bold; }
     .x { color: #c0392b; font-weight: bold; }
     .partial { color: #e67e22; font-weight: bold; }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('en')">English</a> | <a onclick="switchLang('es')">Espa&ntilde;ol</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-dental-vision-hearing-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- SPANISH VERSION (primary) -->
-  <div class="es">
+<!-- SPANISH VERSION (primary) -->
+  
 
     <h1>Cubre Medicare los Servicios Dentales, de Vision y Auditivos en California 2026?</h1>
     <p class="byline">Publicado el 8 de abril de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -322,57 +321,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres. Si un familiar cumple 65 anos este ano, necesita saber que estas brechas existen antes de inscribirse.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ENGLISH VERSION (secondary) -->
-  <div class="en">
 
-    <h1>Does Medicare Cover Dental, Vision, and Hearing in California 2026?</h1>
-    <p class="byline">Published April 8, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>One of the biggest surprises for people turning 65 and enrolling in Medicare is discovering what it does not cover. Dental cleanings, eyeglasses, and hearing aids are three of the most common health expenses for older adults, yet Original Medicare provides little to no coverage for any of them. This guide explains exactly what Medicare covers, what it does not, and what options California beneficiaries have to fill these gaps in 2026.</p>
-
-    <h2>What Is "Original Medicare" and Why Does It Have These Gaps?</h2>
-
-    <p>Original Medicare refers to Medicare Part A (hospital insurance) and Medicare Part B (medical insurance). When Medicare was created in 1965, dental, vision, and hearing care were considered routine and relatively inexpensive, so they were excluded from the program. Congress has debated expanding these benefits for decades, but as of 2026, Original Medicare still does not cover them as routine benefits.</p>
-
-    <div class="callout">
-      <strong>The good news:</strong> Medicare Advantage plans, standalone supplemental plans, and California's Medi-Cal program all offer ways to get dental, vision, and hearing coverage. You do not have to go without.
-    </div>
-
-    <h2>Medicare and Dental Coverage in California</h2>
-
-    <p>Original Medicare does not cover routine dental care: cleanings, fillings, root canals, crowns, bridges, or dentures. Your three options to add dental coverage are: (1) a Medicare Advantage plan with dental benefits included, (2) a standalone dental plan from a private insurer for roughly $20 to $50 per month, or (3) Medi-Cal if you qualify for dual eligibility.</p>
-
-    <h2>Medicare and Vision Coverage in California</h2>
-
-    <p>Part B covers medically necessary eye care: diabetic eye exams, glaucoma screenings for high-risk individuals, and treatment for eye diseases. It does not cover routine eye exams for glasses or the glasses themselves. Many California Medicare Advantage plans include an annual vision allowance of $100 to $300.</p>
-
-    <h2>Medicare and Hearing Coverage in California</h2>
-
-    <p>Original Medicare does not cover hearing aids or the routine exams for fitting them. Part B covers only diagnostic hearing exams ordered by a physician. Many Medicare Advantage plans offer a hearing aid allowance of $500 to $2,500 annually.</p>
-
-    <p>For Spanish-language guides on Medicare benefits in California, visit our sister site <a href="https://beneficiosmedicare.com/blog/medicare-seguro-empleador-california" target="_blank">BeneficiosMedicare.com</a>.</p>
-
-    <h2>Frequently Asked Questions</h2>
-
-    <h3>Does Original Medicare cover dental care in California?</h3>
-    <p>No. Original Medicare does not cover routine dental cleanings, fillings, dentures, or extractions. To get dental coverage, you need a Medicare Advantage plan with dental benefits, a standalone dental plan, or Medi-Cal if you qualify.</p>
-
-    <h3>Does Medicare cover eye exams and glasses in California?</h3>
-    <p>Part B covers medically necessary eye care but not routine eye exams for glasses or the glasses themselves. Many Medicare Advantage plans in California include an annual vision allowance.</p>
-
-    <h3>Does Medicare cover hearing aids in California?</h3>
-    <p>Original Medicare does not cover hearing aids. Many Medicare Advantage plans in California offer an annual allowance toward hearing aids, typically between $500 and $2,500.</p>
-
-    <div class="cta">
-      <p><strong>Not sure which Medicare plan includes the dental, vision, and hearing benefits you need?</strong> Our licensed agents can compare options in your California county at no cost to you.</p>
-      <p><a href="https://medicare-california.com/contact">Get a Free Benefits Comparison &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love. If a family member is turning 65 this year, they need to know these gaps exist before they enroll.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-dental-vision-hearing-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>

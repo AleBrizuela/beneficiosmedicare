@@ -73,27 +73,26 @@
     .cta a { color: #fff; font-weight: bold; text-decoration: underline; }
     .lang-toggle { text-align: right; margin-bottom: 1rem; font-size: 0.9rem; }
     .lang-toggle a { color: var(--terra); cursor: pointer; }
-    .en { display: none; }
     a { color: var(--terra); }
     .check { color: #27ae60; font-weight: bold; }
     .x { color: #c0392b; font-weight: bold; }
   </style>
-
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-      document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
-    }
-  </script>
+<style>
+.lang-cta { background: #E8F2FA; border-left: 4px solid #007B7B; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 15px; }
+.lang-cta a { color: #002147; font-weight: 600; text-decoration: none; }
+.lang-cta a:hover { text-decoration: underline; }
+.lang-cta .lang-cta-icon { font-weight: 700; color: #007B7B; margin-right: 6px; }
+</style>
 </head>
 <body>
-
-  <div class="lang-toggle">
-    <a onclick="switchLang('es')">Espa&ntilde;ol</a> | <a onclick="switchLang('en')">English</a>
+  <!-- LANG-CTA-TOP-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-wellness-visit-vs-physical-california.html">Read it on Medicare California &rarr;</a>
   </div>
+  <!-- LANG-CTA-TOP-END -->
 
-  <!-- VERSION EN ESPANOL -->
-  <div class="es">
+<!-- VERSION EN ESPANOL -->
+  
 
     <h1>Visita Anual de Bienestar de Medicare vs Examen Fisico Anual en California 2026: Que Cubre y Que No</h1>
     <p class="byline">Publicado el 21 de abril de 2026 &bull; Susana Marcos LLC, Agente de Seguros de Medicare con Licencia &bull; California</p>
@@ -169,86 +168,14 @@
       <p style="font-size: 0.95rem;">Comparte esto con alguien que quieres. Un padre, vecino o amigo con Medicare en California merece saber la diferencia antes de entrar al consultorio.</p>
     </div>
 
-  </div><!-- /.es -->
+  <!-- /.es -->
+<!-- /.en -->
 
-  <!-- ENGLISH VERSION -->
-  <div class="en">
 
-    <h1>Medicare Annual Wellness Visit vs Annual Physical in California 2026: What Is Covered and What Is Not</h1>
-    <p class="byline">Published April 21, 2026 &bull; Susana Marcos LLC, Licensed Medicare Insurance Agent &bull; California</p>
-
-    <p>Every spring we get the same call at our California office. A new Medicare beneficiary went to their primary care doctor for what they thought was a free annual physical, and weeks later a bill arrived. The doctor ordered labs, talked through a new symptom, or did a complete hands-on exam, and the patient learned the hard way that Medicare does not actually cover a traditional annual physical. It covers something different called the Annual Wellness Visit. Understanding the difference saves money, prevents surprise bills, and helps you get the preventive care you are paying for through Part B.</p>
-
-    <h2>The Three Types of Preventive Visits Medicare Covers</h2>
-
-    <p>Medicare covers three distinct preventive visits, and each one has its own rules and timeline. None of them is the traditional annual physical that most Californians grew up with while on employer insurance.</p>
-
-    <p>The first is the Welcome to Medicare visit, also called the Initial Preventive Physical Examination. You can schedule this once, during your first 12 months on Part B. The second is the Annual Wellness Visit, available every 12 months after you have had Part B for at least a year. The third is a mix of individual preventive screenings, such as mammograms, colonoscopies, flu shots, and diabetes screenings, which are covered at no cost when medically appropriate. For the full list of screenings, see our guide on <a href="https://medicare-california.com/blog/free-medicare-preventive-services-california">free Medicare preventive services in California</a>.</p>
-
-    <h2>What Happens During an Annual Wellness Visit</h2>
-
-    <p>The Annual Wellness Visit is a planning visit, not an exam visit. Your provider reviews your medical and family history, updates your medication list, measures blood pressure, height, weight, and body mass index, and runs a brief cognitive screening. You fill out a health risk assessment that looks at habits, mood, fall risk, and safety at home. The provider then builds a written prevention plan: which screenings to schedule, which vaccines to update, which specialist referrals to make this year.</p>
-
-    <p>What the Annual Wellness Visit does not include is a deep hands-on exam. Your provider does not listen to your heart and lungs in detail, check your abdomen, examine your skin head to toe, or evaluate a new symptom you brought up. If you mention knee pain or a new rash, the visit shifts from preventive to problem-focused, and that portion is billed like any other office visit, with the Part B deductible and 20 percent coinsurance.</p>
-
-    <div class="callout">
-      <strong>California tip:</strong> If you want to keep your Annual Wellness Visit free, save new symptoms and medication concerns for a separate appointment. Tell the scheduler you are booking only the Wellness Visit and add a second visit for the symptom if needed.
-    </div>
-
-    <h2>What Original Medicare Does and Does Not Cover</h2>
-
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Service</th>
-          <th>Original Medicare</th>
-          <th>Typical California Medicare Advantage</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Welcome to Medicare visit (year 1)</td><td class="check">Covered at $0</td><td class="check">Covered at $0</td></tr>
-        <tr><td>Annual Wellness Visit</td><td class="check">Covered at $0</td><td class="check">Covered at $0</td></tr>
-        <tr><td>Traditional annual physical exam</td><td class="x">Not covered</td><td class="check">Usually included at $0</td></tr>
-        <tr><td>Preventive screenings (mammogram, colonoscopy)</td><td class="check">Covered at $0 when preventive</td><td class="check">Covered at $0 when preventive</td></tr>
-        <tr><td>Problem-focused exam during visit</td><td class="x">Part B cost sharing applies</td><td class="x">Copay applies</td></tr>
-        <tr><td>Routine lab panels with no diagnosis</td><td class="x">Not covered</td><td class="x">Usually not covered</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Why California Medicare Advantage Plans Add a Physical</h2>
-
-    <p>Most Medicare Advantage plans sold in California bundle a full annual physical exam on top of the Annual Wellness Visit. The largest HMOs, including Kaiser Permanente Senior Advantage, Blue Shield 65 Plus, SCAN Health Plan, and Health Net Seniority Plus, market this as a supplemental benefit. For many retirees, the combined Wellness Visit plus hands-on physical replaces the routine care they had under their employer plan. If that matters to you, it is worth comparing against a Medicare Supplement plan, which leaves the physical uncovered but gives broader provider access. See our breakdown of <a href="https://medicare-california.com/blog/medicare-hmo-vs-ppo-california">Medicare HMO vs PPO plans in California</a> for more.</p>
-
-    <h2>How to Avoid Surprise Bills at Your Visit</h2>
-
-    <p>Three small steps protect you from unexpected charges. Before the visit, tell the scheduler you are booking an Annual Wellness Visit, not a physical, and ask them to code it that way. During the visit, if the provider starts treating a new symptom, ask whether that portion will be billed separately. After the visit, review the Medicare Summary Notice or your Advantage plan explanation of benefits within 30 days. If a charge looks wrong, call the billing office and reference the correct preventive code before the statement becomes a collections issue.</p>
-
-    <h2>Spanish Speaking Family Members Helping a Parent</h2>
-
-    <p>If you are helping a Spanish speaking parent navigate their first Wellness Visit, our sister site <a href="https://beneficiosmedicare.com/blog/medicare-viajes-fuera-estados-unidos-california" target="_blank">BeneficiosMedicare.com</a> offers California Medicare guides in Spanish, with the same local detail for families who prefer to read and ask questions in their first language.</p>
-
-    <h2>Frequently Asked Questions</h2>
-
-    <h3>Is the Annual Wellness Visit really free in California?</h3>
-    <p>Yes, when it is coded correctly as a preventive Wellness Visit with no problem-focused services added. $0 deductible and $0 copay on both Original Medicare and California Medicare Advantage plans.</p>
-
-    <h3>Can my doctor do a real physical exam during the Wellness Visit?</h3>
-    <p>Only a very limited one. If you want a full hands-on exam, enroll in a Medicare Advantage plan that includes an annual physical, or book a separate office visit and expect standard cost sharing.</p>
-
-    <h3>How often can I get an Annual Wellness Visit?</h3>
-    <p>Once every 12 months, starting after you have had Part B for a year. The 12 months is counted from the date of your last Wellness Visit, not the calendar year.</p>
-
-    <h3>Do I still need a doctor if I have Original Medicare?</h3>
-    <p>Yes. Many Californians skip a primary care doctor on Original Medicare because they feel healthy, then have trouble finding one when a problem comes up. Use your Annual Wellness Visit as the anchor that keeps a relationship open with your provider.</p>
-
-    <div class="cta">
-      <p><strong>Not sure if your California Medicare plan includes a full physical?</strong> A free 15-minute review with a licensed California Medicare agent can compare your Annual Wellness Visit benefits against a plan that includes a full annual physical.</p>
-      <p><a href="https://medicare-california.com/contact">Request a Free Plan Review &rarr;</a></p>
-      <hr style="border-color: rgba(255,255,255,0.3); margin: 1rem 0;" />
-      <p style="font-size: 0.95rem;">Share this with someone you love. A parent, neighbor, or friend on Medicare in California deserves to know the difference before they walk into the exam room.</p>
-    </div>
-
-  </div><!-- /.en -->
-
+  <!-- LANG-CTA-BOTTOM-START -->
+  <div class="lang-cta">
+    <span class="lang-cta-icon">EN</span> This article is also available in English. <a href="https://medicare-california.com/blog/medicare-wellness-visit-vs-physical-california.html">Read it on Medicare California &rarr;</a>
+  </div>
+  <!-- LANG-CTA-BOTTOM-END -->
 </body>
 </html>
