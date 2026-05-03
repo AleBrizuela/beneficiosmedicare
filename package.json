@@ -1,4 +1,12 @@
 {
+  "name": "beneficiosmedicare",
+  "version": "1.0.0",
+  "description": "Beneficios Medicare - bilingual Medicare site for Hispanic seniors in California",
+  "scripts": {
+    "build": "python3 generate_sitemap.py --domain https://beneficiosmedicare.com --dir . && python3 generate_blog_index.py --dir .",
+    "build:sitemap": "python3 generate_sitemap.py --domain https://beneficiosmedicare.com --dir .",
+    "build:blog-index": "python3 generate_blog_index.py --dir ."
+  },
   "dependencies": {
     "jsdom": "^28.1.0"
   }
