@@ -661,6 +661,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/nosotros.html</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/nosotros.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/about.html" />
     <lastmod>2026-05-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -686,6 +687,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/politica-editorial.html</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/politica-editorial.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/editorial-policy.html" />
     <lastmod>2026-05-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
