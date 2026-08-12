@@ -5,3 +5,31 @@
 /blog/como-prepararse-medicare-65-california           /blog/inscripcion-inicial-cumplir-65.html  301
 /blog/inscripcion-abierta-termina-california-2026.html /blog/oep-termina-marzo-2026.html          301
 /blog/inscripcion-abierta-termina-california-2026      /blog/oep-termina-marzo-2026.html          301
+
+# 301 redirects: English pages that were wrongly hosted same-domain (violates the
+# cross-site bilingual rule) now point to their real English home on medicare-california.com.
+# Preserves existing organic ranking/impressions instead of 404ing them.
+/beneficios-en.html                          https://medicare-california.com/#benefits                              301
+/beneficios-en                               https://medicare-california.com/#benefits                              301
+/como-inscribirse-medicare-en.html           https://medicare-california.com/how-to-enroll-medicare-california.html 301
+/como-inscribirse-medicare-en                https://medicare-california.com/how-to-enroll-medicare-california.html 301
+/contacto-en.html                            https://medicare-california.com/contact.html                           301
+/contacto-en                                 https://medicare-california.com/contact.html                           301
+/costos-medicare-2026-en.html                https://medicare-california.com/medicare-costs-california.html         301
+/costos-medicare-2026-en                     https://medicare-california.com/medicare-costs-california.html         301
+/doble-elegibilidad-medicare-medicaid-en.html https://medicare-california.com/dual-eligibility-medicare-medi-cal.html 301
+/doble-elegibilidad-medicare-medicaid-en     https://medicare-california.com/dual-eligibility-medicare-medi-cal.html 301
+/index-en.html                               https://medicare-california.com/                                       301
+/index-en-current.html                       https://medicare-california.com/                                       301
+/inscripcion-anual-aep-en.html               https://medicare-california.com/open-enrollment-california.html        301
+/inscripcion-anual-aep-en                    https://medicare-california.com/open-enrollment-california.html        301
+/medicare-advantage-california-en.html       https://medicare-california.com/best-medicare-advantage-california.html 301
+/medicare-advantage-california-en            https://medicare-california.com/best-medicare-advantage-california.html 301
+/medigap-suplementos-california-en.html      https://medicare-california.com/medigap-california.html                301
+/medigap-suplementos-california-en           https://medicare-california.com/medigap-california.html                301
+/partes-medicare-en.html                     https://medicare-california.com/medicare-in-california.html            301
+/partes-medicare-en                          https://medicare-california.com/medicare-in-california.html            301
+/privacy-en.html                             https://medicare-california.com/privacy.html                           301
+/privacy-en                                  https://medicare-california.com/privacy.html                           301
+/que-es-medicare-en.html                     https://medicare-california.com/medicare-in-california.html            301
+/que-es-medicare-en                          https://medicare-california.com/medicare-in-california.html            301
