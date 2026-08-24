@@ -7,26 +7,7 @@
 // AB_TESTS CONFIGURATION - Define your experiments here
 // ──────────────────────────────────────────────────────────────
 
-const AB_TESTS = {
-  // Example test configuration:
-  // 'test-name': {
-  //   enabled: true,
-  //   variants: {
-  //     control: {
-  //       // No changes for control (original experience)
-  //     },
-  //     variant_a: {
-  //       selector: '.element-selector',
-  //       innerHTML: 'New headline text',
-  //       // OR use 'textContent' for text-only changes
-  //       // OR use 'className' to add/change classes
-  //       // OR use 'setAttribute' with {key: value} pairs
-  //     }
-  //   },
-  //   traffic: 0.5,  // 50% see test (0-1)
-  //   duration: 30   // days (optional, for tracking)
-  // }
-};
+const AB_TESTS = { 'hero-overlap-depth': { enabled: true, variants: { control: {}, variant_a: { selector: 'body', addClass: 'ab-deep-overlap' } }, traffic: 1.0, duration: 30 } };
 
 // ──────────────────────────────────────────────────────────────
 // CORE A/B TESTING ENGINE
