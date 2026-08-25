@@ -17,8 +17,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#002147">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Beneficios Medicare | Asesoría Gratuita de Medicare en Español</title>
-<meta name="description" content="Agencia familiar con licencia. Ofrecemos asesoría gratuita en español sobre Medicare Advantage, Medigap y planes de medicinas. Â¡Llame hoy!">
+<title>Medicare en Español: Asesoría Gratuita | Compare Planes</title>
+<meta name="description" content="Compare planes Medicare Advantage, Medigap y Parte D gratis. Equipo familiar bilingüe con licencia en 8 estados. Más de 2,000 familias asesoradas. ¡Llame!">
 <meta name="keywords" content="agente medicare, beneficios medicare, medicare en español, seguros de salud, medicare, kaiser, humana, scan, aetna, unitedhealthcare, inscripcion, medicare enrollment, medicaid, plans, medicare para mis padres, medicare para mis abuelos">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,8 +26,8 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="canonical" href="https://beneficiosmedicare.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Beneficios Medicare | Asesoría Gratuita">
-<meta property="og:description" content="Agencia familiar con licencia. Ofrecemos asesoría gratuita en español sobre Medicare Advantage, Medigap y planes de medicinas. Â¡Llame hoy!">
+<meta property="og:title" content="Medicare en Español: Asesoría Gratuita | Compare Planes">
+<meta property="og:description" content="Compare planes Medicare Advantage, Medigap y Parte D gratis. Equipo familiar bilingüe con licencia en 8 estados. Más de 2,000 familias asesoradas.">
 <meta property="og:url" content="https://beneficiosmedicare.com/">
 <meta property="og:locale" content="es_US">
 <meta property="og:site_name" content="Beneficios Medicare">
@@ -35,8 +35,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Beneficios Medicare | Asesoría Gratuita">
-<meta name="twitter:description" content="Agencia familiar con licencia. Ofrecemos asesoría gratuita en español sobre Medicare Advantage, Medigap y planes de medicinas. Â¡Llame hoy!">
+<meta name="twitter:title" content="Medicare en Español: Asesoría Gratuita | Compare Planes">
+<meta name="twitter:description" content="Compare planes Medicare Advantage, Medigap y Parte D gratis. Equipo familiar bilingüe con licencia en 8 estados. Más de 2,000 familias asesoradas.">
 <meta name="twitter:image" content="https://beneficiosmedicare.com/og-image.png">
       <meta name="google-site-verification" content="9vOTvTlIJkyavplNWTeze2_fRIK3usQCaN6-njTfOh0" />
 <meta name="robots" content="index, follow">
@@ -348,6 +348,11 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: #1a202c; font
   box-shadow: var(--shadow-lg);
   padding: 32px 28px 28px;
 }
+/* A/B test: hero-overlap-depth — variant_a deepens the hanging-card overlap.
+   Control values live inline on #zip-card / .trust-badge-strip above; these
+   rules only apply once ab-testing.js adds .ab-deep-overlap to <body>. */
+body.ab-deep-overlap #zip-card { margin: 0 auto -140px !important; }
+body.ab-deep-overlap .trust-badge-strip { padding: 150px 24px 16px !important; }
 .zip-card label {
   display: block;
   font-size: 14px;
@@ -513,14 +518,14 @@ main { display: block; }
   <!-- Social proof moved inside widget (widget-v4.html) -->
 
   <!-- HERO -->
-  <section class="hero" id="hero" style="padding-top:60px;padding-bottom:48px">
+  <section class="hero" id="hero" style="padding-top:60px;padding-bottom:16px">
     <div style="max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:2">
       <div class="section-label" style="color:var(--green);margin-bottom:16px">ASESORÍA GRATUITA DE MEDICARE</div>
       <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:16px">Expertos en Medicare <em style="font-style:normal;color:var(--green)">en Español</em></h1>
       <p style="font-size:18px;color:var(--gray);max-width:500px;margin:0 auto 36px;line-height:1.6">Todo lo que necesita para elegir su plan</p>
 
       <!-- ZIP FORM (inline, crawlable by search engines and LLMs) -->
-      <div class="zip-card" id="zip-card" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:32px 28px 28px;max-width:400px;margin:0 auto">
+      <div class="zip-card" id="zip-card" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:32px 28px 28px;max-width:400px;margin:0 auto -70px">
         <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px">Su código postal</label>
         <div style="position:relative;margin-bottom:16px">
           <input type="tel" inputmode="numeric" id="zip-input" placeholder="ej. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
@@ -542,7 +547,7 @@ main { display: block; }
   </section>
 
   <!-- TRUST BADGE STRIP -->
-  <div class="trust-badge-strip" style="padding:16px 24px;background:white;border-top:1px solid rgba(0,33,71,0.08);border-bottom:1px solid rgba(0,33,71,0.08);text-align:center">
+  <div class="trust-badge-strip" style="padding:80px 24px 16px;background:white;border-top:1px solid rgba(0,33,71,0.08);border-bottom:1px solid rgba(0,33,71,0.08);text-align:center">
     <div style="max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:12px 20px;flex-wrap:wrap;font-size:13px;color:var(--gray);font-weight:500">
       <div style="display:flex;align-items:center;gap:6px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--green)" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
