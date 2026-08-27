@@ -7,7 +7,16 @@
 // AB_TESTS CONFIGURATION - Define your experiments here
 // ──────────────────────────────────────────────────────────────
 
-const AB_TESTS = { 'hero-overlap-depth': { enabled: true, variants: { control: {}, variant_a: { selector: 'body', addClass: 'ab-deep-overlap' } }, traffic: 1.0, duration: 30 } };
+const AB_TESTS = {
+  // 'hero-overlap-depth' test (started 2026-08-24 on staging, closed 2026-08-25 per
+  // Alejandra's decision -- shipping a single version instead of testing, no more
+  // A/B tests by default). Kept control only: shallow overlap, the shorter of the
+  // two backgrounds (ends near the Comenzar button). Control was always the
+  // zero-change default, so removing the test config alone is enough; no other
+  // file needs to change. The unused .ab-deep-overlap CSS override still sits
+  // next to #zip-card / .trust-badge-strip in index.html on this branch --
+  // harmless dead code, safe to strip during a future cleanup pass.
+};
 
 // ──────────────────────────────────────────────────────────────
 // CORE A/B TESTING ENGINE
