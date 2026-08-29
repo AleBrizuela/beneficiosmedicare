@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,413 +14,135 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Find the best Medicare plans in Orange County, California. Free expert guidance from licensed agents. Compare plans for your ZIP code today.">
-    <meta name="keywords" content="Medicare Orange County, Medicare plans Orange County CA, senior health insurance">
-    <meta property="og:title" content="Medicare Help in Orange County, California - Free Expert Guidance | Medicare California">
-    <meta property="og:description" content="Free, personalized Medicare guidance for Orange County residents. Get expert help choosing the right Medicare plan.">
-    <meta property="og:image" content="https://medicare-california.com/og-image.jpg">
-    <meta property="og:url" content="https://medicare-california.com/california/cities/orange-county.html">
+    <title>Ayuda con Medicare en Orange, California | Beneficios Medicare</title>
+    <meta name="description" content="Asesoría gratuita de Medicare en español para residentes de Orange, California. Compare planes Medicare Advantage, Medigap y Parte D. Agentes licenciados bilingües.">
+    <meta name="keywords" content="Medicare Orange, Medicare en español Orange, planes Medicare Orange California, agente Medicare Orange">
+    <link rel="canonical" href="https://beneficiosmedicare.com/california/cities/orange-county.html">
+    <meta property="og:title" content="Ayuda con Medicare en Orange, California | Beneficios Medicare">
+    <meta property="og:description" content="Asesoría gratuita de Medicare en español para residentes de Orange. Compare planes Medicare Advantage y Medigap con agentes bilingües licenciados.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://beneficiosmedicare.com/california/cities/orange-county.html">
+    <meta property="og:image" content="https://beneficiosmedicare.com/og-image.png">
+    <meta property="og:locale" content="es_US">
+    <meta property="og:site_name" content="Beneficios Medicare">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://medicare-california.com/california/cities/orange-county.html">
-    <title>Medicare Help in Orange County, California - Free Expert Guidance | Medicare California</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/orange-county.html">
+    <link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/orange-county.html">
+    <link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/orange-county.html">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon-beneficios.svg">
 
     <style>
         :root {
+            --navy: #002147;
+            --green: #00897B;
+            --green-dark: #00796B;
+            --teal: #26A69A;
+            --mint: #B2DFDB;
+            --lt-blue: #E8F2FA;
+            --lt-green: #E0F2F1;
             --charcoal: #1a1a1a;
-            --terra: #0080D4;
-            --terra-dark: #0068B0;
-            --soft-blue: #3D9BE9;
-            --light-blue: #E8F2FC;
             --text: #4a4a4a;
+            --gray: #4A5568;
             --white: #FFFFFF;
-            --bg: #F5F8FC;
-            --navy: #0C2340;
-            --radius: 14px;
+            --bg: #F5F8F7;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,60,113,0.10);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Open Sans', sans-serif; color: var(--text); line-height: 1.65; background-color: var(--bg); }
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            background-color: var(--bg);
-        }
+        /* Header */
+        .header { background: rgba(255,255,255,0.97); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 70px; }
+        .logo { font-size: 22px; font-weight: 700; color: var(--green); text-decoration: none; display: flex; align-items: center; }
+        #desktop-nav { display: flex; align-items: center; gap: 8px; }
+        #desktop-nav a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--gray); padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+        #desktop-nav a:hover { color: var(--navy); background: var(--lt-blue); }
+        .lang-pill { display: inline-flex; border: 2px solid var(--navy); border-radius: 999px; overflow: hidden; margin-left: 8px; }
+        .lang-pill button { background: none; border: none; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--navy); transition: background 0.18s, color 0.18s; }
+        .lang-pill button.lp-active { background: var(--navy); color: #fff; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer; }
 
-        /* Navigation */
-        nav {
-            background-color: var(--white);
-            padding: 1.2rem 2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        /* Breadcrumb */
+        .breadcrumb { max-width: 1200px; margin: 0 auto; padding: 12px 24px; font-size: 0.85rem; }
+        .breadcrumb a { color: var(--green); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: var(--gray); }
 
-        nav .brand {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--terra);
-        }
+        /* Hero */
+        .hero { background: linear-gradient(135deg, var(--lt-green) 0%, #F0F7F6 100%); padding: 4rem 2rem; text-align: center; }
+        .hero h1 { font-size: 2.8rem; color: var(--navy); margin-bottom: 0.5rem; font-weight: 700; }
+        .hero .subtitle { font-size: 1.2rem; color: var(--text); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .zip-form { max-width: 500px; margin: 2rem auto; display: flex; gap: 0.5rem; }
+        .zip-form input { flex: 1; padding: 0.9rem; border: 2px solid var(--green); border-radius: var(--radius); font-size: 1rem; font-family: 'Open Sans', sans-serif; }
+        .zip-form button { padding: 0.9rem 2rem; background-color: var(--green); color: var(--white); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+        .zip-form button:hover { background-color: var(--green-dark); }
+        .trust-checks { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+        .trust-item { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+        .trust-item::before { content: "✓ "; color: var(--green); font-weight: 700; margin-right: 0.5rem; }
 
-        nav .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
+        /* Stats */
+        .stats { background-color: var(--navy); color: var(--white); padding: 3rem 2rem; text-align: center; }
+        .stats-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .stat-card { padding: 1.5rem; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--teal); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: #e0e0e0; }
 
-        nav a {
-            text-decoration: none;
-            color: var(--text);
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
+        /* Why Choose */
+        .why-choose { max-width: 1200px; margin: 3rem auto; padding: 2rem; }
+        .why-choose h2 { font-size: 2rem; color: var(--navy); text-align: center; margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .benefit-card { background-color: var(--white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s; }
+        .benefit-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,137,123,0.15); }
+        .benefit-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .benefit-card h3 { font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .benefit-card p { color: var(--text); font-size: 0.95rem; }
 
-        nav a:hover {
-            color: var(--terra);
-        }
+        /* Local Info */
+        .local-info { max-width: 1200px; margin: 3rem auto; padding: 2rem; background-color: var(--white); border-radius: var(--radius); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .local-info h2 { font-size: 2rem; color: var(--navy); margin-bottom: 1.5rem; }
+        .local-info p { color: var(--text); margin-bottom: 1.2rem; line-height: 1.8; font-size: 1rem; }
 
-        .cta-btn {
-            background-color: var(--terra);
-            color: var(--white);
-            padding: 0.7rem 1.5rem;
-            border-radius: var(--radius);
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            border: none;
-            cursor: pointer;
-        }
+        /* FAQ */
+        .faq { max-width: 1200px; margin: 3rem auto; padding: 2rem; }
+        .faq h2 { font-size: 2rem; color: var(--navy); text-align: center; margin-bottom: 2rem; }
+        .faq-item { background-color: var(--white); margin-bottom: 1.5rem; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .faq-question { padding: 1.5rem; background-color: var(--lt-green); color: var(--charcoal); font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s; }
+        .faq-question:hover { background-color: #c8e6c3; }
+        .faq-answer { padding: 1.5rem; color: var(--text); display: none; }
+        .faq-answer.active { display: block; }
+        .faq-toggle { font-size: 1.5rem; color: var(--green); }
 
-        .cta-btn:hover {
-            background-color: var(--terra-dark);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #E8F2FC 0%, #F0F4F8 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            color: var(--charcoal);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .hero .subtitle {
-            font-size: 1.2rem;
-            color: var(--text);
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .zip-form {
-            max-width: 500px;
-            margin: 2rem auto;
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .zip-form input {
-            flex: 1;
-            padding: 0.9rem;
-            border: 2px solid var(--terra);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .zip-form button {
-            padding: 0.9rem 2rem;
-            background-color: var(--terra);
-            color: var(--white);
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .zip-form button:hover {
-            background-color: var(--terra-dark);
-        }
-
-        .trust-checks {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .trust-item {
-            font-size: 0.9rem;
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .trust-item::before {
-            content: "✓ ";
-            color: var(--terra);
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-
-        /* Stats Section */
-        .stats {
-            background-color: var(--navy);
-            color: var(--white);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .stats-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-card {
-            padding: 1.5rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--soft-blue);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: #e0e0e0;
-        }
-
-        /* Why Choose Us Section */
-        .why-choose {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 2rem;
-        }
-
-        .why-choose h2 {
-            font-size: 2rem;
-            color: var(--charcoal);
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .benefit-card {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 128, 212, 0.15);
-        }
-
-        .benefit-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .benefit-card h3 {
-            font-size: 1.3rem;
-            color: var(--charcoal);
-            margin-bottom: 0.5rem;
-        }
-
-        .benefit-card p {
-            color: var(--text);
-            font-size: 0.95rem;
-        }
-
-        /* Local Info Section */
-        .local-info {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: var(--radius);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .local-info h2 {
-            font-size: 2rem;
-            color: var(--charcoal);
-            margin-bottom: 1.5rem;
-        }
-
-        .local-info p {
-            color: var(--text);
-            margin-bottom: 1.2rem;
-            line-height: 1.8;
-            font-size: 1rem;
-        }
-
-        /* FAQ Section */
-        .faq {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 2rem;
-        }
-
-        .faq h2 {
-            font-size: 2rem;
-            color: var(--charcoal);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .faq-item {
-            background-color: var(--white);
-            margin-bottom: 1.5rem;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            background-color: var(--light-blue);
-            color: var(--charcoal);
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
-
-        .faq-question:hover {
-            background-color: #d4e9f8;
-        }
-
-        .faq-answer {
-            padding: 1.5rem;
-            color: var(--text);
-            display: none;
-        }
-
-        .faq-answer.active {
-            display: block;
-        }
-
-        .faq-toggle {
-            font-size: 1.5rem;
-            color: var(--terra);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background-color: var(--navy);
-            color: var(--white);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #e0e0e0;
-        }
-
-        .cta-section .cta-btn {
-            font-size: 1.1rem;
-            padding: 0.9rem 2.5rem;
-        }
+        /* CTA */
+        .cta-section { background-color: var(--navy); color: var(--white); padding: 3rem 2rem; text-align: center; }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .cta-section p { font-size: 1.1rem; margin-bottom: 2rem; color: #e0e0e0; }
+        .cta-btn { background-color: var(--green); color: var(--white); padding: 0.9rem 2.5rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: background-color 0.3s; border: none; cursor: pointer; }
+        .cta-btn:hover { background-color: var(--green-dark); }
 
         /* Footer */
-        footer {
-            background-color: var(--charcoal);
-            color: var(--white);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            margin-top: 3rem;
-        }
+        footer { background-color: var(--navy); color: var(--white); padding: 20px 24px 16px; text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; font-size: 13px; }
+        .footer-links a { color: var(--lt-blue); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--green); }
+        .footer-contact { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 13px; }
+        .footer-contact a { color: var(--lt-blue); text-decoration: none; }
+        .disclaimer { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.5; }
 
-        footer p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-        }
-
-        .footer-links a {
-            color: var(--soft-blue);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--terra);
-        }
-
-        .disclaimer {
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 1.5rem;
-            line-height: 1.5;
-        }
+        /* Mobile nav */
+        .mobile-nav { display: none; position: fixed; top: 70px; left: 0; right: 0; background: white; padding: 12px 16px; flex-direction: column; gap: 8px; z-index: 900; box-shadow: var(--shadow); }
+        .mobile-nav.active { display: flex; }
+        .mobile-nav a { text-decoration: none; color: var(--navy); padding: 12px 16px; font-size: 16px; }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .zip-form {
-                flex-direction: column;
-            }
-
-            nav .nav-links {
-                gap: 1rem;
-            }
-
-            .trust-checks {
-                gap: 1rem;
-                font-size: 0.85rem;
-            }
+            .hero h1 { font-size: 2rem; }
+            .zip-form { flex-direction: column; }
+            #desktop-nav { display: none !important; }
+            .mobile-menu-btn { display: inline-block; }
+            .trust-checks { gap: 1rem; font-size: 0.85rem; }
         }
     </style>
 
@@ -428,19 +150,19 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": "Medicare California - Orange County",
-        "description": "Free Medicare guidance and plan comparison for Orange County residents",
-        "url": "https://medicare-california.com/california/cities/orange-county.html",
+        "@type": "InsuranceAgency",
+        "name": "Beneficios Medicare - Orange",
+        "description": "Asesoría gratuita de Medicare en español para residentes de Orange y el Condado de Orange",
+        "url": "https://beneficiosmedicare.com/california/cities/orange-county.html",
+        "telephone": "+1-310-597-9142",
         "areaServed": {
             "@type": "City",
-            "name": "Orange County",
+            "name": "Orange",
             "addressCountry": "US",
             "addressRegion": "CA"
         },
-        "telephone": "+1-800-MEDICARE",
-        "priceRange": "Free",
-        "image": "https://medicare-california.com/logo.png"
+        "priceRange": "Gratis",
+        "availableLanguage": ["es", "en"]
     }
     </script>
 
@@ -451,26 +173,34 @@
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "How many Medicare plans are available in Orange County?",
+                "name": "¿Cuántos planes de Medicare hay disponibles en el Condado de Orange?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Orange County residents typically have access to approximately 45 Medicare Advantage plans and numerous Medigap supplement options. The availability varies by ZIP code, with popular carriers including Kaiser Permanente, SCAN Health Plan, CalOptima, and Blue Shield of California. Our agents can help you compare all available options for your specific area."
+                    "text": "Los residentes del Condado de Orange tienen acceso a más de 35 planes Medicare Advantage y múltiples opciones de Medigap. La competencia entre aseguradoras en esta región resulta en planes con excelentes beneficios adicionales."
                 }
             },
             {
                 "@type": "Question",
-                "name": "Can I keep my UCI Health or Hoag Hospital doctors with Medicare?",
+                "name": "¿Puedo conservar mi doctor de Hoag Hospital o UCI Medical Center con Medicare?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Many Orange County Medicare Advantage plans maintain networks with major healthcare systems including UCI Health and Hoag Hospital. It's important to verify that your preferred doctors and hospitals are included in your chosen plan's network. Our licensed agents can confirm whether your current healthcare providers accept your Medicare coverage."
+                    "text": "Muchos planes de Medicare en el Condado de Orange incluyen Hoag Memorial Hospital y UCI Medical Center en sus redes de proveedores. Siempre confirme que sus doctores preferidos participan en su plan antes de inscribirse."
                 }
             },
             {
                 "@type": "Question",
-                "name": "When is the best time to enroll in Medicare in Orange County?",
+                "name": "¿Cuándo es el mejor momento para inscribirse en Medicare en el Condado de Orange?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Your Initial Enrollment Period begins 3 months before your 65th birthday and extends 3 months after. Open Enrollment Period runs from October 15 to December 7 each year, allowing you to make changes. If you miss these windows, late enrollment penalties may apply. Contact our team for guidance on your specific situation."
+                    "text": "Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para obtener la mejor cobertura."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Cómo encuentro ayuda con Medicare cerca de mí en el Condado de Orange?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Encontrar ayuda con Medicare cerca de usted en el Condado de Orange es fácil. Nuestros agentes licenciados sirven el área de el Condado de Orange con comparaciones de planes gratuitas y personalizadas. Ya sea que necesite Medicare Advantage, Medigap o cobertura de la Parte D, le ayudamos a comparar opciones de las mejores aseguradoras disponibles en su código postal. Llámenos o use nuestra herramienta en línea para conectarse con un experto local en Medicare cerca de usted hoy."
                 }
             }
         ]
@@ -485,20 +215,26 @@
             {
                 "@type": "ListItem",
                 "position": 1,
-                "name": "Home",
-                "item": "https://medicare-california.com"
+                "name": "Inicio",
+                "item": "https://beneficiosmedicare.com"
             },
             {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Cities",
-                "item": "https://medicare-california.com/california/cities/"
+                "name": "California",
+                "item": "https://beneficiosmedicare.com/california/"
             },
             {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Orange County",
-                "item": "https://medicare-california.com/california/cities/orange-county.html"
+                "name": "Ciudades",
+                "item": "https://beneficiosmedicare.com/california/cities/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Orange",
+                "item": "https://beneficiosmedicare.com/california/cities/orange-county.html"
             }
         ]
     }
@@ -506,168 +242,201 @@
 </head>
 <body>
 <!-- CMS Disclaimer -->
-<div style="background:#F7F8FA;color:#4b5563;text-align:center;padding:4px 16px;font-size:12px;line-height:1.4;font-weight:400;position:relative;z-index:1100">
-  Sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
+<div style="background:#fff;text-align:center;font-size:11px;padding:6px 16px;color:#9CA3AF;border-bottom:1px solid #f0f0f0;line-height:1.4;position:relative;z-index:1100">
+  Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
 </div>
-    <!-- Navigation -->
-    <nav>
-        <div class="brand"><a href="https://medicare-california.com" style="text-decoration:none"><svg viewBox="0 0 260 48" width="195" height="36" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#sg)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="Open Sans,Segoe UI,Helvetica Neue,Arial,sans-serif"><tspan x="50" font-size="22" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="5" font-size="22" font-weight="600" fill="#3D9BE9">California</tspan></text></svg></a></div>
-        <div class="nav-links">
-            <a href="https://medicare-california.com/california/cities/">All Cities</a>
-            <button class="cta-btn" onclick="window.location.href='https://medicare-california.com'">Find Your Plan</button>
-        </div>
-    </nav>
 
-    <main>
-    <!-- Hero Section -->
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo"><svg viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
+    <nav id="desktop-nav">
+      <a href="/">Inicio</a>
+      <a href="/beneficios.html">Beneficios</a>
+      <a href="/california/cities/">Ciudades</a>
+      <a href="/contacto.html">Contáctenos</a>
+      <div class="lang-pill"><button class="lp-active" aria-label="Español">ES</button><a href="https://medicare-california.com/california/cities/orange-county.html" style="padding:5px 14px;font-size:0.82rem;font-weight:700;color:var(--navy);text-decoration:none" aria-label="English">EN</a></div>
+    </nav>
+    <button class="mobile-menu-btn" onclick="toggleMobile()" aria-label="Abrir menú"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Inicio</a>
+  <a href="/beneficios.html">Beneficios</a>
+  <a href="/california/cities/">Ciudades</a>
+  <a href="/contacto.html">Contáctenos</a>
+  <div class="lang-pill"><button class="lp-active" aria-label="Español">ES</button><a href="https://medicare-california.com/california/cities/orange-county.html" style="padding:5px 14px;font-size:0.82rem;font-weight:700;color:var(--navy);text-decoration:none" aria-label="English">EN</a></div>
+</div>
+
+<main>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Inicio</a> <span>›</span>
+        <a href="/california/cities/">Ciudades</a> <span>›</span>
+        <span>Orange</span>
+    </div>
+
+    <!-- Hero -->
     <section class="hero">
-        <h1>Medicare Help in Orange County</h1>
-        <p class="subtitle">Free, personalized Medicare guidance for Orange County and Orange County residents</p>
+        <h1>Ayuda con Medicare en el Condado de Orange</h1>
+        <p class="subtitle">Asesoría gratuita y personalizada de Medicare para residentes de el Condado de Orange y el Condado de Orange</p>
 
         <div class="zip-form">
-            <input type="text" id="city-zip" placeholder="Enter your ZIP code" maxlength="5" inputmode="numeric">
-            <button onclick="handleZip()">Get Started</button>
+            <input type="tel" id="city-zip" placeholder="Ingrese su código postal" maxlength="5" inputmode="numeric" autocomplete="postal-code">
+            <button onclick="handleZip()">Comenzar</button>
         </div>
 
         <div class="trust-checks">
-            <div class="trust-item">100% Free</div>
+            <div class="trust-item">100% Gratis</div>
             <div class="trust-item">Hablamos Español</div>
-            <div class="trust-item">Licensed Agents</div>
+            <div class="trust-item">Agentes Licenciados</div>
         </div>
     </section>
 
-    <!-- Stats Section -->
+    <!-- Stats -->
     <section class="stats">
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-number">530K+</div>
-                <div class="stat-label">Medicare Beneficiaries</div>
+                <div class="stat-number">500K+</div>
+                <div class="stat-label">Beneficiarios de Medicare</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">45</div>
-                <div class="stat-label">Medicare Advantage Plans Available</div>
+                <div class="stat-number">35+</div>
+                <div class="stat-label">Planes Medicare Advantage</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number">15+</div>
-                <div class="stat-label">Serving Orange County</div>
+                <div class="stat-label">Aseguradoras Principales</div>
             </div>
         </div>
     </section>
 
     <!-- Why Choose Us -->
     <section class="why-choose">
-        <h2>Why Orange County Residents Choose Us</h2>
+        <h2>Por Qué los Residentes de el Condado de Orange Nos Eligen</h2>
         <div class="benefits-grid">
             <div class="benefit-card">
                 <div class="benefit-icon">🏥</div>
-                <h3>Local Knowledge</h3>
-                <p>We know Orange County's Medicare landscape inside and out. From Huntington Beach to Santa Ana, we understand your area's specific healthcare needs and plan options.</p>
+                <h3>Expertos en el Condado de Orange</h3>
+                <p>Conocemos el mercado de salud del Condado de Orange. Desde Anaheim hasta Irvine, Newport Beach y Santa Ana, sabemos qué planes ofrecen la mejor cobertura.</p>
             </div>
             <div class="benefit-card">
                 <div class="benefit-icon">🗣️</div>
-                <h3>Bilingual Guidance</h3>
-                <p>English and Spanish speaking agents ready to help. We ensure clear communication about your Medicare options in the language you're most comfortable with.</p>
+                <h3>Atención Bilingüe</h3>
+                <p>Agentes que hablan español disponibles para ayudarle. La creciente comunidad hispana del Condado de Orange merece asesoría de Medicare en su idioma.</p>
             </div>
             <div class="benefit-card">
                 <div class="benefit-icon">💰</div>
-                <h3>Completely Free</h3>
-                <p>No cost for our expert help. We're paid by insurance carriers, not by you, so our advice is always in your best interest.</p>
+                <h3>Completamente Gratis</h3>
+                <p>Sin costo por nuestra ayuda. Las aseguradoras nos compensan directamente para que usted reciba asesoría imparcial.</p>
             </div>
         </div>
     </section>
 
     <!-- Local Info -->
     <section class="local-info">
-        <h2>Medicare in Orange County: What You Need to Know</h2>
-        <p>Orange County, home to over 3 million residents and one of California's largest Medicare populations, offers an exceptionally diverse range of healthcare options. The region's well-developed medical infrastructure, including world-renowned healthcare systems and hospitals, makes Medicare planning particularly important to ensure you maintain access to quality care.</p>
-
-        <p>Medicare beneficiaries in Orange County have access to some of California's most comprehensive plan offerings. Kaiser Permanente dominates the HMO market with strong networks throughout the county, while SCAN Health Plan and CalOptima provide competitive Medicare Advantage options with excellent coverage for Orange County-specific healthcare needs. Blue Shield of California, Alignment Healthcare, and other carriers also offer attractive plans with local provider networks. The region's proximity to major medical centers means you'll have excellent access to specialized care regardless of which plan you choose.</p>
-
-        <p>The Orange County healthcare landscape is particularly competitive, with multiple options in coastal areas like Irvine, Laguna Hills, and Huntington Beach, as well as in inland communities like Anaheim and Garden Grove. Whether you're looking for Original Medicare supplemented with a Medigap policy, a Medicare Advantage plan with prescription drug coverage, or a prescription drug plan, our agents understand the nuances of Orange County's market and can match you with the plan that best fits your lifestyle and healthcare preferences.</p>
+        <h2>Medicare en el Condado de Orange: Guía de Salud</h2>
+        <p>El Condado de Orange, hogar de más de 3 millones de residentes, cuenta con uno de los sistemas de salud más avanzados de California. Con más de 500,000 beneficiarios de Medicare, la región ofrece una amplia selección de planes de alta calidad.</p>
+        <p>Las principales aseguradoras incluyen Kaiser Permanente, Blue Shield of California, UnitedHealthcare, SCAN Health Plan y Alignment Health Plan. Hoag Memorial Hospital, UCI Medical Center y Providence St. Joseph Hospital son instalaciones de primer nivel incluidas en la mayoría de las redes de planes Medicare.</p>
+        <p>El Condado de Orange tiene una diversa población hispana, especialmente en ciudades como Santa Ana, Anaheim y Garden Grove. Nuestros agentes bilingües conocen las necesidades de la comunidad y pueden ayudarle a encontrar el plan que mejor se adapte a su situación de salud y presupuesto.</p>
     </section>
 
-    <!-- FAQ Section -->
+    <!-- FAQ -->
     <section class="faq">
-        <h2>Frequently Asked Questions</h2>
+        <h2>Preguntas Frecuentes</h2>
 
         <div class="faq-item">
             <div class="faq-question" onclick="toggleFaq(this)">
-                <span>How many Medicare plans are available in Orange County?</span>
+                <span>¿Cuántos planes de Medicare hay disponibles en el Condado de Orange?</span>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Orange County residents typically have access to approximately 45 Medicare Advantage plans and numerous Medigap supplement options. The availability varies by ZIP code, with popular carriers including Kaiser Permanente, SCAN Health Plan, CalOptima, and Blue Shield of California. Our agents can help you compare all available options for your specific area.</p>
+                <p>Los residentes del Condado de Orange tienen acceso a más de 35 planes Medicare Advantage y múltiples opciones de Medigap. La competencia entre aseguradoras en esta región resulta en planes con excelentes beneficios adicionales.</p>
             </div>
         </div>
-
         <div class="faq-item">
             <div class="faq-question" onclick="toggleFaq(this)">
-                <span>Can I keep my UCI Health or Hoag Hospital doctors with Medicare?</span>
+                <span>¿Puedo conservar mi doctor de Hoag Hospital o UCI Medical Center con Medicare?</span>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Many Orange County Medicare Advantage plans maintain networks with major healthcare systems including UCI Health and Hoag Hospital. It's important to verify that your preferred doctors and hospitals are included in your chosen plan's network. Our licensed agents can confirm whether your current healthcare providers accept your Medicare coverage.</p>
+                <p>Muchos planes de Medicare en el Condado de Orange incluyen Hoag Memorial Hospital y UCI Medical Center en sus redes de proveedores. Siempre confirme que sus doctores preferidos participan en su plan antes de inscribirse.</p>
             </div>
         </div>
-
         <div class="faq-item">
             <div class="faq-question" onclick="toggleFaq(this)">
-                <span>When is the best time to enroll in Medicare in Orange County?</span>
+                <span>¿Cuándo es el mejor momento para inscribirse en Medicare en el Condado de Orange?</span>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Your Initial Enrollment Period begins 3 months before your 65th birthday and extends 3 months after. Open Enrollment Period runs from October 15 to December 7 each year, allowing you to make changes. If you miss these windows, late enrollment penalties may apply. Contact our team for guidance on your specific situation.</p>
+                <p>Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para obtener la mejor cobertura.</p>
             </div>
         </div>
-    </section>
-
-
-            <div class="faq-item">
-                <h3>¿Cómo encuentro ayuda con Medicare cerca de mí en el Condado de Orange?</h3>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Cómo encuentro ayuda con Medicare cerca de mí en el Condado de Orange?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
                 <p>Encontrar ayuda con Medicare cerca de usted en el Condado de Orange es fácil. Nuestros agentes licenciados sirven el área de el Condado de Orange con comparaciones de planes gratuitas y personalizadas. Ya sea que necesite Medicare Advantage, Medigap o cobertura de la Parte D, le ayudamos a comparar opciones de las mejores aseguradoras disponibles en su código postal. Llámenos o use nuestra herramienta en línea para conectarse con un experto local en Medicare cerca de usted hoy.</p>
             </div>
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <h2>Ready to Find Your Medicare Plan in Orange County?</h2>
-        <p>Let our licensed agents guide you through all available options at no cost to you.</p>
-        <button class="cta-btn" onclick="window.location.href='https://medicare-california.com'">Compare Plans Free</button>
+        </div>
     </section>
-    </main>
 
-    <!-- Footer -->
-    <footer>
-        <p><strong>Medicare California</strong> - Your trusted resource for Medicare guidance in California</p>
-        <p>We help California residents navigate Medicare options and find plans that fit their healthcare needs and budget.</p>
-        <div class="footer-links">
-            <a href="https://medicare-california.com">Home</a>
-            <a href="https://medicare-california.com/about">About Us</a>
-            <a href="https://medicare-california.com/contact">Contact</a>
-            <a href="https://medicare-california.com/privacy">Privacy Policy</a>
-            <a href="https://medicare-california.com/terms">Terms of Service</a>
-        </div>
-        <div class="disclaimer">
-            <p>This website is not affiliated with or endorsed by the U.S. government or the federal Medicare program. We are a private organization that helps seniors find Medicare plans. Licensed insurance agents available to help guide your Medicare decisions.</p>
-        </div>
-    </footer>
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>¿Listo para Encontrar su Plan de Medicare en el Condado de Orange?</h2>
+        <p>Permita que nuestros agentes licenciados lo guíen a través de todas las opciones disponibles sin costo alguno.</p>
+        <button class="cta-btn" onclick="window.location.href='/'">Compare Planes Gratis</button>
+    </section>
+</main>
 
-    <script>
-        function handleZip() {
-            var zip = document.getElementById('city-zip').value.replace(/\D/g,'');
-            if(zip.length === 5) {
-                window.top.location.href = 'https://medicare-california.com/?zip=' + zip;
-            }
+<!-- Footer -->
+<footer>
+  <div style="max-width:960px;margin:0 auto">
+    <div style="font-size:18px;color:var(--mint);margin-bottom:10px">Susana Marcos LLC</div>
+    <div class="footer-links">
+      <a href="/"><i class="fas fa-home"></i> Inicio</a>
+      <a href="/beneficios.html"><i class="fas fa-heart"></i> Beneficios</a>
+      <a href="/california/cities/"><i class="fas fa-map-marked-alt"></i> Ciudades</a>
+      <a href="/blog/"><i class="fas fa-pen"></i> Blog</a>
+    </div>
+    <div class="footer-contact">
+      <a href="tel:+13105979142"><i class="fas fa-phone-alt"></i> Llame</a>
+      <a href="https://wa.me/13105979142" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      <a href="mailto:alejamedicare@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+    </div>
+    <p style="font-size:12px;margin-bottom:8px"><a href="/privacidad.html" style="color:rgba(255,255,255,0.5);text-decoration:none"><i class="fas fa-lock"></i> Política de Privacidad</a></p>
+    <p class="disclaimer">No ofrecemos todos los planes disponibles en su área. Visite Medicare.gov o llame al 1-800-Medicare. Sitio no es parte del gobierno federal ni del programa de Medicare.</p>
+  </div>
+</footer>
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/13105979142?text=Hola%2C%20necesito%20ayuda%20con%20Medicare" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:999;text-decoration:none" target="_blank" title="WhatsApp">
+  <i class="fab fa-whatsapp" style="font-size:28px;color:white"></i>
+</a>
+
+<script>
+    function handleZip() {
+        var zip = document.getElementById('city-zip').value.replace(/\D/g,'');
+        if(zip.length === 5) {
+            window.location.href = '/?zip=' + zip;
         }
-
-        document.getElementById('city-zip').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') handleZip();
-        });
-
-        function toggleFaq(element) {
-            const answer = element.nextElementSibling;
-            const toggle = element.querySelector('.faq-toggle');
-            answer.classList.toggle('active');
-            toggle.textContent = answer.classList.contains('active') ? '−' : '+';
-        }
-    </script>
+    }
+    document.getElementById('city-zip').addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') handleZip();
+    });
+    function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const toggle = element.querySelector('.faq-toggle');
+        answer.classList.toggle('active');
+        toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+    }
+    function toggleMobile() {
+        document.getElementById('mobile-nav').classList.toggle('active');
+    }
+</script>
 </body>
 </html>

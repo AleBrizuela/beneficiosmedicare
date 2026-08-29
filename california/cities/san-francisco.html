@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,604 +14,155 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicare Help in San Francisco, California - Free Expert Guidance | Medicare California</title>
-    <meta name="description" content="Free Medicare guidance for San Francisco residents. Compare plans from Kaiser, Anthem, UnitedHealth & more. Licensed agents speak English & Spanish. Get your plan today!">
-    <meta name="keywords" content="Medicare San Francisco, San Francisco Medicare plans, Medicare in SF County">
-    <link rel="canonical" href="https://medicare-california.com/california/cities/san-francisco.html">
-
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Medicare Help in San Francisco, California - Free Expert Guidance">
-    <meta property="og:description" content="Free Medicare guidance for San Francisco residents. Compare plans from Kaiser, Anthem, UnitedHealth & more.">
+    <title>Ayuda con Medicare en San Francisco, California | Beneficios Medicare</title>
+    <meta name="description" content="Asesoría gratuita de Medicare en español para residentes de San Francisco, California. Compare planes Medicare Advantage, Medigap y Parte D. Agentes licenciados bilingües.">
+    <meta name="keywords" content="Medicare San Francisco, Medicare en español San Francisco, planes Medicare San Francisco California, agente Medicare San Francisco">
+    <link rel="canonical" href="https://beneficiosmedicare.com/california/cities/san-francisco.html">
+    <meta property="og:title" content="Ayuda con Medicare en San Francisco, California | Beneficios Medicare">
+    <meta property="og:description" content="Asesoría gratuita de Medicare en español para residentes de San Francisco. Compare planes Medicare Advantage y Medigap con agentes bilingües licenciados.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://medicare-california.com/california/cities/san-francisco.html">
-    <meta property="og:image" content="https://medicare-california.com/images/san-francisco-medicare.jpg">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta property="og:url" content="https://beneficiosmedicare.com/california/cities/san-francisco.html">
+    <meta property="og:image" content="https://beneficiosmedicare.com/og-image.png">
+    <meta property="og:locale" content="es_US">
+    <meta property="og:site_name" content="Beneficios Medicare">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/san-francisco.html">
+    <link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/san-francisco.html">
+    <link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/san-francisco.html">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon-beneficios.svg">
 
     <style>
         :root {
+            --navy: #002147;
+            --green: #00897B;
+            --green-dark: #00796B;
+            --teal: #26A69A;
+            --mint: #B2DFDB;
+            --lt-blue: #E8F2FA;
+            --lt-green: #E0F2F1;
             --charcoal: #1a1a1a;
-            --terra: #0080D4;
-            --terra-dark: #0068B0;
-            --soft-blue: #3D9BE9;
-            --light-blue: #E8F2FC;
             --text: #4a4a4a;
+            --gray: #4A5568;
             --white: #FFFFFF;
-            --bg: #F5F8FC;
-            --navy: #0C2340;
-            --radius: 14px;
+            --bg: #F5F8F7;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,60,113,0.10);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Open Sans', sans-serif; color: var(--text); line-height: 1.65; background-color: var(--bg); }
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            color: var(--text);
-            background-color: var(--bg);
-            line-height: 1.6;
-        }
+        /* Header */
+        .header { background: rgba(255,255,255,0.97); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 70px; }
+        .logo { font-size: 22px; font-weight: 700; color: var(--green); text-decoration: none; display: flex; align-items: center; }
+        #desktop-nav { display: flex; align-items: center; gap: 8px; }
+        #desktop-nav a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--gray); padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+        #desktop-nav a:hover { color: var(--navy); background: var(--lt-blue); }
+        .lang-pill { display: inline-flex; border: 2px solid var(--navy); border-radius: 999px; overflow: hidden; margin-left: 8px; }
+        .lang-pill button { background: none; border: none; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--navy); transition: background 0.18s, color 0.18s; }
+        .lang-pill button.lp-active { background: var(--navy); color: #fff; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer; }
 
-        /* Navigation */
-        nav {
-            background-color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        /* Breadcrumb */
+        .breadcrumb { max-width: 1200px; margin: 0 auto; padding: 12px 24px; font-size: 0.85rem; }
+        .breadcrumb a { color: var(--green); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: var(--gray); }
 
-        .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--terra);
-            text-decoration: none;
-        }
+        /* Hero */
+        .hero { background: linear-gradient(135deg, var(--lt-green) 0%, #F0F7F6 100%); padding: 4rem 2rem; text-align: center; }
+        .hero h1 { font-size: 2.8rem; color: var(--navy); margin-bottom: 0.5rem; font-weight: 700; }
+        .hero .subtitle { font-size: 1.2rem; color: var(--text); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .zip-form { max-width: 500px; margin: 2rem auto; display: flex; gap: 0.5rem; }
+        .zip-form input { flex: 1; padding: 0.9rem; border: 2px solid var(--green); border-radius: var(--radius); font-size: 1rem; font-family: 'Open Sans', sans-serif; }
+        .zip-form button { padding: 0.9rem 2rem; background-color: var(--green); color: var(--white); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+        .zip-form button:hover { background-color: var(--green-dark); }
+        .trust-checks { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+        .trust-item { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+        .trust-item::before { content: "✓ "; color: var(--green); font-weight: 700; margin-right: 0.5rem; }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-        }
+        /* Stats */
+        .stats { background-color: var(--navy); color: var(--white); padding: 3rem 2rem; text-align: center; }
+        .stats-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .stat-card { padding: 1.5rem; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--teal); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: #e0e0e0; }
 
-        .nav-links a:not(.nav-cta) {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+        /* Why Choose */
+        .why-choose { max-width: 1200px; margin: 3rem auto; padding: 2rem; }
+        .why-choose h2 { font-size: 2rem; color: var(--navy); text-align: center; margin-bottom: 3rem; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .benefit-card { background-color: var(--white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s; }
+        .benefit-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,137,123,0.15); }
+        .benefit-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .benefit-card h3 { font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .benefit-card p { color: var(--text); font-size: 0.95rem; }
 
-        .nav-links a:not(.nav-cta):hover {
-            color: var(--terra);
-        }
+        /* Local Info */
+        .local-info { max-width: 1200px; margin: 3rem auto; padding: 2rem; background-color: var(--white); border-radius: var(--radius); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .local-info h2 { font-size: 2rem; color: var(--navy); margin-bottom: 1.5rem; }
+        .local-info p { color: var(--text); margin-bottom: 1.2rem; line-height: 1.8; font-size: 1rem; }
 
-        .nav-cta {
-            background-color: var(--terra);
-            color: var(--white);
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius);
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
+        /* FAQ */
+        .faq { max-width: 1200px; margin: 3rem auto; padding: 2rem; }
+        .faq h2 { font-size: 2rem; color: var(--navy); text-align: center; margin-bottom: 2rem; }
+        .faq-item { background-color: var(--white); margin-bottom: 1.5rem; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .faq-question { padding: 1.5rem; background-color: var(--lt-green); color: var(--charcoal); font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s; }
+        .faq-question:hover { background-color: #c8e6c3; }
+        .faq-answer { padding: 1.5rem; color: var(--text); display: none; }
+        .faq-answer.active { display: block; }
+        .faq-toggle { font-size: 1.5rem; color: var(--green); }
 
-        .nav-cta:hover {
-            background-color: var(--terra-dark);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #E8F2FC 0%, #F0F4F8 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            color: var(--charcoal);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: var(--text);
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
-
-        .zip-form {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .zip-input {
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            border: 2px solid var(--soft-blue);
-            border-radius: var(--radius);
-            width: 250px;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .zip-button {
-            padding: 1rem 2rem;
-            background-color: var(--terra);
-            color: var(--white);
-            border: none;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .zip-button:hover {
-            background-color: var(--terra-dark);
-        }
-
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .trust-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--navy);
-        }
-
-        .trust-badge::before {
-            content: "✓";
-            font-size: 1.5rem;
-            color: var(--terra);
-            font-weight: bold;
-        }
-
-        /* Stats Section */
-        .stats-section {
-            background-color: var(--navy);
-            color: var(--white);
-            padding: 4rem 2rem;
-        }
-
-        .stats-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--terra);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--soft-blue);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        /* Benefits Section */
-        .benefits-section {
-            padding: 4rem 2rem;
-            background-color: var(--white);
-        }
-
-        .benefits-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            color: var(--charcoal);
-            text-align: center;
-            margin-bottom: 3rem;
-            font-weight: 700;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .benefit-card {
-            padding: 2rem;
-            background-color: var(--bg);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--terra);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .benefit-card h3 {
-            color: var(--terra);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .benefit-card p {
-            color: var(--text);
-            line-height: 1.8;
-        }
-
-        /* Info Section */
-        .info-section {
-            padding: 4rem 2rem;
-            background-color: var(--white);
-        }
-
-        .info-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .info-content {
-            font-size: 1.05rem;
-            color: var(--text);
-            line-height: 1.9;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-content strong {
-            color: var(--charcoal);
-        }
-
-        /* FAQ Section */
-        .faq-section {
-            padding: 4rem 2rem;
-            background-color: var(--bg);
-        }
-
-        .faq-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
-            background-color: var(--white);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: var(--radius);
-            border-left: 4px solid var(--terra);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .faq-item h3 {
-            color: var(--charcoal);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .faq-item p {
-            color: var(--text);
-            line-height: 1.8;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background-color: var(--navy);
-            color: var(--white);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .cta-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        .cta-button {
-            background-color: var(--terra);
-            color: var(--white);
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .cta-button:hover {
-            background-color: var(--terra-dark);
-        }
+        /* CTA */
+        .cta-section { background-color: var(--navy); color: var(--white); padding: 3rem 2rem; text-align: center; }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .cta-section p { font-size: 1.1rem; margin-bottom: 2rem; color: #e0e0e0; }
+        .cta-btn { background-color: var(--green); color: var(--white); padding: 0.9rem 2.5rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: background-color 0.3s; border: none; cursor: pointer; }
+        .cta-btn:hover { background-color: var(--green-dark); }
 
         /* Footer */
-        footer {
-            background-color: var(--charcoal);
-            color: var(--white);
-            padding: 3rem 2rem;
-            font-size: 0.9rem;
-        }
+        footer { background-color: var(--navy); color: var(--white); padding: 20px 24px 16px; text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; font-size: 13px; }
+        .footer-links a { color: var(--lt-blue); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--green); }
+        .footer-contact { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 13px; }
+        .footer-contact a { color: var(--lt-blue); text-decoration: none; }
+        .disclaimer { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.5; }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
+        /* Mobile nav */
+        .mobile-nav { display: none; position: fixed; top: 70px; left: 0; right: 0; background: white; padding: 12px 16px; flex-direction: column; gap: 8px; z-index: 900; box-shadow: var(--shadow); }
+        .mobile-nav.active { display: flex; }
+        .mobile-nav a { text-decoration: none; color: var(--navy); padding: 12px 16px; font-size: 16px; }
 
-        .footer-section h4 {
-            color: var(--terra);
-            margin-bottom: 1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: var(--terra);
-        }
-
-        .footer-disclaimer {
-            border-top: 1px solid #444;
-            padding-top: 2rem;
-            text-align: center;
-            color: #aaa;
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .zip-input {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
+            .hero h1 { font-size: 2rem; }
+            .zip-form { flex-direction: column; }
+            #desktop-nav { display: none !important; }
+            .mobile-menu-btn { display: inline-block; }
+            .trust-checks { gap: 1rem; font-size: 0.85rem; }
         }
     </style>
-</head>
-<body>
-<!-- CMS Disclaimer -->
-<div style="background:#F7F8FA;color:#4b5563;text-align:center;padding:4px 16px;font-size:12px;line-height:1.4;font-weight:400;position:relative;z-index:1100">
-  Sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
-</div>
-    <!-- Navigation -->
-    <nav>
-        <a href="https://medicare-california.com" class="nav-brand"><svg viewBox="0 0 260 48" width="195" height="36" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#sg)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="Open Sans,Segoe UI,Helvetica Neue,Arial,sans-serif"><tspan x="50" font-size="22" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="5" font-size="22" font-weight="600" fill="#3D9BE9">California</tspan></text></svg></a>
-        <ul class="nav-links">
-            <li><a href="https://medicare-california.com/california/cities/">All Cities</a></li>
-            <li><a href="https://medicare-california.com" class="nav-cta">Find Your Plan</a></li>
-        </ul>
-    </nav>
-
-    <main>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Medicare Help in San Francisco</h1>
-            <p class="hero-subtitle">Free, personalized Medicare guidance for San Francisco and San Francisco County residents</p>
-
-            <div class="zip-form">
-                <input type="text" id="city-zip" class="zip-input" placeholder="Enter your ZIP code" maxlength="5" inputmode="numeric">
-                <button class="zip-button" onclick="handleZip()">Get Started</button>
-            </div>
-
-            <div class="trust-badges">
-                <div class="trust-badge">100% Free</div>
-                <div class="trust-badge">Hablamos Español</div>
-                <div class="trust-badge">Licensed Agents</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-number">160K+</div>
-                <div class="stat-label">Medicare Beneficiaries in San Francisco County</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">35+</div>
-                <div class="stat-label">Average Medicare Advantage Plans</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">Serving San Francisco Residents</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Benefits Section -->
-    <section class="benefits-section">
-        <div class="benefits-container">
-            <h2 class="section-title">Why San Francisco Residents Choose Us</h2>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <h3>Local Knowledge</h3>
-                    <p>We understand San Francisco County's unique healthcare market. Whether you're in downtown SF, the Mission District, the Financial District, or surrounding areas, we know your local options and which plans serve your community best.</p>
-                </div>
-                <div class="benefit-card">
-                    <h3>Bilingual Guidance</h3>
-                    <p>English and Spanish speaking licensed agents ready to support you. San Francisco's diverse senior population benefits from our culturally-aware, bilingual Medicare guidance.</p>
-                </div>
-                <div class="benefit-card">
-                    <h3>Free Expert Help</h3>
-                    <p>No cost for our expert guidance. We compare all available plans in your area and help you make the right choice without any hidden fees or pressure.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Local Medicare Info Section -->
-    <section class="info-section">
-        <div class="info-container">
-            <h2 class="section-title">Medicare in San Francisco County</h2>
-
-            <div class="info-content">
-                <strong>San Francisco County is a highly concentrated urban market with distinct Medicare plan dynamics.</strong> As one of the nation's most expensive healthcare markets, SF seniors have access to premium healthcare options and extensive plan choices. The county includes San Francisco proper and surrounding areas, with ZIP codes like 94102, 94110, and 94121 serving different neighborhoods with varying healthcare infrastructure and plan concentrations. San Francisco's urban density means excellent network coverage, but your choice of plan significantly impacts both your costs and access to specialists.
-            </div>
-
-            <div class="info-content">
-                <strong>Kaiser Permanente remains the dominant carrier in San Francisco</strong> with deeply integrated Northern California operations and a large membership base. Anthem (Blue Shield) offers competitive coverage across SF with extensive provider networks. UnitedHealth Group plans have grown in San Francisco's market. Aetna and other carriers also participate, providing genuine choice for residents. UCSF Health is the major academic medical system in the county, and most Medicare plans include it in-network or offer reasonable access. San Francisco General Hospital and other city health facilities serve as important healthcare anchors. The high concentration of specialists and alternative care practitioners in San Francisco means some residents prioritize plans offering specialized care options.
-            </div>
-
-            <div class="info-content">
-                San Francisco's Medicare market differs significantly from other California regions due to its urban concentration, high cost of living, and specialty healthcare density. Residents in neighborhoods like the Mission (94110), Downtown (94102), and the Sunset District (94121) often have different plan preferences and healthcare utilization patterns. The tech-forward senior population in SF may value plans with strong digital tools and online support. Whether you're seeking a broad network plan like Blue Shield or the integrated Kaiser model, our agents understand San Francisco's unique Medicare landscape and can guide you to the right choice.
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <div class="faq-container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-
-            <div class="faq-item">
-                <h3>How many Medicare plans are available in San Francisco?</h3>
-                <p>San Francisco County typically has 35+ Medicare Advantage plans available, with additional options for Traditional Medicare with Medigap and Part D plans. Despite the smaller population compared to LA or San Diego, SF's status as a major metro area ensures robust plan competition. You can choose from integrated systems like Kaiser or broader networks like Blue Shield, giving you flexibility to match your healthcare preferences. Our agents can help you evaluate options specific to your SF neighborhood.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Can I keep my UCSF Health doctor with Medicare in San Francisco?</h3>
-                <p>Most Medicare plans in San Francisco include UCSF Health in their networks, though specific coverage varies by plan. If you see a UCSF specialist, always verify the plan includes that provider before enrolling. Kaiser has its own affiliated network and may not include independent UCSF providers. Blue Shield and other broad-network plans typically include major UCSF services. Our agents can verify your specific doctor and facility are in-network for any plan you're considering.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>When is the best time to enroll in Medicare in San Francisco?</h3>
-                <p>You're eligible at age 65 with a 7-month Initial Enrollment Period. Many SF residents use the Annual Enrollment Period (October 15-December 7) to review and switch plans. If you're self-employed or have lost income (common in SF's changing tech market), you may qualify for a Special Enrollment Period. Our agents can help you understand your options and timeline, regardless of where you are in your Medicare journey.</p>
-            </div>
-        </div>
-    </section>
-
-
-    <div class="faq-item">
-        <h3>¿Cómo encuentro ayuda con Medicare cerca de mí en San Francisco?</h3>
-        <p>Encontrar ayuda con Medicare cerca de usted en San Francisco y el Bay Area es fácil. Nuestros agentes licenciados sirven el área de San Francisco con comparaciones de planes gratuitas y personalizadas. Ya sea que necesite Medicare Advantage, Medigap o cobertura de la Parte D, le ayudamos a comparar opciones de las mejores aseguradoras disponibles en su código postal. Llámenos o use nuestra herramienta en línea para conectarse con un experto local en Medicare cerca de usted hoy.</p>
-    </div>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-container">
-            <h2>Ready to Find Your Medicare Plan in San Francisco?</h2>
-            <p>Let our local Medicare experts help you navigate San Francisco's healthcare landscape. Compare plans and choose the coverage that's right for you.</p>
-            <a href="https://medicare-california.com" class="cta-button">Compare Plans Free</a>
-        </div>
-    </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Medicare California</h4>
-                <p>Over 15 years of experience helping California families find the right Medicare plan.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="https://medicare-california.com">Home</a></li>
-                    <li><a href="https://medicare-california.com/california/cities/">All Cities</a></li>
-                    <li><a href="https://medicare-california.com/blog">Medicare Blog</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="https://medicare-california.com/contact">Contact Us</a></li>
-                    <li><a href="https://medicare-california.com/faq">FAQ</a></li>
-                    <li><a href="https://medicare-california.com/privacy">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-disclaimer">
-            <p>Medicare California is committed to helping residents understand their Medicare options. We work with licensed insurance agents and are not affiliated with the federal Medicare program. Always verify plan details on Medicare.gov or with your insurance provider. Information is current as of 2024 and subject to change. Contact your plan provider or visit Medicare.gov for the most up-to-date information.</p>
-        </div>
-    </footer>
 
     <!-- JSON-LD Schema -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": "Medicare California - San Francisco",
-        "description": "Free Medicare guidance for San Francisco County residents",
+        "@type": "InsuranceAgency",
+        "name": "Beneficios Medicare - San Francisco",
+        "description": "Asesoría gratuita de Medicare en español para residentes de San Francisco y San Francisco",
+        "url": "https://beneficiosmedicare.com/california/cities/san-francisco.html",
+        "telephone": "+1-310-597-9142",
         "areaServed": {
-            "@type": "AdministrativeArea",
-            "name": "San Francisco County, California"
-        },
-        "url": "https://medicare-california.com/california/cities/san-francisco.html",
-        "telephone": "+1-800-MEDICARE",
-        "address": {
-            "@type": "PostalAddress",
+            "@type": "City",
+            "name": "San Francisco",
             "addressCountry": "US",
             "addressRegion": "CA"
-        }
+        },
+        "priceRange": "Gratis",
+        "availableLanguage": ["es", "en"]
     }
     </script>
 
@@ -622,26 +173,34 @@
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "How many Medicare plans are available in San Francisco?",
+                "name": "¿Cuántos planes de Medicare hay disponibles en San Francisco?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "San Francisco County typically has 35+ Medicare Advantage plans available, with additional options for Traditional Medicare with Medigap and Part D plans."
+                    "text": "Los residentes de San Francisco tienen acceso a aproximadamente 30 planes Medicare Advantage y múltiples opciones de Medigap. La excelente infraestructura de salud de la ciudad significa planes con acceso a centros médicos de clase mundial."
                 }
             },
             {
                 "@type": "Question",
-                "name": "Can I keep my UCSF Health doctor with Medicare in San Francisco?",
+                "name": "¿Puedo conservar mi doctor de UCSF o Sutter CPMC con Medicare?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Most Medicare plans in San Francisco include UCSF Health in their networks, though specific coverage varies by plan."
+                    "text": "Muchos planes de Medicare en San Francisco incluyen UCSF Medical Center y los hospitales de Sutter Health en sus redes. Verifique que sus doctores preferidos participan en su plan elegido antes de inscribirse."
                 }
             },
             {
                 "@type": "Question",
-                "name": "When is the best time to enroll in Medicare in San Francisco?",
+                "name": "¿Cuándo es el mejor momento para inscribirse en Medicare en San Francisco?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "You're eligible at age 65 with a 7-month Initial Enrollment Period. Many SF residents use the Annual Enrollment Period to review and switch plans."
+                    "text": "Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para asegurar la mejor cobertura."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Cómo encuentro ayuda con Medicare cerca de mí en San Francisco?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Encontrar ayuda con Medicare cerca de usted en San Francisco es fácil. Nuestros agentes licenciados sirven el área de San Francisco con comparaciones de planes gratuitas y personalizadas. Ya sea que necesite Medicare Advantage, Medigap o cobertura de la Parte D, le ayudamos a comparar opciones de las mejores aseguradoras disponibles en su código postal. Llámenos o use nuestra herramienta en línea para conectarse con un experto local en Medicare cerca de usted hoy."
                 }
             }
         ]
@@ -656,39 +215,228 @@
             {
                 "@type": "ListItem",
                 "position": 1,
-                "name": "Home",
-                "item": "https://medicare-california.com"
+                "name": "Inicio",
+                "item": "https://beneficiosmedicare.com"
             },
             {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Cities",
-                "item": "https://medicare-california.com/california/cities/"
+                "name": "California",
+                "item": "https://beneficiosmedicare.com/california/"
             },
             {
                 "@type": "ListItem",
                 "position": 3,
+                "name": "Ciudades",
+                "item": "https://beneficiosmedicare.com/california/cities/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
                 "name": "San Francisco",
-                "item": "https://medicare-california.com/california/cities/san-francisco.html"
+                "item": "https://beneficiosmedicare.com/california/cities/san-francisco.html"
             }
         ]
     }
     </script>
+</head>
+<body>
+<!-- CMS Disclaimer -->
+<div style="background:#fff;text-align:center;font-size:11px;padding:6px 16px;color:#9CA3AF;border-bottom:1px solid #f0f0f0;line-height:1.4;position:relative;z-index:1100">
+  Este sitio no es parte del gobierno federal ni del programa de Medicare. Para información oficial visite Medicare.gov o llame al 1-800-Medicare.
+</div>
 
-    <!-- ZIP Form Handler -->
-    <script>
-        function handleZip() {
-            var zip = document.getElementById('city-zip').value.replace(/\D/g,'');
-            if(zip.length === 5) {
-                window.top.location.href = 'https://medicare-california.com/?zip=' + zip;
-            }
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo"><svg viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
+    <nav id="desktop-nav">
+      <a href="/">Inicio</a>
+      <a href="/beneficios.html">Beneficios</a>
+      <a href="/california/cities/">Ciudades</a>
+      <a href="/contacto.html">Contáctenos</a>
+      <div class="lang-pill"><button class="lp-active" aria-label="Español">ES</button><a href="https://medicare-california.com/california/cities/san-francisco.html" style="padding:5px 14px;font-size:0.82rem;font-weight:700;color:var(--navy);text-decoration:none" aria-label="English">EN</a></div>
+    </nav>
+    <button class="mobile-menu-btn" onclick="toggleMobile()" aria-label="Abrir menú"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Inicio</a>
+  <a href="/beneficios.html">Beneficios</a>
+  <a href="/california/cities/">Ciudades</a>
+  <a href="/contacto.html">Contáctenos</a>
+  <div class="lang-pill"><button class="lp-active" aria-label="Español">ES</button><a href="https://medicare-california.com/california/cities/san-francisco.html" style="padding:5px 14px;font-size:0.82rem;font-weight:700;color:var(--navy);text-decoration:none" aria-label="English">EN</a></div>
+</div>
+
+<main>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Inicio</a> <span>›</span>
+        <a href="/california/cities/">Ciudades</a> <span>›</span>
+        <span>San Francisco</span>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Ayuda con Medicare en San Francisco</h1>
+        <p class="subtitle">Asesoría gratuita y personalizada de Medicare para residentes de San Francisco y San Francisco</p>
+
+        <div class="zip-form">
+            <input type="tel" id="city-zip" placeholder="Ingrese su código postal" maxlength="5" inputmode="numeric" autocomplete="postal-code">
+            <button onclick="handleZip()">Comenzar</button>
+        </div>
+
+        <div class="trust-checks">
+            <div class="trust-item">100% Gratis</div>
+            <div class="trust-item">Hablamos Español</div>
+            <div class="trust-item">Agentes Licenciados</div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">150K+</div>
+                <div class="stat-label">Beneficiarios de Medicare</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">30</div>
+                <div class="stat-label">Planes Medicare Advantage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Aseguradoras en el Bay Area</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose">
+        <h2>Por Qué los Residentes de San Francisco Nos Eligen</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🏥</div>
+                <h3>Expertos en el Bay Area</h3>
+                <p>Conocemos el mercado de salud de San Francisco y el Bay Area. Desde el Financial District hasta el Sunset y el Mission, sabemos qué planes funcionan mejor.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🗣️</div>
+                <h3>Atención Bilingüe</h3>
+                <p>Agentes que hablan español disponibles para ayudarle. La comunidad hispana de San Francisco merece asesoría de Medicare en su idioma.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">💰</div>
+                <h3>Completamente Gratis</h3>
+                <p>Sin costo por nuestra ayuda. Las aseguradoras nos compensan directamente para que usted reciba asesoría imparcial.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Local Info -->
+    <section class="local-info">
+        <h2>Medicare en San Francisco: Guía de Salud del Bay Area</h2>
+        <p>San Francisco, una de las ciudades más icónicas de California, alberga algunos de los centros médicos más prestigiosos del país. Con más de 150,000 beneficiarios de Medicare, la ciudad ofrece opciones de planes de salud de alta calidad.</p>
+        <p>Las principales aseguradoras incluyen Kaiser Permanente, Blue Shield of California, UnitedHealthcare, Anthem Blue Cross y UCSF Health. UCSF Medical Center, Zuckerberg San Francisco General Hospital y Sutter CPMC son instalaciones de primer nivel incluidas en múltiples redes de planes Medicare.</p>
+        <p>San Francisco tiene una vibrante comunidad hispana, especialmente en el distrito de la Misión. Nuestros agentes bilingües conocen las necesidades de salud de la comunidad y pueden ayudarle a navegar las opciones de Medicare disponibles en su código postal.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <h2>Preguntas Frecuentes</h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Cuántos planes de Medicare hay disponibles en San Francisco?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Los residentes de San Francisco tienen acceso a aproximadamente 30 planes Medicare Advantage y múltiples opciones de Medigap. La excelente infraestructura de salud de la ciudad significa planes con acceso a centros médicos de clase mundial.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Puedo conservar mi doctor de UCSF o Sutter CPMC con Medicare?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Muchos planes de Medicare en San Francisco incluyen UCSF Medical Center y los hospitales de Sutter Health en sus redes. Verifique que sus doctores preferidos participan en su plan elegido antes de inscribirse.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Cuándo es el mejor momento para inscribirse en Medicare en San Francisco?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para asegurar la mejor cobertura.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Cómo encuentro ayuda con Medicare cerca de mí en San Francisco?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Encontrar ayuda con Medicare cerca de usted en San Francisco es fácil. Nuestros agentes licenciados sirven el área de San Francisco con comparaciones de planes gratuitas y personalizadas. Ya sea que necesite Medicare Advantage, Medigap o cobertura de la Parte D, le ayudamos a comparar opciones de las mejores aseguradoras disponibles en su código postal. Llámenos o use nuestra herramienta en línea para conectarse con un experto local en Medicare cerca de usted hoy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>¿Listo para Encontrar su Plan de Medicare en San Francisco?</h2>
+        <p>Permita que nuestros agentes licenciados lo guíen a través de todas las opciones disponibles sin costo alguno.</p>
+        <button class="cta-btn" onclick="window.location.href='/'">Compare Planes Gratis</button>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div style="max-width:960px;margin:0 auto">
+    <div style="font-size:18px;color:var(--mint);margin-bottom:10px">Susana Marcos LLC</div>
+    <div class="footer-links">
+      <a href="/"><i class="fas fa-home"></i> Inicio</a>
+      <a href="/beneficios.html"><i class="fas fa-heart"></i> Beneficios</a>
+      <a href="/california/cities/"><i class="fas fa-map-marked-alt"></i> Ciudades</a>
+      <a href="/blog/"><i class="fas fa-pen"></i> Blog</a>
+    </div>
+    <div class="footer-contact">
+      <a href="tel:+13105979142"><i class="fas fa-phone-alt"></i> Llame</a>
+      <a href="https://wa.me/13105979142" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      <a href="mailto:alejamedicare@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+    </div>
+    <p style="font-size:12px;margin-bottom:8px"><a href="/privacidad.html" style="color:rgba(255,255,255,0.5);text-decoration:none"><i class="fas fa-lock"></i> Política de Privacidad</a></p>
+    <p class="disclaimer">No ofrecemos todos los planes disponibles en su área. Visite Medicare.gov o llame al 1-800-Medicare. Sitio no es parte del gobierno federal ni del programa de Medicare.</p>
+  </div>
+</footer>
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/13105979142?text=Hola%2C%20necesito%20ayuda%20con%20Medicare" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:999;text-decoration:none" target="_blank" title="WhatsApp">
+  <i class="fab fa-whatsapp" style="font-size:28px;color:white"></i>
+</a>
+
+<script>
+    function handleZip() {
+        var zip = document.getElementById('city-zip').value.replace(/\D/g,'');
+        if(zip.length === 5) {
+            window.location.href = '/?zip=' + zip;
         }
-
-        document.getElementById('city-zip').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') {
-                handleZip();
-            }
-        });
-    </script>
+    }
+    document.getElementById('city-zip').addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') handleZip();
+    });
+    function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const toggle = element.querySelector('.faq-toggle');
+        answer.classList.toggle('active');
+        toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+    }
+    function toggleMobile() {
+        document.getElementById('mobile-nav').classList.toggle('active');
+    }
+</script>
 </body>
 </html>
