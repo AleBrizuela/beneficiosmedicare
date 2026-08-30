@@ -47,12 +47,12 @@
 
     <style>
         :root {
-            --terra: #0080D4;
-            --terra-dark: #0068B0;
+            --green: #00897B;
+            --green-dark: #00796B;
             --charcoal: #1a1a1a;
-            --soft-blue: #3D9BE9;
-            --light-blue: #E8F2FC;
-            --navy: #0C2340;
+            --teal: #26A69A;
+            --lt-green: #E0F2F1;
+            --navy: #002147;
             --white: #FFFFFF;
             --gray-light: #F5F5F5;
             --gray-dark: #666666;
@@ -99,7 +99,7 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--terra);
+            color: var(--green);
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -121,11 +121,11 @@
         }
 
         .nav-links a:not(.nav-cta):hover {
-            color: var(--terra);
+            color: var(--green);
         }
 
         .cta-button {
-            background-color: var(--terra);
+            background-color: var(--green);
             color: var(--white);
             padding: 0.75rem 1.5rem;
             border-radius: 4px;
@@ -138,12 +138,12 @@
         }
 
         .cta-button:hover {
-            background-color: var(--terra-dark);
+            background-color: var(--green-dark);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+            background: linear-gradient(135deg, var(--lt-green) 0%, var(--white) 100%);
             padding: 4rem 1rem;
             text-align: center;
         }
@@ -205,7 +205,7 @@
         .city-card:hover {
             box-shadow: 0 8px 16px rgba(0, 128, 212, 0.15);
             transform: translateY(-4px);
-            border-color: var(--terra);
+            border-color: var(--green);
         }
 
         .city-card h3 {
@@ -217,7 +217,7 @@
 
         .county {
             font-size: 0.9rem;
-            color: var(--soft-blue);
+            color: var(--teal);
             font-weight: 600;
             margin-bottom: 1rem;
             text-transform: uppercase;
@@ -233,7 +233,7 @@
         }
 
         .learn-more {
-            color: var(--terra);
+            color: var(--green);
             text-decoration: none;
             font-weight: 600;
             display: inline-flex;
@@ -252,7 +252,7 @@
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, var(--terra) 0%, var(--soft-blue) 100%);
+            background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
             color: var(--white);
             padding: 3rem 1rem;
             text-align: center;
@@ -276,12 +276,12 @@
 
         .cta-section .cta-button {
             background-color: var(--white);
-            color: var(--terra);
+            color: var(--green);
             font-weight: 700;
         }
 
         .cta-section .cta-button:hover {
-            background-color: var(--light-blue);
+            background-color: var(--lt-green);
         }
 
         /* Footer */
@@ -390,7 +390,31 @@
                 padding: 2rem 1rem;
             }
         }
+
+        /* BM Header */
+        .header { background: rgba(255,255,255,0.97); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 70px; }
+        #desktop-nav { display: flex; align-items: center; gap: 28px; }
+        #desktop-nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
+        #desktop-nav a:hover { color: var(--green); }
+        .lang-pill { display: inline-flex; background: #f0f4f8; border-radius: 20px; overflow: hidden; margin-left: 8px; }
+        .lp-active { padding: 5px 14px; font-size: 0.82rem; font-weight: 700; background: var(--navy); color: #fff; border: none; border-radius: 20px; cursor: default; }
+
+        /* BM Footer */
+        .bm-footer { background-color: var(--navy); color: var(--white); padding: 20px 24px 16px; text-align: center; margin-top: 3rem; }
+        .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; font-size: 13px; }
+        .footer-links a { color: #B2DFDB; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--green); }
+        .footer-contact { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 13px; }
+        .footer-contact a { color: #B2DFDB; text-decoration: none; }
+        .bm-footer .disclaimer { font-size: 11px; color: rgba(255,255,255,0.45); border-top: none; padding-top: 0; max-width: none; margin: 0; }
+
+        /* WhatsApp button */
+        .whatsapp-float { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 999; transition: transform 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float i { color: white; font-size: 28px; }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <!-- CMS Disclaimer -->
@@ -403,7 +427,7 @@
             <a href="https://medicare-california.com" class="logo"><svg viewBox="0 0 260 48" width="195" height="36" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0080D4"/><stop offset="100%" style="stop-color:#0071BC"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#sg)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="Open Sans,Segoe UI,Helvetica Neue,Arial,sans-serif"><tspan x="50" font-size="22" font-weight="700" fill="#1a1a1a">Medicare</tspan><tspan dx="5" font-size="22" font-weight="600" fill="#3D9BE9">California</tspan></text></svg></a>
             <ul class="nav-links">
                 <li><a href="https://medicare-california.com">Home</a></li>
-                <li><a href="https://medicare-california.com/find-your-plan" class="cta-button">Find Your Plan</a></li>
+                <li><a href="https://beneficiosmedicare.com/contacto.html" class="cta-button">Find Your Plan</a></li>
             </ul>
         </nav>
     </header>
@@ -411,8 +435,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Medicare Help Across California</h1>
-            <p>Find expert Medicare guidance in your city. Free, bilingual, and licensed.</p>
+            <h1>Ayuda con Medicare en California</h1>
+            <p>Encuentre asesoría experta de Medicare en su ciudad. Gratis, bilingüe y con agentes licenciados.</p>
         </div>
     </section>
 
@@ -591,44 +615,33 @@
 
         <!-- CTA Section -->
         <section class="cta-section">
-            <h2>Ready to Find the Right Medicare Plan?</h2>
-            <p>Our licensed counselors are ready to help you understand your options and enroll in coverage that fits your needs.</p>
-            <a href="https://medicare-california.com/find-your-plan" class="cta-button">Start Your Search</a>
+            <h2>¿Listo para Encontrar el Plan de Medicare Adecuado?</h2>
+            <p>Nuestros consejeros licenciados están listos para ayudarle a entender sus opciones e inscribirse en la cobertura que mejor se ajuste a sus necesidades.</p>
+            <a href="https://beneficiosmedicare.com/contacto.html" class="cta-button">Comenzar su Búsqueda</a>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>About Medicare California</h4>
-                <ul>
-                    <li><a href="https://medicare-california.com/about">About Us</a></li>
-                    <li><a href="https://medicare-california.com/faq">FAQ</a></li>
-                    <li><a href="https://medicare-california.com/resources">Resources</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Our Services</h4>
-                <ul>
-                    <li><a href="https://medicare-california.com/find-your-plan">Find Your Plan</a></li>
-                    <li><a href="https://medicare-california.com/enrollment">Enrollment Help</a></li>
-                    <li><a href="https://medicare-california.com/counseling">Free Counseling</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="https://medicare-california.com/privacy">Privacy Policy</a></li>
-                    <li><a href="https://medicare-california.com/terms">Terms of Service</a></li>
-                    <li><a href="https://medicare-california.com/accessibility">Accessibility</a></li>
-                </ul>
-            </div>
-        </div>
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/13105979142" target="_blank" class="whatsapp-float" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
-        <div class="disclaimer">
-            <p><strong>Disclaimer:</strong> Medicare California provides free, unbiased information and counseling about Medicare options. This website is not affiliated with or endorsed by the Centers for Medicare & Medicaid Services (CMS), the Social Security Administration (SSA), or any insurance company. Medicare is a federal program run by CMS. For official Medicare information, visit Medicare.gov. Information provided is general in nature and does not constitute medical or legal advice. Always consult with a licensed healthcare provider or attorney for personalized advice. This site is for informational purposes only.</p>
+    <!-- Footer -->
+    <footer class="bm-footer">
+      <div style="max-width:960px;margin:0 auto">
+        <div style="font-size:18px;color:#B2DFDB;margin-bottom:10px">Susana Marcos LLC</div>
+        <div class="footer-links">
+          <a href="/"><i class="fas fa-home"></i> Inicio</a>
+          <a href="/beneficios.html"><i class="fas fa-heart"></i> Beneficios</a>
+          <a href="/california/cities/"><i class="fas fa-map-marked-alt"></i> Ciudades</a>
+          <a href="/blog/"><i class="fas fa-pen"></i> Blog</a>
         </div>
+        <div class="footer-contact">
+          <a href="tel:+13105979142"><i class="fas fa-phone-alt"></i> Llame</a>
+          <a href="https://wa.me/13105979142" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="mailto:alejamedicare@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+        </div>
+        <p style="font-size:12px;margin-bottom:8px"><a href="/privacidad.html" style="color:rgba(255,255,255,0.5);text-decoration:none"><i class="fas fa-lock"></i> Política de Privacidad</a></p>
+        <p class="disclaimer">No ofrecemos todos los planes disponibles en su área. Visite Medicare.gov o llame al 1-800-Medicare. Sitio no es parte del gobierno federal ni del programa de Medicare.</p>
+      </div>
     </footer>
 </body>
 </html>
