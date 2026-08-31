@@ -1646,5 +1646,31 @@ function updateWidgetProgress(pct) {
 </script>
 
 <script src="/shared-footer.js" defer></script>
+
+<!-- Auto-submit zip if present in URL or localStorage (from city/neighborhood pages) -->
+<script>
+(function(){
+  try {
+    var params = new URLSearchParams(location.search);
+    var urlZip = (params.get('zip') || '').trim();
+    var savedZip = '';
+    try { savedZip = (localStorage.getItem('bm_zip') || '').trim(); } catch(_){}
+    var zip = urlZip || savedZip;
+    if (zip && /^\d{5}$/.test(zip)) {
+      var run = function(){
+        var input = document.getElementById('zip-input');
+        if (input) {
+          input.value = zip;
+          if (typeof window.handleZipSubmit === 'function') {
+            setTimeout(window.handleZipSubmit, 0);
+          }
+        }
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+      else run();
+    }
+  } catch(_){}
+})();
+</script>
 </body>
 </html>

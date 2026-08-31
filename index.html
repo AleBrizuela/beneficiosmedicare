@@ -41,8 +41,8 @@
       <meta name="google-site-verification" content="9vOTvTlIJkyavplNWTeze2_fRIK3usQCaN6-njTfOh0" />
 <meta name="robots" content="index, follow">
 <link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/">
-<link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/index-en.html">
-<link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/index-en.html">
+<link rel="alternate" hreflang="en" href="https://medicare-california.com/">
+<link rel="alternate" hreflang="x-default" href="https://medicare-california.com/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Expertos en Beneficios","alternateName":"Beneficios Medicare","url":"https://beneficiosmedicare.com","description":"Expertos en seguros de Medicare. Asesoría gratuita en español sobre Medicare Advantage y Medigap.","telephone":"+1-310-597-9142","areaServed":["CA","FL","TX","AZ","NV","UT","ID","OR"],"member":[{"@type":"Person","name":"Susana Marcos","jobTitle":"Fundadora"},{"@type":"Person","name":"Alejandra Brizuela Marcos","jobTitle":"Agente Licenciada"}]}
 </script>
@@ -1023,8 +1023,8 @@ function wPush(fn) { widgetHistory.push(fn); }
 // Navigation handled by href links
 // âââ LANGUAGE TOGGLE âââââââââââââââââââââââââââââââââââââ
 function goLang(lang) {
-  
-  if (lang !== 'es') window.location.href = 'index-en.html';
+
+  if (lang !== 'es') window.location.href = 'https://medicare-california.com';
 }
 function toggleLang() { goLang('en'); }
 
@@ -1111,9 +1111,28 @@ window.addEventListener('scroll', () => {
     // Show widget container
     widgetC.style.display = 'block';
 
+    // Persist zip so future visits skip the ask
+    try { localStorage.setItem('bm_zip', zip); } catch(_){}
+
     // Load widget with zip param
     frame.src = 'widget-v4.html?lang=es&v=20260309b&zip=' + zip;
   };
+
+  // Auto-submit if a valid zip came in via URL param (from city/neighborhood pages)
+  // or from a prior visit stored in localStorage. Avoids the double-ask flow.
+  (function autoSubmitFromZipContext(){
+    try {
+      var params = new URLSearchParams(location.search);
+      var urlZip = (params.get('zip') || '').trim();
+      var savedZip = '';
+      try { savedZip = (localStorage.getItem('bm_zip') || '').trim(); } catch(_){}
+      var zip = urlZip || savedZip;
+      if (zip && /^\d{5}$/.test(zip)) {
+        zipInput.value = zip;
+        setTimeout(function(){ window.handleZipSubmit(); }, 0);
+      }
+    } catch (err) { /* fail open: normal flow */ }
+  })();
 
   // Auto-resize iframe
   window.addEventListener('message', function(e) {

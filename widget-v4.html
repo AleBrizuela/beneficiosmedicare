@@ -840,7 +840,7 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-function startZip(){zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
+function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';ft_dob();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
@@ -934,7 +934,7 @@ function mv_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 //  FLOW: BETTER BENEFITS (Compare)
 // ═══════════════════════════════════════
-function bb_zip(){zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
+function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';bb_dob();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
 function bb_dob(){dobStep(bb_benefits)}
 function bb_benefits(){
   prog(35);

@@ -8,24 +8,14 @@
 // ──────────────────────────────────────────────────────────────
 
 const AB_TESTS = {
-  // Example test configuration:
-  // 'test-name': {
-  //   enabled: true,
-  //   variants: {
-  //     control: {
-  //       // No changes for control (original experience)
-  //     },
-  //     variant_a: {
-  //       selector: '.element-selector',
-  //       innerHTML: 'New headline text',
-  //       // OR use 'textContent' for text-only changes
-  //       // OR use 'className' to add/change classes
-  //       // OR use 'setAttribute' with {key: value} pairs
-  //     }
-  //   },
-  //   traffic: 0.5,  // 50% see test (0-1)
-  //   duration: 30   // days (optional, for tracking)
-  // }
+  // 'hero-overlap-depth' test (started 2026-08-24 on staging, closed 2026-08-25 per
+  // Alejandra's decision -- shipping a single version instead of testing, no more
+  // A/B tests by default). Kept control only: shallow overlap, the shorter of the
+  // two backgrounds (ends near the Comenzar button). Control was always the
+  // zero-change default, so removing the test config alone is enough; no other
+  // file needs to change. The unused .ab-deep-overlap CSS override still sits
+  // next to #zip-card / .trust-badge-strip in index.html on this branch --
+  // harmless dead code, safe to strip during a future cleanup pass.
 };
 
 // ──────────────────────────────────────────────────────────────
