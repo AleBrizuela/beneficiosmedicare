@@ -1056,9 +1056,28 @@ window.addEventListener('scroll', () => {
     // Show widget container
     widgetC.style.display = 'block';
 
+    // Persist zip so future visits skip the ask
+    try { localStorage.setItem('bm_zip', zip); } catch(_){}
+
     // Load widget with zip param
     frame.src = 'widget-v4.html?lang=es&v=20260309b&zip=' + zip;
   };
+
+  // Auto-submit if a valid zip came in via URL param (from city/neighborhood pages)
+  // or from a prior visit stored in localStorage. Avoids the double-ask flow.
+  (function autoSubmitFromZipContext(){
+    try {
+      var params = new URLSearchParams(location.search);
+      var urlZip = (params.get('zip') || '').trim();
+      var savedZip = '';
+      try { savedZip = (localStorage.getItem('bm_zip') || '').trim(); } catch(_){}
+      var zip = urlZip || savedZip;
+      if (zip && /^\d{5}$/.test(zip)) {
+        zipInput.value = zip;
+        setTimeout(function(){ window.handleZipSubmit(); }, 0);
+      }
+    } catch (err) { /* fail open: normal flow */ }
+  })();
 
   // Auto-resize iframe
   window.addEventListener('message', function(e) {
