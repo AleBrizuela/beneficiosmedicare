@@ -443,14 +443,14 @@ function medigapToWidgetPlans(stateData){
       premium: plan.premium_min,
       ded: 0,
       moop: 0,
-      dental: 0,
-      vision: 0,
-      hearing: 0,
+      dental: null,
+      vision: null,
+      hearing: null,
       fitness: 0,
       otc: 0,
       drug: 'N/A',
       giveback: 0,
-      rating: 0,
+      rating: null,   // Medigap has no CMS star rating
       type: 'Medigap',
       _medigap: true,
       _premiumRange: '$' + Math.round(plan.premium_min) + '-$' + Math.round(plan.premium_max) + '/mo',
@@ -462,7 +462,59 @@ function medigapToWidgetPlans(stateData){
 }
 
 // Map CMS plan to widget format
-function cmsToWidget(p){
+// Render a CMS star rating. null means unrated (new plan, or Medigap) -- never 0.
+function rStar(r){ return (r===null||r===undefined) ? '—' : '⭐ '+r; }
+
+// Extra-benefit rows (dental/vision/hearing/fitness/OTC) are hidden entirely while we have
+// no source for them -- a column of em dashes on every plan is noise, not honesty. These
+// helpers make the rows reappear on their own once the CMS PBP files are loaded and
+// cmsToWidget returns real values instead of null. Nothing else needs to change then.
+const BENEFIT_KEYS=['dental','vision','hearing'];
+const BKEY={dental:'d',vision:'v',hearing:'h'};
+
+// ---- Extra benefits, sourced from the CMS PBP Benefits Public Use File ----
+// data/benefits_<ST>_<YEAR>.json holds one entry per plan we could resolve to a
+// single PBP segment. A plan absent from that file stays null and renders no row:
+// we do not know, so we do not say. Load failures are non-fatal for the same reason.
+let _benefits=null,_benefitsState=null;
+const BENEFIT_YEAR=2026;
+function loadBenefits(stateCode){
+  if(_benefitsState===stateCode) return Promise.resolve(_benefits);
+  return fetch('data/benefits_'+stateCode+'_'+BENEFIT_YEAR+'.json')
+    .then(r=>{
+      // Cloudflare serves the homepage with a 200 for unknown paths, so a
+      // non-JSON content-type means "missing", not "empty".
+      const ct=(r.headers.get('content-type')||'');
+      if(!r.ok||ct.indexOf('json')===-1) throw new Error('no benefits file');
+      return r.json();
+    })
+    .then(j=>{_benefits=(j&&j.plans)||{};_benefitsState=stateCode;return _benefits;})
+    .catch(()=>{_benefits=null;_benefitsState=null;return null;});  // leave unset so a retry can succeed
+}
+const TIER={
+  d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},none:{en:'Not included',es:'No incluido'}},
+  v:{'exams+eyewear':{en:'Exam + eyewear',es:'Examen y lentes'},exams:{en:'Exam only',es:'Solo examen'},eyewear:{en:'Eyewear only',es:'Solo lentes'},none:{en:'Not included',es:'No incluido'}},
+  h:{'exams+aids':{en:'Exam + aids',es:'Examen y aparatos'},exams:{en:'Exam only',es:'Solo examen'},aids:{en:'Aids only',es:'Solo aparatos'},none:{en:'Not included',es:'No incluido'}}
+};
+const BSCORE={d:{comprehensive:3,preventive:1,none:0},
+              v:{'exams+eyewear':2,exams:1,eyewear:1,none:0},
+              h:{'exams+aids':2,exams:1,aids:1,none:0}};
+function benefitScore(p){return (BSCORE.d[p.dental]||0)+(BSCORE.v[p.vision]||0)+(BSCORE.h[p.hearing]||0);}
+function tier(kind,val){
+  if(val===null||val===undefined) return null;
+  const e=TIER[kind]&&TIER[kind][val];
+  return e?e[lang]:null;
+}
+// A benefit counts as present only when its value is a tier we know how to render.
+// This rejects null, undefined, the legacy numeric 0, and any future vocabulary drift.
+function hasBenefit(p,keys){return (keys||BENEFIT_KEYS).some(k=>{
+  const kind=BKEY[k]; return !!(kind && TIER[kind] && TIER[kind][p[k]]!==undefined);
+});}
+function anyBenefit(plans,keys){return plans.some(p=>hasBenefit(p,keys));}
+
+function cmsToWidget(p, benefits){
+  const src = benefits || _benefits;
+  const b = src ? src[p.id] : null;
   const isPDP = p.cat==='PDP';
   const isMA = p.cat==='MA'||p.cat==='MA-PD';
   const isSNP = p.cat==='SNP';
@@ -473,14 +525,20 @@ function cmsToWidget(p){
     premium: p.premium,
     ded: p.deductible,
     moop: p.moop,
-    dental: isPDP?0:1,
-    vision: isPDP?0:1,
-    hearing: isPDP?0:(p.has_drug?1:0),
-    fitness: isPDP?0:1,
-    otc: 0,
+    // Extra benefits come from data/benefits_<ST>_<YEAR>.json (CMS PBP PUF).
+    // A plan missing from that file stays null and renders no row.
+    dental: b ? b.d : null,
+    vision: b ? b.v : null,
+    hearing: b ? b.h : null,
+    // Still unsourced: fitness needs a verified PBP category code, and OTC /
+    // Part B giveback are not in the benefits extract yet.
+    fitness: null,
+    otc: null,
+    giveback: null,
     drug: (isPDP||p.has_drug)?'Included':'N/A',
-    giveback: 0,
-    rating: p.stars || 3,
+    // CMS stars run 1-5; 0 in the source means "too new to be measured",
+    // not a zero rating. Both must render as "no rating", never as 0 stars.
+    rating: (typeof p.stars==='number' && p.stars>0) ? p.stars : null,
     type: p.type
   };
 }
@@ -527,7 +585,7 @@ async function loadPlansForZip(zip){
     const idx = await loadZipIndex();
     const state = idx[zip];
     if(!state) { D._zipValid=false; PLANS=[]; return; }
-    const data = await loadCmsData(state);
+    const [data, benefits] = await Promise.all([loadCmsData(state), loadBenefits(state)]);
     const info = data.zips?.[zip];
     if(!info) { D._zipValid=false; PLANS=[]; return; }
     const county = info.county;
@@ -541,7 +599,7 @@ async function loadPlansForZip(zip){
     raw = raw.filter(p => { if(seen.has(p.id)) return false; seen.add(p.id); return true; });
     // Sort: best stars first, then lowest premium, then lowest MOOP
     raw.sort((a,b) => (b.stars||0)-(a.stars||0) || a.premium-b.premium || a.moop-b.moop);
-    PLANS = raw.map(cmsToWidget);
+    PLANS = raw.map(p => cmsToWidget(p, benefits));
 
     // Merge Medigap / Supplement plans (state-level data)
     try {
@@ -799,7 +857,7 @@ function toggleCond(id){
 const PRI_OPTIONS=[
   {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'My current doctor accepts the plan.',esD:'Que mi doctor acepte el plan.'},
   {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
-  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision, hearing, gym.',esD:'Dental, visi\u00F3n, audici\u00F3n, gimnasio.'},
+  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision and hearing coverage.',esD:'Cobertura dental, visi\u00F3n y audici\u00F3n.'},
   {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
   {id:'medicaid',icon:I.shield,icls:'bl',en:'I have Medicaid / Medi-Cal',es:'Tengo Medicaid / Medi-Cal',enD:'Dual eligibility (D-SNP) plans.',esD:'Planes de elegibilidad dual (D-SNP).'}
 ];
@@ -977,32 +1035,35 @@ function scorePlans(){
     p.score=0;
     ranked.forEach((pri,idx)=>{
       const w=ranked.length-idx; // 1st pick gets highest weight
-      if(pri==='cost')p.score+=w*((6000-p.moop)/1000+(p.premium===0?3:0)+(p.giveback>0?2:0));
-      if(pri==='benefits'||pri==='all')p.score+=w*((p.dental+p.vision+p.hearing+p.fitness)+p.otc/50);
-      if(pri==='drugs')p.score+=w*(p.drug==='Enhanced'?3:1);
-      if(pri==='dental')p.score+=w*((p.dental?3:0)+(p.vision?2:0));
-      if(pri==='wellness')p.score+=w*((p.fitness?3:0)+p.otc/30);
+      if(pri==='cost')p.score+=w*((6000-p.moop)/1000+(p.premium===0?3:0));
+      // 'benefits', 'dental' and 'wellness' scored off dental/vision/hearing/fitness/otc.
+      // Those are null (not in our source data), so any score here would be invented.
+      // Intentionally no-ops until the PBP files are loaded.
+      if(pri==='drugs')p.score+=w*(p.drug==='Included'?2:0);
+      if(pri==='benefits'||pri==='all')p.score+=w*benefitScore(p);
+      if(pri==='dental')p.score+=w*((BSCORE.d[p.dental]||0)*2+(BSCORE.v[p.vision]||0));
+      // 'wellness' still scores nothing: fitness/OTC are not in the benefits extract.
       if(pri==='doctor')p.score+=w*(p.type==='PPO'?3:1);
     });
-    // Boost for matching conditions
-    if(selConds.includes('vision')&&p.vision)p.score+=1;
-    if(selConds.includes('bones')&&p.fitness)p.score+=1;
-    p.score+=p.rating;
+    p.score+=(p.rating||0);
   });
   plans.sort((a,b)=>b.score-a.score);
+  if(!plans.length) return plans;   // invalid ZIP / failed load: caller renders the empty state
   plans[0].label=lang==='en'?'Your Result':'Su Resultado';plans[0].labelCls='best-match';
   const bv=[...plans].sort((a,b)=>a.moop-b.moop)[0];
   if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Lowest Cost':'Menor Costo';p.labelCls='best-value';}
-  const mb=[...plans].sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50))[0];
-  if(!mb.label){mb.label=lang==='en'?'Added Benefits':'Beneficios Adicionales';mb.labelCls='most-benefits';}
-  const tr=[...plans].sort((a,b)=>b.rating-a.rating)[0];
+  // Awarded only when some plan actually has sourced benefits to win on.
+  if(anyBenefit(plans)){
+    const mb=[...plans].sort((a,b)=>benefitScore(b)-benefitScore(a))[0];
+    if(!mb.label&&benefitScore(mb)>0){mb.label=lang==='en'?'Added Benefits':'Beneficios Adicionales';mb.labelCls='most-benefits';}
+  }
+  const tr=[...plans].sort((a,b)=>(b.rating||0)-(a.rating||0))[0];
   if(!tr.label){tr.label=lang==='en'?'High Rating':'Rating Alto';tr.labelCls='top-rated';}
   return plans;
 }
 
 function planCard(p,i,selectable){
   const color=CARRIER_COLORS[p.carrier]||'#999';
-  const ck='\u2705',no='\u274C';
   const checked=selPlans.includes(p.id);
   const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'\u2713':''}</div>`:'';
 
@@ -1027,13 +1088,15 @@ function planCard(p,i,selectable){
     ${selBtn}
     ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
     <h4>${p.name}</h4>
-    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type} | \u2B50 ${p.rating}</div>
+    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type}${p.rating===null?'':' | CMS '+rStar(p.rating)}</div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium.toLocaleString()}/${lang==='en'?'mo':'mes'}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${p.drug}</span></div>
-    <div class="plan-row"><span class="lb">Dental/${lang==='en'?'Vision':'Visi\u00F3n'}/${lang==='en'?'Hearing':'Audici\u00F3n'}</span><span class="vl">${p.dental?ck:no} ${p.vision?ck:no} ${p.hearing?ck:no}</span></div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'OTC Allowance':'OTC Mensual'}</span><span class="vl gd">$${p.otc}/${lang==='en'?'qtr':'trim'}</span></div>
+    ${[['dental','d',lang==='en'?'Dental':'Dental'],['vision','v',lang==='en'?'Vision':'Visi\u00F3n'],['hearing','h',lang==='en'?'Hearing':'Audici\u00F3n']].map(([f,k,lb])=>{
+      const t=tier(k,p[f]); return t?`<div class="plan-row"><span class="lb">${lb}</span><span class="vl${p[f]==='none'?'':' gd'}">${t}</span></div>`:'';
+    }).join('')}
+    ${p.otc!==null?`<div class="plan-row"><span class="lb">${lang==='en'?'OTC Allowance':'OTC Mensual'}</span><span class="vl gd">$${p.otc}/${lang==='en'?'qtr':'trim'}</span></div>`:''}
     ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devoluci\u00F3n Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
     <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
   </div>`;
@@ -1108,7 +1171,7 @@ function sortPlans(plans, mode){
   if(mode==='cost')  s.sort((a,b)=>(a.premium+a.moop)-(b.premium+b.moop));
   else if(mode==='star') s.sort((a,b)=>b.rating-a.rating||(a.premium-b.premium));
   else if(mode==='drug') s.sort((a,b)=>(b.drug==='Included'?1:0)-(a.drug==='Included'?1:0)||(b.rating-a.rating));
-  else if(mode==='extra') s.sort((a,b)=>(b.dental+b.vision+b.hearing+b.fitness+b.otc/50)-(a.dental+a.vision+a.hearing+a.fitness+a.otc/50));
+  else if(mode==='extra') s.sort((a,b)=>benefitScore(b)-benefitScore(a)||(a.premium-b.premium));
   // 'best' keeps scorePlans() order
   return s;
 }
@@ -1153,18 +1216,15 @@ async function flowResults(){
 function flowCompare(){
   prog(88);
   const plans=scorePlans().slice(0,3);
-  const ck='\u2705',no='\u274C';
   const rows=[
     [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
-    ['Dental',...plans.map(p=>p.dental?ck:no)],
-    [lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>p.vision?ck:no)],
-    [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
-    [lang==='en'?'Fitness':'Ejercicio',...plans.map(p=>p.fitness?ck:no)],
-    [lang==='en'?'OTC Allowance':'OTC Mensual',...plans.map(p=>'$'+p.otc)],
+    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||'\u2014')]]:[]),
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    [lang==='en'?'Rating':'Calificaci\u00F3n',...plans.map(p=>'\u2B50 '+p.rating)],
+    [lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS',...plans.map(p=>rStar(p.rating))],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach((p,i)=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}${p.label?' \u2B50':''}</th>`;});
@@ -1183,18 +1243,15 @@ function customCompare(){
   const all=scorePlans();
   const plans=all.filter(p=>selPlans.includes(p.id));
   if(plans.length<2){back();return;}
-  const ck='\u2705',no='\u274C';
   const rows=[
     [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
-    ['Dental',...plans.map(p=>p.dental?ck:no)],
-    [lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>p.vision?ck:no)],
-    [lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>p.hearing?ck:no)],
-    [lang==='en'?'Fitness':'Ejercicio',...plans.map(p=>p.fitness?ck:no)],
-    [lang==='en'?'OTC Allowance':'OTC Mensual',...plans.map(p=>'$'+p.otc)],
+    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||'\u2014')]]:[]),
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    [lang==='en'?'Rating':'Calificaci\u00F3n',...plans.map(p=>'\u2B50 '+p.rating)],
+    [lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS',...plans.map(p=>rStar(p.rating))],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach(p=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}</th>`;});
