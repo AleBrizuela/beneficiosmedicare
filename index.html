@@ -200,8 +200,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
-<link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="/styles.css"></noscript>
+<link rel="stylesheet" href="/styles.css?v=20260916" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/styles.css?v=20260916"></noscript>
 
 <!-- Critical CSS for above-fold content (CMS disclaimer, header, hero section) -->
 <style>
@@ -307,11 +307,11 @@ body { font-family: 'Open Sans', -apple-system, sans-serif; color: #1a202c; font
   transition: background 0.18s, color 0.18s;
 }
 .lang-pill button.lp-active { background: var(--navy); color: #fff; }
-.mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer;padding:10px;min-width:44px;min-height:44px;box-sizing:content-box; }
 
 @media (max-width: 768px) {
   #desktop-nav { display: none !important; }
-  .mobile-menu-btn { display: inline-block; }
+  .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
 }
 
 /* Hero Section */
@@ -2246,7 +2246,7 @@ function updateWidgetProgress(pct) {
 })();
 </script>
 
-<script src="/shared-footer.js" defer></script>
-<script src="/ab-testing.js" defer></script>
+<script src="/shared-footer.js?v=20260916" defer></script>
+<script src="/ab-testing.js?v=20260916" defer></script>
 </body>
 </html>
