@@ -476,7 +476,7 @@ const BKEY={dental:'d',vision:'v',hearing:'h'};
 // data/benefits_<ST>_<YEAR>.json holds one entry per plan we could resolve to a
 // single PBP segment. A plan absent from that file stays null and renders no row:
 // we do not know, so we do not say. Load failures are non-fatal for the same reason.
-let _benefits=null,_benefitsState=null;
+let _benefits=null,_benefitsState=null,_benefitsMeta=null;
 const BENEFIT_YEAR=2026;
 function loadBenefits(stateCode){
   if(_benefitsState===stateCode) return Promise.resolve(_benefits);
@@ -488,8 +488,8 @@ function loadBenefits(stateCode){
       if(!r.ok||ct.indexOf('json')===-1) throw new Error('no benefits file');
       return r.json();
     })
-    .then(j=>{_benefits=(j&&j.plans)||{};_benefitsState=stateCode;return _benefits;})
-    .catch(()=>{_benefits=null;_benefitsState=null;return null;});  // leave unset so a retry can succeed
+    .then(j=>{_benefits=(j&&j.plans)||{};_benefitsMeta=(j&&j.year)?{year:j.year,source:j.source||''}:null;_benefitsState=stateCode;return _benefits;})
+    .catch(()=>{_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;});  // leave unset so a retry can succeed
 }
 const TIER={
   d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},none:{en:'Not included',es:'No incluido'}},
@@ -500,6 +500,23 @@ const BSCORE={d:{comprehensive:3,preventive:1,none:0},
               v:{'exams+eyewear':2,exams:1,eyewear:1,none:0},
               h:{'exams+aids':2,exams:1,aids:1,none:0}};
 function benefitScore(p){return (BSCORE.d[p.dental]||0)+(BSCORE.v[p.vision]||0)+(BSCORE.h[p.hearing]||0);}
+// CMS requires benefit and cost figures to carry their plan year and source,
+// plus a "your plan documents are the final word" caveat. The benefits file
+// already ships year + source; render them rather than discarding them.
+// Absence of data must never render as absence of benefit.
+function noInfo(){return lang==='en'?'No information':'Sin informaci\u00F3n';}
+function provenanceNote(){
+  const y=_benefitsMeta&&_benefitsMeta.year;
+  if(!y) return '';
+  const src=(_benefitsMeta&&_benefitsMeta.source)||'CMS PBP Benefits Public Use File';
+  return lang==='en'
+    ? `Plan year ${y} benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`
+    : `Beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`;
+}
+function provenanceHTML(){
+  const t=provenanceNote(); if(!t) return '';
+  return `<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${t}</p>`;
+}
 function tier(kind,val){
   if(val===null||val===undefined) return null;
   const e=TIER[kind]&&TIER[kind][val];
@@ -1088,7 +1105,7 @@ function planCard(p,i,selectable){
     ${selBtn}
     ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
     <h4>${p.name}</h4>
-    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type}${p.rating===null?'':' | CMS '+rStar(p.rating)}</div>
+    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type}${p.rating===null?'':' | CMS '+(_benefitsMeta&&_benefitsMeta.year?_benefitsMeta.year+' ':'')+rStar(p.rating)}</div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium.toLocaleString()}/${lang==='en'?'mo':'mes'}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded.toLocaleString()}</span></div>
     <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
@@ -1210,6 +1227,7 @@ async function flowResults(){
       <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
     </div>`:''}
     ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}
+    ${provenanceHTML()}
     `;
 }
 
@@ -1220,11 +1238,11 @@ function flowCompare(){
     [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
-    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||'\u2014')]]:[]),
-    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||'\u2014')]]:[]),
-    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||noInfo())]]:[]),
+    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
+    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    [lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS',...plans.map(p=>rStar(p.rating))],
+    [(lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS')+(_benefitsMeta&&_benefitsMeta.year?' '+_benefitsMeta.year:''),...plans.map(p=>rStar(p.rating))],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach((p,i)=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}${p.label?' \u2B50':''}</th>`;});
@@ -1234,6 +1252,7 @@ function flowCompare(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Side-by-side comparison:':'Comparaci\u00F3n lado a lado:')}
     <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${provenanceHTML()}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
     ${bs(lang==='en'?'Back to plans':'Volver a planes','back()')}`;
 }
@@ -1247,11 +1266,11 @@ function customCompare(){
     [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
     [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
     [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
-    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||'\u2014')]]:[]),
-    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||'\u2014')]]:[]),
-    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||'\u2014')]]:[]),
+    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||noInfo())]]:[]),
+    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
+    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
     [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p.drug)],
-    [lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS',...plans.map(p=>rStar(p.rating))],
+    [(lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS')+(_benefitsMeta&&_benefitsMeta.year?' '+_benefitsMeta.year:''),...plans.map(p=>rStar(p.rating))],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
   plans.forEach(p=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}</th>`;});
@@ -1261,6 +1280,7 @@ function customCompare(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'Your custom comparison:':'Su comparaci\u00F3n personalizada:')}
     <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${provenanceHTML()}
     ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
     ${bs(lang==='en'?'Back to all plans':'Volver a todos los planes','back()')}`;
 }
