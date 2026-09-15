@@ -13,8 +13,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/beneficios</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/beneficios" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/beneficios-en" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/beneficios-en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/beneficios" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -579,7 +578,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/como-inscribirse-medicare</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/como-inscribirse-medicare" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/como-inscribirse-medicare-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/how-to-enroll-medicare-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/como-inscribirse-medicare" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -588,8 +587,8 @@
   <url>
     <loc>https://beneficiosmedicare.com/contacto</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/contacto-en" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/contacto-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/contacto" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -597,7 +596,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/costos-medicare-2026</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/costos-medicare-2026" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/costos-medicare-2026-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/medicare-costs-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/costos-medicare-2026" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -606,7 +605,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/doble-elegibilidad-medicare-medicaid</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/doble-elegibilidad-medicare-medicaid" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/doble-elegibilidad-medicare-medicaid-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/dual-eligibility-medicare-medi-cal" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/doble-elegibilidad-medicare-medicaid" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -676,7 +675,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/inscripcion-anual-aep</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/inscripcion-anual-aep" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/inscripcion-anual-aep-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/open-enrollment-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/inscripcion-anual-aep" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -685,7 +684,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/medicare-advantage-california</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/medicare-advantage-california" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/medicare-advantage-california-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/best-medicare-advantage-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/medicare-advantage-california" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -694,7 +693,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/medigap-suplementos-california</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/medigap-suplementos-california" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/medigap-suplementos-california-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/medigap-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/medigap-suplementos-california" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -711,7 +710,6 @@
   <url>
     <loc>https://beneficiosmedicare.com/partes-medicare</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/partes-medicare" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/partes-medicare-en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/partes-medicare" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -736,7 +734,7 @@
   <url>
     <loc>https://beneficiosmedicare.com/que-es-medicare</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/que-es-medicare" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/que-es-medicare-en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/medicare-in-california" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/que-es-medicare" />
     <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
