@@ -32,13 +32,19 @@ class HreflangExtractor(HTMLParser):
 
 
 
-_NON_PUBLIC_PREFIXES = ("index-v", "index-dev", "index-localtest", "index-current")
+_NON_PUBLIC_PREFIXES = ("index-v", "index-dev", "index-localtest", "index-current",
+                        "404", "bot-evals", "widget")
+
+
+_NON_PUBLIC_DIRS = ("tools/",)
 
 
 def _is_non_public(url_path):
     """True for archived experiments and local-only dev/test pages."""
     name = url_path.rsplit("/", 1)[-1]
     stem = name[:-len(".html")] if name.endswith(".html") else name
+    if url_path.startswith(_NON_PUBLIC_DIRS):
+        return True
     return stem.startswith(_NON_PUBLIC_PREFIXES)
 
 
@@ -121,7 +127,20 @@ def scan_local_files(directory, domain):
                 parser.feed(html)
                 hreflang = parser.hreflang
             except Exception:
+                html = ""
                 hreflang = {}
+
+            # A page whose canonical points at a DIFFERENT url is telling Google not to
+            # index it. Listing it in the sitemap at the same time is a contradiction,
+            # and it lands the page in Search Console's "Alternate page with proper
+            # canonical tag" bucket -- which is where most of this site sat before
+            # 2026-09-14. Found by smoke-check.py on 2026-09-16: two duplicate articles
+            # canonicalised to their English-slugged twins and were in the sitemap anyway.
+            m = re.search(r'rel="canonical"[^>]*?href="([^"]+)"', html)
+            if m:
+                canon = m.group(1).rstrip("/")
+                if canon and canon.rstrip("/") != url.rstrip("/"):
+                    continue
 
             pages[url] = {"hreflang": hreflang}
 
