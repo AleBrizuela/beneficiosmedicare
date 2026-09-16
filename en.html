@@ -1069,7 +1069,7 @@ function toggleMobile() {
     try { localStorage.setItem('bm_zip', zip); } catch(_){}
 
     // Load widget with zip param
-    frame.src = 'widget-v4.html?lang=en&v=20260309b&zip=' + zip;
+    frame.src = 'widget-v4?lang=en&v=20260309b&zip=' + zip;
   };
 
   // Auto-submit if a valid zip came in via URL param (from city/neighborhood pages)
