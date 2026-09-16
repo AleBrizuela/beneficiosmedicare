@@ -125,6 +125,9 @@ nav a:hover, nav a.active { color: var(--navy); background: var(--lt-blue); }
 .mobile-menu-btn {
   display: none; background: none; border: none;
   font-size: 24px; color: var(--navy); cursor: pointer;
+  /* 44x44 is the minimum tap target; the glyph alone measured 21x28 */
+  min-width: 44px; min-height: 44px;
+  align-items: center; justify-content: center;
 }
 .phone-header {
   display: flex; align-items: center; gap: 6px;
@@ -628,7 +631,7 @@ footer {
 
 @media (max-width: 900px) {
   nav { display: none; }
-  .mobile-menu-btn { display: block; }
+  .mobile-menu-btn { display: flex; }
   .hero-grid { grid-template-columns: 1fr; gap: 32px; }
   .hero h1 { font-size: 36px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -639,7 +642,7 @@ footer {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .section-title { font-size: 30px; }
   .header-inner { padding: 0 16px; }
-  .mobile-menu-btn { display: block; }
+  .mobile-menu-btn { display: flex; }
   .phone-header { display: none; }
 }
 @media (max-width: 500px) {
