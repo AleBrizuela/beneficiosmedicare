@@ -654,6 +654,7 @@ footer {
 
 /* ââ WIDGET ANCHOR & PULSE ââââââââââââââââââââââââââââââ */
 #widget-anchor { scroll-margin-top: 100px; }
+#zip-card { scroll-margin-top: 100px; }
 
 @keyframes widget-pulse {
   0%   { box-shadow: var(--shadow-lg); }
