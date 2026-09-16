@@ -431,6 +431,15 @@ body.ab-deep-overlap .trust-badge-strip { padding: 150px 24px 16px !important; }
 
 /* Basic main */
 main { display: block; }
+
+/* Plan cards: four across on desktop, matching Medicare California. auto-fit with a
+   200px minimum needed 860px and the container gives 852, so the fourth card wrapped
+   to a row of its own. Equal-height rows come free from the grid. */
+.plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+              align-items: stretch; }
+.plans-grid > * { height: 100%; }
+@media (max-width: 900px) { .plans-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .plans-grid { grid-template-columns: 1fr; } }
 </style>
   <link rel="icon" type="image/svg+xml" href="favicon-beneficios.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
@@ -637,7 +646,7 @@ main { display: block; }
     <div class="section-label">TIPOS DE PLANES</div>
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">Conozca Sus Opciones de Medicare</h2>
     <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:620px;margin-left:auto;margin-right:auto">Existen varios tipos de planes de Medicare. Cada uno tiene diferente cobertura, costo y beneficios. Le ayudamos a entender cuál le conviene.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+    <div class="plans-grid">
       <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
         <div style="font-size:2.5rem;margin-bottom:12px">🏥</div>
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Medicare Advantage</h3>
