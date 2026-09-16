@@ -928,7 +928,7 @@ a[href^="tel"] { white-space: nowrap; }
   section.hero { padding-top: 0 !important; padding-bottom: 6px !important; }
   .hero::after { display: none !important; }
   .hero .hero-grid { margin-top: 0 !important; gap: 0 !important; }
-  .hero h1.widget-hero-heading { font-size: 24px !important; line-height: 1.2 !important; margin-top: 0 !important; margin-bottom: 2px !important; white-space: nowrap !important; padding-top: 10px !important; }
+  .hero h1.widget-hero-heading { font-size: 24px !important; line-height: 1.2 !important; margin-top: 0 !important; margin-bottom: 2px !important; padding-top: 10px !important; text-wrap: balance; }
   .hero .widget-hero-heading + p { margin-bottom: 8px !important; font-size: 13px !important; }
   .widget-opt { border-radius: 14px !important; }
   /* Widget card: tighter padding and subtle brand border top */
