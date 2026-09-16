@@ -390,9 +390,9 @@ main { display: block; }
   var el=document.getElementById('aep-countdown');
   function update(){
     var now=new Date();var diff=target-now;
-    if(diff<=0){el.textContent='¡La inscripción está ABIERTA!';return;}
+    if(diff<=0){el.textContent='Enrollment is OPEN now!';return;}
     var days=Math.ceil(diff/864e5);
-    el.textContent='- faltan '+days+' día'+(days!==1?'s':'');
+    el.textContent='- '+days+' day'+(days!==1?'s':'')+' to go';
   }
   update();setInterval(update,36e5);
 })();
@@ -415,7 +415,7 @@ main { display: block; }
       <div class="zip-card" id="zip-card" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:32px 28px 28px;max-width:400px;margin:0 auto -70px">
         <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px">Your ZIP code</label>
         <div style="position:relative;margin-bottom:16px">
-          <input type="tel" inputmode="numeric" id="zip-input" placeholder="ej. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
+          <input type="tel" inputmode="numeric" id="zip-input" placeholder="e.g. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
           <div id="zip-error" style="display:none;font-size:13px;color:#C0392B;margin-top:6px;text-align:center">Please enter a valid 5-digit ZIP code.</div>
         </div>
         <button id="zip-btn" onclick="handleZipSubmit()" style="width:100%;padding:16px 24px;background:var(--green);color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
