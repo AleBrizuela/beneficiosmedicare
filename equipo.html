@@ -344,6 +344,13 @@ section { padding: 80px 24px; }
 }
 .cta-banner p { font-size: 18px; color: #5A6577; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; }
 .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .header-inner { flex-wrap: wrap; height: auto; padding: 10px 16px; row-gap: 8px; justify-content: center; }
+  .site-logo { flex: 0 0 auto; }
+  .site-logo svg, .nav-brand svg, .blog-nav-brand svg { max-width: 100%; height: auto; width: 210px; }
+  #blog-desktop-nav, .desktop-nav, .nav-links { flex: 1 0 100%; justify-content: center; flex-wrap: wrap; gap: 4px 10px; }
+}
 </style>
 </head>
 <body>

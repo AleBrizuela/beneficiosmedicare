@@ -105,7 +105,14 @@
       .blog-article-body table { font-size: 13px; }
       .blog-article-body th, .blog-article-body td { padding: 8px; }
     }
-    </style>
+    
+/* Wide tables scroll inside their own container. The scroll goes on the PARENT:
+   overflow-x on the table itself loses to its min-content width, and display:block
+   on a table strips its semantics from screen readers. */
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+</style>
     <script type="application/ld+json">
     {"@context": "https://schema.org", "@type": "Article", "headline": "Prima de Medicare Parte B e IRMAA en California 2026: Lo Que Realmente Paga", "description": "Como funcionan la prima de Medicare Parte B y el IRMAA en California para 2026. Vea los rangos de ingreso, como el Seguro Social calcula su prima, y cómo apelar si su ingreso bajo.", "datePublished": "2026-04-14", "dateModified": "2026-04-30", "inLanguage": "es", "author": {"@type": "Person", "name": "Susana Marcos", "url": "https://beneficiosmedicare.com/equipo#susana", "jobTitle": "Agente Licenciada de Medicare", "worksFor": {"@type": "Organization", "name": "Susana Marcos Insurance LLC"}}, "publisher": {"@type": "Organization", "name": "Susana Marcos Insurance LLC", "logo": {"@type": "ImageObject", "url": "https://beneficiosmedicare.com/logo.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://beneficiosmedicare.com/blog/medicare-part-b-irmaa-california"}}
     </script>

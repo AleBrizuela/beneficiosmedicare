@@ -97,7 +97,14 @@
     .highlight-box{background:#FFF8E1;border-left:4px solid #FFA726;padding:20px;border-radius:0 8px 8px 0;margin:24px 0}
     .highlight-box strong{color:#E65100}
     @media(max-width:768px){.pillar-comparison{grid-template-columns:1fr}.blog-sidebar-card{margin-bottom:20px}}
-    </style>
+    
+/* Wide tables scroll inside their own container. The scroll goes on the PARENT:
+   overflow-x on the table itself loses to its min-content width, and display:block
+   on a table strips its semantics from screen readers. */
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+</style>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",

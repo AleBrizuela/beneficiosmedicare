@@ -94,7 +94,14 @@
     .pillar-table td{padding:12px;border-bottom:1px solid #E0F2F1;color:#1a202c}
     .pillar-table tr:hover{background:#F0F3F6}
     @media(max-width:768px){.pillar-comparison{grid-template-columns:1fr}.blog-sidebar-card{margin-bottom:20px}}
-    </style>
+    
+/* Wide tables scroll inside their own container. The scroll goes on the PARENT:
+   overflow-x on the table itself loses to its min-content width, and display:block
+   on a table strips its semantics from screen readers. */
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+</style>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",

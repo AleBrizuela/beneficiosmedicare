@@ -105,7 +105,14 @@
       .blog-article-body table { font-size: 13px; }
       .blog-article-body th, .blog-article-body td { padding: 8px; }
     }
-    </style>
+    
+/* Wide tables scroll inside their own container. The scroll goes on the PARENT:
+   overflow-x on the table itself loses to its min-content width, and display:block
+   on a table strips its semantics from screen readers. */
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+</style>
     <script type="application/ld+json">
     {"@context": "https://schema.org", "@type": "Article", "headline": "HMO vs PPO de Medicare en California 2026: Cómo Elegir el Plan Medicare Advantage Correcto", "description": "Compare los planes HMO y PPO de Medicare en California para 2026. Conozca las diferencias en redes, referidos, cobertura fuera de la red y costos mensuales para elegir el plan Medicare Advantage correcto.", "datePublished": "2026-04-14", "dateModified": "2026-04-30", "inLanguage": "es", "author": {"@type": "Person", "name": "Susana Marcos", "url": "https://beneficiosmedicare.com/equipo#susana", "jobTitle": "Agente Licenciada de Medicare", "worksFor": {"@type": "Organization", "name": "Susana Marcos Insurance LLC"}}, "publisher": {"@type": "Organization", "name": "Susana Marcos Insurance LLC", "logo": {"@type": "ImageObject", "url": "https://beneficiosmedicare.com/logo.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://beneficiosmedicare.com/blog/medicare-hmo-vs-ppo-california"}}
     </script>

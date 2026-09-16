@@ -122,7 +122,14 @@
     .check { color: #007B40; font-weight: bold; }
     .x { color: #c0392b; font-weight: bold; }
     footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #cce5e5; font-size: 0.8rem; color: var(--muted); text-align: center; }
-  </style>
+  
+/* Wide tables scroll inside their own container. The scroll goes on the PARENT:
+   overflow-x on the table itself loses to its min-content width, and display:block
+   on a table strips its semantics from screen readers. */
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+</style>
 
   <script>
     function switchLang(lang) {
