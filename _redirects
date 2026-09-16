@@ -35,3 +35,56 @@
 /privacy-en                                  https://medicare-california.com/privacy.html                           301
 /que-es-medicare-en.html                     https://medicare-california.com/medicare-in-california.html            301
 /que-es-medicare-en                          https://medicare-california.com/medicare-in-california.html            301
+
+# 25 duplicate home pages: old A/B variants and dev copies, every one deployed and
+# serving 200. Three declared index,follow. Several carried the brand name in their
+# <title> while the real home page did not. 301 rather than delete so any signal
+# they accumulated lands on the real home page instead of evaporating into a 404.
+/index-v10                                   https://beneficiosmedicare.com/                                        301
+/index-v10.html                              https://beneficiosmedicare.com/                                        301
+/index-v11                                   https://beneficiosmedicare.com/                                        301
+/index-v11.html                              https://beneficiosmedicare.com/                                        301
+/index-v12                                   https://beneficiosmedicare.com/                                        301
+/index-v12.html                              https://beneficiosmedicare.com/                                        301
+/index-v13                                   https://beneficiosmedicare.com/                                        301
+/index-v13.html                              https://beneficiosmedicare.com/                                        301
+/index-v13r                                  https://beneficiosmedicare.com/                                        301
+/index-v13r.html                             https://beneficiosmedicare.com/                                        301
+/index-v14                                   https://beneficiosmedicare.com/                                        301
+/index-v14.html                              https://beneficiosmedicare.com/                                        301
+/index-v15                                   https://beneficiosmedicare.com/                                        301
+/index-v15.html                              https://beneficiosmedicare.com/                                        301
+/index-v16                                   https://beneficiosmedicare.com/                                        301
+/index-v16.html                              https://beneficiosmedicare.com/                                        301
+/index-v17                                   https://beneficiosmedicare.com/                                        301
+/index-v17.html                              https://beneficiosmedicare.com/                                        301
+/index-v18                                   https://beneficiosmedicare.com/                                        301
+/index-v18.html                              https://beneficiosmedicare.com/                                        301
+/index-v19                                   https://beneficiosmedicare.com/                                        301
+/index-v19.html                              https://beneficiosmedicare.com/                                        301
+/index-v2                                    https://beneficiosmedicare.com/                                        301
+/index-v2.html                               https://beneficiosmedicare.com/                                        301
+/index-v20                                   https://beneficiosmedicare.com/                                        301
+/index-v20.html                              https://beneficiosmedicare.com/                                        301
+/index-v21g                                  https://beneficiosmedicare.com/                                        301
+/index-v21g.html                             https://beneficiosmedicare.com/                                        301
+/index-v3                                    https://beneficiosmedicare.com/                                        301
+/index-v3.html                               https://beneficiosmedicare.com/                                        301
+/index-v4                                    https://beneficiosmedicare.com/                                        301
+/index-v4.html                               https://beneficiosmedicare.com/                                        301
+/index-v5                                    https://beneficiosmedicare.com/                                        301
+/index-v5.html                               https://beneficiosmedicare.com/                                        301
+/index-v6                                    https://beneficiosmedicare.com/                                        301
+/index-v6.html                               https://beneficiosmedicare.com/                                        301
+/index-v7                                    https://beneficiosmedicare.com/                                        301
+/index-v7.html                               https://beneficiosmedicare.com/                                        301
+/index-v8                                    https://beneficiosmedicare.com/                                        301
+/index-v8.html                               https://beneficiosmedicare.com/                                        301
+/index-v9                                    https://beneficiosmedicare.com/                                        301
+/index-v9.html                               https://beneficiosmedicare.com/                                        301
+/index-dev                                   https://beneficiosmedicare.com/                                        301
+/index-dev.html                              https://beneficiosmedicare.com/                                        301
+/index-localtest                             https://beneficiosmedicare.com/                                        301
+/index-localtest.html                        https://beneficiosmedicare.com/                                        301
+/index-current                               https://beneficiosmedicare.com/                                        301
+/index-current.html                          https://beneficiosmedicare.com/                                        301
