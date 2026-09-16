@@ -114,3 +114,9 @@
 /blog/como-prepararse-medicare-65-california-en.html https://medicare-california.com/blog/turning-65-california-medicare-iep-guide 301
 /blog/turning-65-medicare-california https://medicare-california.com/blog/turning-65-california-medicare-iep-guide 301
 /blog/turning-65-medicare-california.html https://medicare-california.com/blog/turning-65-california-medicare-iep-guide 301
+
+# /california/ was an English copy of the Medicare California home page living on
+# the Spanish domain, canonical already pointing there, no inbound links, not in the
+# sitemap. Same class as the 24 duplicate home pages retired above.
+/california https://medicare-california.com/ 301
+/california/ https://medicare-california.com/ 301
