@@ -178,6 +178,26 @@ footer.blog-footer { text-align: center; padding: 40px 24px; font-size: 13px; co
 .lang-cta strong { color: var(--teal-dark); margin-right: 6px; }
 .lang-cta a { color: var(--navy); font-weight: 600; text-decoration: none; }
 .lang-cta a:hover { text-decoration: underline; }
+
+/* Responsive header. These pages had no media query at all and no hamburger, so the
+   nav could not be hidden without leaving no navigation. It wraps to a second row
+   instead, the wordmark scales off its hardcoded width, and wide content scrolls in
+   its own box rather than pushing the page sideways. */
+.site-logo svg, .blog-nav-brand svg, .nav-brand svg { max-width: 100%; height: auto; display: block; }
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+@media (max-width: 900px) {
+  .header-inner { flex-wrap: wrap; height: auto; padding: 10px 16px; row-gap: 8px; justify-content: center; }
+  .site-logo { flex: 0 0 auto; }
+  .site-logo svg { width: 210px; }
+  #blog-desktop-nav, .desktop-nav { flex: 1 0 100%; justify-content: center; flex-wrap: wrap; gap: 4px 10px; }
+  #blog-desktop-nav a, .desktop-nav a { padding: 8px 10px; }
+}
+@media (max-width: 640px) {
+  .site-logo svg { width: 190px; }
+  #blog-desktop-nav a, .desktop-nav a { font-size: 15px; }
+}
 </style>
 <script>
 function goLang(lang) {

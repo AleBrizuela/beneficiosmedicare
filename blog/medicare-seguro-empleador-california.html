@@ -105,7 +105,27 @@
       .blog-article-body table { font-size: 13px; }
       .blog-article-body th, .blog-article-body td { padding: 8px; }
     }
-    </style>
+    
+/* Responsive header. These pages had no media query at all and no hamburger, so the
+   nav could not be hidden without leaving no navigation. It wraps to a second row
+   instead, the wordmark scales off its hardcoded width, and wide content scrolls in
+   its own box rather than pushing the page sideways. */
+.site-logo svg, .blog-nav-brand svg, .nav-brand svg { max-width: 100%; height: auto; display: block; }
+table { display: table; width: 100%; max-width: 100%; }
+*:has(> table) { overflow-x: auto; max-width: 100%; }
+img { max-width: 100%; height: auto; }
+@media (max-width: 900px) {
+  .header-inner { flex-wrap: wrap; height: auto; padding: 10px 16px; row-gap: 8px; justify-content: center; }
+  .site-logo { flex: 0 0 auto; }
+  .site-logo svg { width: 210px; }
+  #blog-desktop-nav, .desktop-nav { flex: 1 0 100%; justify-content: center; flex-wrap: wrap; gap: 4px 10px; }
+  #blog-desktop-nav a, .desktop-nav a { padding: 8px 10px; }
+}
+@media (max-width: 640px) {
+  .site-logo svg { width: 190px; }
+  #blog-desktop-nav a, .desktop-nav a { font-size: 15px; }
+}
+</style>
     <script type="application/ld+json">
     {"@context": "https://schema.org", "@type": "Article", "headline": "Como Funciona Medicare con el Seguro del Empleador en California 2026", "description": "Si tiene seguro de salud del trabajo y esta llegando a los 65 años, aprenda cómo coordinar Medicare con el seguro del empleador en California. Cuándo inscribirse, que pasa primero, y cómo evitar penalidades.", "datePublished": "2026-04-08", "dateModified": "2026-04-30", "inLanguage": "es", "author": {"@type": "Person", "name": "Susana Marcos", "url": "https://beneficiosmedicare.com/equipo#susana", "jobTitle": "Agente Licenciada de Medicare", "worksFor": {"@type": "Organization", "name": "Susana Marcos Insurance LLC"}}, "publisher": {"@type": "Organization", "name": "Susana Marcos Insurance LLC", "logo": {"@type": "ImageObject", "url": "https://beneficiosmedicare.com/logo.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://beneficiosmedicare.com/blog/medicare-seguro-empleador-california"}}
     </script>
