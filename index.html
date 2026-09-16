@@ -1164,5 +1164,82 @@ function toggleMobile() {
 
 <script src="/shared-footer.js?v=20260916" defer></script>
 <script src="/ab-testing.js?v=20260916" defer></script>
+<script>
+// --- ZIP FORM LOGIC ---
+(function() {
+  var zipInput = document.getElementById('zip-input');
+  var zipError = document.getElementById('zip-error');
+  var zipCard  = document.getElementById('zip-card');
+  var widgetC  = document.getElementById('widget-anchor');
+  var frame    = document.getElementById('widget-frame');
+  var heroEl   = document.getElementById('hero');
+
+  // Allow Enter key
+  zipInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleZipSubmit();
+  });
+
+  // Only allow digits
+  zipInput.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+    zipError.style.display = 'none';
+  });
+
+  var submitted = false;
+  window.handleZipSubmit = function() {
+    if (submitted) return;
+    var zip = zipInput.value.trim();
+    if (!/^\d{5}$/.test(zip)) {
+      zipError.style.display = 'block';
+      zipInput.focus();
+      return;
+    }
+    submitted = true;
+
+    // Hide ZIP card, show widget
+    zipCard.style.display = 'none';
+
+    // Update heading
+    heroEl.querySelector('h1').innerHTML = 'Encontremos su plan';
+
+    // Show widget container
+    widgetC.style.display = 'block';
+
+    // Persist zip so future visits skip the ask
+    try { localStorage.setItem('bm_zip', zip); } catch(_){}
+
+    // Load widget with zip param
+    frame.src = 'widget-v4.html?lang=es&v=20260309b&zip=' + zip;
+  };
+
+  // Auto-submit if a valid zip came in via URL param (from city/neighborhood pages)
+  // or from a prior visit stored in localStorage. Avoids the double-ask flow.
+  (function autoSubmitFromZipContext(){
+    try {
+      var params = new URLSearchParams(location.search);
+      var urlZip = (params.get('zip') || '').trim();
+      var savedZip = '';
+      try { savedZip = (localStorage.getItem('bm_zip') || '').trim(); } catch(_){}
+      var zip = urlZip || savedZip;
+      if (zip && /^\d{5}$/.test(zip)) {
+        zipInput.value = zip;
+        setTimeout(function(){ window.handleZipSubmit(); }, 0);
+      }
+    } catch (err) { /* fail open: normal flow */ }
+  })();
+
+  // Auto-resize iframe
+  window.addEventListener('message', function(e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'widget-resize') {
+      frame.style.height = e.data.height + 'px';
+    }
+    if (e.data.type === 'widget-scrolltop') {
+      var a = widgetC || frame;
+      if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+})();
+</script>
 </body>
 </html>
