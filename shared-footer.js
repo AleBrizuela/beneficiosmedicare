@@ -23,13 +23,13 @@
   inner += '<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:6px;font-size:13px">';
   if (isEN) {
     inner += '<a href="/index-en.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-home"></i> Home</a>';
-    inner += '<a href="/beneficios-en.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-heart"></i> Benefits</a>';
+    inner += '<a href="/beneficios-en.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-heart"></i> Medicare 101</a>';
     inner += '<a href="/estados/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-map-marked-alt"></i> States</a>';
     inner += '<a href="/blog/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-pen"></i> Blog</a>';
     inner += '<a href="/careers.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-briefcase"></i> Careers</a>';
   } else {
     inner += '<a href="/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-home"></i> Inicio</a>';
-    inner += '<a href="/beneficios.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-heart"></i> Beneficios</a>';
+    inner += '<a href="/beneficios.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-heart"></i> Medicare 101</a>';
     inner += '<a href="/estados/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-map-marked-alt"></i> Estados</a>';
     inner += '<a href="/blog/" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-pen"></i> Blog</a>';
     inner += '<a href="/careers.html" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-briefcase"></i> Carreras</a>';

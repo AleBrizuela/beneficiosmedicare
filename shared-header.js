@@ -57,10 +57,10 @@
 
   var navLinks = isEN
     ? '<a href="' + homeLink + '"' + cls('home') + '>Home</a>'
-      + '<a href="' + beneLink + '"' + cls('beneficios') + '>Benefits</a>'
+      + '<a href="' + beneLink + '"' + cls('beneficios') + '>Medicare 101</a>'
       + '<a href="' + contLink + '"' + cls('contacto') + '>Contact</a>'
     : '<a href="' + homeLink + '"' + cls('home') + '>Inicio</a>'
-      + '<a href="' + beneLink + '"' + cls('beneficios') + '>Beneficios</a>'
+      + '<a href="' + beneLink + '"' + cls('beneficios') + '>Medicare 101</a>'
       + '<a href="' + contLink + '"' + cls('contacto') + '>Cont\u00e1ctenos</a>';
 
   var langPill = '<div class="lang-pill">'
