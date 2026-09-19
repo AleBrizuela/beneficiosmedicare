@@ -1367,8 +1367,8 @@ function submitLead(type){
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
   }
-  if(phoneClean.length < 10){
-    alert(lang==='en'?'Please enter a valid 10-digit phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos.');
+  if(phoneClean.length !== 10){
+    alert(lang==='en'?'Please enter a valid 10-digit US phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos (EE.UU.).');
     _submitting=false;
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
