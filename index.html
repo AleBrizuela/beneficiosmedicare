@@ -514,7 +514,7 @@ main { display: block; }
 <main id="main-content">
 
 <!-- AEP 2027 Countdown Banner -->
-<style>@media(max-width:480px){#aep-banner{padding:12px 16px!important}#aep-banner>div{gap:8px 12px!important}#aep-banner>div>div{font-size:14px!important;letter-spacing:0!important;line-height:1.35}#aep-banner>div>div>span:first-child{padding:3px 9px!important;margin-right:6px!important;font-size:12px!important}#aep-banner a{padding:7px 16px!important;font-size:13px!important}}</style>
+<style>@media(max-width:480px){#aep-banner{padding:12px 16px!important}#aep-banner>div{gap:8px 12px!important}#aep-banner>div>div{font-size:14px!important;letter-spacing:0!important;line-height:1.35}#aep-banner>div>div>span:first-child{padding:3px 9px!important;margin-right:6px!important;font-size:12px!important}#aep-banner a{display:none!important}}</style>
 <div id="aep-banner" style="background:linear-gradient(135deg,#002147 0%,#00897B 100%);color:#fff;text-align:center;padding:18px 24px;position:relative;z-index:50">
   <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 24px">
     <div style="font-size:15px;font-weight:600;letter-spacing:0.5px">
@@ -554,13 +554,13 @@ main { display: block; }
 
       <!-- ZIP FORM (inline, crawlable by search engines and LLMs) -->
       <div class="zip-card" id="zip-card" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:32px 28px 28px;max-width:400px;margin:0 auto -70px">
-        <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px">Su código postal</label>
+        <label for="zip-input" style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px">Ingrese su código postal para ver planes</label>
         <div style="position:relative;margin-bottom:16px">
           <input type="tel" inputmode="numeric" id="zip-input" placeholder="ej. 90001" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
           <div id="zip-error" style="display:none;font-size:13px;color:#C0392B;margin-top:6px;text-align:center">Ingrese un código postal válido de 5 dígitos.</div>
         </div>
         <button id="zip-btn" onclick="handleZipSubmit()" style="width:100%;padding:16px 24px;background:var(--green);color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
-          <span>Comenzar</span>
+          <span>Ver mis planes gratis</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
