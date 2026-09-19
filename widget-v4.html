@@ -1057,14 +1057,6 @@ function scorePlans(){
       // 'benefits', 'dental' and 'wellness' scored off dental/vision/hearing/fitness/otc.
       // Those are null (not in our source data), so any score here would be invented.
       // Intentionally no-ops until the PBP files are loaded.
-
-// 'Included'/'N/A' are internal sentinels used by the scoring and sort comparisons.
-// Translate only where they are shown, never the value itself.
-function drugLabel(v, lang){
-  if (lang === 'en') return v;
-  return v === 'Included' ? 'Incluido' : (v === 'N/A' ? 'No incluido' : v);
-}
-
       if(pri==='drugs')p.score+=w*(p.drug==='Included'?2:0);
       if(pri==='benefits'||pri==='all')p.score+=w*benefitScore(p);
       if(pri==='dental')p.score+=w*((BSCORE.d[p.dental]||0)*2+(BSCORE.v[p.vision]||0));
@@ -1086,6 +1078,13 @@ function drugLabel(v, lang){
   const tr=[...plans].sort((a,b)=>(b.rating||0)-(a.rating||0))[0];
   if(!tr.label){tr.label=lang==='en'?'High Rating':'Rating Alto';tr.labelCls='top-rated';}
   return plans;
+}
+
+// 'Included'/'N/A' are internal sentinels used by the scoring and sort comparisons.
+// Translate only where they are shown, never the value itself.
+function drugLabel(v, lang){
+  if (lang === 'en') return v;
+  return v === 'Included' ? 'Incluido' : (v === 'N/A' ? 'No incluido' : v);
 }
 
 function planCard(p,i,selectable){
@@ -1368,8 +1367,8 @@ function submitLead(type){
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
   }
-  if(phoneClean.length < 10){
-    alert(lang==='en'?'Please enter a valid 10-digit phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos.');
+  if(phoneClean.length !== 10){
+    alert(lang==='en'?'Please enter a valid 10-digit US phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos (EE.UU.).');
     _submitting=false;
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
