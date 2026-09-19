@@ -756,30 +756,28 @@ a[href^="tel"] { white-space: nowrap; }
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
   <link rel="shortcut icon" href="favicon-192x192.png">
   <link rel="apple-touch-icon" href="favicon-192x192.png">
+<link rel="stylesheet" href="/sm-chrome.css?v=20260918a">
 </head>
 
 <body>
-<div id="cms-disclaimer" style="background:#fff;text-align:center;font-size:11px;padding:6px 16px;color:#9CA3AF;border-bottom:1px solid #f0f0f0;line-height:1.4">
-  This site is not part of the federal government or the Medicare program. For official information visit Medicare.gov or call 1-800-Medicare.
-</div>
-<header class="header" id="header">
-  <div class="header-inner">
-    <a href="/en" class="logo"><svg class="logo-full" viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
-    <nav id="desktop-nav">
+<!-- sm-header:start -->
+<header class="sm-header" id="header">
+  <div class="sm-header-in">
+    <a href="/en" class="sm-logo"><svg class="logo-full" viewBox="0 0 380 48" width="285" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
+    <div class="sm-nav" role="navigation" aria-label="Main navigation">
       <a href="/benefits">Medicare 101</a>
       <a href="/contacto" hreflang="es" lang="es">En Español</a>
       <a href="/contact">Contact Us</a>
-    </nav>
-    <button class="mobile-menu-btn" onclick="toggleMobile()" aria-label="Open navigation menu"><i class="fas fa-bars"></i></button>
+    </div>
+    <button type="button" class="sm-burger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav" onclick="var m=document.getElementById('mobile-nav');var o=m.classList.toggle('open');this.setAttribute('aria-expanded',o?'true':'false')"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   </div>
-</header>
-
-<!-- Mobile nav -->
-<div class="mobile-nav" id="mobile-nav">
-  <a href="/benefits">Medicare 101</a>
+  <div class="sm-mnav" id="mobile-nav">
+    <a href="/benefits">Medicare 101</a>
       <a href="/contacto" hreflang="es" lang="es">En Español</a>
       <a href="/contact">Contact Us</a>
-</div>
+  </div>
+</header>
+<!-- sm-header:end -->
 
 <!-- SMS floating button -->
 <!-- WhatsApp floating button -->
@@ -1085,26 +1083,35 @@ a[href^="tel"] { white-space: nowrap; }
 
 </main>
 
-<footer style="padding:20px 24px 16px">
-  <div style="max-width:960px;margin:0 auto;text-align:center">
-    <div style="font-family:'Open Sans',sans-serif;font-size:18px;color:var(--mint);margin-bottom:10px">Beneficios Medicare</div>
-    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:6px;font-size:13px">
-      <a href="/en" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-home"></i> Home</a>
-      <a href="/benefits" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-heart"></i> Benefits</a>
-      <a href="/estados/" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-map-marked-alt"></i> States</a>
-      <a href="/blog/" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-pen"></i> Blog</a>
-      <a href="/careers" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-briefcase"></i> Careers</a>
+<!-- sm-footer:start -->
+<footer class="sm-footer sm-bm">
+  <div class="sm-bm-in">
+    <div class="sm-bm-brand">Beneficios Medicare</div>
+    <div class="sm-bm-row">
+      <a href="/en">Home</a>
+      <a href="/benefits">Medicare 101</a>
+      <a href="/estados/">States</a>
+      <a href="/blog/">Blog</a>
+      <a href="/careers">Careers</a>
     </div>
-    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:13px">
-      <a href="tel:+13105979142" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-phone-alt"></i> Call</a>
-      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-video"></i> Schedule Virtual Appointment</a>
-      <a href="mailto:alejamedicare@gmail.com" style="color:var(--lt-blue);text-decoration:none"><i class="fas fa-envelope"></i> Email</a>
-      <a href="https://wa.me/13105979142" target="_blank" style="color:var(--lt-blue);text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <div class="sm-bm-row">
+      <a href="tel:+13105979142">Call</a>
+      <a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" rel="noopener">Book a Video Visit</a>
+      <a href="mailto:alejamedicare@gmail.com">Email</a>
+      <a href="https://wa.me/13105979142" target="_blank" rel="noopener">WhatsApp</a>
     </div>
-    <p style="font-size:12px;margin-bottom:8px"><a href="https://medicare-california.com/privacy" style="color:rgba(255,255,255,0.5);text-decoration:none"><i class="fas fa-lock" style="font-size:12px"></i> Privacy Policy</a></p>
-    <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">We do not offer every plan available in your area. Visit Medicare.gov or call 1-800-Medicare for all options. Site is not part of the federal government or Medicare.</p>
+    <div class="sm-bm-priv"><a href="https://medicare-california.com/privacy">Privacy Policy</a></div>
+    <!-- sm-disclaimer:start -->
+<div class="sm-disclaimer" lang="en" style="max-width:960px;margin:20px auto 0;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.14);text-align:left;font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:rgba(255,255,255,0.68);">
+    <p style="margin:0 0 8px;font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.68);font-weight:600;color:rgba(255,255,255,0.82);">CMS required notice (TPMO disclaimer)</p>
+    <p style="margin:0 0 8px;font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.68);">Beneficios Medicare is owned and operated by Susana Marcos LLC, an independent insurance agency.</p>
+    <p class="sm-tpmo" style="margin:0 0 8px;font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.68);">“We do not offer every plan available in your area. Currently we represent 10 organizations which offer 245 products in your area. Please contact Medicare.gov or <span style="white-space:nowrap">1-800-MEDICARE</span> to get information on all of your options.”</p>
+    <p style="margin:0 0 4px;font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.68);margin-top:10px;">Not affiliated with or endorsed by the federal Medicare program or any government agency.</p>
+</div>
+<!-- sm-disclaimer:end -->
   </div>
 </footer>
+<!-- sm-footer:end -->
 
 <!-- ── MOBILE STICKY CTA ─────────────────────────────── -->
 <div class="mobile-sticky-cta" id="mobile-sticky-cta">
