@@ -375,14 +375,15 @@ main { display: block; }
 <main id="main-content">
 
 <!-- AEP 2027 Countdown Banner -->
+<style>@media(max-width:480px){#aep-banner{padding:12px 16px!important}#aep-banner>div{gap:8px 12px!important}#aep-banner>div>div{font-size:14px!important;letter-spacing:0!important;line-height:1.35}#aep-banner>div>div>span:first-child{padding:3px 9px!important;margin-right:6px!important;font-size:12px!important}#aep-banner a{padding:7px 16px!important;font-size:13px!important}}</style>
 <div id="aep-banner" style="background:linear-gradient(135deg,#002147 0%,#00897B 100%);color:#fff;text-align:center;padding:18px 24px;position:relative;z-index:50">
   <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 24px">
     <div style="font-size:15px;font-weight:600;letter-spacing:0.5px">
       <span style="background:rgba(255,255,255,0.18);padding:4px 12px;border-radius:20px;font-size:13px;margin-right:8px">AEP 2027</span>
-      Annual Enrollment opens <strong>October 15</strong>
+      opens <strong>October 15</strong>
       <span id="aep-countdown" style="margin-left:6px;color:#FFD54F;font-weight:700"></span>
     </div>
-    <a href="/benefits" style="background:#FFD54F;color:#002147;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap">What's changing in 2027 &rarr;</a>
+    <a href="/benefits" style="background:#FFD54F;color:#002147;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap">See what's changing &rarr;</a>
   </div>
 </div>
 <script>
@@ -1046,6 +1047,8 @@ function toggleMobile() {
   });
 
   var submitted = false;
+  var autoLoaded = false, widgetTouched = false;
+  window.addEventListener('blur', function(){ if (document.activeElement === frame) widgetTouched = true; });
   window.handleZipSubmit = function() {
     if (submitted) return;
     var zip = zipInput.value.trim();
@@ -1080,10 +1083,14 @@ function toggleMobile() {
       var urlZip = (params.get('zip') || '').trim();
       var savedZip = '';
       try { savedZip = (localStorage.getItem('bm_zip') || '').trim(); } catch(_){}
-      var zip = urlZip || savedZip;
-      if (zip && /^\d{5}$/.test(zip)) {
-        zipInput.value = zip;
+      // A ZIP in the URL (city pages) auto-submits. A ZIP saved from an earlier visit only pre-fills
+      // the box: auto-submitting hid the ZIP card and scrolled the page past it on every load.
+      if (/^\d{5}$/.test(urlZip)) {
+        zipInput.value = urlZip;
+        autoLoaded = true;
         setTimeout(function(){ window.handleZipSubmit(); }, 0);
+      } else if (/^\d{5}$/.test(savedZip)) {
+        zipInput.value = savedZip;
       }
     } catch (err) { /* fail open: normal flow */ }
   })();
@@ -1095,6 +1102,7 @@ function toggleMobile() {
       frame.style.height = e.data.height + 'px';
     }
     if (e.data.type === 'widget-scrolltop') {
+      if (autoLoaded && !widgetTouched) return;  // widget's own start-up must not scroll the page
       var a = widgetC || frame;
       if (a) a.scrollIntoView({behavior:'smooth', block:'start'});
     }
