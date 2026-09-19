@@ -58,9 +58,9 @@
 
   // Legal disclaimer
   if (isEN) {
-    inner += '<p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">We do not offer every plan available in your area. Visit Medicare.gov or call 1-800-Medicare for all options. Site is not part of the federal government or Medicare.</p>';
+    inner += '<p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">We do not offer every plan available in your area. Currently we represent 10 organizations which offer 245 products in your area. Please contact Medicare.gov or call 1-800-MEDICARE to get information on all of your options. Not affiliated with or endorsed by the federal Medicare program or any government agency.</p>';
   } else {
-    inner += '<p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">No ofrecemos todos los planes disponibles en su \u00e1rea. Visite Medicare.gov o llame al 1-800-Medicare. Sitio no es parte del gobierno federal ni del programa de Medicare.</p>';
+    inner += '<p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.5;margin:0">No ofrecemos todos los planes disponibles en su \u00e1rea. Actualmente representamos 10 organizaciones que ofrecen 245 productos en su \u00e1rea. Comun\u00edquese con Medicare.gov o llame al 1-800-MEDICARE para obtener informaci\u00f3n sobre todas sus opciones. No afiliado ni respaldado por el programa federal de Medicare ni ninguna agencia gubernamental.</p>';
   }
 
   inner += '</div>';

@@ -601,6 +601,7 @@ function inp(id,label,ph,type='text'){
   return `<div class="input-group"><label for="${id}">${label}</label><input class="input-field" type="${type}"${im} id="${id}" placeholder="${ph}" value="${v}" oninput="D['${id}']=this.value"></div>`
 }
 function bp(txt,onclick){return `<button class="btn-p" onclick="${onclick}">${txt}</button>`}
+function tcpaNotice(){return `<p style="text-align:center;font-size:11px;color:var(--gray);line-height:1.5;margin-top:8px">${lang==='en'?'By providing your phone number, you agree to receive phone calls and SMS messages regarding Medicare options from Susana Marcos LLC. Consent is not required as a condition of purchase.':'Al proporcionar su número de teléfono, usted acepta recibir llamadas y mensajes SMS sobre opciones de Medicare de parte de Susana Marcos LLC. El consentimiento no es requerido como condición de compra.'}</p>`}
 function bs(txt,onclick){return `<button class="btn-s" onclick="${onclick}">${txt}</button>`}
 function ic(title,text,cls=''){return `<div class="info-card ${cls}"><h4>${title}</h4><p>${text}</p></div>`}
 function skip(txt,onclick){return `<button class="btn-skip" onclick="${onclick}">${txt}</button>`}
@@ -963,7 +964,8 @@ function snoozeStep(){
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead("snooze")')}`;
+    ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead("snooze")')}
+    ${tcpaNotice()}`;
 }
 
 
@@ -1240,9 +1242,7 @@ function planEnroll(){
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir',"submitLead('enroll')")}
-    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
-    </p>`;
+    ${tcpaNotice()}`;
 }
 
 function helpChoose(){
@@ -1255,9 +1255,7 @@ function helpChoose(){
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
     ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
-    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
-    </p>`;
+    ${tcpaNotice()}`;
 }
 
 
@@ -1282,8 +1280,8 @@ function submitLead(type){
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
   }
-  if(phoneClean.length < 10){
-    alert(lang==='en'?'Please enter a valid 10-digit phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos.');
+  if(phoneClean.length !== 10){
+    alert(lang==='en'?'Please enter a valid 10-digit US phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos (EE.UU.).');
     _submitting=false;
     if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
     return;
@@ -1397,7 +1395,7 @@ function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$185/mo (2025)</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}${tcpaNotice()}`}
 
 
 // ═══════════════════════════════════════
