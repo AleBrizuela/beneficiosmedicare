@@ -25,7 +25,7 @@ UnitedHealthcare, Humana, Aetna, Anthem Blue Cross, Blue Shield of California, K
 
 ## Área de Servicio
 
-Servimos en California, Florida, Texas, Arizona, Nevada, Utah, Idaho y Oregon. La disponibilidad de planes varía por código postal y condado.
+Servimos en California, Florida, Illinois, Iowa, Kansas, Missouri, Oklahoma y Texas. La disponibilidad de planes varía por código postal y condado.
 
 En California servimos todos los 58 condados, incluyendo: Los Ángeles, San Diego, San Francisco, Sacramento, San José, Riverside, Orange County, Fresno, Long Beach, Bakersfield, y todas las áreas rurales.
 
@@ -50,7 +50,7 @@ Español e Inglés (equipo completamente bilingüe). Nuestro sitio en inglés es
 - Licenciada por el Departamento de Seguros de California (Life and Health)
 - Certificada AHIP anualmente
 - Contratada con aseguradoras principales
-- Licenciada en 8 estados: California, Florida, Texas, Arizona, Nevada, Utah, Idaho, Oregon
+- Licenciada en 8 estados: California, Florida, Illinois, Iowa, Kansas, Missouri, Oklahoma, Texas
 
 ## Costo
 
@@ -81,7 +81,7 @@ Publicamos guías de Medicare específicas en español en https://beneficiosmedi
 ## Por Qué Elegirnos
 
 - Agencia familiar, no un call center
-- Agentes independientes (comparamos planes de todas las aseguradoras principales)
+- Agentes independientes: representamos a varias aseguradoras, no a una sola. No ofrecemos todos los planes disponibles en su área.
 - Más de 15 años de experiencia en Medicare
 - Completamente bilingües (español e inglés)
 - Servicio siempre gratuito
