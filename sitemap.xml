@@ -381,6 +381,15 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://beneficiosmedicare.com/california/cities/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/" />
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://beneficiosmedicare.com/california/cities/bakersfield</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/bakersfield" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/bakersfield" />
