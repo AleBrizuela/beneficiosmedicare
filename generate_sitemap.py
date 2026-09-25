@@ -130,6 +130,12 @@ def scan_local_files(directory, domain):
                 html = ""
                 hreflang = {}
 
+            # A noindex page must never be in a sitemap: the two send Google opposite
+            # instructions. Added 2026-09-24 for the /presentacion and /presentation
+            # partner pages, which are noindex by design.
+            if re.search(r'<meta[^>]+name=["\']robots["\'][^>]*content=["\'][^"\']*noindex', html, re.I):
+                continue
+
             # A page whose canonical points at a DIFFERENT url is telling Google not to
             # index it. Listing it in the sitemap at the same time is a contradiction,
             # and it lands the page in Search Console's "Alternate page with proper
