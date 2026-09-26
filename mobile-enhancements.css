@@ -77,23 +77,22 @@ section.hero {
     font-size: 12px !important;
     margin-bottom: 16px !important;
   }
-  /* 2026-09-25: wrap into a 3-column grid instead of a row that scrolls sideways */
+  /* 2026-09-25: wrap like medicare-california.com does (same values), instead of
+     a single row that scrolled sideways */
   .carrier-logos {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px 12px !important;
-    justify-items: center;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
     align-items: center;
+    gap: 28px 48px !important;
     overflow: visible !important;
     padding: 0 !important;
     mask-image: none;
     -webkit-mask-image: none;
   }
   .carrier-logos img {
-    height: 32px !important;
+    height: 30px !important;
     width: auto !important;
-    max-width: 100%;
-    object-fit: contain;
   }
   .carrier-pill {
     font-size: 13px !important;
@@ -379,6 +378,8 @@ img[loading="lazy"] {
   background: var(--lt-gray);
   transition: opacity 0.3s;
 }
+/* Logos are transparent: the grey placeholder showed as a box behind each one */
+.carrier-logos img[loading="lazy"] { background: none; }
 
 /* -- 17. LOGO & HEADER: Matches benefits/contact pages -- */
 @media (max-width: 768px) {
