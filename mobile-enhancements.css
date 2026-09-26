@@ -68,12 +68,12 @@ section.hero {
 /* ââ 2. CARRIER TRUST BAR: Scroll hint + fade edges ââ */
 @media (max-width: 768px) {
   .carrier-trust-bar {
-    padding: 28px 0 28px 16px !important;
+    padding: 28px 16px !important;
     position: relative;
   }
   .trust-bar-label {
     padding-left: 0;
-    padding-right: 16px;
+    padding-right: 0;
     font-size: 12px !important;
     margin-bottom: 16px !important;
   }
@@ -85,7 +85,7 @@ section.hero {
     justify-items: center;
     align-items: center;
     overflow: visible !important;
-    padding: 0 16px 0 0 !important;
+    padding: 0 !important;
     mask-image: none;
     -webkit-mask-image: none;
   }
