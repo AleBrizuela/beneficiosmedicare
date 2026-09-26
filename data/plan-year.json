@@ -1,0 +1,6 @@
+{
+  "year": 2026,
+  "source": "CMS Medicare Plan & Premium PUF 2026",
+  "updated": "2026-09-26",
+  "_README": "This file declares which PLAN YEAR the data/cms_<ST>.js files hold: premiums, deductibles, MOOP, plan names and star ratings. Those files carry no year of their own, so without this the widget shows plan costs with nothing saying which year they are for. UPDATE THIS FILE IN THE SAME CHANGE THAT UPLOADS NEW cms_<ST>.js FILES. If it is missing the widget says nothing about the plan-cost year, which is the old behaviour and is safe. If it is WRONG the widget states a wrong year confidently, which is worse than silence - so do not let it drift. The separate data/benefits_<ST>_<YEAR>.json files carry their own year and are not governed by this file."
+}

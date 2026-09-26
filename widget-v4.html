@@ -523,6 +523,25 @@ function loadBenefits(stateCode){
     })
     .catch(()=>{_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;});
 }
+// ---- Which plan year the cost data is for ----
+// data/cms_<ST>.js holds premiums, deductibles, MOOP, plan names and star
+// ratings, and carries no year of its own. Without this the widget showed
+// plan costs with nothing saying which year they were for -- during AEP, when
+// the whole point is that next year's costs differ from this year's.
+// data/plan-year.json declares it. Missing file = say nothing, which is the
+// old behaviour and is safe. Never guess a year here.
+let _planYear=null,_planYearTried=false;
+function loadPlanYear(){
+  if(_planYearTried) return Promise.resolve(_planYear);
+  return fetch('data/plan-year.json')
+    .then(r=>{
+      const ct=(r.headers.get('content-type')||'');
+      if(!r.ok||ct.indexOf('json')===-1) throw new Error('no plan-year file');
+      return r.json();
+    })
+    .then(j=>{_planYearTried=true;_planYear=(j&&j.year)?{year:j.year,source:j.source||''}:null;return _planYear;})
+    .catch(()=>{_planYearTried=true;_planYear=null;return null;});
+}
 const TIER={
   d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},none:{en:'Not included',es:'No incluido'}},
   v:{'exams+eyewear':{en:'Exam + eyewear',es:'Examen y lentes'},exams:{en:'Exam only',es:'Solo examen'},eyewear:{en:'Eyewear only',es:'Solo lentes'},none:{en:'Not included',es:'No incluido'}},
@@ -538,12 +557,30 @@ function benefitScore(p){return (BSCORE.d[p.dental]||0)+(BSCORE.v[p.vision]||0)+
 // Absence of data must never render as absence of benefit.
 function noInfo(){return lang==='en'?'No information':'Sin informaci\u00F3n';}
 function provenanceNote(){
-  const y=_benefitsMeta&&_benefitsMeta.year;
-  if(!y) return '';
+  const y=_benefitsMeta&&_benefitsMeta.year;              // benefits file's own year
+  const py=_planYear&&_planYear.year;                     // declared plan-cost year
   const src=(_benefitsMeta&&_benefitsMeta.source)||'CMS PBP Benefits Public Use File';
-  return lang==='en'
-    ? `Plan year ${y} benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`
-    : `Beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`;
+  const en=lang==='en';
+  const tail=en
+    ? 'Costs may vary; your plan documents are the final word.'
+    : 'Los costos pueden variar; los documentos de su plan son la palabra final.';
+  // Both known and in step -- one plain sentence.
+  if(y&&py&&y===py) return en
+    ? `Plan year ${y} costs and benefits. Source: ${src}. ${tail}`
+    : `Costos y beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
+  // Both known and NOT in step. Say so rather than pick one: a mismatch means
+  // somebody uploaded one dataset and not the other, and a reader comparing
+  // plans deserves to see that before they act on the numbers.
+  if(y&&py) return en
+    ? `Costs: plan year ${py}. Benefits: plan year ${y}. Source: ${src}. ${tail}`
+    : `Costos: a\u00F1o del plan ${py}. Beneficios: a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
+  if(py&&!y) return en
+    ? `Plan year ${py} costs. ${tail}`
+    : `Costos del a\u00F1o del plan ${py}. ${tail}`;
+  if(!y) return '';   // nothing known -- unchanged from before
+  return en
+    ? `Plan year ${y} benefits. Source: ${src}. ${tail}`
+    : `Beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
 }
 function provenanceHTML(){
   const t=provenanceNote(); if(!t) return '';
@@ -634,7 +671,7 @@ async function loadPlansForZip(zip){
     const idx = await loadZipIndex();
     const state = idx[zip];
     if(!state) { D._zipValid=false; PLANS=[]; return; }
-    const [data, benefits] = await Promise.all([loadCmsData(state), loadBenefits(state)]);
+    const [data, benefits] = await Promise.all([loadCmsData(state), loadBenefits(state), loadPlanYear()]);
     const info = data.zips?.[zip];
     if(!info) { D._zipValid=false; PLANS=[]; return; }
     const county = info.county;
