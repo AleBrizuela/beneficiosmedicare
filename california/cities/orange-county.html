@@ -148,23 +148,34 @@
 
     <!-- JSON-LD Schema -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "InsuranceAgency",
-        "name": "Beneficios Medicare - Orange",
-        "description": "Asesoría gratuita de Medicare en español para residentes de Orange y el Condado de Orange",
-        "url": "https://beneficiosmedicare.com/california/cities/orange-county",
-        "telephone": "+1-310-597-9142",
-        "areaServed": {
-            "@type": "City",
-            "name": "Orange",
-            "addressCountry": "US",
-            "addressRegion": "CA"
-        },
-        "priceRange": "Gratis",
-        "availableLanguage": ["es", "en"]
-    }
-    </script>
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "@id": "https://beneficiosmedicare.com/#agency",
+  "name": "Beneficios Medicare",
+  "legalName": "Susana Marcos LLC",
+  "telephone": "+1-310-597-9142",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Culver City",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "description": "Asesoría gratuita de Medicare en español para residentes de Orange y el Condado de Orange",
+  "url": "https://beneficiosmedicare.com/california/cities/orange-county",
+  "areaServed": {
+    "@type": "City",
+    "name": "Orange",
+    "addressCountry": "US",
+    "addressRegion": "CA"
+  },
+  "priceRange": "Gratis",
+  "availableLanguage": [
+    "es",
+    "en"
+  ]
+}
+</script>
 
     <script type="application/ld+json">
     {
@@ -192,7 +203,7 @@
                 "name": "¿Cuándo es el mejor momento para inscribirse en Medicare en el Condado de Orange?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para obtener la mejor cobertura."
+                    "text": "Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para elegir la cobertura que mejor se adapte a sus necesidades."
                 }
             },
             {
@@ -208,37 +219,31 @@
     </script>
 
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
     {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://beneficiosmedicare.com"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "California",
-                "item": "https://beneficiosmedicare.com/california/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "Ciudades",
-                "item": "https://beneficiosmedicare.com/california/cities/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 4,
-                "name": "Orange",
-                "item": "https://beneficiosmedicare.com/california/cities/orange-county.html"
-            }
-        ]
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://beneficiosmedicare.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Ciudades",
+      "item": "https://beneficiosmedicare.com/california/cities/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Orange",
+      "item": "https://beneficiosmedicare.com/california/cities/orange-county"
     }
-    </script>
+  ]
+}
+</script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20260918q">
 </head>
 <body>
@@ -313,7 +318,7 @@
             <div class="benefit-card">
                 <div class="benefit-icon">🏥</div>
                 <h3>Expertos en el Condado de Orange</h3>
-                <p>Conocemos el mercado de salud del Condado de Orange. Desde Anaheim hasta Irvine, Newport Beach y Santa Ana, sabemos qué planes ofrecen la mejor cobertura.</p>
+                <p>Conocemos el mercado de salud del Condado de Orange. Desde Anaheim hasta Irvine, Newport Beach y Santa Ana, conocemos los planes disponibles en su zona.</p>
             </div>
             <div class="benefit-card">
                 <div class="benefit-icon">🗣️</div>
@@ -364,7 +369,7 @@
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para obtener la mejor cobertura.</p>
+                <p>Su Período Inicial de Inscripción es 3 meses antes y después de cumplir 65 años. El Período Anual de Inscripción Abierta es del 15 de octubre al 7 de diciembre. Planifique con anticipación para elegir la cobertura que mejor se adapte a sus necesidades.</p>
             </div>
         </div>
         <div class="faq-item">

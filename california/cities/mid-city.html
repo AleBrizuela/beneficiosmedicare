@@ -125,18 +125,34 @@
     </style>
 
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "InsuranceAgency",
-        "name": "Beneficios Medicare - Mid-City",
-        "description": "Asesoría gratuita de Medicare en español para residentes de Mid-City y el Condado de Los Ángeles",
-        "url": "https://beneficiosmedicare.com/california/cities/mid-city",
-        "telephone": "+1-310-597-9142",
-        "areaServed": { "@type": "City", "name": "Mid-City", "addressCountry": "US", "addressRegion": "CA" },
-        "priceRange": "Gratis",
-        "availableLanguage": ["es", "en"]
-    }
-    </script>
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "@id": "https://beneficiosmedicare.com/#agency",
+  "name": "Beneficios Medicare",
+  "legalName": "Susana Marcos LLC",
+  "telephone": "+1-310-597-9142",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Culver City",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "description": "Asesoría gratuita de Medicare en español para residentes de Mid-City y el Condado de Los Ángeles",
+  "url": "https://beneficiosmedicare.com/california/cities/mid-city",
+  "areaServed": {
+    "@type": "City",
+    "name": "Mid-City",
+    "addressCountry": "US",
+    "addressRegion": "CA"
+  },
+  "priceRange": "Gratis",
+  "availableLanguage": [
+    "es",
+    "en"
+  ]
+}
+</script>
 
     <script type="application/ld+json">
     {
@@ -180,17 +196,31 @@
     </script>
 
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
     {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://beneficiosmedicare.com" },
-            { "@type": "ListItem", "position": 2, "name": "California", "item": "https://beneficiosmedicare.com/california/" },
-            { "@type": "ListItem", "position": 3, "name": "Ciudades", "item": "https://beneficiosmedicare.com/california/cities/" },
-            { "@type": "ListItem", "position": 4, "name": "Mid-City", "item": "https://beneficiosmedicare.com/california/cities/mid-city.html" }
-        ]
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://beneficiosmedicare.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Ciudades",
+      "item": "https://beneficiosmedicare.com/california/cities/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Mid-City",
+      "item": "https://beneficiosmedicare.com/california/cities/mid-city"
     }
-    </script>
+  ]
+}
+</script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20260918q">
 </head>
 <body>
