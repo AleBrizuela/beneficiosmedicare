@@ -478,10 +478,17 @@ const BKEY={dental:'d',vision:'v',hearing:'h'};
 // single PBP segment. A plan absent from that file stays null and renders no row:
 // we do not know, so we do not say. Load failures are non-fatal for the same reason.
 let _benefits=null,_benefitsState=null,_benefitsMeta=null;
-const BENEFIT_YEAR=2026;
-function loadBenefits(stateCode){
-  if(_benefitsState===stateCode) return Promise.resolve(_benefits);
-  return fetch('data/benefits_'+stateCode+'_'+BENEFIT_YEAR+'.json')
+// CMS publishes the next plan year's PBP file in the autumn, so a hard-coded
+// year silently serves last year's benefits until somebody remembers to change
+// it. Probe newest-first instead. A missing file returns 404 + text/html
+// (verified against production), which the content-type guard below already
+// rejects, so the probe costs one cheap failed request and nothing else.
+// The year SHOWN to the user always comes from the file's own `year` field,
+// never from this list, so the label cannot disagree with the data.
+const BENEFIT_YEARS=[2027,2026];
+let _benefitYear=null;  // informational only: which year actually answered last
+function fetchBenefitYear(stateCode,year){
+  return fetch('data/benefits_'+stateCode+'_'+year+'.json')
     .then(r=>{
       // Cloudflare serves the homepage with a 200 for unknown paths, so a
       // non-JSON content-type means "missing", not "empty".
@@ -489,8 +496,32 @@ function loadBenefits(stateCode){
       if(!r.ok||ct.indexOf('json')===-1) throw new Error('no benefits file');
       return r.json();
     })
-    .then(j=>{_benefits=(j&&j.plans)||{};_benefitsMeta=(j&&j.year)?{year:j.year,source:j.source||''}:null;_benefitsState=stateCode;return _benefits;})
-    .catch(()=>{_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;});  // leave unset so a retry can succeed
+    .then(j=>({j:j,y:year}));
+}
+function loadBenefits(stateCode){
+  if(_benefitsState===stateCode) return Promise.resolve(_benefits);
+  // Always probe newest-first, per state, with no memory of what a previous
+  // state resolved to. Two QA runs killed the cache that used to live here:
+  // remembering a year and trying ONLY that year lost a state's benefits
+  // entirely during a partial CMS upload, and remembering it as a mere
+  // preference made the result order-dependent -- load Texas, come back to
+  // California, and California silently dropped from 2027 to 2026. A miss
+  // costs one 404 (measured: the whole call takes ~4ms), which is not worth
+  // one bad year label on a plan comparison during AEP.
+  const years=BENEFIT_YEARS;
+  return years.reduce(
+      (chain,y)=>chain.then(hit=>hit||fetchBenefitYear(stateCode,y).catch(()=>null)),
+      Promise.resolve(null))
+    .then(hit=>{
+      if(!hit){_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;}  // leave unset so a retry can succeed
+      const j=hit.j;
+      _benefitYear=hit.y;
+      _benefits=(j&&j.plans)||{};
+      _benefitsMeta=(j&&j.year)?{year:j.year,source:j.source||''}:null;
+      _benefitsState=stateCode;
+      return _benefits;
+    })
+    .catch(()=>{_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;});
 }
 const TIER={
   d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},none:{en:'Not included',es:'No incluido'}},
