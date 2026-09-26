@@ -533,25 +533,35 @@
 <!-- sm-footer:end -->
 
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": "Beneficios Medicare - California",
-        "description": "Asesoría gratuita de Medicare para residentes de California",
-        "areaServed": {
-            "@type": "AdministrativeArea",
-            "name": "California, US"
-        },
-        "url": "https://beneficiosmedicare.com/estados/california",
-        "telephone": "+13105979142",
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "US",
-            "addressRegion": "CA"
-        },
-        "availableLanguage": ["es", "en"]
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "@id": "https://beneficiosmedicare.com/#agency",
+  "name": "Beneficios Medicare",
+  "legalName": "Susana Marcos LLC",
+  "telephone": "+1-310-597-9142",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Culver City",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "description": "Asesoría gratuita de Medicare para residentes de California",
+  "areaServed": {
+    "@type": "State",
+    "name": "California",
+    "containedInPlace": {
+      "@type": "Country",
+      "name": "United States"
     }
-    </script>
+  },
+  "url": "https://beneficiosmedicare.com/estados/california",
+  "availableLanguage": [
+    "es",
+    "en"
+  ]
+}
+</script>
 
     <script type="application/ld+json">
     {
@@ -587,31 +597,31 @@
     </script>
 
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
     {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://beneficiosmedicare.com"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Estados",
-                "item": "https://beneficiosmedicare.com/estados/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "California",
-                "item": "https://beneficiosmedicare.com/estados/california.html"
-            }
-        ]
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://beneficiosmedicare.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Estados",
+      "item": "https://beneficiosmedicare.com/estados/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "California",
+      "item": "https://beneficiosmedicare.com/estados/california"
     }
-    </script>
+  ]
+}
+</script>
 
     <script>
         function handleZip() {

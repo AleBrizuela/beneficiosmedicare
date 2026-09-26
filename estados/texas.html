@@ -534,25 +534,35 @@
 <!-- sm-footer:end -->
 
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": "Beneficios Medicare - Texas",
-        "description": "Asesoría gratuita de Medicare para residentes de Texas",
-        "areaServed": {
-            "@type": "AdministrativeArea",
-            "name": "Texas, US"
-        },
-        "url": "https://beneficiosmedicare.com/estados/texas",
-        "telephone": "+13105979142",
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "US",
-            "addressRegion": "TX"
-        },
-        "availableLanguage": ["es", "en"]
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "@id": "https://beneficiosmedicare.com/#agency",
+  "name": "Beneficios Medicare",
+  "legalName": "Susana Marcos LLC",
+  "telephone": "+1-310-597-9142",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Culver City",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "description": "Asesoría gratuita de Medicare para residentes de Texas",
+  "areaServed": {
+    "@type": "State",
+    "name": "Texas",
+    "containedInPlace": {
+      "@type": "Country",
+      "name": "United States"
     }
-    </script>
+  },
+  "url": "https://beneficiosmedicare.com/estados/texas",
+  "availableLanguage": [
+    "es",
+    "en"
+  ]
+}
+</script>
 
     <script type="application/ld+json">
     {
@@ -588,31 +598,31 @@
     </script>
 
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
     {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://beneficiosmedicare.com"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Estados",
-                "item": "https://beneficiosmedicare.com/estados/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "Texas",
-                "item": "https://beneficiosmedicare.com/estados/texas.html"
-            }
-        ]
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://beneficiosmedicare.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Estados",
+      "item": "https://beneficiosmedicare.com/estados/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Texas",
+      "item": "https://beneficiosmedicare.com/estados/texas"
     }
-    </script>
+  ]
+}
+</script>
 
     <script>
         function handleZip() {
