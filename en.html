@@ -309,6 +309,11 @@ main { display: block; }
 .plans-grid > * { height: 100%; }
 @media (max-width: 900px) { .plans-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .plans-grid { grid-template-columns: 1fr; } }
+
+/* 2026-09-25: plan-type cards lift on hover, same as medicare-california.com's .plan-card */
+.plan-card-bm { border: 2px solid transparent; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.plan-card-bm:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,33,71,0.12) !important; border-color: #A8D8B9; }
+@media (prefers-reduced-motion: reduce) { .plan-card-bm:hover { transform: none; } }
 </style>
   <link rel="icon" type="image/svg+xml" href="favicon-beneficios.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
@@ -505,22 +510,22 @@ main { display: block; }
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">Understand Your Medicare Options</h2>
     <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:620px;margin-left:auto;margin-right:auto">There are several kinds of Medicare plan, each with different coverage, costs and benefits. We help you work out which one suits you.</p>
     <div class="plans-grid">
-      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+      <div class="plan-card-bm" style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
         <div style="font-size:2.5rem;margin-bottom:12px">🏥</div>
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Medicare Advantage</h3>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">All-in-one coverage combining Part A, Part B and usually Part D. Includes prescriptions and extra benefits.</p>
       </div>
-      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+      <div class="plan-card-bm" style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
         <div style="font-size:2.5rem;margin-bottom:12px">📋</div>
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Medigap Plans</h3>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Supplemental insurance covering the costs Original Medicare does not pay. Choose from 10 standardized plans.</p>
       </div>
-      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+      <div class="plan-card-bm" style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
         <div style="font-size:2.5rem;margin-bottom:12px">💊</div>
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Part D Prescriptions</h3>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Prescription drug coverage. Available as a standalone plan or built into Medicare Advantage.</p>
       </div>
-      <div style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
+      <div class="plan-card-bm" style="background:white;border-radius:14px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,33,71,0.06)">
         <div style="font-size:2.5rem;margin-bottom:12px">👥</div>
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px">Special Needs Plans (SNP)</h3>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.6">Coverage tailored to people with specific conditions or circumstances. Available in certain regions.</p>
@@ -717,7 +722,7 @@ main { display: block; }
 
       <div style="max-width:800px;margin:0 auto">
         <div class="faq-item" id="faq-keep-doctor" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>Can my relative keep their current doctor?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -727,7 +732,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-when-to-enroll" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>When can my relative enroll in Medicare?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -737,7 +742,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-advantage-vs-medigap" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>What is the difference between Medicare Advantage and Medigap?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -747,7 +752,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-medi-cal" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>My relative has Medi-Cal. Does that change things?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -757,7 +762,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-cost-medicare" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>How much does Medicare cost?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -767,7 +772,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-cost-of-service" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>Do you charge for your service?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -777,7 +782,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-late-enrollment" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>What happens if I do not enroll on time?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -787,7 +792,7 @@ main { display: block; }
         </div>
 
         <div class="faq-item" id="faq-change-plan" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>Can I change plans if I am not happy?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
@@ -796,7 +801,7 @@ main { display: block; }
           </div>
         </div>
 <div class="faq-item" id="faq-medicare-cerca" style="background:white;border:1px solid #E5E7EB;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px">
+          <button class="faq-question" onclick="toggleFAQ(this)" style="padding:24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--navy);background:white;border:none;width:100%;transition:all 0.3s ease;font-size:17px;font-family:inherit;text-align:left">
             <span>How do I find Medicare help near me in California?</span>
             <i class="fas fa-chevron-down faq-icon" style="transition:transform 0.3s ease;font-size:16px"></i>
           </button>
