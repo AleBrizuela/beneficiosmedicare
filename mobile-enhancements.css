@@ -77,11 +77,23 @@ section.hero {
     font-size: 12px !important;
     margin-bottom: 16px !important;
   }
+  /* 2026-09-25: wrap into a 3-column grid instead of a row that scrolls sideways */
   .carrier-logos {
-    padding-right: 24px !important;
-    gap: 8px !important;
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 12px !important;
+    justify-items: center;
+    align-items: center;
+    overflow: visible !important;
+    padding: 0 16px 0 0 !important;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .carrier-logos img {
+    height: 32px !important;
+    width: auto !important;
+    max-width: 100%;
+    object-fit: contain;
   }
   .carrier-pill {
     font-size: 13px !important;
