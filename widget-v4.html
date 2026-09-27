@@ -783,6 +783,17 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
     }
   }
 }
+// A ZIP the CMS data does not cover is a dead end, not a filter problem. Let the
+// customer correct it in place rather than sending them back through the flow.
+async function retryZip(){
+  const el = document.getElementById('zip-retry');
+  if(!el) return;
+  const v = (el.value||'').replace(/\D/g,'').slice(0,5);
+  if(v.length !== 5) return;
+  D.zip = v; D.county = ''; D._zipValid = undefined; PLANS = [];
+  await loadPlansForZip(v);
+  flowResults();
+}
 function onZipInput(el, fieldId){
   el.value = el.value.replace(/\D/g,'').slice(0,5);
   D[fieldId] = el.value;
@@ -1288,6 +1299,27 @@ async function flowResults(){
   if(age!==null){
     if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
     else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
+  }
+  // The ZIP resolved to no state or no county, so there are no plans to filter. The
+  // old screen still rendered the type filter, the sort bar and "No plans in this
+  // category. Try a different type above." -- advice that cannot work, on the only
+  // lead form, with no way to correct the ZIP and no way to reach a person.
+  if(D.zip && D._zipValid === false){
+    const tel = '+13105979142', telShown = '(310) 597-9142';
+    wb().innerHTML = `${bk()}
+      ${bm(lang==='en'
+        ? `We do not have plan data for <strong>${D.zip}</strong>. Check the ZIP code and try again, or call us and we will look it up with you.`
+        : `No tenemos datos de planes para <strong>${D.zip}</strong>. Verifique el c\u00F3digo postal e intente de nuevo, o ll\u00E1menos y lo buscamos juntos.`)}
+      <div class="input-group zip-group">
+        <label for="zip-retry">${lang==='en'?'Your ZIP code':'Su c\u00F3digo postal'}</label>
+        <input class="input-field" type="tel" inputmode="numeric" id="zip-retry" maxlength="5" value="${D.zip||''}">
+      </div>
+      ${bp(lang==='en'?'Try again':'Intentar de nuevo','retryZip()')}
+      <div style="text-align:center;margin-top:14px;font-size:15px;line-height:2">
+        <a href="tel:${tel}" style="color:#00796B;font-weight:700;text-decoration:none">&#128222; ${telShown}</a><br>
+        <a href="https://wa.me/13105979142" target="_blank" rel="noopener" style="color:#25D366;font-weight:700;text-decoration:none">WhatsApp</a>
+      </div>`;
+    return;
   }
   const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
