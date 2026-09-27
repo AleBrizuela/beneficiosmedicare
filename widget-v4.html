@@ -1319,9 +1319,12 @@ async function flowResults(){
     const msg = _zipRetryMsg;
     _zipRetryMsg = '';
     wb().innerHTML = `${bk()}
-      ${bm(lang==='en'
-        ? `We do not have plan data for <strong>${D.zip}</strong>. Check the ZIP code and try another, or call us and we will look it up with you.`
-        : `No tenemos datos de planes para <strong>${D.zip}</strong>. Verifique el c\u00F3digo postal y pruebe otro, o ll\u00E1menos y lo buscamos juntos.`)}
+      ${bm(msg
+        ? (lang==='en' ? 'Let us try a different ZIP code, or call us and we will look it up with you.'
+                       : 'Probemos otro c\u00F3digo postal, o ll\u00E1menos y lo buscamos juntos.')
+        : (lang==='en'
+            ? `We do not have plan data for <strong>${D.zip}</strong>. Check the ZIP code and try another, or call us and we will look it up with you.`
+            : `No tenemos datos de planes para <strong>${D.zip}</strong>. Verifique el c\u00F3digo postal y pruebe otro, o ll\u00E1menos y lo buscamos juntos.`))}
       ${msg?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:13px;color:#c00;text-align:center">${msg}</div>`:''}
       <div class="input-group zip-group">
         <label for="zip-retry">${lang==='en'?'Try another ZIP code':'Pruebe otro c\u00F3digo postal'}</label>
