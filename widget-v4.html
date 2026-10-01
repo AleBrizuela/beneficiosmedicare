@@ -1477,7 +1477,8 @@ function submitLead(type){
   const email=D.email||document.getElementById('email')?.value||'';
   const question=document.getElementById('question')?.value||'';
 
-  const phoneClean = phone.replace(/\D/g,'');
+  let phoneClean = phone.replace(/\D/g,'');
+  if(phoneClean.length === 11 && phoneClean.charAt(0) === '1') phoneClean = phoneClean.slice(1);
   if(!name.trim() || name.trim().length < 2){
     alert(lang==='en'?'Please enter your full name.':'Por favor ingrese su nombre completo.');
     _submitting=false;
