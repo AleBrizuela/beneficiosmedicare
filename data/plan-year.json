@@ -1,6 +1,6 @@
 {
-  "year": 2026,
-  "source": "CMS Medicare Plan & Premium PUF 2026",
-  "updated": "2026-09-26",
-  "_README": "This file declares which PLAN YEAR the data/cms_<ST>.js files hold: premiums, deductibles, MOOP, plan names and star ratings. Those files carry no year of their own, so without this the widget shows plan costs with nothing saying which year they are for. UPDATE THIS FILE IN THE SAME CHANGE THAT UPLOADS NEW cms_<ST>.js FILES. If it is missing the widget says nothing about the plan-cost year, which is the old behaviour and is safe. If it is WRONG the widget states a wrong year confidently, which is worse than silence - so do not let it drift. The separate data/benefits_<ST>_<YEAR>.json files carry their own year and are not governed by this file."
+  "year": 2027,
+  "source": "CMS CY2027 Landscape (data last updated 09/22/2026) + CMS PBP Benefits 2027 (released 2026-10-01)",
+  "updated": "2026-10-02",
+  "_README": "Declares which PLAN YEAR the widget's plan data is for. Since T-017 (2026-10-02) the widget loads data/plans_<ST>_2027.json, and each of those files carries its own 'year' and 'source', which is what the widget displays, so the label cannot drift from the data. Keep this file in step anyway for anything else that reads it. The 2026 files (cms_<ST>.js, benefits_<ST>_2026.json) are kept unchanged so rollback is one revert. Built by SHIP/reference/tools/build-plan-data-2027.py (outside the repo)."
 }

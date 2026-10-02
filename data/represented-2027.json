@@ -1,0 +1,36 @@
+{
+ "year": 2027,
+ "updated": "2026-10-02",
+ "signed": "Alejandra Brizuela 2026-10-02 (T-017)",
+ "_README": "Which states we are licensed in, and per state which CMS parent organizations we are appointed with and Ready to Sell for 2027. The widget shows an agent button ONLY on plans whose CMS Parent Organization Name is listed for the visitor's state; every other plan is 'Information only'. A state not in 'licensed' gets no lead capture at all. An empty list means licensed but no appointment confirmed there yet. Change this file only with AB's sign-off (RED).",
+ "licensed": [
+  "AZ",
+  "CA",
+  "FL",
+  "IA",
+  "IL",
+  "KS",
+  "MO",
+  "OK",
+  "TX"
+ ],
+ "represented": {
+  "AZ": [],
+  "CA": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "FL": [],
+  "IA": [],
+  "IL": [],
+  "KS": [],
+  "MO": [],
+  "OK": [],
+  "TX": []
+ }
+}

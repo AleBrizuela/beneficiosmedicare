@@ -2,13 +2,34 @@
 
 Central data folder for all plan data used by the widget (widget-v4.html).
 
-## Susana's Licensed States
+## Plan year 2027 (live data for widget-v4, since T-017, 2026-10-02)
 
-**CA, FL, IA, IL, KS, MO, OK, TX**
+### plans_{STATE}_2027.json (56 files)
+Every MA, SNP, Cost and PDP plan CMS lists for 2027, one file per state/territory, ~5.6 MB total
+(California 363 KB, 25 KB compressed). Built from the CMS CY2027 Landscape (data last updated
+09/22/2026) and CMS PBP Benefits 2027 (released 2026-10-01) by
+`SHIP/reference/tools/build-plan-data-2027.py`, which lives OUTSIDE this repo because repo-root
+files are served publicly. Checked against the raw CMS files by `spot-check-plan-data-2027.py`
+(same folder). Each file carries its own `year` and `source`; the widget displays those.
+- Format: `{year, state, source, statewide, zips:{zip:county}, counties:{county:[plan index]}, plans:[...]}`
+- Plan fields: id, name, org, parent (CMS parent organization), cat, type, snp, drug, prem, partc,
+  partd, dded (Part D deductible), moop, stars (null until CMS publishes 2027 ratings), sanction,
+  pcp, spec, er, urg, dental, vision, hearing, otc, tiers, dbt (Part D benefit type).
+- The ZIP -> county map is the 2026 one, reused. Known gaps: backlog D-054.
+- Every PBP field for every plan is kept outside the repo in
+  `SHIP/now/2027-plan-data/pbp-full/` (34 MB, internal tools only).
 
-These 8 states are where Susana is licensed to sell. All other states are included
-for informational purposes and may be flagged differently in the widget.
+### represented-2027.json
+Licensed states (AZ CA FL IA IL KS MO OK TX) and, per state, the CMS parent organizations we are
+appointed with and Ready to Sell for 2027. Drives the agent button. RED: change only with AB's sign-off.
 
+### plan-year.json
+Says 2027. Kept in step; the widget reads the year from the plan file itself.
+
+## Plan year 2026 (kept for rollback, no longer loaded by widget-v4)
+
+The files below (`cms_*.js`, `benefits_*_2026.json`) are the 2026 data. Do not delete them until
+2027 has been live through AEP; rollback is one revert of the T-017 commit.
 
 ## File Index
 
@@ -62,6 +83,7 @@ API endpoints:
 
 
 ## Last Updated
+- 2027 plan data: October 2, 2026 (T-017)
 - CMS data: March 8, 2026
 - Medigap data: March 9, 2026 (33 of 51 states)
 - ZIP index: March 8, 2026

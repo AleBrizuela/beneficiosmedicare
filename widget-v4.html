@@ -146,6 +146,13 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .plan-cta:hover{background:var(--sage);color:white}
 .plan-cta.filled{background:var(--sage);color:white}
 .plan-cta.filled:hover{background:var(--sage-dark)}
+.plan-stars{font-size:12px;color:#5f6368;margin:-6px 0 8px}
+.plan-flag{margin-top:10px;padding:10px 12px;border-radius:8px;background:#f1f3f4;color:#3c4043;font-size:13px;line-height:1.45;text-align:center}
+.plan-flag.warn{background:#fdecea;color:#a50e0e}
+.plan-flag a{color:inherit;font-weight:600}
+.plan-note{font-size:12px;color:#5f6368;line-height:1.45;margin:6px 0 0}
+.plan-more{margin-top:6px;border-top:1px solid #EDF2F7}
+.plan-more summary{cursor:pointer;font-size:14px;color:var(--sage);font-weight:600;padding:10px 0;min-height:44px;display:flex;align-items:center}
 
 /* ── PLAN SELECT CHECKBOX ── */
 .plan-sel{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;border:2px solid #CBD5E0;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .15s;z-index:2}
@@ -462,125 +469,41 @@ function medigapToWidgetPlans(stateData){
   return result;
 }
 
-// Map CMS plan to widget format
-// Render a CMS star rating. null means unrated (new plan, or Medigap) -- never 0.
-function rStar(r){ return (r===null||r===undefined) ? '—' : '⭐ '+r; }
+// ---- 2027 plan data (T-017) ----
+// data/plans_<ST>_2027.json, built from the CMS CY2027 Landscape + PBP Benefits files by
+// SHIP/reference/tools/build-plan-data-2027.py. Each file carries its own `year` and `source`,
+// and those are what the widget displays, so the year label cannot drift from the numbers.
+// The 2026 files (cms_<ST>.js, benefits_<ST>_2026.json) are kept unchanged for rollback.
+const PLAN_FILE_YEAR=2027;
+let _planMeta=null;   // {year, source} of the file currently loaded
 
-// Extra-benefit rows (dental/vision/hearing/fitness/OTC) are hidden entirely while we have
-// no source for them -- a column of em dashes on every plan is noise, not honesty. These
-// helpers make the rows reappear on their own once the CMS PBP files are loaded and
-// cmsToWidget returns real values instead of null. Nothing else needs to change then.
+// Render a CMS star rating. CMS has not published 2027 ratings (the field is blank in the
+// landscape file), so a null rating says exactly that. Never carry 2026 stars onto a 2027 plan.
+function rStar(r){
+  if(r!==null&&r!==undefined) return '⭐ '+r;
+  const y=(_planMeta&&_planMeta.year)||PLAN_FILE_YEAR;
+  return lang==='en'?`${y} rating not yet published by CMS`:`Calificación ${y} aún no publicada por CMS`;
+}
+
 const BENEFIT_KEYS=['dental','vision','hearing'];
 const BKEY={dental:'d',vision:'v',hearing:'h'};
-
-// ---- Extra benefits, sourced from the CMS PBP Benefits Public Use File ----
-// data/benefits_<ST>_<YEAR>.json holds one entry per plan we could resolve to a
-// single PBP segment. A plan absent from that file stays null and renders no row:
-// we do not know, so we do not say. Load failures are non-fatal for the same reason.
-let _benefits=null,_benefitsState=null,_benefitsMeta=null;
-// CMS publishes the next plan year's PBP file in the autumn, so a hard-coded
-// year silently serves last year's benefits until somebody remembers to change
-// it. Probe newest-first instead. A missing file returns 404 + text/html
-// (verified against production), which the content-type guard below already
-// rejects, so the probe costs one cheap failed request and nothing else.
-// The year SHOWN to the user always comes from the file's own `year` field,
-// never from this list, so the label cannot disagree with the data.
-const BENEFIT_YEARS=[2027,2026];
-let _benefitYear=null;  // informational only: which year actually answered last
-function fetchBenefitYear(stateCode,year){
-  return fetch('data/benefits_'+stateCode+'_'+year+'.json')
-    .then(r=>{
-      // Cloudflare serves the homepage with a 200 for unknown paths, so a
-      // non-JSON content-type means "missing", not "empty".
-      const ct=(r.headers.get('content-type')||'');
-      if(!r.ok||ct.indexOf('json')===-1) throw new Error('no benefits file');
-      return r.json();
-    })
-    .then(j=>({j:j,y:year}));
-}
-function loadBenefits(stateCode){
-  if(_benefitsState===stateCode) return Promise.resolve(_benefits);
-  // Always probe newest-first, per state, with no memory of what a previous
-  // state resolved to. Two QA runs killed the cache that used to live here:
-  // remembering a year and trying ONLY that year lost a state's benefits
-  // entirely during a partial CMS upload, and remembering it as a mere
-  // preference made the result order-dependent -- load Texas, come back to
-  // California, and California silently dropped from 2027 to 2026. A miss
-  // costs one 404 (measured: the whole call takes ~4ms), which is not worth
-  // one bad year label on a plan comparison during AEP.
-  const years=BENEFIT_YEARS;
-  return years.reduce(
-      (chain,y)=>chain.then(hit=>hit||fetchBenefitYear(stateCode,y).catch(()=>null)),
-      Promise.resolve(null))
-    .then(hit=>{
-      if(!hit){_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;}  // leave unset so a retry can succeed
-      const j=hit.j;
-      _benefitYear=hit.y;
-      _benefits=(j&&j.plans)||{};
-      _benefitsMeta=(j&&j.year)?{year:j.year,source:j.source||''}:null;
-      _benefitsState=stateCode;
-      return _benefits;
-    })
-    .catch(()=>{_benefits=null;_benefitsMeta=null;_benefitsState=null;return null;});
-}
-// ---- Which plan year the cost data is for ----
-// data/cms_<ST>.js holds premiums, deductibles, MOOP, plan names and star
-// ratings, and carries no year of its own. Without this the widget showed
-// plan costs with nothing saying which year they were for -- during AEP, when
-// the whole point is that next year's costs differ from this year's.
-// data/plan-year.json declares it. Missing file = say nothing, which is the
-// old behaviour and is safe. Never guess a year here.
-let _planYear=null,_planYearTried=false;
-function loadPlanYear(){
-  if(_planYearTried) return Promise.resolve(_planYear);
-  return fetch('data/plan-year.json')
-    .then(r=>{
-      const ct=(r.headers.get('content-type')||'');
-      if(!r.ok||ct.indexOf('json')===-1) throw new Error('no plan-year file');
-      return r.json();
-    })
-    .then(j=>{_planYearTried=true;_planYear=(j&&j.year)?{year:j.year,source:j.source||''}:null;return _planYear;})
-    .catch(()=>{_planYearTried=true;_planYear=null;return null;});
-}
+// 'optional' = an optional supplemental benefit: available for an extra premium, not included.
 const TIER={
-  d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},none:{en:'Not included',es:'No incluido'}},
-  v:{'exams+eyewear':{en:'Exam + eyewear',es:'Examen y lentes'},exams:{en:'Exam only',es:'Solo examen'},eyewear:{en:'Eyewear only',es:'Solo lentes'},none:{en:'Not included',es:'No incluido'}},
-  h:{'exams+aids':{en:'Exam + aids',es:'Examen y aparatos'},exams:{en:'Exam only',es:'Solo examen'},aids:{en:'Aids only',es:'Solo aparatos'},none:{en:'Not included',es:'No incluido'}}
+  d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}},
+  v:{'exams+eyewear':{en:'Exam + eyewear',es:'Examen y lentes'},exams:{en:'Exam only',es:'Solo examen'},eyewear:{en:'Eyewear only',es:'Solo lentes'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}},
+  h:{'exams+aids':{en:'Exam + aids',es:'Examen y aparatos'},exams:{en:'Exam only',es:'Solo examen'},aids:{en:'Aids only',es:'Solo aparatos'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}}
 };
-const BSCORE={d:{comprehensive:3,preventive:1,none:0},
-              v:{'exams+eyewear':2,exams:1,eyewear:1,none:0},
-              h:{'exams+aids':2,exams:1,aids:1,none:0}};
-function benefitScore(p){return (BSCORE.d[p.dental]||0)+(BSCORE.v[p.vision]||0)+(BSCORE.h[p.hearing]||0);}
-// CMS requires benefit and cost figures to carry their plan year and source,
-// plus a "your plan documents are the final word" caveat. The benefits file
-// already ships year + source; render them rather than discarding them.
 // Absence of data must never render as absence of benefit.
-function noInfo(){return lang==='en'?'No information':'Sin informaci\u00F3n';}
+function noInfo(){return lang==='en'?'No information':'Sin información';}
 function provenanceNote(){
-  const y=_benefitsMeta&&_benefitsMeta.year;              // benefits file's own year
-  const py=_planYear&&_planYear.year;                     // declared plan-cost year
-  const src=(_benefitsMeta&&_benefitsMeta.source)||'CMS PBP Benefits Public Use File';
-  const en=lang==='en';
+  if(!_planMeta||!_planMeta.year) return '';
+  const en=lang==='en', y=_planMeta.year, src=_planMeta.source||'CMS';
   const tail=en
     ? 'Costs may vary; your plan documents are the final word.'
     : 'Los costos pueden variar; los documentos de su plan son la palabra final.';
-  // Both known and in step -- one plain sentence.
-  if(y&&py&&y===py) return en
-    ? `Plan year ${y} costs and benefits. Source: ${src}. ${tail}`
-    : `Costos y beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
-  // Both known and NOT in step. Say so rather than pick one: a mismatch means
-  // somebody uploaded one dataset and not the other, and a reader comparing
-  // plans deserves to see that before they act on the numbers.
-  if(y&&py) return en
-    ? `Costs: plan year ${py}. Benefits: plan year ${y}. Source: ${src}. ${tail}`
-    : `Costos: a\u00F1o del plan ${py}. Beneficios: a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
-  if(py&&!y) return en
-    ? `Plan year ${py} costs. ${tail}`
-    : `Costos del a\u00F1o del plan ${py}. ${tail}`;
-  if(!y) return '';   // nothing known -- unchanged from before
   return en
-    ? `Plan year ${y} benefits. Source: ${src}. ${tail}`
-    : `Beneficios del a\u00F1o del plan ${y}. Fuente: ${src}. ${tail}`;
+    ? `Plan year ${y} costs and benefits. Source: ${src}. ${tail}`
+    : `Costos y beneficios del año del plan ${y}. Fuente: ${src}. ${tail}`;
 }
 function provenanceHTML(){
   const t=provenanceNote(); if(!t) return '';
@@ -591,62 +514,82 @@ function tier(kind,val){
   const e=TIER[kind]&&TIER[kind][val];
   return e?e[lang]:null;
 }
-// A benefit counts as present only when its value is a tier we know how to render.
-// This rejects null, undefined, the legacy numeric 0, and any future vocabulary drift.
 function hasBenefit(p,keys){return (keys||BENEFIT_KEYS).some(k=>{
   const kind=BKEY[k]; return !!(kind && TIER[kind] && TIER[kind][p[k]]!==undefined);
 });}
 function anyBenefit(plans,keys){return plans.some(p=>hasBenefit(p,keys));}
 
-function cmsToWidget(p, benefits){
-  const src = benefits || _benefits;
-  const b = src ? src[p.id] : null;
-  const isPDP = p.cat==='PDP';
-  const isMA = p.cat==='MA'||p.cat==='MA-PD';
-  const isSNP = p.cat==='SNP';
+// ---- Who we may offer an agent for: data/represented-2027.json (signed by AB, RED) ----
+// licensed: states with lead capture. represented[ST]: CMS parent organizations we are appointed
+// with and Ready to Sell for 2027 in that state. If the file cannot load, everything fails CLOSED:
+// no agent buttons and no lead forms once a state is known (a lost lead beats a lead taken in a
+// state we are not licensed in). A failed load is retried on the next ZIP.
+let _rep=null,_repTried=false;
+function loadRepresented(){
+  if(_repTried) return Promise.resolve(_rep);
+  return fetch('data/represented-2027.json?v=20261002')
+    .then(r=>{const ct=(r.headers.get('content-type')||'');if(!r.ok||ct.indexOf('json')===-1)throw new Error('no file');return r.json();})
+    .then(j=>{_repTried=true;_rep=j;return j;})
+    .catch(()=>{_repTried=false;_rep=null;return null;});
+}
+// May this visitor be offered lead capture? No ZIP/state yet = yes, as before T-017. A known state
+// is offered lead capture only when the signed list loaded AND names it.
+function leadOK(){
+  if(!D.state) return true;
+  if(!_rep||!Array.isArray(_rep.licensed)) return false;
+  return _rep.licensed.indexOf(D.state)>=0;
+}
+// True only when we positively know the state is not licensed (drives the Medicare.gov notice).
+function knownUnlicensed(){
+  return !!(D.state&&_rep&&Array.isArray(_rep.licensed)&&_rep.licensed.indexOf(D.state)<0);
+}
+function isRepresented(parent,state){
+  if(!_rep||!_rep.represented) return false;
+  const l=_rep.represented[state]; return Array.isArray(l)&&l.indexOf(parent)>=0;
+}
+
+function cmsToWidget(p, state){
   return {
     id: p.id,
     name: p.name,
-    carrier: p.carrier,
-    premium: p.premium,
-    ded: p.deductible,
+    carrier: p.org,
+    parent: p.parent,
+    cat: p.cat,
+    snp: p.snp,
+    premium: p.prem,            // null = CMS published no consolidated premium for this plan
+    ded: p.dded,                // Part D deductible; null when the plan has no drug coverage
     moop: p.moop,
-    // Extra benefits come from data/benefits_<ST>_<YEAR>.json (CMS PBP PUF).
-    // A plan missing from that file stays null and renders no row.
-    dental: b ? b.d : null,
-    vision: b ? b.v : null,
-    hearing: b ? b.h : null,
-    // Still unsourced: fitness needs a verified PBP category code, and OTC /
-    // Part B giveback are not in the benefits extract yet.
-    fitness: null,
-    otc: null,
-    giveback: null,
-    drug: (isPDP||p.has_drug)?'Included':'N/A',
-    // CMS stars run 1-5; 0 in the source means "too new to be measured",
-    // not a zero rating. Both must render as "no rating", never as 0 stars.
+    pcp: p.pcp||null, spec: p.spec||null, er: p.er||null, urg: p.urg||null,
+    dental: p.dental===undefined?null:p.dental,
+    vision: p.vision===undefined?null:p.vision,
+    hearing: p.hearing===undefined?null:p.hearing,
+    otc: p.otc||null,
+    tiers: p.tiers||null,
+    dbt: p.dbt||null,
+    drug: p.drug?'Included':'N/A',
     rating: (typeof p.stars==='number' && p.stars>0) ? p.stars : null,
-    type: p.type
+    type: p.type,
+    sanction: !!p.sanction,
+    // Agent button only for: a licensed state, a carrier we represent there, and no CMS sanction.
+    agent: isRepresented(p.parent,state) && !p.sanction && leadOK()
   };
 }
 
-// Load CMS data for a state, returns promise
-function loadCmsData(stateCode){
-  if(_cmsLoadedState === stateCode && _cmsData) return Promise.resolve(_cmsData);
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'data/cms_' + stateCode + '.js';
-    s.onload = () => {
-      if(typeof CMS_STATE_DATA !== 'undefined'){
-        _cmsData = CMS_STATE_DATA;
-        _cmsLoadedState = stateCode;
-        resolve(_cmsData);
-      } else reject(new Error('CMS data not found'));
-    };
-    s.onerror = () => reject(new Error('Failed to load CMS data for ' + stateCode));
-    document.head.appendChild(s);
-  });
+// Load one state's 2027 plan file. JSON via fetch, not an injected script tag: the old
+// `const CMS_STATE_DATA` threw "already declared" on the second state, so a retry with a ZIP
+// in a different state silently kept the first state's plans.
+let _planCache={};
+function loadPlanData(stateCode){
+  if(_planCache[stateCode]) return Promise.resolve(_planCache[stateCode]);
+  return fetch('data/plans_'+stateCode+'_'+PLAN_FILE_YEAR+'.json')
+    .then(r=>{
+      // Cloudflare serves the homepage with a 200 for unknown paths: non-JSON means missing.
+      const ct=(r.headers.get('content-type')||'');
+      if(!r.ok||ct.indexOf('json')===-1) throw new Error('no plan file for '+stateCode);
+      return r.json();
+    })
+    .then(j=>{_planCache[stateCode]=j;return j;});
 }
-
 // Load ZIP index (small file, maps ZIP to state code)
 let _zipIndex = null;
 function loadZipIndex(){
@@ -671,36 +614,33 @@ async function loadPlansForZip(zip){
     const idx = await loadZipIndex();
     const state = idx[zip];
     if(!state) { D._zipValid=false; PLANS=[]; return; }
-    const [data, benefits] = await Promise.all([loadCmsData(state), loadBenefits(state), loadPlanYear()]);
-    const info = data.zips?.[zip];
-    if(!info) { D._zipValid=false; PLANS=[]; return; }
-    const county = info.county;
+    const [data] = await Promise.all([loadPlanData(state), loadRepresented()]);
+    const county = data.zips?.[zip];
+    if(!county) { D._zipValid=false; PLANS=[]; return; }
     D.county = county;
     D.state = state;
     D._zipValid = true;
-    // Get plans for this county + "All Counties" plans
-    let raw = [...(data.plans?.[county] || []), ...(data.plans?.['All Counties'] || [])];
-    // Dedupe by plan ID
+    _planMeta = {year:data.year, source:data.source||''};
+    // This county's plans + plans sold statewide (PDPs), deduped
+    const ids = [...(data.counties?.[county]||[]), ...(data.counties?.[data.statewide||'All Counties']||[])];
     const seen = new Set();
-    raw = raw.filter(p => { if(seen.has(p.id)) return false; seen.add(p.id); return true; });
-    // Sort: best stars first, then lowest premium, then lowest MOOP
-    raw.sort((a,b) => (b.stars||0)-(a.stars||0) || a.premium-b.premium || a.moop-b.moop);
-    PLANS = raw.map(p => cmsToWidget(p, benefits));
+    const raw = ids.filter(i=>{ if(seen.has(i)) return false; seen.add(i); return true; }).map(i=>data.plans[i]);
+    // Neutral default order: lowest monthly premium (no scoring, no "best" labels). The
+    // visitor can re-sort. Plans CMS gave no premium for go last.
+    PLANS = sortPlans(raw.map(p => cmsToWidget(p, state)), 'premium');
 
-    // Merge Medigap / Supplement plans (state-level data)
+    // Medigap / Supplement plans (state-level data, Medicare.gov, March 2026, labelled as such)
     try {
       const mgData = await loadMedigapData();
       if(mgData[state]){
-        const mgPlans = medigapToWidgetPlans(mgData[state]);
-        PLANS = PLANS.concat(mgPlans);
+        PLANS = PLANS.concat(medigapToWidgetPlans(mgData[state]));
       }
     } catch(e2){ console.warn('Medigap data merge skipped:', e2.message); }
   } catch(e) {
-    console.warn('CMS data load failed:', e.message);
+    console.warn('Plan data load failed:', e.message);
     PLANS=[];
   }
 }
-
 // ── i18n ──
 const T={
   title:{en:'Your Guide',es:'Su Gu\u00EDa'},
@@ -948,7 +888,7 @@ function healthStep(nextFn){
       <textarea class="health-textarea" id="healthNotes" maxlength="500" placeholder="${lang==='en'?'e.g. I take a few medications but don\'t remember the names, I need dental work, my knees hurt...':'ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental, me duelen las rodillas...'}" oninput="D.healthNotes=this.value">${D.healthNotes||''}</textarea>
     </div>
     ${bp(t('next'),'D.conditions=[...selConds];go(_cb.health)')}
-    ${skip(lang==='en'?'Skip this step':'Saltar este paso','D.conditions=[];D.healthNotes="";go(_cb.health)')}`;
+    ${skip(lang==='en'?'Skip this step':'Saltar este paso','D.conditions=[];D.healthNotes=\'\';go(_cb.health)')}`;
 }
 
 function toggleCond(id){
@@ -978,7 +918,7 @@ function priorityStep(nextFn){
     <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply.':'Seleccione todos los que apliquen.'}</p>
     <div class="opt-grid">${cards}</div>
     ${bp(t('next'),'savePriority();go(_cb.priority)')}
-    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority="benefits";D.priorities=[];go(_cb.priority)')}`;
+    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority=\'benefits\';D.priorities=[];go(_cb.priority)')}`;
 }
 function togglePri(id){
   const i=priRank.indexOf(id);
@@ -1029,7 +969,7 @@ function ft_eligibility(){
     if(monthsAway>8){
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}. That is ${timeAwayStr(monthsAway)}.`:`Su ventana de inscripci\u00F3n abre ${opensStr}. Eso es ${timeAwayStr(monthsAway)}.`)}
-        <button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
+        ${leadOK()?'':'<!-- no reminder sign-up: state not licensed -->'}<button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px;${leadOK()?'':'display:none'}">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
           ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
@@ -1135,84 +1075,114 @@ function snoozeStep(){
 // ═══════════════════════════════════════
 //  PLAN RESULTS
 // ═══════════════════════════════════════
-function scorePlans(){
-  let plans=[...PLANS];
-  const ranked=D.priorities&&D.priorities.length?D.priorities:[D.priority||'benefits'];
-  plans.forEach(p=>{
-    p.score=0;
-    ranked.forEach((pri,idx)=>{
-      const w=ranked.length-idx; // 1st pick gets highest weight
-      if(pri==='cost')p.score+=w*((6000-p.moop)/1000+(p.premium===0?3:0));
-      // 'benefits', 'dental' and 'wellness' scored off dental/vision/hearing/fitness/otc.
-      // Those are null (not in our source data), so any score here would be invented.
-      // Intentionally no-ops until the PBP files are loaded.
-      if(pri==='drugs')p.score+=w*(p.drug==='Included'?2:0);
-      if(pri==='benefits'||pri==='all')p.score+=w*benefitScore(p);
-      if(pri==='dental')p.score+=w*((BSCORE.d[p.dental]||0)*2+(BSCORE.v[p.vision]||0));
-      // 'wellness' still scores nothing: fitness/OTC are not in the benefits extract.
-      if(pri==='doctor')p.score+=w*(p.type==='PPO'?3:1);
-    });
-    p.score+=(p.rating||0);
-  });
-  plans.sort((a,b)=>b.score-a.score);
-  if(!plans.length) return plans;   // invalid ZIP / failed load: caller renders the empty state
-  plans[0].label=lang==='en'?'Your Result':'Su Resultado';plans[0].labelCls='best-match';
-  const bv=[...plans].sort((a,b)=>a.moop-b.moop)[0];
-  if(bv.id!==plans[0].id){const p=plans.find(x=>x.id===bv.id);p.label=lang==='en'?'Lowest Cost':'Menor Costo';p.labelCls='best-value';}
-  // Awarded only when some plan actually has sourced benefits to win on.
-  if(anyBenefit(plans)){
-    const mb=[...plans].sort((a,b)=>benefitScore(b)-benefitScore(a))[0];
-    if(!mb.label&&benefitScore(mb)>0){mb.label=lang==='en'?'Added Benefits':'Beneficios Adicionales';mb.labelCls='most-benefits';}
-  }
-  const tr=[...plans].sort((a,b)=>(b.rating||0)-(a.rating||0))[0];
-  if(!tr.label){tr.label=lang==='en'?'High Rating':'Rating Alto';tr.labelCls='top-rated';}
-  return plans;
-}
+// No scoring and no "Your Result / Lowest Cost / Added Benefits / High Rating" labels (T-017,
+// PROTECT 2026-10-02): ranking plans for a person from their answers is advice that needs a
+// licensed agent and a Scope of Appointment. The public list is the same for everyone in the
+// county, in a neutral order the visitor chooses.
+function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
 
-// 'Included'/'N/A' are internal sentinels used by the scoring and sort comparisons.
-// Translate only where they are shown, never the value itself.
+// 'Included'/'N/A' are internal sentinels. Translate only where they are shown.
 function drugLabel(v, lang){
   if (lang === 'en') return v;
   return v === 'Included' ? 'Incluido' : (v === 'N/A' ? 'No incluido' : v);
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+// Every cost carries its plan year: "Monthly premium 2027".
+function yl(en,es){return (lang==='en'?en:es)+' '+((_planMeta&&_planMeta.year)||PLAN_FILE_YEAR);}
+function usd(v,cents){
+  if(v===null||v===undefined) return null;
+  const o=cents?{minimumFractionDigits:2,maximumFractionDigits:2}:{maximumFractionDigits:2};
+  return (v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',o);
+}
+const OTC_PER={mo:{en:'every month',es:'cada mes'},'3mo':{en:'every 3 months',es:'cada 3 meses'},'6mo':{en:'every 6 months',es:'cada 6 meses'},
+  yr:{en:'every year',es:'cada año'},'2y':{en:'every 2 years',es:'cada 2 años'},'3y':{en:'every 3 years',es:'cada 3 años'}};
+function otcText(o){
+  if(!o) return null;
+  if(o.has&&o.amt!=null) return usd(o.amt)+(o.per&&OTC_PER[o.per]?' '+OTC_PER[o.per][lang]:'');
+  if(o.has) return lang==='en'?'Included':'Incluido';
+  if(o.optional) return lang==='en'?'Optional, extra premium':'Opcional, prima adicional';
+  return lang==='en'?'Not included':'No incluido';
+}
+const TIER_ES={'Preferred Generic':'Genérico preferido','Generic':'Genérico','Preferred Brand':'Marca preferida',
+  'Non-Preferred Drug':'Medicamento no preferido','Non-Preferred Brand':'Marca no preferida','Specialty Tier':'Especialidad','Specialty':'Especialidad'};
+function tierLabel(t){
+  const l=(t.label||'').trim();
+  if(lang==='en') return 'Tier '+t.t+(l?' · '+esc(l):'');
+  // Unmapped CMS labels (e.g. "Injectable Drugs") are shown as CMS wrote them, never dropped.
+  return 'Nivel '+t.t+(l?' · '+(TIER_ES[l]||esc(l)):'');
+}
+function tiersHTML(p){
+  if(p.drug!=='Included') return '';
+  const head=yl('Drug costs by tier, 1-month supply,','Costo de medicinas por nivel, suministro de 1 mes,');
+  if(p.tiers&&p.tiers.length){
+    const t5=p.tiers.filter(t=>t.t>=1&&t.t<=5);
+    const std=t5.some(t=>t.pharm==='standard');
+    return `<details class="plan-more"><summary>${head}</summary>
+      ${t5.map(t=>`<div class="plan-row"><span class="lb">${tierLabel(t)}</span><span class="vl">${esc(t.v||noInfo())}</span></div>`).join('')}
+      ${std?`<p class="plan-note">${lang==='en'?'Standard network pharmacy. Preferred pharmacies may cost less.':'Farmacia estándar de la red. Las farmacias preferidas pueden costar menos.'}</p>`:''}
+    </details>`;
+  }
+  if(p.dbt==='1') return `<div class="plan-row"><span class="lb">${lang==='en'?'Drug tiers':'Niveles de medicinas'}</span><span class="vl">${lang==='en'?'Standard Part D benefit, no tiers':'Beneficio estándar de la Parte D, sin niveles'}</span></div>`;
+  return '';
+}
+function row(lb,v,gd){return v===null||v===undefined?'':`<div class="plan-row"><span class="lb">${lb}</span><span class="vl${gd?' gd':''}">${v}</span></div>`;}
+// What a plan card offers at the bottom: an agent, or plainly why not.
+function planAction(p){
+  if(p.sanction) return `<p class="plan-flag warn">${lang==='en'?'CMS sanction, see':'Sanción de CMS, consulte'} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`;
+  if(p.agent) return `<button class="plan-cta filled" onclick="pickPlan('${p.id}')">${lang==='en'?'Learn More':'Más Información'}</button>`;
+  if(!leadOK()||!_rep) return `<p class="plan-flag">${lang==='en'?'Information only':'Solo información'}</p>`;
+  return `<p class="plan-flag">${lang==='en'?'Information only. We do not represent this plan’s company.':'Solo información. No representamos a la compañía de este plan.'}</p>`;
+}
+function pickPlan(id){
+  const p=PLANS.find(x=>x.id===id); if(!p) return;
+  if(!p._medigap&&!p.agent) return;   // never capture a lead on an information-only plan
+  if(p._medigap&&!leadOK()) return;
+  D.selectedPlan=p.name; D.selectedPlanId=p.id; go(planEnroll);
 }
 
 function planCard(p,i,selectable){
   const color=CARRIER_COLORS[p.carrier]||'#999';
   const checked=selPlans.includes(p.id);
-  const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'\u2713':''}</div>`:'';
+  const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'✓':''}</div>`:'';
 
-  // Medigap / Supplement cards have a different layout
+  // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such,
+  // never presented as 2027.
   if(p._medigap){
-    const carrierLabel = lang==='en'?'Starting from':'Desde';
     const carriersLabel = lang==='en'?`${p._carrierCount} carriers available`:`${p._carrierCount} aseguradoras disponibles`;
-    return `<div class="plan-card ${i===0?'rec':''}" style="border-left-color:#00897B">
+    return `<div class="plan-card" style="border-left-color:#00897B">
       ${selBtn}
-      ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
-      <h4>${p.name}</h4>
+      <h4>${esc(p.name)}</h4>
       <div class="carrier"><span class="carrier-dot" style="background:#00897B"></span>Medigap ${lang==='en'?'Supplement':'Suplemento'} | ${carriersLabel}</div>
-      <div class="plan-row"><span class="lb">${lang==='en'?'Premium Range':'Rango de Prima'}</span><span class="vl gd">${p._premiumRange}</span></div>
-      <div class="plan-row"><span class="lb">${carrierLabel}</span><span class="vl">${p.carrier}</span></div>
-      <div class="plan-row"><span class="lb">${lang==='en'?'What it covers':'Qu\u00E9 cubre'}</span><span class="vl">${lang==='en'?'Gaps in Original Medicare':'Costos no cubiertos por Medicare Original'}</span></div>
-      <div class="plan-row"><span class="lb">${lang==='en'?'Drug Coverage':'Cobertura de Medicinas'}</span><span class="vl">${lang==='en'?'Separate Part D needed':'Necesita Parte D por separado'}</span></div>
-      <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
+      ${row(lang==='en'?'Premium range':'Rango de prima',p._premiumRange,true)}
+      ${row(lang==='en'?'Lowest price from':'Precio más bajo de',esc(p.carrier))}
+      ${row(lang==='en'?'What it covers':'Qué cubre',lang==='en'?'Gaps in Original Medicare':'Costos no cubiertos por Medicare Original')}
+      ${row(lang==='en'?'Drug Coverage':'Cobertura de Medicinas',lang==='en'?'Separate Part D needed':'Necesita Parte D por separado')}
+      <p class="plan-note">${lang==='en'?'Medigap prices: Medicare.gov, March 2026. Not 2027 prices.':'Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.'}</p>
+      ${leadOK()?`<button class="plan-cta filled" onclick="pickPlan('${p.id}')">${lang==='en'?'Learn More':'Más Información'}</button>`:`<p class="plan-flag">${lang==='en'?'Information only':'Solo información'}</p>`}
     </div>`;
   }
 
-  return `<div class="plan-card ${i===0?'rec':''}" style="border-left-color:${color}">
+  const isMA=p.cat!=='PDP';
+  const prem=p.premium===null?(lang==='en'?'Not published by CMS':'No publicada por CMS'):usd(p.premium,true)+'/'+(lang==='en'?'mo':'mes');
+  return `<div class="plan-card" style="border-left-color:${color}">
     ${selBtn}
-    ${p.label?`<span class="plan-label ${p.labelCls}">${p.label}</span>`:''}
-    <h4>${p.name}</h4>
-    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${p.carrier} | ${p.type}${p.rating===null?'':' | CMS '+(_benefitsMeta&&_benefitsMeta.year?_benefitsMeta.year+' ':'')+rStar(p.rating)}</div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Premium':'Prima'}</span><span class="vl gd">$${p.premium.toLocaleString()}/${lang==='en'?'mo':'mes'}</span></div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Deductible':'Deducible'}</span><span class="vl">$${p.ded.toLocaleString()}</span></div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Max Out-of-Pocket':'Max de Bolsillo'}</span><span class="vl">$${p.moop.toLocaleString()}</span></div>
-    <div class="plan-row"><span class="lb">${lang==='en'?'Drugs':'Medicinas'}</span><span class="vl">${drugLabel(p.drug,lang)}</span></div>
-    ${[['dental','d',lang==='en'?'Dental':'Dental'],['vision','v',lang==='en'?'Vision':'Visi\u00F3n'],['hearing','h',lang==='en'?'Hearing':'Audici\u00F3n']].map(([f,k,lb])=>{
-      const t=tier(k,p[f]); return t?`<div class="plan-row"><span class="lb">${lb}</span><span class="vl${p[f]==='none'?'':' gd'}">${t}</span></div>`:'';
+    <h4>${esc(p.name)}</h4>
+    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${esc(p.carrier)} | ${esc(p.type)}</div>
+    <div class="plan-stars">${rStar(p.rating)}</div>
+    ${row(yl('Monthly premium','Prima mensual'),prem,p.premium!==null)}
+    ${isMA?row(yl('Max out-of-pocket, in-network','Máximo de bolsillo, en la red'),usd(p.moop)):''}
+    ${row(lang==='en'?'Drug coverage':'Cobertura de medicinas',drugLabel(p.drug,lang))}
+    ${p.drug==='Included'?row(yl('Drug deductible','Deducible de medicinas'),usd(p.ded)):''}
+    ${isMA?row(yl('Primary care visit','Visita al médico primario'),p.pcp&&esc(p.pcp)):''}
+    ${isMA?row(yl('Specialist visit','Visita al especialista'),p.spec&&esc(p.spec)):''}
+    ${isMA?row(yl('Emergency room','Sala de emergencias'),p.er&&esc(p.er)):''}
+    ${isMA?row(yl('Urgent care','Atención de urgencia'),p.urg&&esc(p.urg)):''}
+    ${[['dental','d',lang==='en'?'Dental':'Dental'],['vision','v',lang==='en'?'Vision':'Visión'],['hearing','h',lang==='en'?'Hearing':'Audición']].map(([f,k,lb])=>{
+      const t=tier(k,p[f]); return t?row(lb,t,p[f]!=='none'&&p[f]!=='optional'):'';
     }).join('')}
-    ${p.otc!==null?`<div class="plan-row"><span class="lb">${lang==='en'?'OTC Allowance':'OTC Mensual'}</span><span class="vl gd">$${p.otc}/${lang==='en'?'qtr':'trim'}</span></div>`:''}
-    ${p.giveback>0?`<div class="plan-row"><span class="lb">${lang==='en'?'Part B Giveback':'Devoluci\u00F3n Parte B'}</span><span class="vl gd">-$${p.giveback}/mo</span></div>`:''}
-    <button class="plan-cta filled" onclick="D.selectedPlan='${p.name}';go(planEnroll)">${lang==='en'?'Learn More':'M\u00E1s Informaci\u00F3n'}</button>
+    ${isMA?row(yl('Over-the-counter (OTC) allowance','Asignación para productos sin receta (OTC)'),otcText(p.otc),!!(p.otc&&p.otc.has)):''}
+    ${tiersHTML(p)}
+    ${planAction(p)}
   </div>`;
 }
 function togglePlanSel(id){
@@ -1223,13 +1193,12 @@ function togglePlanSel(id){
     const pid=el.getAttribute('onclick').match(/'([^']+)'/)[1];
     const on=selPlans.includes(pid);
     el.classList.toggle('checked',on);
-    el.textContent=on?'\u2713':'';
+    el.textContent=on?'✓':'';
   });
   const bar=document.getElementById('compareBar');
   if(bar) bar.style.display=selPlans.length>=2?'block':'none';
 }
 
-// ── SORT / FILTER BAR ──
 // ── PLAN TYPE FILTER ──
 let _typeFilter='all';
 function classifyType(t){
@@ -1238,11 +1207,12 @@ function classifyType(t){
   if(t.includes('D-SNP')||t.includes('DSNP')||t.includes('Medicaid')) return 'medicaid';
   if(t.includes('SNP')) return 'snp';
   if(t==='Medigap'||t==='Supplement') return 'supp';
+  if(/^(Cost|PFFS|MSA)/.test(t)) return 'other';
   if(t.includes('PPO')) return 'ppo';
   return 'hmo'; // HMO, HMO-POS
 }
 function typeFilterBar(allPlans){
-  const counts={all:allPlans.length, hmo:0, ppo:0, snp:0, pdp:0, supp:0, medicaid:0};
+  const counts={all:allPlans.length, hmo:0, ppo:0, snp:0, pdp:0, supp:0, medicaid:0, other:0};
   allPlans.forEach(p=>{counts[classifyType(p.type)]++});
   const TYPES=[
     {id:'all',      en:'All Plans',           es:'Todos'},
@@ -1252,6 +1222,7 @@ function typeFilterBar(allPlans){
     {id:'snp',      en:'Special Needs (SNP)',  es:'Necesidades Especiales (SNP)'},
     {id:'pdp',      en:'Drug Plans (PDP)',     es:'Medicamentos (PDP)'},
     {id:'medicaid', en:'Medicaid / Medi-Cal',  es:'Medicaid / Medi-Cal'},
+    {id:'other',    en:'Other (Cost, PFFS, MSA)', es:'Otros (Cost, PFFS, MSA)'},
   ];
   return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Filter by plan type':'Filtrar por tipo de plan'}</div><div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
     `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
@@ -1267,48 +1238,49 @@ function applyTypeFilter(type){
   else go(flowResults);
 }
 
-let _sortMode='best';
-const SORT_MODES=[
-  {id:'best',  en:'Your Result',    es:'Su Resultado'},
-  {id:'cost',  en:'Lowest Cost',    es:'Menor Costo'},
-  {id:'star',  en:'High Rating',    es:'Rating Alto'},
-  {id:'drug',  en:'Drug Coverage',  es:'Cobertura de Medicinas'},
-  {id:'extra', en:'Added Benefits',  es:'Beneficios Adicionales'},
-];
+// ── SORT ── neutral, visitor-chosen orders. Default: lowest monthly premium.
+let _sortMode='premium';
+function sortModes(){
+  const m=[
+    {id:'premium', en:'Lowest premium',            es:'Prima más baja'},
+    {id:'moop',    en:'Lowest max out-of-pocket',  es:'Máximo de bolsillo más bajo'},
+    {id:'drug',    en:'Drug coverage first',       es:'Con medicinas primero'},
+  ];
+  // Rating sort only once CMS has published ratings for some plan here.
+  if(PLANS.some(p=>p.rating!==null)) m.push({id:'star', en:'Star rating', es:'Calificación'});
+  return m;
+}
 function sortBar(){
-  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${SORT_MODES.map(m=>
+  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${sortModes().map(m=>
     `<button class="sort-pill${_sortMode===m.id?' active':''}" onclick="applySortMode('${m.id}')">${m[lang]}</button>`
   ).join('')}</div>`;
 }
+// Unknown values (null) always sort last; ties fall back to plan name so the order is stable.
+function _asc(x,y){const a=(x===null||x===undefined)?Infinity:x, b=(y===null||y===undefined)?Infinity:y; return a===b?0:(a<b?-1:1);}
 function sortPlans(plans, mode){
-  const s=[...plans];
-  if(mode==='cost')  s.sort((a,b)=>(a.premium+a.moop)-(b.premium+b.moop));
-  else if(mode==='star') s.sort((a,b)=>b.rating-a.rating||(a.premium-b.premium));
-  else if(mode==='drug') s.sort((a,b)=>(b.drug==='Included'?1:0)-(a.drug==='Included'?1:0)||(b.rating-a.rating));
-  else if(mode==='extra') s.sort((a,b)=>benefitScore(b)-benefitScore(a)||(a.premium-b.premium));
-  // 'best' keeps scorePlans() order
+  const s=[...plans], nm=(a,b)=>String(a.name).localeCompare(String(b.name));
+  if(mode==='moop')      s.sort((a,b)=>_asc(a.moop,b.moop)||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='drug') s.sort((a,b)=>(b.drug==='Included'?1:0)-(a.drug==='Included'?1:0)||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='star') s.sort((a,b)=>_asc(a.rating===null?null:-a.rating,b.rating===null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
+  else                   s.sort((a,b)=>_asc(a.premium,b.premium)||nm(a,b));
   return s;
 }
 function applySortMode(mode){
   _sortMode=mode;
-  // Re-render whichever results view is active
   if(_inAllPlans) go(allPlans);
   else go(flowResults);
 }
 let _inAllPlans=false;
-
 async function flowResults(){
   prog(82); _inAllPlans=false;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
-  const scored=scorePlans();
-  const filtered=filterByType(scored);
-  const plans=_sortMode==='best'?filtered:sortPlans(filtered,_sortMode);
+  const plans=orderedPlans();
   D.conditions=[...selConds];
   const age=getAge();
   let note='';
   if(age!==null){
     if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
-    else{const ew=getEnrollmentWindow();if(ew)note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
+    else{const ew=getEnrollmentWindow();if(ew&&leadOK())note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
   }
   // The ZIP resolved to no state or no county, so there are no plans to filter. The
   // old screen rendered the type filter, the sort bar and "No plans in this category.
@@ -1340,14 +1312,15 @@ async function flowResults(){
   }
   const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`Top plans in your area${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`)}
+    ${bm(lang==='en'?`Plans in your area${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${!D._zipValid && D.zip?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#c00">${lang==='en'?'We could not find plans for this ZIP code. Please check your ZIP and try again.':'No pudimos encontrar planes para este codigo postal. Por favor verifique e intente de nuevo.'}</div>`:''}
-    ${typeFilterBar(scored)}
+    ${unlicensedNote()}
+    ${typeFilterBar(PLANS)}
     ${sortBar()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#888;font-size:14px">${lang==='en'?'No plans in this category. Try a different type above.':'No hay planes en esta categoria. Pruebe otro tipo arriba.'}</div>`:''}
     ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
-    ${!noPlans?bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)'):''}
+    ${!noPlans&&leadOK()?bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)'):''}
     ${!noPlans?`<div style="text-align:center;margin-top:8px">
       <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
     </div>`:''}
@@ -1356,78 +1329,75 @@ async function flowResults(){
     `;
 }
 
-function flowCompare(){
-  prog(88);
-  const plans=scorePlans().slice(0,3);
+function compareTableHTML(plans){
   const rows=[
-    [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
-    [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
-    [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
+    [yl('Monthly premium','Prima mensual'),...plans.map(p=>p._medigap?p._premiumRange:(p.premium===null?noInfo():usd(p.premium,true)))],
+    [yl('Max out-of-pocket','Máximo de bolsillo'),...plans.map(p=>p._medigap||p.cat==='PDP'?'-':(usd(p.moop)||noInfo()))],
+    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p._medigap?(lang==='en'?'Separate Part D':'Parte D aparte'):drugLabel(p.drug,lang))],
+    [yl('Drug deductible','Deducible de medicinas'),...plans.map(p=>p.drug==='Included'?(usd(p.ded)||noInfo()):'-')],
+    [yl('Primary care','Médico primario'),...plans.map(p=>esc(p.pcp||'-'))],
+    [yl('Specialist','Especialista'),...plans.map(p=>esc(p.spec||'-'))],
+    [yl('Emergency room','Emergencias'),...plans.map(p=>esc(p.er||'-'))],
+    [yl('Urgent care','Urgencias'),...plans.map(p=>esc(p.urg||'-'))],
     ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
-    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>drugLabel(p.drug,lang))],
-    [(lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS')+(_benefitsMeta&&_benefitsMeta.year?' '+_benefitsMeta.year:''),...plans.map(p=>rStar(p.rating))],
+    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visión',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
+    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audición',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
+    [yl('OTC allowance','Asignación OTC'),...plans.map(p=>otcText(p.otc)||'-')],
+    [lang==='en'?'CMS rating':'Calificación CMS',...plans.map(p=>p._medigap?'-':rStar(p.rating))],
   ];
   let tbl=`<table class="compare-table"><thead><tr><th></th>`;
-  plans.forEach((p,i)=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}${p.label?' \u2B50':''}</th>`;});
+  plans.forEach(p=>{tbl+=`<th>${esc(p.name.split('(')[0].trim())}</th>`;});
   tbl+=`</tr></thead><tbody>`;
   rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
-  tbl+=`</tbody></table>`;
+  return tbl+`</tbody></table>`;
+}
+function flowCompare(){
+  prog(88);
+  const plans=orderedPlans().slice(0,3);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Side-by-side comparison:':'Comparaci\u00F3n lado a lado:')}
-    <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${bm(lang==='en'?'Side-by-side comparison:':'Comparación lado a lado:')}
+    <div style="overflow-x:auto;margin-bottom:10px">${compareTableHTML(plans)}</div>
     ${provenanceHTML()}
-    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
+    ${leadOK()?bp(lang==='en'?'Help me choose':'Ayúdeme a elegir','go(helpChoose)'):''}
     ${bs(lang==='en'?'Back to plans':'Volver a planes','back()')}`;
 }
 
 function customCompare(){
   prog(88);
-  const all=scorePlans();
-  const plans=all.filter(p=>selPlans.includes(p.id));
+  const plans=PLANS.filter(p=>selPlans.includes(p.id));
   if(plans.length<2){back();return;}
-  const rows=[
-    [lang==='en'?'Premium':'Prima',...plans.map(p=>'$'+p.premium)],
-    [lang==='en'?'Deductible':'Deducible',...plans.map(p=>'$'+p.ded)],
-    [lang==='en'?'Max OOP':'Max Bolsillo',...plans.map(p=>'$'+p.moop.toLocaleString())],
-    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visi\u00F3n',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audici\u00F3n',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
-    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>drugLabel(p.drug,lang))],
-    [(lang==='en'?'CMS Rating':'Calificaci\u00F3n CMS')+(_benefitsMeta&&_benefitsMeta.year?' '+_benefitsMeta.year:''),...plans.map(p=>rStar(p.rating))],
-  ];
-  let tbl=`<table class="compare-table"><thead><tr><th></th>`;
-  plans.forEach(p=>{const s=p.name.split('(')[0].trim();tbl+=`<th>${s}</th>`;});
-  tbl+=`</tr></thead><tbody>`;
-  rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
-  tbl+=`</tbody></table>`;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Your custom comparison:':'Su comparaci\u00F3n personalizada:')}
-    <div style="overflow-x:auto;margin-bottom:10px">${tbl}</div>
+    ${bm(lang==='en'?'Your custom comparison:':'Su comparación personalizada:')}
+    <div style="overflow-x:auto;margin-bottom:10px">${compareTableHTML(plans)}</div>
     ${provenanceHTML()}
-    ${bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)')}
+    ${leadOK()?bp(lang==='en'?'Help me choose':'Ayúdeme a elegir','go(helpChoose)'):''}
     ${bs(lang==='en'?'Back to all plans':'Volver a todos los planes','back()')}`;
 }
 
 function allPlans(){
   prog(85); _inAllPlans=true;
   selPlans=[];
-  const scored=scorePlans();
-  const filtered=filterByType(scored);
-  const plans=_sortMode==='best'?filtered:sortPlans(filtered,_sortMode);
+  const plans=orderedPlans();
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
-    <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el c\u00EDrculo en los planes que quiera comparar.'}</p>
-    ${typeFilterBar(scored)}
+    <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el círculo en los planes que quiera comparar.'}</p>
+    ${unlicensedNote()}
+    ${typeFilterBar(PLANS)}
     ${sortBar()}
     ${plans.map((p,i)=>planCard(p,i,true)).join('')}
-    ${bp(lang==='en'?'Compare Top 3':'Comparar Top 3','go(flowCompare)')}
+    ${bp(lang==='en'?'Compare the first 3':'Comparar los primeros 3','go(flowCompare)')}
     <div id="compareBar" class="compare-float" style="display:none">
       <button class="btn-s" onclick="go(customCompare)">${lang==='en'?'Compare Selected':'Comparar Seleccionados'}</button>
-    </div>`;
+    </div>
+    ${provenanceHTML()}`;
 }
-
+// Shown wherever plans are listed for a state we are not licensed in.
+function unlicensedNote(){
+  if(!knownUnlicensed()) return '';
+  return `<div class="info-card"><p>${lang==='en'
+    ? 'We are not licensed in this state, so these plans are shown for information only. For help choosing a plan, visit <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a> or call 1-800-MEDICARE (1-800-633-4227), TTY 1-877-486-2048, 24 hours a day, 7 days a week.'
+    : 'No tenemos licencia en este estado, así que estos planes se muestran solo como información. Para ayuda para elegir un plan, visite <a href="https://www.medicare.gov/es" target="_blank" rel="noopener">Medicare.gov</a> o llame al 1-800-MEDICARE (1-800-633-4227), TTY 1-877-486-2048, las 24 horas del día, los 7 días de la semana.'}</p></div>`;
+}
 
 // ═══════════════════════════════════════
 //  PLAN ENROLL / HELP CHOOSE
@@ -1436,8 +1406,8 @@ function planEnroll(){
   prog(92);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'
-      ?`We recorded your choice: ${D.selectedPlan}. We will review this plan with you and answer all your questions. Free, no obligation.`
-      :`Registramos su elecci\u00F3n: ${D.selectedPlan}. Revisaremos este plan con usted y responderemos todas sus preguntas. Gratis, sin compromiso.`)}
+      ?`We recorded your choice: ${esc(D.selectedPlan)}. We will review this plan with you and answer all your questions. Free, no obligation.`
+      :`Registramos su elecci\u00F3n: ${esc(D.selectedPlan)}. Revisaremos este plan con usted y responderemos todas sus preguntas. Gratis, sin compromiso.`)}
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
@@ -1468,6 +1438,7 @@ function helpChoose(){
 // ═══════════════════════════════════════
 function submitLead(type){
   if(_submitting) return;
+  if(!leadOK()){ go(flowResults); return; }   // information-only state: no lead capture (T-017)
   _submitting=true;
   const btn=document.querySelector('.btn-p:not(:disabled)');
   if(btn){btn.disabled=true;btn.textContent=btn.textContent.includes('Obtener')?'Procesando...':'Processing...'}
@@ -1594,7 +1565,7 @@ function learnHome(){
       ${oc(I.chart,'mi',lang==='en'?'Advantage vs. Supplement':'Advantage vs. Suplemento',lang==='en'?'Which type fits you.':'Cu\u00E1l tipo le conviene.','','','go(lAdvVsMed)')}
       ${oc(I.calendar,'sg',lang==='en'?'Enrollment Periods':'Periodos de Inscripcion',lang==='en'?'When to sign up.':'Cu\u00E1ndo inscribirse.','','','go(lEnroll)')}
     </div>
-    <div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`;
+    ${leadOK()?`<div style="margin-top:12px">${bs(lang==='en'?'I have specific questions':'Tengo preguntas especificas','go(learnContact)')}</div>`:''}`;
 }
 function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has 4 parts:':'Medicare tiene 4 partes:')}${ic(lang==='en'?'Part A - Hospital':'Parte A - Hospital',lang==='en'?'Hospital stays, skilled nursing, hospice. $0 premium for most.':'Estancias en hospital, enfermer\u00EDa, hospicio. $0 prima para la mayor\u00EDa.')}${ic(lang==='en'?'Part B - Medical':'Parte B - M\u00E9dica',lang==='en'?'Doctor visits, outpatient care, preventive services. $202.90/mo (2026).':'Visitas al doctor, atenci\u00F3n ambulatoria, preventivos. $202.90/mes (2026).','bl')}${ic(lang==='en'?'Part C - Advantage':'Parte C - Advantage',lang==='en'?'Private plans with A+B+D. Often $0 premium + dental, vision, hearing.':'Planes privados con A+B+D. Frecuentemente $0 prima + dental, visi\u00F3n, audici\u00F3n.')}${ic(lang==='en'?'Part D - Prescriptions':'Parte D - Medicinas',lang==='en'?'Drug coverage. Standalone or in Advantage plans.':'Cobertura de medicinas. Individual o en planes Advantage.','bl')}${bp(lang==='en'?'Find plans in my area':'Encontrar planes en mi \u00E1rea','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$202.90/mo (2026)</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
