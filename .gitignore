@@ -5,3 +5,4 @@ __pycache__/
 *.bak
 .claude/
 PILLAR_PAGE_NOTES.txt
+.fuse_hidden*
