@@ -118,8 +118,11 @@
 # /california/ was an English copy of the Medicare California home page living on
 # the Spanish domain, canonical already pointing there, no inbound links, not in the
 # sitemap. Same class as the 24 duplicate home pages retired above.
-/california https://medicare-california.com/ 301
-/california/ https://medicare-california.com/ 301
+# 2026-10-02 (T-015): an English copy of another site's home has no place on the Spanish
+# domain. Send /california to the BM Spanish home instead. /california/cities/* untouched.
+/california / 301
+/california/ / 301
+/california/index.html / 301
 
 # --- Internal tooling and docs: blocked at the edge, not deleted ---------------
 # Cloudflare Pages publishes whatever sits in the repo root, so these returned
