@@ -411,7 +411,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .team2 .alt{text-align:center;font-size:14px;margin:8px 0 0;color:#66727c}
 .team2 .alt a{color:var(--sage-dark);font-weight:600;text-decoration:none;display:inline-block;padding:8px 2px}
 .cmp td.v.na{color:#66727c;font-weight:500;font-style:italic;font-size:12px}
-@media(max-width:360px){.pn{font-size:12.5px}.pp img{width:38px;height:38px}.pp{gap:6px}}
+@media(max-width:360px){.pn{font-size:12.5px}.pp img{width:38px;height:38px}.pp{gap:6px}.team2{padding:14px 10px}.people{gap:6px}}
 </style>
 </head>
 <body>
@@ -1779,8 +1779,8 @@ function teamCard(){
   return `<div class="team2">
     <p class="tt">${L('Rather talk to a person?','¿Prefiere hablar con nosotras?')}</p>
     <div class="people">
-      <div class="pp"><img src="images/susana-headshot.jpg" alt="Susana Marcos, ${lic}" width="44" height="44" loading="lazy"><div><div class="pn">Susana Marcos</div><div class="pr">${ag}</div></div></div>
-      <div class="pp"><img src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela, ${lic}" width="44" height="44" loading="lazy"><div><div class="pn">Ale Brizuela</div><div class="pr">${ag}</div></div></div>
+      <div class="pp"><img src="images/susana-headshot.jpg" alt="Susana Marcos, ${lic}" width="44" height="44"><div><div class="pn">Susana Marcos</div><div class="pr">${ag}</div></div></div>
+      <div class="pp"><img src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela, ${lic}" width="44" height="44"><div><div class="pn">Ale Brizuela</div><div class="pr">${ag}</div></div></div>
     </div>
     <p class="td">${L('We answer in English or Spanish.','Le respondemos en español o inglés.')}</p>
     <a class="tb" ${main}><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg>${L('Send us a message','Envíenos un mensaje')}</a>
