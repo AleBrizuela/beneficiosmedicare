@@ -1260,10 +1260,12 @@ function hearingB(p,short){
   const h=p.hear; if(!h) return null;
   if(!h.exam&&!h.aids) return {t:p.hearing==='optional'?OPTX():NOINC(),off:true};
   const aid=h.amax?upTo(h.amax,!short)+ear(h.amax.ear):(h.acopay?(short?money(h.acopay):'<b>'+money(h.acopay)+'</b>'+L(' per aid',' por audífono')):null);
-  if(short) return h.aids?{t:aid||L('Included','Incluidos'),off:false}:{t:NOINC(),off:true};
+  if(short) return h.aids?{t:(aid||L('Included','Incluidos'))+(h.amax&&h.acopay?' + '+L('copay ','copago ')+money(h.acopay):''),off:false}:{t:NOINC(),off:true};
   const ex=h.exam?L('Routine hearing exam','Examen de audición de rutina')+' '+(h.exam_cs?'<b>'+money(h.exam_cs)+'</b>':L('included','incluido'))
                  :L('Routine hearing exam: not included','Examen de audición de rutina: no incluido');
-  const ai=h.aids?L('Hearing aids','Audífonos')+' '+(aid||L('included','incluidos')):L('Hearing aids: not included','Audífonos: no incluidos');
+  // Allowance AND a per-aid copay: show both, never only the allowance (it would understate the cost).
+  const both=h.amax&&h.acopay?' · '+L('copay','copago')+' <b>'+money(h.acopay)+'</b>'+L(' per aid',' por audífono'):'';
+  const ai=h.aids?L('Hearing aids','Audífonos')+' '+(aid||L('included','incluidos'))+both:L('Hearing aids: not included','Audífonos: no incluidos');
   return {t:ex+' · '+ai,off:false};
 }
 function otcB(p,short){
@@ -1273,6 +1275,7 @@ function otcB(p,short){
 }
 function fitB(p){
   if(p.fit===null||p.fit===undefined) return null;
+  if(p.fit==='opt') return {t:OPTX(),off:true};
   return p.fit?{t:L('Included','Incluido'),off:false}:{t:NOINC(),off:true};
 }
 
@@ -1497,7 +1500,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=3; _typeFilter='all';
+  selPlans=[]; _shown=3; _typeFilter='all'; delete D.plansSeen; delete D.represented;
   flowResults();
 }
 function cmpAllBtn(list){
@@ -1755,6 +1758,7 @@ function submitLead(type){
   D.lang=lang;D.conditions=[...selConds];
   D.timestamp=new Date().toISOString();
   D.leadType=type;
+  if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
 
   const host=window.location.hostname||'';
   const parentHost=(window.self!==window.top)?document.referrer:'';
