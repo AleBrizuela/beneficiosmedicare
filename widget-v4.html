@@ -385,6 +385,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc details{margin-top:0}
 .pc .nodet{font-size:13px;color:#56616a;margin:6px 0 0;line-height:1.4}
 .rh .elig{font-size:13.5px;color:#2b3640;margin:0 0 8px;line-height:1.45}
+.rh .t1.dual a{color:var(--sage-dark);font-weight:600}
 .rh .elig a{color:var(--sage-dark);font-weight:600;white-space:nowrap}
 .pc svg.hi,.pc svg.ri{width:16px;height:16px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
 .pc svg.ri{margin-right:8px}
@@ -1620,16 +1621,22 @@ function pickPlan(id){
 // special-needs plan (LA County: 70 = 64 HMO incl. HMO-POS + 6 PPO). Special-needs plans appear
 // only under their own pill. Drug-only plans (PDP) and Medigap get their own pill, shown only
 // where the ZIP has them, so a visitor looking for one can still find it.
-let _typeFilter='all';
+let _typeFilter='all', _dualAuto=null;
 function isSNP(p){return !p._medigap&&(p.cat==='SNP'||!!p.snp||/SNP/.test(p.type||''));}
 function isPDP(p){return !p._medigap&&p.cat==='PDP';}
 function inTodos(p){return !p._medigap&&!isPDP(p)&&!isSNP(p);}
+// T-028 (AB 2026-10-03): special-needs plans split in two. Dual plans (D-SNP, for people with Medicare
+// AND Medi-Cal / Medicaid) get their own pill; chronic-condition and institutional plans stay together.
+function isDual(p){return isSNP(p)&&p.snp==='Dual-Eligible';}
+function mcd(){return D.state==='CA'?'Medi-Cal':'Medicaid';}
+function saidMedicaid(){return D.priority==='medicaid'||(Array.isArray(D.priorities)&&D.priorities.indexOf('medicaid')>=0);}
 const PILLS=[
   {id:'all',  en:'All',                  es:'Todos',                  f:inTodos},
   {id:'hmo',  en:'HMO',                  es:'HMO',                    f:p=>inTodos(p)&&/HMO/.test(p.type||'')},
   {id:'ppo',  en:'PPO',                  es:'PPO',                    f:p=>inTodos(p)&&/PPO/.test(p.type||'')},
   {id:'zero', en:'$0 premium',           es:'$0 prima',               f:p=>inTodos(p)&&p.premium===0},
-  {id:'snp',  en:'Special needs',        es:'Necesidades especiales', f:isSNP},
+  {id:'dsnp', en:()=>'With '+mcd(),       es:()=>'Con '+mcd(),         f:isDual},
+  {id:'snp',  en:'Other special needs',  es:'Otras necesidades especiales', f:p=>isSNP(p)&&!isDual(p)},
   {id:'pdp',  en:'Drug plans (Part D)',  es:'Medicamentos (Parte D)', f:isPDP, opt:true},
   {id:'supp', en:'Medigap',              es:'Medigap',                f:p=>!!p._medigap, opt:true},
 ];
@@ -1643,7 +1650,8 @@ function pillsHTML(){
     const n=PLANS.filter(x.f).length;
     if(x.id!=='all'&&!n) return '';
     const on=_typeFilter===x.id;
-    return `<button class="pill${on?' on':''}" aria-pressed="${on}" onclick="setType('${x.id}')">${x[lang]} <span>${n}</span></button>`;
+    const lb=typeof x[lang]==='function'?x[lang]():x[lang];
+    return `<button class="pill${on?' on':''}" aria-pressed="${on}" onclick="setType('${x.id}')">${lb} <span>${n}</span></button>`;
   }).join('')+`</div>`;
 }
 
@@ -1704,6 +1712,7 @@ function resultsHead(list){
       </form></div>
     <p class="zerr" id="zerr"></p>
     <p class="t1">${what}${where}</p>
+    ${dualLine()}
     ${eligLine()}
     ${pillsHTML()}
     ${sortHTML()}
@@ -1729,6 +1738,14 @@ function eligLine(){
   const dt=w.start.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
   const remind=leadOK()?` <a href="#" onclick="event.preventDefault();go(snoozeStep)">${L('Remind me then','Recordarme entonces')}</a>`:'';
   return `<p class="elig">${L(`You can enroll starting ${dt}.`,`Puede inscribirse a partir del ${dt}.`)}${remind}</p>`;
+}
+// T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
+function dualLine(){
+  if(!saidMedicaid()) return '';
+  const m=mcd();
+  if(_typeFilter==='dsnp') return `<p class="t1 dual">${L(`Plans for people with Medicare and ${m}. You can also see <a href="#" onclick="event.preventDefault();setType('all')">all plans</a>.`,`Planes para personas con Medicare y ${m}. También puede ver <a href="#" onclick="event.preventDefault();setType('all')">todos los planes</a>.`)}</p>`;
+  if(!PLANS.some(isDual)) return `<p class="t1 dual">${L(`There are no plans for people with Medicare and ${m} in this county.`,`No hay planes para Medicare y ${m} en este condado.`)}</p>`;
+  return '';
 }
 function zipEdit(){const z=document.getElementById('zl');if(!z)return;z.classList.add('edit');const i=document.getElementById('zin');if(i){i.value='';i.focus();}}
 // "Cambiar" changes the ZIP without leaving the results. A ZIP we have no plans for keeps the
@@ -1798,6 +1815,9 @@ async function flowResults(){
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
   // Some rural counties have only special-needs, drug-only or Medigap plans: never open on an empty
   // "Todos"; open on the first type that has plans instead (KS Finney, OK Beaver, ...).
+  // T-028: someone who said they have Medi-Cal / Medicaid opens on their plans, once per ZIP; after
+  // that their own pill choice sticks. If the county has none, they open on Todos with a line saying so.
+  if(saidMedicaid()&&_dualAuto!==D.zip&&PLANS.length){_dualAuto=D.zip;if(PLANS.some(isDual))_typeFilter='dsnp';}
   if(_typeFilter==='all'&&PLANS.length&&!PLANS.some(inTodos)){const pl=PILLS.find(x=>x.id!=='all'&&PLANS.some(x.f));if(pl)_typeFilter=pl.id;}
   const plans=orderedPlans();
   D.conditions=[...selConds];
