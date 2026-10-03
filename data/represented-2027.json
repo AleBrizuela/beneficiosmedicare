@@ -1,7 +1,7 @@
 {
  "year": 2027,
  "updated": "2026-10-02",
- "signed": "Alejandra Brizuela 2026-10-02 (T-017)",
+ "signed": "Alejandra Brizuela 2026-10-02 (T-017: CA); same 7 carriers in AZ FL IA IL KS MO OK TX, AB 2026-10-02 (D-056)",
  "_README": "Which states we are licensed in, and per state which CMS parent organizations we are appointed with and Ready to Sell for 2027. The widget shows an agent button ONLY on plans whose CMS Parent Organization Name is listed for the visitor's state; every other plan is 'Information only'. A state not in 'licensed' gets no lead capture at all. An empty list means licensed but no appointment confirmed there yet. Change this file only with AB's sign-off (RED).",
  "licensed": [
   "AZ",
@@ -15,7 +15,15 @@
   "TX"
  ],
  "represented": {
-  "AZ": [],
+  "AZ": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
   "CA": [
    "Alignment Healthcare USA, LLC",
    "CVS Health Corporation",
@@ -25,12 +33,68 @@
    "UnitedHealth Group, Inc.",
    "The Regents of the University of California"
   ],
-  "FL": [],
-  "IA": [],
-  "IL": [],
-  "KS": [],
-  "MO": [],
-  "OK": [],
-  "TX": []
+  "FL": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "IA": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "IL": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "KS": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "MO": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "OK": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ],
+  "TX": [
+   "Alignment Healthcare USA, LLC",
+   "CVS Health Corporation",
+   "Elevance Health, Inc.",
+   "Humana Inc.",
+   "SCAN Group",
+   "UnitedHealth Group, Inc.",
+   "The Regents of the University of California"
+  ]
  }
 }
