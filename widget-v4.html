@@ -1987,9 +1987,11 @@ function submitLead(type){
   const _btnLabel=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent=lang==='en'?'Processing...':'Procesando...'}
 
-  const name=D.fullName||document.getElementById('fullName')?.value||'';
-  const phone=D.phone||document.getElementById('phone')?.value||'';
-  const email=D.email||document.getElementById('email')?.value||'';
+  // What is in the boxes now wins over anything remembered: a visitor who corrects a wrong phone after
+  // an error must send the corrected one (found in T-024 testing: the old value was re-sent).
+  const name=document.getElementById('fullName')?.value||D.fullName||'';
+  const phone=document.getElementById('phone')?.value||D.phone||'';
+  const email=document.getElementById('email')?.value||D.email||'';
   const question=document.getElementById('question')?.value||'';
 
   let phoneClean = phone.replace(/\D/g,'');
