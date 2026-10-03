@@ -1713,6 +1713,9 @@ function compareFirst(){selPlans=orderedPlans().filter(p=>!p._medigap).slice(0,3
 async function flowResults(){
   prog(82); _inAllPlans=false; _plansView=true;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
+  // Some rural counties have only special-needs, drug-only or Medigap plans: never open on an empty
+  // "Todos"; open on the first type that has plans instead (KS Finney, OK Beaver, ...).
+  if(_typeFilter==='all'&&PLANS.length&&!PLANS.some(inTodos)){const pl=PILLS.find(x=>x.id!=='all'&&PLANS.some(x.f));if(pl)_typeFilter=pl.id;}
   const plans=orderedPlans();
   D.conditions=[...selConds];
   const age=getAge();
