@@ -741,7 +741,10 @@ function cmsToWidget(p, state){
 let _planCache={};
 function loadPlanData(stateCode){
   if(_planCache[stateCode]) return Promise.resolve(_planCache[stateCode]);
-  return fetch('data/plans_'+stateCode+'_'+PLAN_FILE_YEAR+'.json')
+  // cache:'no-cache' = ask the server every time whether the file changed (a cheap 304 when it has
+  // not). /data/* is served with max-age=86400, and a browser holding an older plan file showed
+  // "Sin información" on every card for a day after the 2026-10-02 data rebuild (found 2026-10-03).
+  return fetch('data/plans_'+stateCode+'_'+PLAN_FILE_YEAR+'.json',{cache:'no-cache'})
     .then(r=>{
       // Cloudflare serves the homepage with a 200 for unknown paths: non-JSON means missing.
       const ct=(r.headers.get('content-type')||'');
