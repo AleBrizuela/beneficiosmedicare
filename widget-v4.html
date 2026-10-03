@@ -341,6 +341,40 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
   .cond-chip .cond-icon{font-size:26px}
   .cond-chip .cond-label{font-size:14px}
 }
+/* T-027 (AB 2026-10-03) */
+.pc-foot{text-align:center}
+.pc-btn{display:inline-flex;align-items:center;justify-content:center;width:auto;background:#fff;color:var(--sage-dark);border:1.5px solid var(--sage);padding:10px 22px;min-height:44px;border-radius:10px}
+.pc-btn:hover{background:var(--lt-mint)}
+.cmp-foot .pc-btn{display:flex;width:100%}
+.cmpall{border:1.5px solid #cfd6dc;color:#2b3640}
+.cmpall svg{stroke:#66727c}
+.nw{white-space:nowrap}
+.lead-about{font-size:14px;color:#3b4650;margin:0 0 6px;text-align:left;line-height:1.4}
+.cf{text-align:left}
+.cf-ic{width:52px;height:52px;border-radius:50%;background:var(--lt-mint);display:flex;align-items:center;justify-content:center;margin:4px 0 12px}
+.cf-ic svg{width:26px;height:26px;fill:none;stroke:var(--sage-dark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cf-ic.err{background:#fdecea}.cf-ic.err svg{stroke:#b42318}
+.cf-t{font-size:20px;font-weight:700;margin:0 0 6px;line-height:1.3;color:#1e2a32}
+.cf-s{font-size:15px;color:#5f6b75;margin:0 0 16px;line-height:1.45}
+.cf-band{background:#f3f5f7;border-radius:10px;padding:10px 12px;margin:0 0 14px}
+.cf-band .h{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#5f6b75;margin:0 0 6px}
+.cf-row{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;padding:3px 0}
+.cf-row .l{color:#5f6b75;flex:0 0 auto}
+.cf-row .v{font-weight:600;text-align:right;color:#1e2a32;overflow-wrap:anywhere}
+.cf-row .v.none{color:#5f6b75;font-weight:400}
+.cf-fix{font-size:13px;color:#5f6b75;margin:6px 0 0}
+.cf-fix a{color:var(--sage-dark)}
+.cf-alt{text-align:center;font-size:14px;margin:10px 0 0;color:#5f6b75}
+.cf-alt a{color:var(--sage-dark);font-weight:600;text-decoration:none;display:inline-block;padding:6px 2px}
+.cf-now{color:#1e2a32;font-weight:600;margin:16px 0 8px}
+.cf-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--sage);color:#fff;border-radius:10px;padding:13px;font-size:16px;font-weight:700;text-decoration:none;min-height:48px;box-sizing:border-box}
+.cf-btn svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cf-btn2{display:flex;align-items:center;justify-content:center;width:100%;background:#fff;color:var(--sage-dark);border:1.5px solid var(--sage);border-radius:10px;padding:12px;font-size:15px;font-weight:700;margin-top:8px;min-height:48px;text-decoration:none;box-sizing:border-box}
+.cf-links{display:flex;justify-content:center;gap:18px;margin-top:16px;font-size:14px}
+.cf-links a{color:#5f6b75;text-decoration:underline;text-underline-offset:2px;padding:6px 2px}
+.cf-errbox{background:#fdecea;color:#b42318;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:0 0 12px}
+.cf-err{margin-top:14px;border-top:1px solid #e5e9ec;padding-top:14px}
+.stg-badge{position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none}
 /* T-017 b13-b18 (AB 2026-10-02): list card, plain ZIP line, filter pills, sort menu, team card,
    lighter numbers, empty states. Source of truth: DECIDE/now/2026-10-02_widget-2027-results-mockup.html.
    Colours stay the widget's theme variables (BM teal, MC blue), as in the first build. */
@@ -776,13 +810,14 @@ async function loadPlansForZip(zip){
   try {
     const idx = await loadZipIndex();
     const state = idx[zip];
-    if(!state) { D._zipValid=false; PLANS=[]; return; }
+    if(!state) { D._zipValid=false; PLANS=[]; wEvt('widget_error',{step:'zip',reason:'unknown_zip'}); return; }
     const [data] = await Promise.all([loadPlanData(state), loadRepresented()]);
     const county = data.zips?.[zip];
-    if(!county) { D._zipValid=false; PLANS=[]; return; }
+    if(!county) { D._zipValid=false; PLANS=[]; wEvt('widget_error',{step:'zip',reason:'no_county'}); return; }
     D.county = county;
     D.state = state;
     D._zipValid = true;
+    if(_gaStartZip!==zip){ _gaStartZip=zip; wEvt('widget_start',{step:'zip'}); }
     _planMeta = {year:data.year, source:data.source||''};
     // This county's plans + plans sold statewide (PDPs), deduped
     const ids = [...(data.counties?.[county]||[]), ...(data.counties?.[data.statewide||'All Counties']||[])];
@@ -801,7 +836,7 @@ async function loadPlansForZip(zip){
     } catch(e2){ console.warn('Medigap data merge skipped:', e2.message); }
   } catch(e) {
     console.warn('Plan data load failed:', e.message);
-    PLANS=[];
+    PLANS=[]; wEvt('widget_error',{step:'load',reason:'plan_data'});
   }
 }
 // ── i18n ──
@@ -846,7 +881,7 @@ function oc(icon,icls,title,desc,btxt,bcls,onclick){
 function inp(id,label,ph,type='text'){
   const v=D[id]||'';
   const im=type==='tel'?' inputmode="numeric"':type==='email'?' inputmode="email"':'';
-  return `<div class="input-group"><label for="${id}">${label}</label><input class="input-field" type="${type}"${im} id="${id}" placeholder="${ph}" value="${v}" oninput="D['${id}']=this.value"></div>`
+  return `<div class="input-group"><label for="${id}">${label}</label><input class="input-field" type="${type}"${im} id="${id}" placeholder="${ph}" value="${esc(v)}" oninput="D['${id}']=this.value"></div>`
 }
 function bp(txt,onclick){return `<button class="btn-p" onclick="${onclick}">${txt}</button>`}
 function bs(txt,onclick){return `<button class="btn-s" onclick="${onclick}">${txt}</button>`}
@@ -1577,6 +1612,7 @@ function pickPlan(id){
   if(p._medigap&&(!leadOK()||(D.state&&!_rep))) return;
   D.selectedPlan=p.name; D.selectedPlanId=p.id;
   D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
+  wEvt('widget_plan_select',{step:'card'});
   go(planEnroll);
 }
 
@@ -1656,7 +1692,8 @@ function resultsHead(list){
   const mg=_typeFilter==='supp';
   const what=mg?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
                :L(`${n} plan${n===1?'':'s'} for ${y}`,`${n} plan${n===1?'':'es'} para ${y}`);
-  const where=cty?L(` in ${cty} County`,` en el condado de ${cty}`):'';
+  const st=D.state?', '+esc(D.state):'';
+  const where=cty?L(` in <span class="nw"><b>${cty}</b> County${st}</span>`,` <span class="nw">en el condado de <b>${cty}</b>${st}</span>`):'';
   return `<div class="rh">
     <div class="zl" id="zl">${PIN}
       <span class="zv">${esc(D.zip||'')}</span>
@@ -1805,6 +1842,7 @@ async function flowResults(){
     ${provenanceHTML()}`;
   updBar();
   viewMsg();
+  if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
 }
 
 // b16: under the results, a way to reach a person. Visitor-initiated contact, so no consent step on
@@ -1913,6 +1951,7 @@ function helpCompare(){
   D.selectedPlanId=plans.map(p=>p.id).join(';');
   D.plansSeen=plans.map(planLeadTag).join(' | ');
   D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
+  wEvt('widget_plan_select',{step:'compare',plans:plans.length});
   go(helpChoose);
 }
 // Old entry point kept so any saved history entry still lands somewhere sensible.
@@ -1935,6 +1974,7 @@ function planEnroll(){
   prog(92); _plansView=true;
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
@@ -1948,6 +1988,7 @@ function helpChoose(){
   prog(92); _plansView=true;
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
@@ -1984,6 +2025,9 @@ function withConsent(d,lang,btn,page){
   d.consentAt=new Date().toISOString(); d.consentPage=page||location.href;
   return d;
 }
+/* T-020: one way to report an event. Inside the plan-finder iframe it goes to the host page, which sends it
+   to that site's own GA4 property (BM or MC); anywhere else straight to this page's gtag. */
+function gaEvent(n,p){try{if(window.self!==window.top){window.parent.postMessage({type:'widget-ga',name:n,params:p},'*');}else if(typeof gtag==='function'){gtag('event',n,p);}}catch(e){}}
 function sendLead(d){
   if(!d.leadId) d.leadId='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   d.env=leadURL()===LEAD_URL_STAGING?'staging':'production';   // AB 2026-10-03: tell STG leads from PROD
@@ -1991,7 +2035,12 @@ function sendLead(d){
   var t=setTimeout(function(){if(ctl)ctl.abort();},25000);
   return fetch(leadURL(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d),signal:ctl?ctl.signal:undefined})
     .then(function(r){return r.json();})
-    .then(function(j){clearTimeout(t);return !!(j&&j.saved===true&&j.emailed===true);})
+    .then(function(j){clearTimeout(t);var ok=!!(j&&j.saved===true&&j.emailed===true);
+      // T-020: generate_lead ONLY when the script confirmed the save. No personal data in the event.
+      if(ok) gaEvent('generate_lead',{site:/california/i.test(String(d.source||d.site||location.hostname))?'mc':'bm',
+        lang:String(d.lang||d.language||document.documentElement.lang||'').slice(0,2),
+        form:(d.role!==undefined||d.resume_link!==undefined)?'careers':(d.leadType?'widget_'+d.leadType:'contact')});
+      return ok;})
     .catch(function(){clearTimeout(t);return false;});
 }
 function leadErrorHTML(lang){
@@ -2004,6 +2053,20 @@ function leadErrorHTML(lang){
 }
 /* end T-024 lead-send v1 */
 
+// T-020 widget funnel. Params: site, lang, step, state, and at most the 3-digit ZIP prefix. Never a name,
+// phone, email or birth date.
+function wEvt(n,extra){gaEvent(n,Object.assign({site:leadSite()==='medicare-california'?'mc':'bm',lang:lang,state:D.state||'',zip3:String(D.zip||'').slice(0,3)},extra||{}));}
+let _gaStartZip='', _gaResultsZip='';
+document.addEventListener('click',function(e){
+  const a=e.target&&e.target.closest?e.target.closest('a[href]'):null; if(!a) return;
+  const h=a.getAttribute('href')||'';
+  const ch=/^tel:/i.test(h)?'phone':/^sms:/i.test(h)?'sms':/wa\.me|whatsapp\.com/i.test(h)?'whatsapp':/calendar\.app\.google|calendly\.com|cal\.com/i.test(h)?'book':'';
+  if(!ch) return;
+  const step=a.closest('.team2')?'team_card':a.closest('.cf-err,.lead-err')?'error':a.closest('.cf')?'confirmation':'widget';
+  wEvt(ch+'_click',{step:step});
+  if(step==='team_card') wEvt('widget_agent_click',{step:step,channel:ch});
+},true);
+
 // Which site the visitor is on (the widget is iframed on MC), and that site's privacy page.
 function leadSite(){
   const host=window.location.hostname||'', ref=(window.self!==window.top)?document.referrer:'', path=window.location.pathname||'';
@@ -2013,6 +2076,14 @@ function privacyURL(){
   return leadSite()==='medicare-california'
     ?'https://medicare-california.com/'+(lang==='en'?'privacy':'privacidad')
     :'https://beneficiosmedicare.com/'+(lang==='en'?'privacy':'privacidad');
+}
+// T-027 (1) screen 4: never a thank-you when nothing was saved; details stay in the boxes above.
+function cfErrorHTML(){
+  return `<div class="cf cf-err" role="alert"><div class="cf-ic err">${CFI.warn}</div>
+    <p class="cf-t">${L('We could not send your message','No pudimos enviar su mensaje')}</p>
+    <p class="cf-s">${L('Nothing was saved. Your details are still above; try again or contact us directly.','No se guardó. Sus datos siguen arriba; intente de nuevo o escríbanos directamente.')}</p>
+    <div class="cf-errbox">${L('It may be a connection problem. Nothing you did wrong.','Puede ser un problema de conexión. No es por algo que usted hizo.')}</div>
+    ${cfContact(true)}</div>`;
 }
 const CONSENT_BTN={enroll:['Send','Enviar'],help:['Send','Enviar'],snooze:['Set Reminder','Programar Recordatorio'],question:['Request Free Call','Solicitar Llamada Gratis']};
 
@@ -2068,7 +2139,7 @@ function submitLead(type){
     if(ok){ go(flowSuccess); return; }
     if(btn){btn.disabled=false;btn.textContent=_btnLabel}
     const box=document.getElementById('leadErr');
-    if(box){ box.innerHTML=leadErrorHTML(lang); box.scrollIntoView({block:'nearest'}); }
+    if(box){ box.innerHTML=cfErrorHTML(); box.scrollIntoView({block:'nearest'}); }
   });
 }
 
@@ -2076,44 +2147,64 @@ function submitLead(type){
 // ═══════════════════════════════════════
 //  SUCCESS
 // ═══════════════════════════════════════
+// T-027 (1), AB 2026-10-03: confirmation screens 1 (thank you) and 3 (reminder saved) of
+// DECIDE/now/2026-10-03_widget-2027-confirmation-screens-mockup.html. No emoji, none of the old
+// headline, "agent" or unqualified "free" claims. Each screen shows what we saved so a typo in the phone can be caught.
+const CFI={check:'<svg viewBox="0 0 24 24"><polyline points="5 12.5 10 17.5 19 7"/></svg>',
+  bell:'<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  warn:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>',
+  chat:'<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2.5-3A8 8 0 1 1 21 12z"/></svg>'};
+function cfContact(secondary){
+  const msg=encodeURIComponent(L("Hi, I'd like help with the 2027 plans",'Hola, quiero ayuda con los planes 2027'));
+  const wa='https://wa.me/13105979142?text='+msg;
+  const phone=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));
+  const main=phone?`href="sms:+13105979142?&body=${msg}"`:`href="${wa}" target="_blank" rel="noopener"`;
+  return `<p class="cf-alt cf-now">${L('Rather not wait?','¿Prefiere no esperar?')}</p>
+    <a class="${secondary?'cf-btn2':'cf-btn'}" ${main}>${secondary?'':CFI.chat}${L('Send us a message','Envíenos un mensaje')}</a>
+    <p class="cf-alt"><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+13105979142">${L('Call','Llamar')} (310) 597-9142</a></p>`;
+}
+function cfRow(l,v,none){return `<div class="cf-row"><span class="l">${l}</span><span class="v${none?' none':''}">${v}</span></div>`;}
+function seenPlanNames(){
+  const ids=String(D.selectedPlanId||'').split(';').filter(Boolean);
+  return ids.map(id=>{const p=PLANS.find(x=>x.id===id);return p?esc(shortPlan(p.name)):'';}).filter(Boolean).join(', ');
+}
 function flowSuccess(){
   prog(100); _plansView=true;
-  const isSnooze=D.leadType==='snooze';
-  const firstName=(D.fullName||'').split(' ')[0]||'';
-  if(isSnooze){
-    wb().innerHTML=`<div class="success-wrap">
-      <div class="success-icon">\u23F0</div>
-      <h3 class="success-title">${lang==='en'?'Reminder Set!':'Recordatorio Programado!'}</h3>
-      <p class="success-subtitle">${lang==='en'?'We have you covered, '+firstName:'Le tenemos cubierto, '+firstName}</p>
-      <ul class="success-bullets">
-        <li><span class="sb-icon">\uD83D\uDCC5</span>${lang==='en'?'We will contact you before your enrollment window opens':'Le contactaremos antes de que abra su ventana de inscripci\u00F3n'}</li>
-        <li><span class="sb-icon">\uD83D\uDCDE</span>${lang==='en'?'A licensed agent will call you personally':'Un agente licenciado le llamar\u00E1 personalmente'}</li>
-        <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
-      </ul>
-      <div class="success-links">
-        <button onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
-        <button onclick="hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
-      </div>
-    </div>`;
-  } else {
-    wb().innerHTML=`<div class="success-wrap">
-      <div class="success-icon">\u2705</div>
-      <h3 class="success-title">\uD83C\uDF89 ${lang==='en'?'Great News, '+firstName+'!':'\u00A1Excelentes Noticias, '+firstName+'!'}</h3>
-      <p class="success-subtitle">${lang==='en'?'Your personalized help is on the way':'Su ayuda personalizada va en camino'}</p>
-      <ul class="success-bullets">
-        <li><span class="sb-icon">\uD83D\uDC69\uD83C\uDFFB\u200D\uD83D\uDCBC</span>${lang==='en'?'A dedicated agent will call you personally':'Una agente dedicada le llamar\u00E1 personalmente'}</li>
-        <li><span class="sb-icon">\u2764\uFE0F</span>${lang==='en'?'We are a family team that treats you like family':'Somos un equipo familiar que le trata como familia'}</li>
-        <li><span class="sb-icon">\uD83D\uDCB0</span>${lang==='en'?'100% free, zero obligation':'100% gratis, sin compromiso'}</li>
-      </ul>
-      <button class="success-cta" onclick="hist=[];go(learnHome)">${lang==='en'?'Learn About Medicare':'Aprender Sobre Medicare'}</button>
-      <div class="success-links">
-        <button onclick="hist=[];go(allPlans)">${lang==='en'?'Back to All Plans':'Ver Todos los Planes'}</button>
-        <button onclick="hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${lang==='en'?'Start Over':'Empezar de Nuevo'}</button>
-      </div>
-    </div>`;
+  const first=esc((D.fullName||'').trim().split(/\s+/)[0]||'');
+  const name=esc(D.fullName||''), phone=esc(D.phone||'');
+  const email=D.email?esc(D.email):'';
+  const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  if(D.leadType==='snooze'){
+    const w=iepWindow();
+    const fmt=d=>d.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
+    const mY=w?w.start.toLocaleDateString(lang==='en'?'en-US':'es-US',{month:'long',year:'numeric'}):'';
+    wb().innerHTML=`<div class="cf">
+      <div class="cf-ic">${CFI.bell}</div>
+      <p class="cf-t">${w?L(`All set${first?', '+first:''}. We will contact you before ${mY}.`,`Listo${first?', '+first:''}. Le avisamos antes de ${mY.replace(' de ',' de ')}.`):L(`All set${first?', '+first:''}.`,`Listo${first?', '+first:''}.`)}</p>
+      <p class="cf-s">${L('One of us will contact you before your enrollment window opens. Our help is at no cost to you.','Una de nosotras le contacta antes de que abra su período de inscripción. Nuestra ayuda no tiene costo para usted.')}</p>
+      <div class="cf-band"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
+        ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
+        ${w?cfRow(L('When','Cuándo'),L('Before ','Antes del ')+fmt(w.start)):''}
+        ${fix}</div>
+      ${cfContact(false)}
+      <div class="cf-links">${restart}</div></div>`;
+    return;
   }
+  const plans=seenPlanNames();
+  wb().innerHTML=`<div class="cf">
+    <div class="cf-ic">${CFI.check}</div>
+    <p class="cf-t">${L(`Thank you${first?', '+first:''}. We got your message.`,`Gracias${first?', '+first:''}. Recibimos su mensaje.`)}</p>
+    <p class="cf-s">${L('One of us will contact you soon by call, text or WhatsApp.','Una de nosotras le contacta pronto por llamada, texto o WhatsApp.')}</p>
+    <div class="cf-band"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
+      ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
+      ${cfRow(L('Email','Correo'),email||L('Not given','No lo dio'),!email)}
+      ${plans?cfRow(L('Plans you looked at','Planes que miró'),plans):''}
+      ${D.question?cfRow(L('Your question','Su pregunta'),esc(D.question)):''}
+      ${fix}</div>
+    ${cfContact(false)}
+    <div class="cf-links">${PLANS.length?`<a href="#" onclick="event.preventDefault();hist=[];go(allPlans)">${L('Back to your plans','Volver a sus planes')}</a>`:''}${restart}</div></div>`;
 }
-
 
 // ═══════════════════════════════════════
 //  LEARN (educational)
@@ -2142,5 +2233,6 @@ function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can
 // ═══════════════════════════════════════
 go(startZip);
 </script>
+<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent='STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
 </body>
 </html>
