@@ -317,6 +317,8 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmp-foot{padding:12px}
 .cmp-note{font-size:12px;color:#66727c;margin:0 12px 10px;line-height:1.4}
 @media(max-width:400px){.cmp th,.cmp td{padding:7px 3px;font-size:12px}.cmp td.lab,.cmp thead th.l0{width:27%;padding-left:8px;font-size:11.5px}.cmp td.big{font-size:14px}.cmp thead th{font-size:11.5px}}
+.lead-title{font-size:20px;font-weight:700;color:#1e2a32;margin:4px 0 4px;text-align:left}
+.lead-sub{font-size:15px;color:#4a5560;margin:0 0 14px;text-align:left}
 .contact-line{text-align:center;font-size:14px;color:#3c4043;margin:12px 0 0;line-height:1.45}
 
 /* ── RESPONSIVE ── */
@@ -1221,7 +1223,9 @@ function snoozeStep(){
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead(\'snooze\')')}`;
+    ${bp(lang==='en'?'\u23F0 Set Reminder':'\u23F0 Programar Recordatorio','submitLead(\'snooze\')')}
+    ${consentHTML(lang,lang==='en'?'Set Reminder':'Programar Recordatorio',privacyURL())}
+    <div id="leadErr"></div>`;
 }
 
 
@@ -1889,42 +1893,92 @@ function unlicensedNote(){
 // ═══════════════════════════════════════
 //  PLAN ENROLL / HELP CHOOSE
 // ═══════════════════════════════════════
+// T-024 contact step (AB 2026-10-03): "Una de nosotras le contacta", no plan name on screen (it can
+// mislead; the plans seen stay in the lead row), consent stated right under "Enviar", no checkbox.
 function planEnroll(){
   prog(92); _plansView=true;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'
-      ?`We recorded your choice: ${esc(D.selectedPlan)}. We will review this plan with you and answer all your questions. Free, no obligation.`
-      :`Registramos su elecci\u00F3n: ${esc(D.selectedPlan)}. Revisaremos este plan con usted y responderemos todas sus preguntas. Gratis, sin compromiso.`)}
+    <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'Help me decide':'Ay\u00FAdeme a decidir',"submitLead('enroll')")}
-    <p class="contact-line">${lang==='en'?'A licensed agent contacts you, at no cost, by WhatsApp, text or call.':'Una agente licenciada le contacta, sin costo, por WhatsApp, texto o llamada.'}</p>
-    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
-    </p>`;
+    ${bp(lang==='en'?'Send':'Enviar',"submitLead('enroll')")}
+    ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
+    <div id="leadErr"></div>`;
 }
 
 function helpChoose(){
   prog(92); _plansView=true;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'
-      ?'We can review these plans with you and help you decide. Free, no obligation.'
-      :'Una de nosotras le llamar\u00E1 para revisar estos planes y ayudarle a decidir. Gratis, sin compromiso.')}
+    <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'Get free consultation':'Obtener consulta gratis',"submitLead('help')")}
-    <p class="contact-line">${lang==='en'?'A licensed agent contacts you, at no cost, by WhatsApp, text or call.':'Una agente licenciada le contacta, sin costo, por WhatsApp, texto o llamada.'}</p>
-    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
-      ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
-    </p>`;
+    ${bp(lang==='en'?'Send':'Enviar',"submitLead('help')")}
+    ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
+    <div id="leadErr"></div>`;
 }
 
 
 // ═══════════════════════════════════════
 //  SUBMIT LEAD
 // ═══════════════════════════════════════
+/* T-024 lead-send v1 (signed AB 2026-10-03). The SAME block is on every form on both sites:
+   widget-v4, contacto, contact, careers. "Thank you" only when the leads script confirms the lead
+   was saved AND the alert email went out; anything else gets an honest error with our number. No
+   blind resend: it used to show "thank you" whether or not anything arrived. Staging and preview
+   builds post to the staging copy of the script, so test leads never touch the live sheet setup. */
+var LEAD_URL_PROD='https://script.google.com/macros/s/AKfycby8F8kXyTGFcCh2bzk92_sZeUKGlQPZ9RR-QmzYV6CfzBDbw6ANNOQ5JpnH2Z9PfJ_dEQ/exec';
+var LEAD_URL_STAGING='__LEAD_URL_STAGING__';
+var CONSENT_VERSION='2026-10-03-v1';
+function leadURL(){return /(^|\.)staging\.|\.pages\.dev$|^localhost$|^127\./.test(location.hostname)?LEAD_URL_STAGING:LEAD_URL_PROD;}
+function consentText(lang,btn){
+  return lang==='en'
+    ?'By tapping '+(btn||'Send')+', you agree that we may contact you by call, text or WhatsApp. Not a condition of purchase. Message rates may apply; reply STOP to opt out.'
+    :'Al tocar '+(btn||'Enviar')+', acepta que le contactemos por llamada, texto o WhatsApp. No es condición de compra. Pueden aplicar tarifas de mensajes; responda STOP para cancelar.';
+}
+function consentHTML(lang,btn,privacyUrl){
+  return '<p class="lead-consent" style="font-size:12.5px;line-height:1.45;color:#5f6b75;text-align:center;margin:10px 4px 0">'+consentText(lang,btn)
+    +' <a href="'+privacyUrl+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">'+(lang==='en'?'Privacy':'Privacidad')+'</a></p>';
+}
+function withConsent(d,lang,btn,page){
+  d.consentText=consentText(lang,btn); d.consentVersion=CONSENT_VERSION;
+  d.consentAt=new Date().toISOString(); d.consentPage=page||location.href;
+  return d;
+}
+function sendLead(d){
+  if(!d.leadId) d.leadId='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  var ctl=window.AbortController?new AbortController():null;
+  var t=setTimeout(function(){if(ctl)ctl.abort();},25000);
+  return fetch(leadURL(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d),signal:ctl?ctl.signal:undefined})
+    .then(function(r){return r.json();})
+    .then(function(j){clearTimeout(t);return !!(j&&j.saved===true&&j.emailed===true);})
+    .catch(function(){clearTimeout(t);return false;});
+}
+function leadErrorHTML(lang){
+  var en=lang==='en', m=encodeURIComponent(en?"Hi, I'd like help with Medicare":'Hola, quiero ayuda con Medicare');
+  return '<div class="lead-err" role="alert" style="background:#fff4f2;border:1px solid #f0c4bc;border-radius:10px;padding:12px 14px;margin:12px 0 0;text-align:center;font-size:15px;line-height:1.45;color:#5a1f14">'
+    +(en?"We couldn't send your details. Message us or call (310) 597-9142.":'No pudimos enviar sus datos. Escríbanos o llámenos al (310) 597-9142.')
+    +'<div style="margin-top:8px;font-weight:700;font-size:15px"><a href="https://wa.me/13105979142?text='+m+'" target="_blank" rel="noopener" style="color:#0b6b56;padding:6px 4px;display:inline-block">WhatsApp</a> · '
+    +'<a href="sms:+13105979142" style="color:#0b6b56;padding:6px 4px;display:inline-block">'+(en?'Text':'Texto')+'</a> · '
+    +'<a href="tel:+13105979142" style="color:#0b6b56;padding:6px 4px;display:inline-block">'+(en?'Call':'Llamar')+'</a></div></div>';
+}
+/* end T-024 lead-send v1 */
+
+// Which site the visitor is on (the widget is iframed on MC), and that site's privacy page.
+function leadSite(){
+  const host=window.location.hostname||'', ref=(window.self!==window.top)?document.referrer:'', path=window.location.pathname||'';
+  return (ref.includes('medicare-california')||ref.includes('/california')||host.includes('medicare-california')||host.includes('california')||path.includes('/california'))?'medicare-california':'beneficiosmedicare';
+}
+function privacyURL(){
+  return leadSite()==='medicare-california'
+    ?'https://medicare-california.com/'+(lang==='en'?'privacy':'privacidad')
+    :'https://beneficiosmedicare.com/'+(lang==='en'?'privacy':'privacidad');
+}
+const CONSENT_BTN={enroll:['Send','Enviar'],help:['Send','Enviar'],snooze:['Set Reminder','Programar Recordatorio'],question:['Request Free Call','Solicitar Llamada Gratis']};
+
 function submitLead(type){
   if(_submitting) return;
   if(!leadOK()){ go(flowResults); return; }   // information-only state: no lead capture (T-017)
@@ -1959,45 +2013,24 @@ function submitLead(type){
   D.leadType=type;
   if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
 
-  const host=window.location.hostname||'';
   const parentHost=(window.self!==window.top)?document.referrer:'';
-  const path=window.location.pathname||'';
-  if(parentHost.includes('medicare-california')||parentHost.includes('/california')||host.includes('medicare-california')||host.includes('california')||path.includes('/california')){
-    D.source='medicare-california';
-  } else {
-    D.source='beneficiosmedicare';
-  }
+  D.source=leadSite();
   D.url=parentHost||window.location.href;
 
   const parts=name.trim().split(/\s+/);
   D.firstName=parts[0]||'';
   D.lastName=parts.slice(1).join(' ')||'';
 
-  const GS_URL='https://script.google.com/macros/s/AKfycby8F8kXyTGFcCh2bzk92_sZeUKGlQPZ9RR-QmzYV6CfzBDbw6ANNOQ5JpnH2Z9PfJ_dEQ/exec';
-
-  // Primary: try Google Sheets with CORS
-  fetch(GS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
-    .then(r=>{
-      if(!r.ok) throw new Error('GS response '+r.status);
-      console.log('[Widget] Lead saved to Google Sheets');
-      _submitting=false;go(flowSuccess);
-    })
-    .catch(err=>{
-      console.warn('[Widget] Google Sheets failed:',err.message,'. Trying fallback...');
-      // Fallback: re-try with no-cors (send goes through even if response is opaque)
-      fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(D)})
-        .then(()=>console.log('[Widget] Fallback no-cors sent'))
-        .catch(()=>console.warn('[Widget] Fallback also failed'));
-      // Email fallback via FormSubmit
-      const fd=new FormData();
-      fd.append('name',D.fullName);fd.append('phone',D.phone);
-      fd.append('email',D.email||'N/A');fd.append('_subject','New Medicare Lead - '+D.source);
-      fd.append('message','Type: '+D.leadType+' | ZIP: '+(D.zip||'N/A')+' | County: '+(D.county||'N/A')+' | Age: '+(D.age||'N/A')+' | Conditions: '+(D.conditions||[]).join(', ')+' | Lang: '+D.lang+' | Plans seen: '+(D.plansSeen||'N/A')+' | Question: '+(D.question||'N/A'));
-      fetch('https://formsubmit.co/ajax/brizuela@gmail.com',{method:'POST',body:fd})
-        .then(()=>console.log('[Widget] Email fallback sent'))
-        .catch(()=>console.warn('[Widget] Email fallback also failed'));
-      _submitting=false;go(flowSuccess);
-    });
+  const cb=CONSENT_BTN[type]||CONSENT_BTN.enroll;
+  withConsent(D,lang,lang==='en'?cb[0]:cb[1],D.url);
+  const errBox=document.getElementById('leadErr'); if(errBox) errBox.innerHTML='';
+  sendLead(D).then(ok=>{
+    _submitting=false;
+    if(ok){ go(flowSuccess); return; }
+    if(btn){btn.disabled=false;btn.textContent=_btnLabel}
+    const box=document.getElementById('leadErr');
+    if(box){ box.innerHTML=leadErrorHTML(lang); box.scrollIntoView({block:'nearest'}); }
+  });
 }
 
 
@@ -2062,7 +2095,7 @@ function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$202.90/mo (2026)</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}`}
+function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}${consentHTML(lang,lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',privacyURL())}<div id="leadErr"></div>`}
 
 
 // ═══════════════════════════════════════
