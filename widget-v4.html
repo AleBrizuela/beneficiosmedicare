@@ -210,6 +210,114 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .social-proof-line .sp-stars{display:flex;gap:2px;color:#FDB022}
 .social-proof-line .sp-stars svg{width:12px;height:12px}
 
+/* ── 2027 PLAN CARD, RESULTS, COMPARE (T-017 b2-b13; mockups DECIDE/now/2026-10-02_widget-2027-*.html) ── */
+.pc{background:#fff;border:1px solid #e5e9ec;border-top:4px solid var(--cc,#c9d1d8);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.06);margin-bottom:12px;text-align:left}
+.pc-head{padding:14px 14px 12px;border-bottom:1px solid #e5e9ec}
+.pc-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pc-top>div{min-width:0}
+.pc-eb{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#66727c;margin:0 0 3px;overflow-wrap:anywhere}
+.pc-name{font-size:17px;font-weight:700;line-height:1.3;margin:0;color:#1e2a32;overflow-wrap:anywhere}
+.pc-meta{margin-top:6px;font-size:13px;color:#66727c;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pc-chip{background:var(--lt-mint);color:var(--sage-dark);font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px}
+.pc-rating{font-size:12px;color:#66727c;margin-top:4px}
+.pc-cmp{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sage-dark);border:1px solid #e5e9ec;border-radius:999px;padding:0 10px 0 8px;white-space:nowrap;min-height:36px;background:#fff;cursor:pointer;flex:0 0 auto}
+.pc-cmp input{accent-color:var(--sage);width:18px;height:18px;margin:0;cursor:pointer}
+.pc-keys{display:grid;grid-template-columns:repeat(3,1fr);background:#f3f5f7}
+.pc-keys.k2{grid-template-columns:repeat(2,1fr)}
+.pc-key{padding:12px 6px;text-align:center;border-right:1px solid #e5e9ec;min-width:0}
+.pc-key:last-child{border-right:0}
+.pc-key .v{font-size:21px;font-weight:800;line-height:1.1;color:#1e2a32;overflow-wrap:anywhere}
+.pc-key .v small{font-size:12px;font-weight:600;color:#66727c}
+.pc-key .v.na{font-size:14px;font-weight:600;color:#56616a}
+.pc-key .l{font-size:11.5px;color:#66727c;margin-top:4px;line-height:1.25}
+.pc-key.zero .v,.pc-visit .v.zero,.pc .zero,.cmp .zero{color:var(--sage-dark)}
+.pc-sec{padding:14px 14px 4px}
+.pc-sec h5{font-size:13px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;margin:0 0 8px;color:#1e2a32}
+.pc-sec h5 span{text-transform:none;letter-spacing:0;font-weight:600;color:#66727c}
+.pc-visits{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc-visit{background:#f3f5f7;border-radius:10px;padding:8px 10px;min-width:0}
+.pc-visit .l{font-size:12px;color:#66727c}
+.pc-visit .v{font-size:17px;font-weight:800;color:#1e2a32;overflow-wrap:anywhere}
+.pc-visit .v.na{font-size:13px;font-weight:600;color:#56616a}
+.pc-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pc-chips .c{font-size:12.5px;font-weight:600;background:#f3f5f7;color:#1e2a32;border:1px solid #e5e9ec;padding:4px 9px;border-radius:999px}
+.pc-chips .c b{color:var(--sage)}
+.pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
+.pc-chips .c.off b{color:#a3adb5}
+.pc details{border-top:1px solid #e5e9ec;margin-top:10px}
+.pc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:14.5px;font-weight:700;color:var(--sage-dark);display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px}
+.pc summary::-webkit-details-marker{display:none}
+.pc summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(45deg);margin-top:-4px}
+.pc details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.pc-ben{list-style:none;margin:0;padding:0}
+.pc-ben li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid #e5e9ec}
+.pc-ben.plain li{grid-template-columns:1fr}
+.pc-ben li:last-child{border-bottom:0}
+.pc-ic{width:34px;height:34px;border-radius:10px;background:var(--lt-mint);display:flex;align-items:center;justify-content:center}
+.pc-ic svg{width:19px;height:19px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pc-ic.off{background:#f3f5f7}.pc-ic.off svg{stroke:#9aa5ae}
+.pc-ben .t{font-size:14.5px;font-weight:700;color:#1e2a32}
+.pc-ben .d{font-size:13px;color:#66727c;margin-top:1px;line-height:1.4}
+.pc-ben .d b{color:#1e2a32}
+.pc-ben .t.off,.pc-ben .d.off{color:#56616a}
+table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
+.pc-tiers td{padding:7px 0;border-bottom:1px solid #e5e9ec;vertical-align:top}
+.pc-tiers tr:last-child td{border-bottom:0}
+.pc-tiers td.n{width:28px}
+.pc-tiers td.n span{display:inline-flex;width:20px;height:20px;border-radius:50%;background:#f3f5f7;font-size:11.5px;font-weight:800;align-items:center;justify-content:center;color:#66727c}
+.pc-tiers td.t{color:#66727c;padding-right:8px}
+.pc-tiers td.v{text-align:right;font-weight:800;color:#1e2a32;white-space:nowrap;padding-left:8px}
+.pc-tiers td.v.zero{color:var(--sage-dark)}
+.pc-tiers td.th{font-size:11px;color:#66727c;font-weight:700;text-align:right;padding-bottom:2px;padding-left:8px}
+.pc-fine{font-size:12px;color:#66727c;margin:6px 0 0;line-height:1.4}
+.pc-fine b{color:#1e2a32}
+.pc-foot{padding:12px 14px 14px}
+.pc-btn{display:block;width:100%;background:var(--sage);color:#fff;border:0;border-radius:10px;padding:14px;font-size:16px;font-weight:700;text-align:center;cursor:pointer;font-family:inherit;min-height:50px}
+.pc-btn:hover{background:var(--sage-dark)}
+.pc-foot .plan-flag{margin-top:0}
+.rh{border:1px solid #e5e9ec;border-radius:16px;padding:12px 14px;margin-bottom:12px;text-align:left}
+.zl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:#66727c}
+.zl>svg{width:15px;height:15px;fill:none;stroke:var(--sage-dark);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.zl .zv{font:inherit;font-size:14.5px;font-weight:700;color:#1e2a32;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted #9aa5ae;text-decoration-thickness:1.5px;text-underline-offset:4px;min-height:32px}
+.zl .zc{font:inherit;font-size:13px;font-weight:600;color:var(--sage-dark);background:none;border:0;padding:0 0 0 4px;cursor:pointer;min-height:32px}
+.zl .zf{display:none;width:100%;gap:8px;margin-top:4px}
+.zl.edit .zf{display:flex}.zl.edit .zv,.zl.edit .zc{display:none}
+.zl .zf input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px;border:1px solid #dadce0;border-radius:9px;color:#1e2a32}
+.zl .zf button{font:inherit;font-size:14px;font-weight:800;background:var(--sage);color:#fff;border:0;border-radius:9px;padding:9px 14px;min-height:44px;cursor:pointer}
+.zerr{font-size:13px;color:#a50e0e;margin:4px 0 0}
+.zerr:empty{display:none}
+.rh .t1{font-size:13px;font-weight:400;color:#66727c;margin:2px 0 8px}
+.rh .sr{display:flex;gap:8px;align-items:center;font-size:13px;color:#66727c;margin-top:6px}
+.rh .sr label{flex:0 0 86px;white-space:nowrap}
+.rh .sr select{flex:1;min-width:0;font:inherit;font-size:14px;padding:8px;border:1px solid #e5e9ec;border-radius:9px;background:#f3f5f7;color:#1e2a32;font-weight:600;min-height:40px}
+.cmpall{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1.5px solid var(--sage);color:var(--sage-dark);border-radius:10px;padding:11px;font-weight:700;font-size:15px;background:#fff;cursor:pointer;font-family:inherit;margin:0 0 10px;min-height:48px}
+.cmpall svg{width:18px;height:18px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round}
+.showmore{display:block;width:100%;text-align:center;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:12px;font-weight:700;color:#1e2a32;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:6px}
+.showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
+.cbar{position:sticky;bottom:12px;margin-top:12px;background:#1e2a32;color:#fff;border-radius:14px;padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:5}
+.cbar.on{display:flex}
+.cbar .n{font-size:14px;font-weight:600}
+.cbar button{background:var(--sage);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer;min-height:40px;flex:0 0 auto}
+.cbar button:disabled{opacity:.45;cursor:not-allowed}
+.cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left}
+.cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:auto}
+.cmp td.lab{text-align:left;color:#66727c;font-size:12px;padding-left:10px;width:31%}
+.cmp thead th{background:#fff;font-size:12px;line-height:1.25;color:#1e2a32;font-weight:700;box-shadow:inset 0 4px 0 var(--cc,#c9d1d8);border-left:3px solid #fff;border-right:3px solid #fff;padding-top:10px}
+.cmp thead th.l0{box-shadow:none;text-align:left;padding-left:10px;font-size:12px;color:#66727c;font-weight:600;width:31%}
+.cmp thead th .eb{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:#66727c;margin-bottom:3px}
+.cmp tr.grp td{background:#f3f5f7;text-align:left;font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:#1e2a32;padding:7px 10px}
+.cmp td.v{font-weight:700;color:#1e2a32}
+.cmp td.v.zero{color:var(--sage-dark)}
+.cmp td.v.off{color:#56616a;font-weight:600;font-style:italic}
+.cmp td.big{font-size:16px;font-weight:800}
+.cmp .tog{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:10px 12px;font-size:13px;font-weight:600;color:var(--sage-dark);border-bottom:1px solid #e5e9ec;cursor:pointer;min-height:44px}
+.cmp .tog input{accent-color:var(--sage);width:18px;height:18px;margin:0}
+.cmp.diff tr.same{display:none}
+.cmp-foot{padding:12px}
+.cmp-note{font-size:12px;color:#66727c;margin:0 12px 10px;line-height:1.4}
+.contact-line{text-align:center;font-size:14px;color:#3c4043;margin:12px 0 0;line-height:1.45}
+
 /* ── RESPONSIVE ── */
 @media(max-width:480px){
   body{padding:0;align-items:flex-start}
@@ -462,6 +570,7 @@ function medigapToWidgetPlans(stateData){
       type: 'Medigap',
       _medigap: true,
       _premiumRange: '$' + Math.round(plan.premium_min) + '-$' + Math.round(plan.premium_max) + '/mo',
+      _pmin: plan.premium_min, _pmax: plan.premium_max,
       _carrierCount: plan.policies.length,
       _planLetter: letter
     });
@@ -477,47 +586,7 @@ function medigapToWidgetPlans(stateData){
 const PLAN_FILE_YEAR=2027;
 let _planMeta=null;   // {year, source} of the file currently loaded
 
-// Render a CMS star rating. CMS has not published 2027 ratings (the field is blank in the
-// landscape file), so a null rating says exactly that. Never carry 2026 stars onto a 2027 plan.
-function rStar(r){
-  if(r!==null&&r!==undefined) return '⭐ '+r;
-  const y=(_planMeta&&_planMeta.year)||PLAN_FILE_YEAR;
-  return lang==='en'?`${y} rating not yet published by CMS`:`Calificación ${y} aún no publicada por CMS`;
-}
-
-const BENEFIT_KEYS=['dental','vision','hearing'];
-const BKEY={dental:'d',vision:'v',hearing:'h'};
-// 'optional' = an optional supplemental benefit: available for an extra premium, not included.
-const TIER={
-  d:{comprehensive:{en:'Comprehensive',es:'Completo'},preventive:{en:'Preventive',es:'Preventivo'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}},
-  v:{'exams+eyewear':{en:'Exam + eyewear',es:'Examen y lentes'},exams:{en:'Exam only',es:'Solo examen'},eyewear:{en:'Eyewear only',es:'Solo lentes'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}},
-  h:{'exams+aids':{en:'Exam + aids',es:'Examen y aparatos'},exams:{en:'Exam only',es:'Solo examen'},aids:{en:'Aids only',es:'Solo aparatos'},optional:{en:'Optional, extra premium',es:'Opcional, prima adicional'},none:{en:'Not included',es:'No incluido'}}
-};
-// Absence of data must never render as absence of benefit.
-function noInfo(){return lang==='en'?'No information':'Sin información';}
-function provenanceNote(){
-  if(!_planMeta||!_planMeta.year) return '';
-  const en=lang==='en', y=_planMeta.year, src=_planMeta.source||'CMS';
-  const tail=en
-    ? 'Costs may vary; your plan documents are the final word.'
-    : 'Los costos pueden variar; los documentos de su plan son la palabra final.';
-  return en
-    ? `Plan year ${y} costs and benefits. Source: ${src}. ${tail}`
-    : `Costos y beneficios del año del plan ${y}. Fuente: ${src}. ${tail}`;
-}
-function provenanceHTML(){
-  const t=provenanceNote(); if(!t) return '';
-  return `<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${t}</p>`;
-}
-function tier(kind,val){
-  if(val===null||val===undefined) return null;
-  const e=TIER[kind]&&TIER[kind][val];
-  return e?e[lang]:null;
-}
-function hasBenefit(p,keys){return (keys||BENEFIT_KEYS).some(k=>{
-  const kind=BKEY[k]; return !!(kind && TIER[kind] && TIER[kind][p[k]]!==undefined);
-});}
-function anyBenefit(plans,keys){return plans.some(p=>hasBenefit(p,keys));}
+// Star rating, benefit wording and provenance helpers live with the plan card (PLAN RESULTS below).
 
 // ---- Who we may offer an agent for: data/represented-2027.json (signed by AB, RED) ----
 // licensed: states with lead capture. represented[ST]: CMS parent organizations we are appointed
@@ -549,6 +618,7 @@ function isRepresented(parent,state){
 }
 
 function cmsToWidget(p, state){
+  const rep=isRepresented(p.parent,state);
   return {
     id: p.id,
     name: p.name,
@@ -564,14 +634,22 @@ function cmsToWidget(p, state){
     vision: p.vision===undefined?null:p.vision,
     hearing: p.hearing===undefined?null:p.hearing,
     otc: p.otc||null,
+    // Card detail from PBP 2027 (T-017 b3-b7, b6b). undefined/null = not in the file = "No information".
+    hosp: p.hosp||null, ohosp: p.ohosp||null, asc: p.asc||null, amb: p.amb||null,
+    trans: p.trans===undefined?null:p.trans, fit: p.fit===undefined?null:p.fit,
+    dent: p.dent||null, vis: p.vis||null, hear: p.hear||null,
+    ins: p.ins||null, noded: p.noded||null,
     tiers: p.tiers||null,
     dbt: p.dbt||null,
     drug: p.drug?'Included':'N/A',
     rating: (typeof p.stars==='number' && p.stars>0) ? p.stars : null,
     type: p.type,
     sanction: !!p.sanction,
-    // Agent button only for: a licensed state, a carrier we represent there, and no CMS sanction.
-    agent: isRepresented(p.parent,state) && !p.sanction && leadOK()
+    // Represented or not is DATA ONLY, for the lead row (AB 2026-10-02, T-017 e). Every plan in a
+    // licensed state gets the same button; none on a CMS-sanctioned plan; none if the signed
+    // carrier/licence file did not load (fail closed).
+    rep: rep,
+    agent: !p.sanction && leadOK() && !!_rep
   };
 }
 
@@ -1079,124 +1157,245 @@ function snoozeStep(){
 // PROTECT 2026-10-02): ranking plans for a person from their answers is advice that needs a
 // licensed agent and a Scope of Appointment. The public list is the same for everyone in the
 // county, in a neutral order the visitor chooses.
+// Card, results and compare follow the mockups AB approved for staging on 2026-10-02:
+// DECIDE/now/2026-10-02_widget-2027-card-mockup.html, ..._results-mockup.html,
+// ..._missing-and-compare-mockup.html (T-017 b2-b13).
 function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
 
-// 'Included'/'N/A' are internal sentinels. Translate only where they are shown.
-function drugLabel(v, lang){
-  if (lang === 'en') return v;
-  return v === 'Included' ? 'Incluido' : (v === 'N/A' ? 'No incluido' : v);
-}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-// Every cost carries its plan year: "Monthly premium 2027".
-function yl(en,es){return (lang==='en'?en:es)+' '+((_planMeta&&_planMeta.year)||PLAN_FILE_YEAR);}
+const L=(en,es)=>lang==='en'?en:es;
+function planYear(){return (_planMeta&&_planMeta.year)||PLAN_FILE_YEAR;}
 function usd(v,cents){
   if(v===null||v===undefined) return null;
   const o=cents?{minimumFractionDigits:2,maximumFractionDigits:2}:{maximumFractionDigits:2};
   return (v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',o);
 }
-const OTC_PER={mo:{en:'every month',es:'cada mes'},'3mo':{en:'every 3 months',es:'cada 3 meses'},'6mo':{en:'every 6 months',es:'cada 6 meses'},
-  yr:{en:'every year',es:'cada año'},'2y':{en:'every 2 years',es:'cada 2 años'},'3y':{en:'every 3 years',es:'cada 3 años'}};
-function otcText(o){
-  if(!o) return null;
-  if(o.has&&o.amt!=null) return usd(o.amt)+(o.per&&OTC_PER[o.per]?' '+OTC_PER[o.per][lang]:'');
-  if(o.has) return lang==='en'?'Included':'Incluido';
-  if(o.optional) return lang==='en'?'Optional, extra premium':'Opcional, prima adicional';
-  return lang==='en'?'Not included':'No incluido';
+// Monthly premium: "$0" when zero, otherwise to the cent ("$45.00"), as CMS publishes it.
+function premUsd(v){return v===null||v===undefined?null:(v===0?'$0':usd(v,true));}
+// CMS cost strings from the plan file ("$1495", "$0-$100", "$10 / 20%"): thousands separators,
+// ranges in words. Escaped first; the strings come from a public CMS file.
+function money(s){
+  if(s===null||s===undefined||s==='') return null;
+  return esc(s).replace(/\d{4,}(?:\.\d+)?/g,m=>{const p=m.split('.');return p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',')+(p[1]?'.'+p[1]:'');})
+    .replace(/(\$[\d,.]+|[\d.]+%)-(\$[\d,.]+|[\d.]+%)/g,(_,a,b)=>a+L(' to ',' a ')+b);
 }
+function isZero(s){return s==='$0'||s==='$0.00'||s==='0%';}
+const NOINC=()=>L('Not included','No incluido');
+function noInfo(){return L('No information','Sin información');}
+const OPTX=()=>L('Optional, extra premium','Opcional, con prima adicional');
+const PERW={mo:['a month','al mes'],'3mo':['every 3 months','cada 3 meses'],'6mo':['every 6 months','cada 6 meses'],
+  yr:['a year','al año'],'2y':['every 2 years','cada 2 años'],'3y':['every 3 years','cada 3 años']};
+const PERS={mo:['/mo','/mes'],'3mo':['/3 mo','/3 meses'],'6mo':['/6 mo','/6 meses'],yr:['/yr','/año'],'2y':['/2 yrs','/2 años'],'3y':['/3 yrs','/3 años']};
+function perw(p){const w=PERW[p];return w?' '+L(w[0],w[1]):'';}
+// A dollar maximum CMS publishes, always with its period: "up to $150 a year". No amount -> null, never a guess.
+function upTo(a,bold){if(!a||a.amt==null) return null;const v=usd(a.amt)+perw(a.per);return L('up to ','hasta ')+(bold===false?v:'<b>'+v+'</b>');}
+const EAR={per:[' per ear',' por oído'],both:[', both ears',', ambos oídos'],one:[', one ear',', un oído']};
+function ear(e){const w=EAR[e];return w?L(w[0],w[1]):'';}
+
+// CMS Overall Star Rating. CMS has not published 2027 ratings (blank in the landscape file), so a
+// null rating says exactly that. Never carry 2026 stars onto a 2027 plan.
+function rStar(r){
+  if(r!==null&&r!==undefined) return L('CMS rating: ','Calificación CMS: ')+r+' ★';
+  return L('CMS rating: not yet published','Calificación CMS: aún no publicada');
+}
+function provenanceNote(){
+  if(!_planMeta||!_planMeta.year) return '';
+  const y=_planMeta.year, src=_planMeta.source||'CMS';
+  return L(`Plan year ${y} costs and benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`,
+           `Costos y beneficios del año del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
+}
+function provenanceHTML(){
+  const t=provenanceNote(); if(!t) return '';
+  return `<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${esc(t)}</p>`;
+}
+
+// ---- benefit text, ES + EN. CMS PBP category names, one fixed translation (T-017 b4) ----
+function hospText(h,short){
+  if(!h) return null;
+  let s;
+  if(h.mc) s=L('Same as Original Medicare','Igual que Medicare Original');
+  else if(h.days){
+    const nz=h.days.filter(d=>!isZero(d[0])), z=nz.length<h.days.length;
+    if(!nz.length) s=short?'$0':'<b>$0</b> '+L('per stay','por estadía');
+    else if(short) s=nz.map(d=>`${money(d[0])}${L('/day','/día')}, ${L('days','días')} ${d[1]}-${d[2]}`).join(' · ');
+    else s=nz.map(d=>`<b>${money(d[0])} ${L('per day','por día')}</b>, ${L('days','días')} ${d[1]} ${L('to','a')} ${d[2]}`).join(' · ')+(z?` · <b>$0</b> ${L('other days','los demás días')}`:'');
+  } else if(h.stay) s=short?(isZero(h.stay)?'$0':money(h.stay)+' '+L('per stay','por estadía')):`<b>${money(h.stay)}</b> ${L('per stay','por estadía')}`;
+  else return null;
+  if(h.vary) s+=' '+L('(varies by hospital)','(varía según el hospital)');
+  return s;
+}
+function tripsText(tr,short){
+  if(tr===false) return null;          // not offered
+  if(!tr) return undefined;            // unknown
+  if(tr.unl) return L('Unlimited trips','Viajes ilimitados');
+  if(tr.n==null) return L('Included','Incluido');
+  const one=tr.n===1;
+  if(short) return tr.n+' '+L(one?'trip':'trips',one?'viaje':'viajes')+(PERS[tr.per]?L(PERS[tr.per][0],PERS[tr.per][1]):'');
+  const kind=tr.tt==='round'?L(one?'round trip':'round trips',one?'viaje de ida y vuelta':'viajes de ida y vuelta')
+                            :L(one?'one-way trip':'one-way trips',one?'viaje de ida':'viajes de ida');
+  return '<b>'+tr.n+' '+kind+perw(tr.per)+'</b>';
+}
+// Each returns {t:text, off:bool} or null when the plan file has no record (shown as "No information").
+function dentalB(p,short){
+  const d=p.dent; if(!d) return null;
+  if(!d.prev&&!d.comp) return {t:p.dental==='optional'?OPTX():NOINC(),off:true};
+  if(short) return {t:d.prev&&d.comp?L('Preventive and comprehensive','Preventivo e integral'):(d.prev?L('Preventive','Preventivo'):L('Comprehensive','Integral')),off:false};
+  if(d.prev&&d.comp&&!d.pmax&&!d.cmax) return {t:L('Preventive and comprehensive dental','Dental preventivo e integral'),off:false};
+  const parts=[];
+  if(d.prev) parts.push(L('Preventive dental','Dental preventivo')+(d.pmax?' '+upTo(d.pmax):''));
+  if(d.comp) parts.push(L('Comprehensive dental','Dental integral')+(d.cmax?' '+upTo(d.cmax):''));
+  return {t:parts.join(' · '),off:false};
+}
+function visionB(p,short){
+  const v=p.vis; if(!v) return null;
+  if(!v.exam&&!v.wear) return {t:p.vision==='optional'?OPTX():NOINC(),off:true};
+  if(short) return v.wear?{t:v.wmax?usd(v.wmax.amt)+perw(v.wmax.per):L('Included','Incluidos'),off:false}:{t:NOINC(),off:true};
+  const ex=v.exam?L('Routine eye exam','Examen de la vista de rutina')+' '+(v.exam_cs?'<b>'+money(v.exam_cs)+'</b>':L('included','incluido'))
+                 :L('Routine eye exam: not included','Examen de la vista de rutina: no incluido');
+  const ew=v.wear?(v.wmax?L('Eyewear','Anteojos')+' '+upTo(v.wmax):L('Eyewear included','Anteojos incluidos'))
+                 :L('Eyewear: not included','Anteojos: no incluidos');
+  return {t:ex+' · '+ew,off:false};
+}
+function hearingB(p,short){
+  const h=p.hear; if(!h) return null;
+  if(!h.exam&&!h.aids) return {t:p.hearing==='optional'?OPTX():NOINC(),off:true};
+  const aid=h.amax?upTo(h.amax,!short)+ear(h.amax.ear):(h.acopay?(short?money(h.acopay):'<b>'+money(h.acopay)+'</b>'+L(' per aid',' por audífono')):null);
+  if(short) return h.aids?{t:aid||L('Included','Incluidos'),off:false}:{t:NOINC(),off:true};
+  const ex=h.exam?L('Routine hearing exam','Examen de audición de rutina')+' '+(h.exam_cs?'<b>'+money(h.exam_cs)+'</b>':L('included','incluido'))
+                 :L('Routine hearing exam: not included','Examen de audición de rutina: no incluido');
+  const ai=h.aids?L('Hearing aids','Audífonos')+' '+(aid||L('included','incluidos')):L('Hearing aids: not included','Audífonos: no incluidos');
+  return {t:ex+' · '+ai,off:false};
+}
+function otcB(p,short){
+  const o=p.otc; if(!o) return null;
+  if(o.has) return {t:o.amt!=null?(short?'':'<b>')+usd(o.amt)+perw(o.per)+(short?'':'</b>'):L('Included','Incluido'),off:false};
+  return {t:o.optional?OPTX():NOINC(),off:true};
+}
+function fitB(p){
+  if(p.fit===null||p.fit===undefined) return null;
+  return p.fit?{t:L('Included','Incluido'),off:false}:{t:NOINC(),off:true};
+}
+
 const TIER_ES={'Preferred Generic':'Genérico preferido','Generic':'Genérico','Preferred Brand':'Marca preferida',
   'Non-Preferred Drug':'Medicamento no preferido','Non-Preferred Brand':'Marca no preferida','Specialty Tier':'Especialidad','Specialty':'Especialidad'};
-function tierLabel(t){
-  const l=(t.label||'').trim();
-  if(lang==='en') return 'Tier '+t.t+(l?' · '+esc(l):'');
-  // Unmapped CMS labels (e.g. "Injectable Drugs") are shown as CMS wrote them, never dropped.
-  return 'Nivel '+t.t+(l?' · '+(TIER_ES[l]||esc(l)):'');
+// Unmapped CMS labels (e.g. "Select Care Drugs") are shown as CMS wrote them, never dropped.
+function tierName(t){const l=(t.label||'').trim();return l?(lang==='en'?esc(l):(TIER_ES[l]||esc(l))):L('Tier '+t.t,'Nivel '+t.t);}
+function andList(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+L(' and ',' y ')+a[a.length-1];}
+
+// ---- the card ----
+const PIC={
+  dental:'<path d="M7 3c-2.5 0-4 2-4 4.5 0 3 1.5 4.5 2 7 .5 3 1 6.5 2.5 6.5S9 17 10 15.5c.5-.8 1.5-.8 2 0 1 1.5 1 5.5 2.5 5.5S16.5 17.5 17 14.5c.5-2.5 2-4 2-7C19 5 17.5 3 15 3c-1.5 0-2.3.8-3 .8S8.5 3 7 3z"/>',
+  vision:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  hearing:'<path d="M6 9a6 6 0 1 1 12 0c0 3-2 4-3 5.5S14 18 12.5 19.5 9 20 8 18"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0"/>',
+  otc:'<path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  fit:'<path d="M3 10v4M6 7v10M18 7v10M21 10v4M6 12h12"/>'
+};
+function benLi(icon,title,b){
+  const off=b?b.off:false, txt=b?b.t:noInfo();
+  return `<li><span class="pc-ic${off?' off':''}"><svg viewBox="0 0 24 24">${PIC[icon]}</svg></span><div><div class="t${off?' off':''}">${title}</div><div class="d${off?' off':''}">${txt}</div></div></li>`;
+}
+function plainLi(title,html){return `<li><div><div class="t">${title}</div><div class="d">${html==null?noInfo():html}</div></div></li>`;}
+function keyHTML(v,l,cls){const na=v!==null&&typeof v==='object';return `<div class="pc-key${cls?' '+cls:''}"><div class="v${na?' na':''}">${na?(v.na||noInfo()):v}</div><div class="l">${l}</div></div>`;}
+function visitHTML(l,v){return `<div class="pc-visit"><div class="l">${l}</div>${v?`<div class="v${isZero(v)?' zero':''}">${money(v)}</div>`:`<div class="v na">${noInfo()}</div>`}</div>`;}
+function chipsHTML(p){
+  const c=(b,on,off)=>!b?'':(b.off?`<span class="c off"><b>–</b> ${off}</span>`:`<span class="c"><b>✓</b> ${on}</span>`);
+  const o=p.otc, otcOn=o&&o.has&&o.amt!=null?'OTC '+usd(o.amt)+(PERS[o.per]?L(PERS[o.per][0],PERS[o.per][1]):''):'OTC';
+  const aids=p.hear?{off:!p.hear.aids}:null;
+  return [c(dentalB(p),'Dental',L('No dental','Sin dental')),c(visionB(p),L('Vision','Visión'),L('No vision','Sin visión')),
+    c(aids,L('Hearing aids','Audífonos'),L('No hearing aids','Sin audífonos')),c(otcB(p),otcOn,L('No OTC','Sin OTC')),
+    c(fitB(p),L('Fitness','Ejercicio'),L('No fitness','Sin ejercicio'))].join('');
 }
 function tiersHTML(p){
   if(p.drug!=='Included') return '';
-  const head=yl('Drug costs by tier, 1-month supply,','Costo de medicinas por nivel, suministro de 1 mes,');
-  if(p.tiers&&p.tiers.length){
-    const t5=p.tiers.filter(t=>t.t>=1&&t.t<=5);
-    const std=t5.some(t=>t.pharm==='standard');
-    return `<details class="plan-more"><summary>${head}</summary>
-      ${t5.map(t=>`<div class="plan-row"><span class="lb">${tierLabel(t)}</span><span class="vl">${esc(t.v||noInfo())}</span></div>`).join('')}
-      ${std?`<p class="plan-note">${lang==='en'?'Standard network pharmacy. Preferred pharmacies may cost less.':'Farmacia estándar de la red. Las farmacias preferidas pueden costar menos.'}</p>`:''}
-    </details>`;
+  const t=p.tiers||[];
+  if(!t.length){
+    const msg=p.dbt==='1'?L('Standard Part D benefit, no tiers.','Beneficio estándar de la Parte D, sin niveles.'):noInfo();
+    return `<div class="pc-sec"><h5>${L('Drugs','Medicamentos')}</h5><p class="pc-fine">${msg}</p></div>`;
   }
-  if(p.dbt==='1') return `<div class="plan-row"><span class="lb">${lang==='en'?'Drug tiers':'Niveles de medicinas'}</span><span class="vl">${lang==='en'?'Standard Part D benefit, no tiers':'Beneficio estándar de la Parte D, sin niveles'}</span></div>`;
-  return '';
+  // b6b: one column ("standard pharmacy") or two (standard / preferred), never mixed, never an empty tier.
+  const two=t.some(x=>x.p!=null);
+  const cell=v=>v==null?`<td class="v">–</td>`:`<td class="v${isZero(v)?' zero':''}">${money(v)}</td>`;
+  const rows=t.map(x=>`<tr><td class="n"><span>${x.t}</span></td><td class="t">${tierName(x)}</td>${cell(x.v)}${two?cell(x.p):''}</tr>`).join('');
+  const fine=[];
+  if(p.ins) fine.push(L(`Insulin: at most <b>${money(p.ins)}</b> a month.`,`Insulina: máximo <b>${money(p.ins)}</b> al mes.`));
+  if(p.ded>0&&p.noded&&p.noded.length){
+    const n=p.noded.map(String);
+    fine.push(L(`The ${usd(p.ded)} drug deductible does not apply to tier${n.length>1?'s':''} ${andList(n)}.`,
+                `El deducible de medicamentos de ${usd(p.ded)} no aplica ${n.length>1?'a los niveles':'al nivel'} ${andList(n)}.`));
+  }
+  if(t.some(x=>x.v==null&&x.p==null)) fine.push(L('– = not in the CMS file for this plan.','– = no figura en el archivo de CMS para este plan.'));
+  return `<div class="pc-sec"><h5>${L('Drugs','Medicamentos')} <span>${two?L('(1 month, standard or preferred pharmacy)','(1 mes, farmacia estándar o preferida)'):L('(1 month, standard pharmacy)','(1 mes, farmacia estándar)')}</span></h5>
+    <table class="pc-tiers">${two?`<tr><td></td><td></td><td class="th">${L('Standard','Estándar')}</td><td class="th">${L('Preferred','Preferida')}</td></tr>`:''}${rows}</table>
+    ${fine.map(f=>`<p class="pc-fine">${f}</p>`).join('')}</div>`;
 }
-function row(lb,v,gd){return v===null||v===undefined?'':`<div class="plan-row"><span class="lb">${lb}</span><span class="vl${gd?' gd':''}">${v}</span></div>`;}
-// What a plan card offers at the bottom: an agent, or plainly why not.
+// What a card offers at the bottom (b8, e, f, g): the same button on every plan in a licensed
+// state, none on a CMS-sanctioned plan, information only where we are not licensed.
 function planAction(p){
-  if(p.sanction) return `<p class="plan-flag warn">${lang==='en'?'CMS sanction, see':'Sanción de CMS, consulte'} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`;
-  if(p.agent) return `<button class="plan-cta filled" onclick="pickPlan('${p.id}')">${lang==='en'?'Learn More':'Más Información'}</button>`;
-  if(!leadOK()||!_rep) return `<p class="plan-flag">${lang==='en'?'Information only':'Solo información'}</p>`;
-  return `<p class="plan-flag">${lang==='en'?'Information only. We do not represent this plan’s company.':'Solo información. No representamos a la compañía de este plan.'}</p>`;
+  if(p.sanction) return `<p class="plan-flag warn">${L('CMS sanction, see','Sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`;
+  if(!p.agent) return `<p class="plan-flag">${L('Information only','Solo información')}</p>`;
+  return `<button class="pc-btn" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`;
 }
+function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#c9d1d8';}
+function cmpBox(p){
+  if(p._medigap) return '';
+  const on=selPlans.includes(p.id);
+  return `<label class="pc-cmp"><input type="checkbox" data-pid="${esc(p.id)}" ${on?'checked':''} onchange="toggleCmp(this)"> ${L('Compare','Comparar')}</label>`;
+}
+function planCard(p,selectable){
+  // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
+  if(p._medigap){
+    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
+      <div class="pc-meta">${L('Supplement','Suplemento')} · ${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
+      <div class="pc-keys k2">${keyHTML('<span style="font-size:17px">'+usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+'</span><small>'+L('/mo','/mes')+'</small>',L('Premium range','Rango de prima'))}${keyHTML({na:esc(p.carrier)},L('Lowest price from','Precio más bajo de'))}</div>
+      <div class="pc-sec"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
+      <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
+      <div class="pc-foot">${leadOK()&&!(D.state&&!_rep)?`<button class="pc-btn" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div></div>`;
+  }
+  const isMA=p.cat!=='PDP', drug=p.drug==='Included';
+  const prem=p.premium===null?{na:L('Not published by CMS','No publicada por CMS')}:premUsd(p.premium)+`<small>${L('/mo','/mes')}</small>`;
+  const ded=drug?(p.ded===null||p.ded===undefined?{na:noInfo()}:usd(p.ded)):{na:L('No drug coverage','Sin medicamentos')};
+  const keys=isMA
+    ?keyHTML(prem,L('Monthly premium','Prima mensual'),p.premium===0?'zero':'')+keyHTML(p.moop==null?{na:noInfo()}:usd(p.moop),L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'))+keyHTML(ded,L('Drug deductible','Deducible de medicamentos'),p.ded===0&&drug?'zero':'')
+    :keyHTML(prem,L('Monthly premium','Prima mensual'),p.premium===0?'zero':'')+keyHTML(ded,L('Drug deductible','Deducible de medicamentos'),p.ded===0?'zero':'');
+  const visits=isMA?`<div class="pc-sec"><h5>${L('Visits','Consultas')}</h5><div class="pc-visits">${visitHTML(L('Primary doctor','Médico primario'),p.pcp)}${visitHTML(L('Specialist','Especialista'),p.spec)}${visitHTML(L('Emergency room','Emergencias'),p.er)}${visitHTML(L('Urgent care','Urgencias'),p.urg)}</div></div>
+    <div class="pc-sec" style="padding-top:8px"><div class="pc-chips">${chipsHTML(p)}</div></div>`:'';
+  let more='';
+  if(isMA){
+    const amb=p.amb?`${L('Ground','Terrestre')} <b>${money(p.amb.ground)}</b> · ${L('Air','Aérea')} <b>${money(p.amb.air)}</b>`:null;
+    const surg=(p.asc||p.ohosp)?`${L('Ambulatory surgical center','Centro de cirugía ambulatoria')} <b>${money(p.asc)||noInfo()}</b> · ${L('Outpatient hospital','Hospital ambulatorio')} <b>${money(p.ohosp)||noInfo()}</b>`:null;
+    const tr=tripsText(p.trans);
+    more=`<div class="pc-sec"><h5>${L('Hospital and surgery','Hospital y cirugía')}</h5><ul class="pc-ben plain">
+        ${plainLi(L('Inpatient hospital stay','Hospitalización'),hospText(p.hosp))}
+        ${plainLi(L('Outpatient surgery','Cirugía ambulatoria'),surg)}
+        ${plainLi(L('Ambulance','Ambulancia'),amb)}
+        ${plainLi(L('Rides to medical appointments','Transporte a citas médicas'),tr===null?`<span style="color:#56616a">${NOINC()}</span>`:tr)}
+      </ul></div>
+      <div class="pc-sec"><h5>${L('Extra benefits','Beneficios extra')}</h5><ul class="pc-ben">
+        ${benLi('dental','Dental',dentalB(p))}${benLi('vision',L('Vision','Visión'),visionB(p))}${benLi('hearing',L('Hearing','Audición'),hearingB(p))}
+        ${benLi('otc',L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),otcB(p))}${benLi('fit',L('Fitness program','Programa de ejercicio'),fitB(p))}
+      </ul></div>`;
+  }
+  more+=tiersHTML(p);
+  const sum=isMA?L('See hospital, benefits and drugs','Ver hospital, beneficios y medicamentos'):L('See drug costs by tier','Ver medicamentos por nivel');
+  return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
+      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
+      <div class="pc-meta">${esc(p.type)} <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
+      <div class="pc-rating">${rStar(p.rating)}</div></div>
+    <div class="pc-keys${isMA?'':' k2'}">${keys}</div>
+    ${visits}
+    ${more.trim()?`<details><summary>${sum}</summary>${more}</details>`:''}
+    <div class="pc-foot">${planAction(p)}</div></div>`;
+}
+
+// ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
+function planLeadTag(p){return `${p.name} [${p.id}] represented: ${p._medigap?'n/a (Medigap)':(p.rep?'yes':'no')}`;}
 function pickPlan(id){
   const p=PLANS.find(x=>x.id===id); if(!p) return;
-  if(!p._medigap&&!p.agent) return;   // never capture a lead on an information-only plan
-  if(p._medigap&&!leadOK()) return;
-  D.selectedPlan=p.name; D.selectedPlanId=p.id; go(planEnroll);
-}
-
-function planCard(p,i,selectable){
-  const color=CARRIER_COLORS[p.carrier]||'#999';
-  const checked=selPlans.includes(p.id);
-  const selBtn=selectable?`<div class="plan-sel ${checked?'checked':''}" onclick="event.stopPropagation();togglePlanSel('${p.id}')">${checked?'✓':''}</div>`:'';
-
-  // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such,
-  // never presented as 2027.
-  if(p._medigap){
-    const carriersLabel = lang==='en'?`${p._carrierCount} carriers available`:`${p._carrierCount} aseguradoras disponibles`;
-    return `<div class="plan-card" style="border-left-color:#00897B">
-      ${selBtn}
-      <h4>${esc(p.name)}</h4>
-      <div class="carrier"><span class="carrier-dot" style="background:#00897B"></span>Medigap ${lang==='en'?'Supplement':'Suplemento'} | ${carriersLabel}</div>
-      ${row(lang==='en'?'Premium range':'Rango de prima',p._premiumRange,true)}
-      ${row(lang==='en'?'Lowest price from':'Precio más bajo de',esc(p.carrier))}
-      ${row(lang==='en'?'What it covers':'Qué cubre',lang==='en'?'Gaps in Original Medicare':'Costos no cubiertos por Medicare Original')}
-      ${row(lang==='en'?'Drug Coverage':'Cobertura de Medicinas',lang==='en'?'Separate Part D needed':'Necesita Parte D por separado')}
-      <p class="plan-note">${lang==='en'?'Medigap prices: Medicare.gov, March 2026. Not 2027 prices.':'Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.'}</p>
-      ${leadOK()?`<button class="plan-cta filled" onclick="pickPlan('${p.id}')">${lang==='en'?'Learn More':'Más Información'}</button>`:`<p class="plan-flag">${lang==='en'?'Information only':'Solo información'}</p>`}
-    </div>`;
-  }
-
-  const isMA=p.cat!=='PDP';
-  const prem=p.premium===null?(lang==='en'?'Not published by CMS':'No publicada por CMS'):usd(p.premium,true)+'/'+(lang==='en'?'mo':'mes');
-  return `<div class="plan-card" style="border-left-color:${color}">
-    ${selBtn}
-    <h4>${esc(p.name)}</h4>
-    <div class="carrier"><span class="carrier-dot" style="background:${color}"></span>${esc(p.carrier)} | ${esc(p.type)}</div>
-    <div class="plan-stars">${rStar(p.rating)}</div>
-    ${row(yl('Monthly premium','Prima mensual'),prem,p.premium!==null)}
-    ${isMA?row(yl('Max out-of-pocket, in-network','Máximo de bolsillo, en la red'),usd(p.moop)):''}
-    ${row(lang==='en'?'Drug coverage':'Cobertura de medicinas',drugLabel(p.drug,lang))}
-    ${p.drug==='Included'?row(yl('Drug deductible','Deducible de medicinas'),usd(p.ded)):''}
-    ${isMA?row(yl('Primary care visit','Visita al médico primario'),p.pcp&&esc(p.pcp)):''}
-    ${isMA?row(yl('Specialist visit','Visita al especialista'),p.spec&&esc(p.spec)):''}
-    ${isMA?row(yl('Emergency room','Sala de emergencias'),p.er&&esc(p.er)):''}
-    ${isMA?row(yl('Urgent care','Atención de urgencia'),p.urg&&esc(p.urg)):''}
-    ${[['dental','d',lang==='en'?'Dental':'Dental'],['vision','v',lang==='en'?'Vision':'Visión'],['hearing','h',lang==='en'?'Hearing':'Audición']].map(([f,k,lb])=>{
-      const t=tier(k,p[f]); return t?row(lb,t,p[f]!=='none'&&p[f]!=='optional'):'';
-    }).join('')}
-    ${isMA?row(yl('Over-the-counter (OTC) allowance','Asignación para productos sin receta (OTC)'),otcText(p.otc),!!(p.otc&&p.otc.has)):''}
-    ${tiersHTML(p)}
-    ${planAction(p)}
-  </div>`;
-}
-function togglePlanSel(id){
-  const i=selPlans.indexOf(id);
-  if(i>=0)selPlans.splice(i,1);else if(selPlans.length<4)selPlans.push(id);
-  // re-render checkboxes and floating bar
-  document.querySelectorAll('.plan-sel').forEach(el=>{
-    const pid=el.getAttribute('onclick').match(/'([^']+)'/)[1];
-    const on=selPlans.includes(pid);
-    el.classList.toggle('checked',on);
-    el.textContent=on?'✓':'';
-  });
-  const bar=document.getElementById('compareBar');
-  if(bar) bar.style.display=selPlans.length>=2?'block':'none';
+  if(!p._medigap&&!p.agent) return;   // sanctioned, unlicensed state, or carrier list unavailable: no lead capture
+  if(p._medigap&&(!leadOK()||(D.state&&!_rep))) return;
+  D.selectedPlan=p.name; D.selectedPlanId=p.id;
+  D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
+  go(planEnroll);
 }
 
 // ── PLAN TYPE FILTER ──
@@ -1211,66 +1410,140 @@ function classifyType(t){
   if(t.includes('PPO')) return 'ppo';
   return 'hmo'; // HMO, HMO-POS
 }
-function typeFilterBar(allPlans){
-  const counts={all:allPlans.length, hmo:0, ppo:0, snp:0, pdp:0, supp:0, medicaid:0, other:0};
-  allPlans.forEach(p=>{counts[classifyType(p.type)]++});
-  const TYPES=[
-    {id:'all',      en:'All Plans',           es:'Todos'},
-    {id:'hmo',      en:'HMO',                 es:'HMO'},
-    {id:'ppo',      en:'PPO',                 es:'PPO'},
-    {id:'supp',     en:'Supplement',           es:'Suplemento'},
-    {id:'snp',      en:'Special Needs (SNP)',  es:'Necesidades Especiales (SNP)'},
-    {id:'pdp',      en:'Drug Plans (PDP)',     es:'Medicamentos (PDP)'},
-    {id:'medicaid', en:'Medicaid / Medi-Cal',  es:'Medicaid / Medi-Cal'},
-    {id:'other',    en:'Other (Cost, PFFS, MSA)', es:'Otros (Cost, PFFS, MSA)'},
-  ];
-  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Filter by plan type':'Filtrar por tipo de plan'}</div><div class="type-bar">${TYPES.filter(t=>counts[t.id]>0||t.id==='all').map(t=>
-    `<button class="type-pill${_typeFilter===t.id?' active':''}" onclick="applyTypeFilter('${t.id}')">${t[lang]} <span class="type-count">${counts[t.id]}</span></button>`
-  ).join('')}</div>`;
-}
+const TYPES=[
+  {id:'all',      en:'All plans',               es:'Todos los planes'},
+  {id:'hmo',      en:'HMO',                     es:'HMO'},
+  {id:'ppo',      en:'PPO',                     es:'PPO'},
+  {id:'supp',     en:'Supplement (Medigap)',    es:'Suplemento (Medigap)'},
+  {id:'snp',      en:'Special needs (SNP)',     es:'Necesidades especiales (SNP)'},
+  {id:'pdp',      en:'Drug plans (PDP)',        es:'Medicamentos (PDP)'},
+  {id:'medicaid', en:'Medicaid / Medi-Cal',     es:'Medicaid / Medi-Cal'},
+  {id:'other',    en:'Other (Cost, PFFS, MSA)', es:'Otros (Cost, PFFS, MSA)'},
+];
 function filterByType(plans){
   if(_typeFilter==='all') return plans;
   return plans.filter(p=>classifyType(p.type)===_typeFilter);
 }
-function applyTypeFilter(type){
-  _typeFilter=type;
-  if(_inAllPlans) go(allPlans);
-  else go(flowResults);
-}
+function setType(v){_typeFilter=v;_shown=3;flowResults();}
 
-// ── SORT ── neutral, visitor-chosen orders. Default: lowest monthly premium.
+// ── SORT ── neutral, visitor-chosen orders. Default: lowest monthly premium, then lowest
+// max out-of-pocket (b10). Never favours plans we represent.
 let _sortMode='premium';
 function sortModes(){
   const m=[
-    {id:'premium', en:'Lowest premium',            es:'Prima más baja'},
-    {id:'moop',    en:'Lowest max out-of-pocket',  es:'Máximo de bolsillo más bajo'},
-    {id:'drug',    en:'Drug coverage first',       es:'Con medicinas primero'},
+    {id:'premium', en:'Lowest monthly premium',   es:'Prima mensual más baja'},
+    {id:'moop',    en:'Lowest max out-of-pocket', es:'Máximo de bolsillo más bajo'},
+    {id:'ded',     en:'Lowest drug deductible',   es:'Deducible de medicamentos más bajo'},
   ];
   // Rating sort only once CMS has published ratings for some plan here.
-  if(PLANS.some(p=>p.rating!==null)) m.push({id:'star', en:'Star rating', es:'Calificación'});
+  if(PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS'});
   return m;
 }
-function sortBar(){
-  return `<div class="filter-label" style="font-size:12px;color:#888;font-weight:600;margin-bottom:4px;margin-top:6px;text-transform:uppercase;letter-spacing:0.05em">${lang==='en'?'Sort by':'Ordenar por'}</div><div class="sort-bar">${sortModes().map(m=>
-    `<button class="sort-pill${_sortMode===m.id?' active':''}" onclick="applySortMode('${m.id}')">${m[lang]}</button>`
-  ).join('')}</div>`;
-}
+function setSort(v){_sortMode=v;_shown=3;flowResults();}
 // Unknown values (null) always sort last; ties fall back to plan name so the order is stable.
 function _asc(x,y){const a=(x===null||x===undefined)?Infinity:x, b=(y===null||y===undefined)?Infinity:y; return a===b?0:(a<b?-1:1);}
 function sortPlans(plans, mode){
   const s=[...plans], nm=(a,b)=>String(a.name).localeCompare(String(b.name));
-  if(mode==='moop')      s.sort((a,b)=>_asc(a.moop,b.moop)||_asc(a.premium,b.premium)||nm(a,b));
-  else if(mode==='drug') s.sort((a,b)=>(b.drug==='Included'?1:0)-(a.drug==='Included'?1:0)||_asc(a.premium,b.premium)||nm(a,b));
-  else if(mode==='star') s.sort((a,b)=>_asc(a.rating===null?null:-a.rating,b.rating===null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
-  else                   s.sort((a,b)=>_asc(a.premium,b.premium)||nm(a,b));
+  // Medigap entries carry placeholder 0s for MOOP/deductible: they have neither, so they sort as unknown.
+  const dd=p=>p._medigap||p.drug!=='Included'?null:p.ded, mo=p=>p._medigap||p.cat==='PDP'?null:p.moop;
+  if(mode==='moop')      s.sort((a,b)=>_asc(mo(a),mo(b))||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
+  else if(mode==='star') s.sort((a,b)=>_asc(a.rating==null?null:-a.rating,b.rating==null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
+  else                   s.sort((a,b)=>_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   return s;
 }
-function applySortMode(mode){
-  _sortMode=mode;
-  if(_inAllPlans) go(allPlans);
-  else go(flowResults);
+
+// ── RESULTS ──
+let _shown=3, _inAllPlans=false;
+const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+function resultsHead(list){
+  const n27=list.filter(p=>!p._medigap).length, nmg=list.length-n27, y=planYear();
+  const cty=D.county?esc(D.county):'';
+  const parts=[];
+  if(n27||!nmg) parts.push(L(`${n27} ${y} plan${n27===1?'':'s'}`,`${n27} plan${n27===1?'':'es'} ${y}`));
+  if(nmg) parts.push(nmg+' Medigap');
+  if(cty) parts.push(L(cty+' County','condado de '+cty));
+  const count=parts.join(' · ');
+  const counts={}; PLANS.forEach(p=>{const k=classifyType(p.type);counts[k]=(counts[k]||0)+1;});
+  const typeOpts=TYPES.filter(t=>t.id==='all'||counts[t.id]).map(t=>`<option value="${t.id}"${_typeFilter===t.id?' selected':''}>${t[lang]} (${t.id==='all'?PLANS.length:counts[t.id]})</option>`).join('');
+  const sortOpts=sortModes().map(m=>`<option value="${m.id}"${_sortMode===m.id?' selected':''}>${m[lang]}</option>`).join('');
+  return `<div class="rh">
+    <div class="zl" id="zl">${PIN}
+      <button class="zv" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${esc(D.zip||'')}</button>
+      <button class="zc" onclick="zipEdit()">${L('Change','Cambiar')}</button>
+      <form class="zf" onsubmit="event.preventDefault();zipChange()">
+        <input id="zin" type="tel" inputmode="numeric" maxlength="5" placeholder="${L('ZIP code','Código postal')}" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
+        <button type="submit">${L('See plans','Ver planes')}</button>
+      </form></div>
+    <p class="zerr" id="zerr"></p>
+    <p class="t1">${count}</p>
+    <div class="sr"><label for="srt">${L('Sort by','Ordenar por')}</label><select id="srt" onchange="setSort(this.value)">${sortOpts}</select></div>
+    <div class="sr"><label for="typ">${L('Show','Mostrar')}</label><select id="typ" onchange="setType(this.value)">${typeOpts}</select></div>
+  </div>`;
 }
-let _inAllPlans=false;
+function zipEdit(){const z=document.getElementById('zl');if(!z)return;z.classList.add('edit');const i=document.getElementById('zin');if(i){i.value='';i.focus();}}
+// "Cambiar" changes the ZIP without leaving the results. A ZIP we have no plans for keeps the
+// current results on screen and says so, instead of emptying the page.
+async function zipChange(){
+  const i=document.getElementById('zin'), e=document.getElementById('zerr');
+  const v=((i&&i.value)||'').replace(/\D/g,'').slice(0,5);
+  if(v.length!==5){if(e)e.textContent=L('Please enter all 5 digits.','Escriba los 5 dígitos.');return;}
+  const keep={PLANS,zip:D.zip,county:D.county,state:D.state,valid:D._zipValid,meta:_planMeta};
+  D.zip=v; D.county=''; D._zipValid=undefined; PLANS=[];
+  await loadPlansForZip(v);
+  if(D._zipValid===false||!PLANS.length){
+    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
+    const e2=document.getElementById('zerr');
+    if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
+    return;
+  }
+  selPlans=[]; _shown=3; _typeFilter='all';
+  flowResults();
+}
+function cmpAllBtn(list){
+  const c=list.filter(p=>!p._medigap).slice(0,3);
+  if(c.length<2) return '';
+  return `<button class="cmpall" onclick="compareFirst()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="16" y="4" width="5" height="16" rx="1.5"/></svg>${L(`Compare these ${c.length} plans`,`Comparar estos ${c.length} planes`)}</button>`;
+}
+function moreBtn(total){
+  if(total<=_shown) return '';
+  const k=Math.min(5,total-_shown);
+  return `<button class="showmore" onclick="showMore()">${L(`See ${k} more plan${k===1?'':'s'}`,`Ver ${k} plan${k===1?'':'es'} más`)}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
+}
+function listHTML(list){
+  const first=list.slice(0,Math.min(3,_shown)).map(p=>planCard(p,true)).join('');
+  const rest=list.slice(3,_shown).map(p=>planCard(p,true)).join('');
+  return `<div id="plist">${first}${cmpAllBtn(list)}${rest}</div><div id="pmore">${moreBtn(list.length)}</div>`;
+}
+function showMore(){
+  const list=orderedPlans(), from=_shown;
+  _shown=Math.min(list.length,_shown+5);
+  const box=document.getElementById('plist'), m=document.getElementById('pmore');
+  if(!box){flowResults();return;}
+  box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
+  if(m) m.innerHTML=moreBtn(list.length);
+}
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="go(flowCompare)">${L('Compare','Comparar')}</button></div>`;}
+function updBar(msg){
+  const b=document.getElementById('cbar'); if(!b) return;
+  const k=selPlans.length;
+  b.classList.toggle('on',k>0||!!msg);
+  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
+  document.getElementById('cbarGo').disabled=k<2;
+}
+let _barT=0;
+function toggleCmp(el){
+  const id=el.getAttribute('data-pid'), i=selPlans.indexOf(id);
+  if(el.checked){
+    if(i<0){
+      if(selPlans.length>=3){el.checked=false;updBar(L('You can compare up to 3 plans','Puede comparar hasta 3 planes'));clearTimeout(_barT);_barT=setTimeout(()=>updBar(),2500);return;}
+      selPlans.push(id);
+    }
+  } else if(i>=0) selPlans.splice(i,1);
+  updBar();
+}
+function compareFirst(){selPlans=orderedPlans().filter(p=>!p._medigap).slice(0,3).map(p=>p.id);go(flowCompare);}
+
 async function flowResults(){
   prog(82); _inAllPlans=false;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
@@ -1279,8 +1552,8 @@ async function flowResults(){
   const age=getAge();
   let note='';
   if(age!==null){
-    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} a\u00F1os</strong> y es elegible ahora.`;
-    else{const ew=getEnrollmentWindow();if(ew&&leadOK())note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 ${lang==='en'?'Remind me':'Recu\u00E9rdeme'}</a>`:`Su inscripci\u00F3n abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">\u23F0 Recu\u00E9rdeme</a>`;}
+    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} años</strong> y es elegible ahora.`;
+    else{const ew=getEnrollmentWindow();if(ew&&leadOK())note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">⏰ ${lang==='en'?'Remind me':'Recuérdeme'}</a>`:`Su inscripción abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">⏰ Recuérdeme</a>`;}
   }
   // The ZIP resolved to no state or no county, so there are no plans to filter. The
   // old screen rendered the type filter, the sort bar and "No plans in this category.
@@ -1293,13 +1566,13 @@ async function flowResults(){
     wb().innerHTML = `${bk()}
       ${bm(msg
         ? (lang==='en' ? 'Let us try a different ZIP code, or call us and we will look it up with you.'
-                       : 'Probemos otro c\u00F3digo postal, o ll\u00E1menos y lo buscamos juntos.')
+                       : 'Probemos otro código postal, o llámenos y lo buscamos juntos.')
         : (lang==='en'
-            ? `We do not have plan data for <strong>${D.zip}</strong>. Check the ZIP code and try another, or call us and we will look it up with you.`
-            : `No tenemos datos de planes para <strong>${D.zip}</strong>. Verifique el c\u00F3digo postal y pruebe otro, o ll\u00E1menos y lo buscamos juntos.`))}
+            ? `We do not have plan data for <strong>${esc(D.zip)}</strong>. Check the ZIP code and try another, or call us and we will look it up with you.`
+            : `No tenemos datos de planes para <strong>${esc(D.zip)}</strong>. Verifique el código postal y pruebe otro, o llámenos y lo buscamos juntos.`))}
       ${msg?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:13px;color:#c00;text-align:center">${msg}</div>`:''}
       <div class="input-group zip-group">
-        <label for="zip-retry">${lang==='en'?'Try another ZIP code':'Pruebe otro c\u00F3digo postal'}</label>
+        <label for="zip-retry">${lang==='en'?'Try another ZIP code':'Pruebe otro código postal'}</label>
         <input class="input-field" type="tel" inputmode="numeric" id="zip-retry" maxlength="5" placeholder="${lang==='en'?'e.g. 90232':'ej. 90232'}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)" onkeydown="if(event.key==='Enter'){event.preventDefault();retryZip();}">
       </div>
       ${bp(lang==='en'?'Try again':'Intentar de nuevo','retryZip()')}
@@ -1312,85 +1585,97 @@ async function flowResults(){
   }
   const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`Plans in your area${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`:`Planes disponibles en su \u00E1rea${D.zip?' (<strong>'+D.zip+(D.county?', '+D.county:'')+'</strong>)':''}:`)}
+    ${resultsHead(plans)}
     ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
-    ${!D._zipValid && D.zip?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#c00">${lang==='en'?'We could not find plans for this ZIP code. Please check your ZIP and try again.':'No pudimos encontrar planes para este codigo postal. Por favor verifique e intente de nuevo.'}</div>`:''}
     ${unlicensedNote()}
-    ${typeFilterBar(PLANS)}
-    ${sortBar()}
-    ${noPlans?`<div style="text-align:center;padding:20px 0;color:#888;font-size:14px">${lang==='en'?'No plans in this category. Try a different type above.':'No hay planes en esta categoria. Pruebe otro tipo arriba.'}</div>`:''}
-    ${plans.slice(0,3).map((p,i)=>planCard(p,i)).join('')}
-    ${!noPlans&&leadOK()?bp(lang==='en'?'Help me choose':'Ay\u00FAdeme a elegir','go(helpChoose)'):''}
-    ${!noPlans?`<div style="text-align:center;margin-top:8px">
-      <button class="btn-s" onclick="go(flowCompare)">${lang==='en'?'Compare Side by Side':'Comparar Lado a Lado'}</button>
-    </div>`:''}
-    ${plans.length>3?`<div style="text-align:center;margin-top:6px"><button class="btn-ghost" onclick="go(allPlans)">${lang==='en'?'See all '+plans.length+' plans':'Ver los '+plans.length+' planes'}</button></div>`:''}
-    ${provenanceHTML()}
-    `;
+    ${noPlans?`<div style="text-align:center;padding:20px 0;color:#888;font-size:14px">${L('No plans of this type here. Choose another under "Show".','No hay planes de este tipo aquí. Elija otro en "Mostrar".')}</div>`:''}
+    ${listHTML(plans)}
+    ${cbarHTML()}
+    ${provenanceHTML()}`;
+  updBar();
 }
+// Kept for the "Back to all plans" link on the success screen: the same list, more of it shown.
+function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 
-function compareTableHTML(plans){
-  const rows=[
-    [yl('Monthly premium','Prima mensual'),...plans.map(p=>p._medigap?p._premiumRange:(p.premium===null?noInfo():usd(p.premium,true)))],
-    [yl('Max out-of-pocket','Máximo de bolsillo'),...plans.map(p=>p._medigap||p.cat==='PDP'?'-':(usd(p.moop)||noInfo()))],
-    [lang==='en'?'Drugs':'Medicinas',...plans.map(p=>p._medigap?(lang==='en'?'Separate Part D':'Parte D aparte'):drugLabel(p.drug,lang))],
-    [yl('Drug deductible','Deducible de medicinas'),...plans.map(p=>p.drug==='Included'?(usd(p.ded)||noInfo()):'-')],
-    [yl('Primary care','Médico primario'),...plans.map(p=>esc(p.pcp||'-'))],
-    [yl('Specialist','Especialista'),...plans.map(p=>esc(p.spec||'-'))],
-    [yl('Emergency room','Emergencias'),...plans.map(p=>esc(p.er||'-'))],
-    [yl('Urgent care','Urgencias'),...plans.map(p=>esc(p.urg||'-'))],
-    ...(anyBenefit(plans,['dental'])?[['Dental',...plans.map(p=>tier('d',p.dental)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['vision'])?[[lang==='en'?'Vision':'Visión',...plans.map(p=>tier('v',p.vision)||noInfo())]]:[]),
-    ...(anyBenefit(plans,['hearing'])?[[lang==='en'?'Hearing':'Audición',...plans.map(p=>tier('h',p.hearing)||noInfo())]]:[]),
-    [yl('OTC allowance','Asignación OTC'),...plans.map(p=>otcText(p.otc)||'-')],
-    [lang==='en'?'CMS rating':'Calificación CMS',...plans.map(p=>p._medigap?'-':rStar(p.rating))],
-  ];
-  let tbl=`<table class="compare-table"><thead><tr><th></th>`;
-  plans.forEach(p=>{tbl+=`<th>${esc(p.name.split('(')[0].trim())}</th>`;});
-  tbl+=`</tr></thead><tbody>`;
-  rows.forEach(r=>{tbl+=`<tr>`;r.forEach(c=>tbl+=`<td>${c}</td>`);tbl+=`</tr>`;});
-  return tbl+`</tbody></table>`;
-}
+// ── COMPARE (b9): up to 3 plans, same group order as the card, label column + plan columns,
+// "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 function flowCompare(){
   prog(88);
-  const plans=orderedPlans().slice(0,3);
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Side-by-side comparison:':'Comparación lado a lado:')}
-    <div style="overflow-x:auto;margin-bottom:10px">${compareTableHTML(plans)}</div>
-    ${provenanceHTML()}
-    ${leadOK()?bp(lang==='en'?'Help me choose':'Ayúdeme a elegir','go(helpChoose)'):''}
-    ${bs(lang==='en'?'Back to plans':'Volver a planes','back()')}`;
-}
-
-function customCompare(){
-  prog(88);
-  const plans=PLANS.filter(p=>selPlans.includes(p.id));
+  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
   if(plans.length<2){back();return;}
+  const off=b=>b==null?{t:noInfo(),off:true}:b;
+  const ma=p=>p.cat!=='PDP';
+  const R=[], grp=g=>R.push({g});
+  const row=(lab,cells,big)=>R.push({lab,cells,big});
+  const txt=v=>v==null?{t:noInfo(),off:true}:{t:v,off:false};
+  const dash={t:'–',off:true};
+  grp(L('Costs','Costos'));
+  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
+  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
+  if(plans.some(ma)){
+    grp(L('Visits','Consultas'));
+    [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
+      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
+    grp(L('Hospital and surgery','Hospital y cirugía'));
+    row(L('Inpatient hospital stay','Hospitalización'),plans.map(p=>ma(p)?txt(hospText(p.hosp,true)):dash));
+    row(L('Outpatient surgery (center)','Cirugía ambulatoria (centro)'),plans.map(p=>ma(p)?txt(money(p.asc)):dash));
+    row(L('Ground ambulance','Ambulancia terrestre'),plans.map(p=>ma(p)?txt(p.amb&&money(p.amb.ground)):dash));
+    row(L('Rides to appointments','Transporte a citas'),plans.map(p=>{if(!ma(p))return dash;const t=tripsText(p.trans,true);return t===null?{t:NOINC(),off:true}:txt(t);}));
+    grp(L('Extra benefits','Beneficios extra'));
+    row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
+    row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
+    row(L('Hearing aids','Audífonos'),plans.map(p=>ma(p)?off(hearingB(p,true)):dash));
+    row('OTC',plans.map(p=>ma(p)?off(otcB(p,true)):dash));
+    row(L('Fitness','Ejercicio'),plans.map(p=>ma(p)?off(fitB(p)):dash));
+  }
+  if(plans.some(p=>p.drug==='Included'&&p.tiers&&p.tiers.length)){
+    grp(L('Drugs (1 month, standard pharmacy)','Medicamentos (1 mes, farmacia estándar)'));
+    const ids=[...new Set(plans.flatMap(p=>(p.tiers||[]).map(t=>t.t)))].sort((a,b)=>a-b);
+    ids.forEach(n=>{
+      const named=plans.map(p=>(p.tiers||[]).find(t=>t.t===n)).find(Boolean);
+      const same=plans.every(p=>{const t=(p.tiers||[]).find(x=>x.t===n);return t&&named&&t.label===named.label;});
+      const lab=L('Tier ','Nivel ')+n+(same&&named?' · '+tierName(named):'');
+      row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
+    });
+  }
+  const body=R.map(r=>{
+    if(r.g) return `<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;
+    const same=r.cells.every(c=>c.t===r.cells[0].t);
+    return `<tr class="r${same?' same':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${!c.off&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+  }).join('');
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(shortPlan(p.name))}</th>`).join('')}</tr>`;
+  const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
+  const sanct=plans.some(p=>p.sanction);
   wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Your custom comparison:':'Su comparación personalizada:')}
-    <div style="overflow-x:auto;margin-bottom:10px">${compareTableHTML(plans)}</div>
-    ${provenanceHTML()}
-    ${leadOK()?bp(lang==='en'?'Help me choose':'Ayúdeme a elegir','go(helpChoose)'):''}
-    ${bs(lang==='en'?'Back to all plans':'Volver a todos los planes','back()')}`;
-}
-
-function allPlans(){
-  prog(85); _inAllPlans=true;
-  selPlans=[];
-  const plans=orderedPlans();
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?`All ${plans.length} plans:`:`Los ${plans.length} planes:`)}
-    <p style="font-size:12px;color:#888;margin-bottom:10px">${lang==='en'?'Tap the circle on any plans to compare them.':'Toque el círculo en los planes que quiera comparar.'}</p>
     ${unlicensedNote()}
-    ${typeFilterBar(PLANS)}
-    ${sortBar()}
-    ${plans.map((p,i)=>planCard(p,i,true)).join('')}
-    ${bp(lang==='en'?'Compare the first 3':'Comparar los primeros 3','go(flowCompare)')}
-    <div id="compareBar" class="compare-float" style="display:none">
-      <button class="btn-s" onclick="go(customCompare)">${lang==='en'?'Compare Selected':'Comparar Seleccionados'}</button>
+    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
+      <table><thead>${head}</thead><tbody>${body}</tbody></table>
+      ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
+      <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
+        :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
-    ${provenanceHTML()}`;
+    ${provenanceHTML()}
+    ${bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
+// Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
+// The full name is on every card; this is a label, not the plan's legal name.
+function shortPlan(n){
+  const s=String(n).replace(/\s*\(.*?\)\s*/g,' ').replace(/\bMedicare Advantage\b/gi,'').replace(/\bMedicare\b/gi,'').replace(/\bPlan\s*$/i,'').replace(/\s+/g,' ').trim();
+  return s||String(n);
+}
+function helpCompare(){
+  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(Boolean);
+  if(!plans.length||!plans.every(p=>p.agent)) return;
+  D.selectedPlan=L('Compared: ','Comparó: ')+plans.map(p=>p.name).join('; ');
+  D.selectedPlanId=plans.map(p=>p.id).join(';');
+  D.plansSeen=plans.map(planLeadTag).join(' | ');
+  D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
+  go(helpChoose);
+}
+// Old entry point kept so any saved history entry still lands somewhere sensible.
+function customCompare(){return flowCompare();}
+
 // Shown wherever plans are listed for a state we are not licensed in.
 function unlicensedNote(){
   if(!knownUnlicensed()) return '';
@@ -1411,7 +1696,8 @@ function planEnroll(){
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir',"submitLead('enroll')")}
+    ${bp(lang==='en'?'Help me decide':'Ay\u00FAdeme a decidir',"submitLead('enroll')")}
+    <p class="contact-line">${lang==='en'?'A licensed agent contacts you, at no cost, by WhatsApp, text or call.':'Una agente licenciada le contacta, sin costo, por WhatsApp, texto o llamada.'}</p>
     <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
       ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
     </p>`;
@@ -1426,7 +1712,8 @@ function helpChoose(){
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${bp(lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis',"submitLead('help')")}
+    ${bp(lang==='en'?'Get free consultation':'Obtener consulta gratis',"submitLead('help')")}
+    <p class="contact-line">${lang==='en'?'A licensed agent contacts you, at no cost, by WhatsApp, text or call.':'Una agente licenciada le contacta, sin costo, por WhatsApp, texto o llamada.'}</p>
     <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px">
       ${lang==='en'?'By submitting, you agree to be contacted by us.':'Al enviar, acepta que una de nosotras le contacte.'}
     </p>`;
@@ -1441,7 +1728,8 @@ function submitLead(type){
   if(!leadOK()){ go(flowResults); return; }   // information-only state: no lead capture (T-017)
   _submitting=true;
   const btn=document.querySelector('.btn-p:not(:disabled)');
-  if(btn){btn.disabled=true;btn.textContent=btn.textContent.includes('Obtener')?'Procesando...':'Processing...'}
+  const _btnLabel=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent=lang==='en'?'Processing...':'Procesando...'}
 
   const name=D.fullName||document.getElementById('fullName')?.value||'';
   const phone=D.phone||document.getElementById('phone')?.value||'';
@@ -1453,13 +1741,13 @@ function submitLead(type){
   if(!name.trim() || name.trim().length < 2){
     alert(lang==='en'?'Please enter your full name.':'Por favor ingrese su nombre completo.');
     _submitting=false;
-    if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
+    if(btn){btn.disabled=false;btn.textContent=_btnLabel}
     return;
   }
   if(phoneClean.length !== 10){
     alert(lang==='en'?'Please enter a valid 10-digit US phone number.':'Por favor ingrese un n\u00FAmero de tel\u00E9fono v\u00E1lido de 10 d\u00EDgitos (EE.UU.).');
     _submitting=false;
-    if(btn){btn.disabled=false;btn.textContent=btn.textContent.includes('cesando')?lang==='en'?'Help Me Decide':'Ay\u00FAdeme a Decidir':lang==='en'?'Get Free Consultation':'Obtener Consulta Gratis'}
+    if(btn){btn.disabled=false;btn.textContent=_btnLabel}
     return;
   }
   D.fullName=name;D.phone=phone;D.email=email;
@@ -1501,7 +1789,7 @@ function submitLead(type){
       const fd=new FormData();
       fd.append('name',D.fullName);fd.append('phone',D.phone);
       fd.append('email',D.email||'N/A');fd.append('_subject','New Medicare Lead - '+D.source);
-      fd.append('message','Type: '+D.leadType+' | ZIP: '+(D.zip||'N/A')+' | County: '+(D.county||'N/A')+' | Age: '+(D.age||'N/A')+' | Conditions: '+(D.conditions||[]).join(', ')+' | Lang: '+D.lang+' | Question: '+(D.question||'N/A'));
+      fd.append('message','Type: '+D.leadType+' | ZIP: '+(D.zip||'N/A')+' | County: '+(D.county||'N/A')+' | Age: '+(D.age||'N/A')+' | Conditions: '+(D.conditions||[]).join(', ')+' | Lang: '+D.lang+' | Plans seen: '+(D.plansSeen||'N/A')+' | Question: '+(D.question||'N/A'));
       fetch('https://formsubmit.co/ajax/brizuela@gmail.com',{method:'POST',body:fd})
         .then(()=>console.log('[Widget] Email fallback sent'))
         .catch(()=>console.warn('[Widget] Email fallback also failed'));

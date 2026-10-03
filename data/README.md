@@ -6,7 +6,7 @@ Central data folder for all plan data used by the widget (widget-v4.html).
 
 ### plans_{STATE}_2027.json (56 files)
 Every MA, SNP, Cost and PDP plan CMS lists for 2027, one file per state/territory, ~5.6 MB total
-(California 363 KB, 25 KB compressed). Built from the CMS CY2027 Landscape (data last updated
+(California 515 KB, 33 KB compressed). Built from the CMS CY2027 Landscape (data last updated
 09/22/2026) and CMS PBP Benefits 2027 (released 2026-10-01) by
 `SHIP/reference/tools/build-plan-data-2027.py`, which lives OUTSIDE this repo because repo-root
 files are served publicly. Checked against the raw CMS files by `spot-check-plan-data-2027.py`
@@ -15,6 +15,13 @@ files are served publicly. Checked against the raw CMS files by `spot-check-plan
 - Plan fields: id, name, org, parent (CMS parent organization), cat, type, snp, drug, prem, partc,
   partd, dded (Part D deductible), moop, stars (null until CMS publishes 2027 ratings), sanction,
   pcp, spec, er, urg, dental, vision, hearing, otc, tiers, dbt (Part D benefit type).
+- Card detail added 2026-10-02 (T-017 b3-b7, b6b), all from PBP 2027: hosp (inpatient 1a: per stay,
+  per-day intervals, or Original Medicare cost share), ohosp (9a), asc (9b), amb {ground, air} (10a),
+  trans (10b rides; false = not offered), fit (14c4 fitness), dent {prev, comp, pmax, cmax} (16b/16c),
+  vis {exam, exam_cs, wear, wmax} (17a/17b), hear {exam, exam_cs, aids, amax{amt,per,ear}, acopay} (18a/18b),
+  ins (insulin 1-month cap), noded (tiers the drug deductible skips). Each tier: v = standard pharmacy,
+  p = preferred pharmacy when the plan has a preferred network. Dollar maximums carry CMS's period;
+  no amount in the file = no amount shown.
 - The ZIP -> county map is the 2026 one, reused. Known gaps: backlog D-054.
 - Every PBP field for every plan is kept outside the repo in
   `SHIP/now/2027-plan-data/pbp-full/` (34 MB, internal tools only).
