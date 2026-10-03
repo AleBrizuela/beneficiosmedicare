@@ -344,8 +344,14 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 /* T-017 b13-b18 (AB 2026-10-02): list card, plain ZIP line, filter pills, sort menu, team card,
    lighter numbers, empty states. Source of truth: DECIDE/now/2026-10-02_widget-2027-results-mockup.html.
    Colours stay the widget's theme variables (BM teal, MC blue), as in the first build. */
-.pc .ls{padding:12px 14px 4px}
-.pc .lh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#3b4650;margin:0 0 2px}
+.pc .ls{padding:0 14px 4px}
+/* b19 (AB 2026-10-03): each section header is a full-width light-grey band, like the compare table */
+.pc .lh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#3b4650;margin:0 -14px 4px;padding:8px 14px;background:#f3f5f7;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
+.pc-head{border-bottom:0}
+.pc details{margin-top:0}
+.pc .nodet{font-size:13px;color:#56616a;margin:6px 0 0;line-height:1.4}
+.rh .elig{font-size:13.5px;color:#2b3640;margin:0 0 8px;line-height:1.45}
+.rh .elig a{color:var(--sage-dark);font-weight:600;white-space:nowrap}
 .pc svg.hi,.pc svg.ri{width:16px;height:16px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
 .pc svg.ri{margin-right:8px}
 .pc svg.ri.off{stroke:#9aa5ae}
@@ -972,7 +978,7 @@ function getAge(){
 function getEnrollmentWindow(){
   const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
   if(!m||!d||!y||y<1900||y>2010)return null;
-  let iepMonth=m-3, iepYear=y+65;
+  let iepMonth=m-3-(d===1?1:0), iepYear=y+65;
   if(iepMonth<=0){iepMonth+=12;iepYear--;}
   if(iepMonth<1||iepMonth>12)return null;
   return {month:iepMonth, year:iepYear};
@@ -1349,7 +1355,7 @@ function hearingB(p,short){
 }
 function otcB(p,short){
   const o=p.otc; if(!o) return null;
-  if(o.has) return {t:o.amt!=null?(short?'':'<b>')+usd(o.amt)+perw(o.per)+(short?'':'</b>'):L('Included','Incluido'),off:false};
+  if(o.has) return o.amt!=null?{t:(short?'':'<b>')+usd(o.amt)+perw(o.per)+(short?'':'</b>'),off:false}:{t:L('No allowance','Sin asignación'),off:true};
   return {t:o.optional?OPTX():NOINC(),off:true};
 }
 function fitB(p){
@@ -1414,7 +1420,8 @@ function hearingL(p){
 }
 function otcL(p){
   const o=p.otc; if(!o) return null;
-  if(o.has) return V(o.amt!=null?usd(o.amt)+per2(o.per):L('Included','Incluido'));
+  // b20: "yes" with no dollar allowance = items only (nicotine patches, naloxone): never shown as included.
+  if(o.has) return o.amt!=null?V(usd(o.amt)+per2(o.per)):V(L('No allowance','Sin asignación'),'',true);
   return o.optional?V(OPTX(),'',true):OFF();
 }
 function fitL(p){
@@ -1454,6 +1461,8 @@ function lrow(label,v,icon){
   else{cls=off?'off':(/^\$0(?:\.00)?(?:$|\/| por | per )/.test(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
   return `<div class="lr"><span class="ll">${ic}${label}</span><span class="lv${cls?' '+cls:''}">${txt}${v&&v.sub?`<span class="lsub">${v.sub}</span>`:''}</span></div>`;
 }
+// b20: true when every value in a section is missing from the CMS file (null), so the section shows nothing real.
+function allNull(vals){return vals.every(v=>v==null);}
 function lsec(icon,title,rows,cls){return `<div class="ls${cls?' '+cls:''}"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}</div>${rows}</div>`;}
 
 const TIER_ES={'Preferred Generic':'Genérico preferido','Generic':'Genérico','Preferred Brand':'Marca preferida',
@@ -1468,7 +1477,7 @@ function tiersHTML(p){
   if(p.drug!=='Included') return lsec('drug',L('Drugs','Medicamentos'),`<p class="nod">${L('This plan does not include drug coverage (Part D).','Este plan no incluye medicamentos (Parte D).')}</p>`);
   const t=p.tiers||[];
   if(!t.length){
-    const msg=p.dbt==='1'?L('Standard Part D benefit, no tiers.','Beneficio estándar de la Parte D, sin niveles.'):`<i>${noInfo()}</i>`;
+    const msg=p.dbt==='1'?L('Medicare standard design: 25% after the deductible.','Diseño estándar de Medicare: 25% después del deducible.'):`<i>${noInfo()}</i>`;
     return lsec('drug',L('Drugs','Medicamentos'),`<p class="nod">${msg}</p>`);
   }
   const two=t.some(x=>x.p!=null);
@@ -1521,31 +1530,39 @@ function planCard(p,selectable){
   let rows=lrow(L('Monthly premium','Prima mensual'),prem);
   if(isMA) rows+=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
   rows+=lrow(L('Drug deductible','Deducible de medicamentos'),ded);
-  let body=lsec('cost',L('Costs','Costos'),rows,'cost'), more='';
+  let body=lsec('cost',L('Costs','Costos'),rows,'cost'), more='', gap=false;
   if(isMA){
-    body+=lsec('visits',L('Visits','Consultas'),
-      lrow(L('Primary doctor','Médico primario'),vz(p.pcp))+lrow(L('Specialist','Especialista'),vz(p.spec))+
-      lrow(L('Emergency room','Emergencias'),vz(p.er))+lrow(L('Urgent care','Urgencias'),vz(p.urg)));
-    body+=lsec('star',L('Extra benefits','Beneficios extra'),
-      lrow('Dental',dentalL(p),'dental')+lrow(L('Eyewear','Anteojos'),visionL(p),'vision')+lrow(L('Hearing aids','Audífonos'),hearingL(p),'hearing')+
-      lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),otcL(p),'otc')+lrow(L('Fitness','Ejercicio'),fitL(p),'fit'));
+    const vis=[vz(p.pcp),vz(p.spec),vz(p.er),vz(p.urg)];
+    if(allNull(vis)) gap=true;
+    else body+=lsec('visits',L('Visits','Consultas'),
+      lrow(L('Primary doctor','Médico primario'),vis[0])+lrow(L('Specialist','Especialista'),vis[1])+
+      lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]));
+    const ext=[dentalL(p),visionL(p),hearingL(p),otcL(p),fitL(p)];
+    if(allNull(ext)) gap=true;
+    else body+=lsec('star',L('Extra benefits','Beneficios extra'),
+      lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+
+      lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+lrow(L('Fitness','Ejercicio'),ext[4],'fit'));
     const amb=p.amb||{};
-    more=lsec('hosp',L('Hospital and surgery','Hospital y cirugía'),
-      lrow(L('Inpatient hospital stay','Hospitalización'),hospL(p.hosp))+
-      lrow(L('Ambulatory surgical center','Centro de cirugía ambulatoria'),vz(p.asc))+
-      lrow(L('Outpatient hospital','Hospital ambulatorio'),vz(p.ohosp))+
-      lrow(L('Ground ambulance','Ambulancia terrestre'),vz(amb.ground))+
-      lrow(L('Air ambulance','Ambulancia aérea'),vz(amb.air))+
-      lrow(L('Rides to medical appointments','Transporte a citas médicas'),tripsL(p.trans)));
+    const hs=[hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)];
+    if(allNull(hs)) gap=true;
+    else more=lsec('hosp',L('Hospital and surgery','Hospital y cirugía'),
+      lrow(L('Inpatient hospital stay','Hospitalización'),hs[0])+
+      lrow(L('Ambulatory surgical center','Centro de cirugía ambulatoria'),hs[1])+
+      lrow(L('Outpatient hospital','Hospital ambulatorio'),hs[2])+
+      lrow(L('Ground ambulance','Ambulancia terrestre'),hs[3])+
+      lrow(L('Air ambulance','Ambulancia aérea'),hs[4])+
+      lrow(L('Rides to medical appointments','Transporte a citas médicas'),hs[5]));
   }
-  more+=tiersHTML(p);
+  if(p.drug==='Included'&&!(p.tiers&&p.tiers.length)&&p.dbt!=='1') gap=true;
+  else more+=tiersHTML(p);
   const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
       <div class="pc-meta">${esc(p.type)} <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
-      <div class="pc-rating">${rStar(p.rating)}</div></div>
+      <div class="pc-rating">${rStar(p.rating)}</div>
+      ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
     ${body}
-    <details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>
+    ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
     <div class="pc-foot">${planAction(p)}</div></div>`;
 }
 
@@ -1647,9 +1664,31 @@ function resultsHead(list){
       </form></div>
     <p class="zerr" id="zerr"></p>
     <p class="t1">${what}${where}</p>
+    ${eligLine()}
     ${pillsHTML()}
     ${sortHTML()}
   </div>`;
+}
+// b21 (AB 2026-10-03): one line under the ZIP line, ONLY for someone turning 65 by the birth date
+// they gave; never their age. Window = 3 months before the 65th-birthday month to 3 months after; a
+// birthday on the 1st moves it one month earlier. Before it opens: the date + "Recordarme entonces"
+// (the reminder step, only where we may take a lead). Inside it: "Puede inscribirse ahora." Past it, or
+// anyone else: nothing.
+function iepWindow(){
+  const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
+  if(!m||!d||!y||y<1900) return null;
+  const sh=d===1?1:0;
+  return {start:new Date(y+65,m-1-3-sh,1), end:new Date(y+65,m-1+4-sh,0)};
+}
+function eligLine(){
+  const w=iepWindow(), age=getAge(); if(!w||age===null||age<64||age>66) return '';
+  const now=new Date();
+  if(now>w.end) return '';
+  const howTo=leadSite()==='medicare-california'?'https://medicare-california.com/how-to-enroll-medicare-california':'https://beneficiosmedicare.com/como-inscribirse-medicare';
+  if(now>=w.start) return `<p class="elig">${L('You can enroll now.','Puede inscribirse ahora.')} <a href="${howTo}" target="_top">${L('How to enroll','Cómo inscribirse')}</a></p>`;
+  const dt=w.start.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
+  const remind=leadOK()?` <a href="#" onclick="event.preventDefault();go(snoozeStep)">${L('Remind me then','Recordarme entonces')}</a>`:'';
+  return `<p class="elig">${L(`You can enroll starting ${dt}.`,`Puede inscribirse a partir del ${dt}.`)}${remind}</p>`;
 }
 function zipEdit(){const z=document.getElementById('zl');if(!z)return;z.classList.add('edit');const i=document.getElementById('zin');if(i){i.value='';i.focus();}}
 // "Cambiar" changes the ZIP without leaving the results. A ZIP we have no plans for keeps the
@@ -1723,11 +1762,6 @@ async function flowResults(){
   const plans=orderedPlans();
   D.conditions=[...selConds];
   const age=getAge();
-  let note='';
-  if(age!==null){
-    if(age>=65)note=lang==='en'?`You are <strong>${age}</strong> and eligible now.`:`Tiene <strong>${age} años</strong> y es elegible ahora.`;
-    else{const ew=getEnrollmentWindow();if(ew&&leadOK())note=lang==='en'?`Your enrollment opens <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">⏰ ${lang==='en'?'Remind me':'Recuérdeme'}</a>`:`Su inscripción abre <strong>${monthName(ew.month)} ${ew.year}</strong>. <a href="#" onclick="event.preventDefault();go(snoozeStep)" style="color:var(--sage);font-weight:600;text-decoration:underline;white-space:nowrap">⏰ Recuérdeme</a>`;}
-  }
   // The ZIP resolved to no state or no county, so there are no plans to filter. The
   // old screen rendered the type filter, the sort bar and "No plans in this category.
   // Try a different type above." -- advice that cannot work, on the only lead form,
@@ -1760,7 +1794,6 @@ async function flowResults(){
   const noPlans=plans.length===0;
   wb().innerHTML=`${bk()}
     ${resultsHead(plans)}
-    ${note?ic(lang==='en'?'Your eligibility':'Su elegibilidad',note):''}
     ${unlicensedNote()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#66727c;font-size:14px">${L('No plans of this type here. Choose another type above.','No hay planes de este tipo aquí. Elija otro tipo arriba.')}</div>`:''}
     ${listHTML(plans)}
