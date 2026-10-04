@@ -1008,6 +1008,11 @@ function parseDob(){
 
 
 // ── AGE / ENROLLMENT CALC ──
+function monthsPast65(){
+  const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year; if(!m||!d||!y) return null;
+  const b=new Date(y+65,m-1,d), n=new Date();
+  return (n.getFullYear()-b.getFullYear())*12+(n.getMonth()-b.getMonth())-(n.getDate()<b.getDate()?1:0);
+}
 function getAge(){
   const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
   if(!m||!d||!y)return null;
@@ -1162,6 +1167,9 @@ function ft_eligibility(){
     return;
   }
   if(age>=65){
+    /* T-031 (AB 2026-10-03): this screen is for people who just turned 65. From 65 years and 7 months on, skip it and
+       go straight to the doctor question: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
+    if(monthsPast65()>6){ go(ft_docAsk); return; }
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
       ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
