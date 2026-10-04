@@ -654,6 +654,91 @@ html body .t31-bar{display:none}
   html body.t31-kb .t31-bar{display:none}
   html body .section-nav,html body .wa-float{display:none!important}
 }
+
+/* T-031 (b), AB 2026-10-03: a shorter home on phones, a "Continuar" button in the bottom bar while the
+   plan finder asks its questions, and a thin navy block from question 2 on. Content is kept in the page
+   (Google still reads it); on phones it is laid out as compact rows instead of tall stacked cards. */
+html body .t31-bar .t31-next{display:none}
+html body .t31-rating{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;margin:0 auto;max-width:640px;
+  font-size:18px;line-height:1.5;color:var(--t31-ink);text-align:center}
+html body .t31-rating .t31-stars{color:#F5A623;letter-spacing:2px;font-size:20px}
+html body .t31-rating a{color:var(--t31-brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:8px 4px}
+html body details.t31-cities>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;
+  margin:16px auto 0;padding:12px 18px;max-width:420px;border:2px solid #D4DEE8;border-radius:12px;background:#fff;color:var(--t31-ink);font-weight:700;font-size:17px}
+html body details.t31-cities>summary::-webkit-details-marker{display:none}
+html body details.t31-cities>summary::after{content:"";width:9px;height:9px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg);margin-top:-4px}
+html body details.t31-cities[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+html body details.t31-cities>summary h3{margin:0!important;font-size:inherit!important;color:inherit!important;font-weight:inherit!important}
+html body details.t31-cities[open]>summary{margin-bottom:16px}
+
+@media (max-width:768px){
+  /* top of page */
+  html body .t31-checks{display:none!important}
+  html body .t31-band{padding:20px 18px 32px!important}
+  html body.t31-thin .t31-band{padding:14px 18px 36px!important}
+  html body.t31-thin .t31-band h1{font-size:22px!important;margin:0!important}
+  html body.t31-thin .t31-band p{display:none!important}
+
+  /* bottom bar while the plan finder asks questions */
+  html body.t31-q .t31-bar>a{display:none!important}
+  html body.t31-q .t31-bar .t31-next{display:flex}
+  html body.t31-qn .t31-bar{display:none!important}
+  html body .t31-bar .t31-next{flex:1 1 auto;height:58px;margin:0;padding:0 16px;display:none;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;
+    border:2px solid var(--t31-brand);border-radius:12px;background:var(--t31-brand);color:#fff;cursor:pointer;
+    font:700 18px/1 'Open Sans',-apple-system,'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+  html body.t31-q .t31-bar .t31-next{display:flex}
+  html body .t31-bar .t31-next[disabled]{opacity:.45;cursor:default}
+  html body .t31-bar .t31-next:focus-visible{outline:3px solid #FFB300;outline-offset:2px}
+  html body .mobile-sticky-cta{display:none!important}
+
+  /* every compressed section */
+  html body .t31-sec{padding-top:36px!important;padding-bottom:36px!important;padding-left:18px!important;padding-right:18px!important}
+  html body .t31-sec h2,html body .t31-sec .section-title{font-size:24px!important;line-height:1.25!important;margin-bottom:8px!important}
+  html body .t31-sec .section-label{margin-bottom:6px!important}
+  html body .t31-sec .t31-hd{margin-bottom:16px!important}
+
+  /* Así funciona / How it works: three compact rows */
+  html body .t31-how>div{padding:0!important}
+  html body .t31-how .steps-grid,html body .t31-how .steps{display:block!important;margin:0!important}
+  html body .t31-how .steps-grid>div,html body .t31-how .step{display:grid!important;grid-template-columns:52px 1fr;column-gap:14px;align-items:start;
+    text-align:left!important;padding:12px 0!important;margin:0!important;max-width:none!important;border:0!important;background:none!important;box-shadow:none!important}
+  html body .t31-how .steps-grid>div>div:first-child,html body .t31-how .step-icon{grid-row:1/3;width:52px!important;height:52px!important;margin:0!important}
+  html body .t31-how .steps-grid>div>div:first-child>div:last-child,html body .t31-how .step-badge{width:22px!important;height:22px!important;top:-4px!important;right:-4px!important;font-size:12px!important}
+  html body .t31-how .step-arrow{display:none!important}
+  html body .t31-how h3,html body .t31-how h4{font-size:18px!important;margin:2px 0 4px!important;text-align:left!important}
+  html body .t31-how .steps-grid p,html body .t31-how .step p{font-size:16px!important;line-height:1.5!important;margin:0!important;text-align:left!important}
+
+  /* Tipos de planes / plan types, and MC's "why us": icon + text rows */
+  html body .t31-plans>p:first-of-type{display:none!important}
+  html body .t31-plans .plans-grid,html body .t31-why .cards-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;max-width:none!important;margin:12px 0 0!important}
+  html body .t31-plans .plans-grid>*,html body .t31-why .cards-grid>*{display:grid!important;grid-template-columns:40px 1fr;column-gap:12px;align-items:start;
+    text-align:left!important;padding:14px 16px!important;height:auto!important;margin:0!important}
+  html body .t31-plans .plans-grid>*>:first-child,html body .t31-why .cards-grid>*>:first-child{grid-row:1/4;font-size:28px!important;line-height:1!important;
+    width:40px!important;height:40px!important;margin:0!important;display:flex;align-items:center;justify-content:center}
+  html body .t31-plans h3,html body .t31-why h3{font-size:18px!important;margin:0 0 2px!important;text-align:left!important}
+  html body .t31-plans .plans-grid p,html body .t31-why .cards-grid p{font-size:16px!important;line-height:1.5!important;margin:0!important;text-align:left!important}
+
+  /* Quiénes somos / team: one photo, names and roles; bios stay on the team page */
+  html body .t31-team>p:first-of-type{margin-bottom:12px!important}
+  html body .t31-team .team-photo-banner{margin:0 auto 12px!important;max-width:none!important}
+  html body .t31-team .team-photo-banner img{width:100%!important;height:200px!important;object-fit:cover;border-radius:12px}
+  html body .t31-team .team-card-photo,html body .t31-team .team-bio,html body .t31-team .credentials,html body .t31-team .team-creds{display:none!important}
+  html body .t31-team .team-grid,html body .t31-team .team-cards{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:0!important}
+  html body .t31-team .team-card{padding:14px 12px!important;margin:0!important;text-align:center}
+  html body .t31-team .team-card h3{font-size:17px!important;margin:0 0 4px!important}
+  html body .t31-team .team-card .role,html body .t31-team .team-card .team-role{font-size:14px!important;margin:0!important}
+  html body .t31-team>p:last-of-type{margin-top:8px!important}
+
+  /* states and cities: chips; the city list sits behind a toggle (links stay in the page) */
+  html body .t31-chips{display:flex!important;flex-wrap:wrap;justify-content:center;gap:8px!important;margin:0 auto 12px!important}
+  html body .t31-chips>*{padding:8px 12px!important;font-size:15px!important;gap:6px!important}
+  html body .t31-chips svg{display:none}
+  html body .t31-states .t31-hd p,html body .t31-citysec>div>p[data-i18n="cities-sub"]{display:none}
+
+  /* FAQ: same questions, tighter */
+  html body .t31-faq .faq-item,html body .t31-faq .accordion-item{margin-bottom:8px!important}
+  html body .t31-faq .faq-question,html body .t31-faq .accordion-header{padding:16px 18px!important;font-size:17px!important;min-height:56px}
+}
 </style>
 </head>
 
@@ -767,9 +852,9 @@ html body .t31-bar{display:none}
   </div>
 
   <!-- 3-STEP PROCESS -->
-  <section class="how-it-works" id="como-funciona" style="padding:56px 24px 72px;background:#FBF8F3">
+  <section class="how-it-works t31-sec t31-how" id="como-funciona" style="padding:56px 24px 72px;background:#FBF8F3">
     <div style="max-width:960px;margin:0 auto;padding:0 1.5rem">
-      <div style="margin-bottom:64px;text-align:center">
+      <div class="t31-hd" style="margin-bottom:64px;text-align:center">
         <div class="section-label" style="color:var(--green)">HOW IT WORKS</div>
         <h2 class="section-title">Simple as 1, 2, 3</h2>
         <p style="color:var(--gray);font-size:1.05rem;max-width:500px;margin:12px auto 0;text-align:center">No forms. No confusion. No pressure.</p>
@@ -804,7 +889,7 @@ html body .t31-bar{display:none}
   </section>
 
   <!-- Plan Types Section -->
-  <section style="padding:56px 24px;max-width:900px;margin:0 auto">
+  <section class="t31-sec t31-plans" style="padding:56px 24px;max-width:900px;margin:0 auto">
     <div class="section-label">PLAN TYPES</div>
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">Understand Your Medicare Options</h2>
     <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:620px;margin-left:auto;margin-right:auto">There are several kinds of Medicare plan, each with different coverage, costs and benefits. We help you work out which one suits you.</p>
@@ -833,10 +918,10 @@ html body .t31-bar{display:none}
   </section>
 
   <!-- Team Section -->
-  <section id="equipo" style="padding:56px 24px;max-width:900px;margin:0 auto">
+  <section id="equipo" class="t31-sec t31-team" style="padding:56px 24px;max-width:900px;margin:0 auto">
     <div class="section-label">WHO WE ARE</div>
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">The Family Behind Your Guidance</h2>
-    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">We are a mother-and-daughter team of licensed agents. We help you find the right plan, in English or Spanish.</p>
+    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">We are a family of licensed agents. We help you find your plan, in Spanish or English.</p>
 
     <div class="team-photo-banner">
       <picture>
@@ -909,41 +994,14 @@ html body .t31-bar{display:none}
   </section>
 
   <!-- TESTIMONIALS -->
-  <section id="testimonios" style="padding:60px 24px;background:white">
+  <section id="testimonios" class="t31-sec t31-reviews" style="padding:60px 24px;background:white">
     <div class="container" style="max-width:960px">
-      <div style="text-align:center;margin-bottom:40px">
+      <div class="t31-hd" style="text-align:center;margin-bottom:24px">
         <div class="section-label" style="color:var(--green)">TESTIMONIALS</div>
         <h2 class="section-title">What Our Clients Say</h2>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px">
-        <!-- Testimonial 1 -->
-        <div style="background:var(--lt-gray);border-radius:16px;padding:28px;border-left:4px solid #007B40">
-          <div style="color:#F5A623;font-size:18px;margin-bottom:12px;letter-spacing:2px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p style="font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:16px;font-style:italic">"Susana explained everything patiently. She found a plan that covers my prescriptions and my doctor. I paid nothing extra."</p>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:40px;height:40px;border-radius:50%;background:#007B40;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px">M</div>
-            <div><div style="font-weight:700;font-size:14px;color:var(--navy)">Maria G.</div><div style="font-size:12px;color:var(--gray)">Los Angeles, CA</div></div>
-          </div>
-        </div>
-        <!-- Testimonial 2 -->
-        <div style="background:var(--lt-gray);border-radius:16px;padding:28px;border-left:4px solid #007B40">
-          <div style="color:#F5A623;font-size:18px;margin-bottom:12px;letter-spacing:2px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p style="font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:16px;font-style:italic">"My mother does not speak English and was afraid to switch plans. Alejandra helped her in Spanish, and now she pays less for better coverage."</p>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:40px;height:40px;border-radius:50%;background:#2E6BA4;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px">R</div>
-            <div><div style="font-weight:700;font-size:14px;color:var(--navy)">Roberto L.</div><div style="font-size:12px;color:var(--gray)">Miami, FL</div></div>
-          </div>
-        </div>
-        <!-- Testimonial 3 -->
-        <div style="background:var(--lt-gray);border-radius:16px;padding:28px;border-left:4px solid #007B40">
-          <div style="color:#F5A623;font-size:18px;margin-bottom:12px;letter-spacing:2px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p style="font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:16px;font-style:italic">"They compared 5 plans for my husband and found one with dental and vision included. They are like family."</p>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:40px;height:40px;border-radius:50%;background:#007B7B;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px">C</div>
-            <div><div style="font-weight:700;font-size:14px;color:var(--navy)">Carmen D.</div><div style="font-size:12px;color:var(--gray)">Houston, TX</div></div>
-          </div>
-        </div>
-      </div>
+      <!-- T-031: the real Google rating instead of unverified quotes (D-068). Update the count every Monday from the Business Profile. -->
+      <p class="t31-rating"><span class="t31-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong>5.0 on Google · 9 reviews</strong> <a href="https://maps.app.goo.gl/wfbQjcZ2C4wkN5E99" target="_blank" rel="noopener">Read the reviews &rarr;</a></p>
     </div>
   </section>
 
@@ -957,14 +1015,14 @@ html body .t31-bar{display:none}
 
 
   <!-- States Section -->
-  <section id="estados-section" style="padding:60px 24px;background:var(--lt-green)">
+  <section id="estados-section" class="t31-sec t31-states" style="padding:60px 24px;background:var(--lt-green)">
     <div class="container" style="max-width:900px">
-      <div style="margin-bottom:32px;text-align:center">
+      <div class="t31-hd" style="margin-bottom:32px;text-align:center">
         <div class="section-label" style="color:var(--green);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px">NATIONWIDE COVERAGE</div>
         <h2 style="font-size:2rem;font-weight:700;color:var(--navy);line-height:1.3">We Serve 9 States</h2>
         <p style="color:var(--text);margin-top:12px;font-size:1rem">Licensed, bilingual agents ready to help you, wherever you live.</p>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:700px;margin:0 auto 24px">
+      <div class="t31-chips" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:700px;margin:0 auto 24px">
         <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:white;border-radius:10px;color:var(--navy);font-weight:600;border:1px solid #E0E0E0"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Arizona</div>
         <a href="/estados/california" style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:white;border-radius:10px;text-decoration:none;color:var(--navy);font-weight:600;border:1px solid #E0E0E0;transition:all 0.2s"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> California</a>
         <a href="/estados/texas" style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:white;border-radius:10px;text-decoration:none;color:var(--navy);font-weight:600;border:1px solid #E0E0E0;transition:all 0.2s"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Texas</a>
@@ -977,9 +1035,9 @@ html body .t31-bar{display:none}
       </div>
       <div style="text-align:center"><a href="/estados/" style="color:var(--green);font-weight:600;text-decoration:none;font-size:0.95rem">See all states →</a></div>
 
-      <!-- California Cities subsection -->
-      <div style="margin-top:40px;padding-top:32px;border-top:1px solid rgba(0,123,64,0.15)">
-        <h3 style="font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:6px">Cities in California</h3>
+      <!-- California Cities subsection (T-031: behind a toggle on phones, open on desktop; every link stays in the page) -->
+      <details class="t31-cities">
+        <summary><h3 style="font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:6px">Cities in California</h3></summary>
         <p style="color:var(--gray);font-size:0.9rem;margin-bottom:20px">Personalized Medicare help in your city.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;max-width:700px;margin:0 auto 16px">
           <a href="/california/cities/los-angeles" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:white;border-radius:8px;text-decoration:none;color:var(--navy);font-weight:600;font-size:0.88rem;border:1px solid #E0E0E0;transition:all 0.2s"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Los Angeles</a>
@@ -1008,14 +1066,14 @@ html body .t31-bar{display:none}
           <a href="/california/cities/del-rey" style="padding:8px 12px;background:white;border-radius:6px;text-decoration:none;color:var(--navy);font-weight:500;font-size:0.82rem;border:1px solid #E0E0E0;transition:all 0.2s">Del Rey</a>
         </div>
         <a href="/california/cities/" style="color:var(--green);font-weight:600;text-decoration:none;font-size:0.9rem">See every city in California →</a>
-      </div>
+      </details>
     </div>
   </section>
 
   <!-- FAQ Section -->
-  <section id="preguntas" style="padding:60px 24px;background:white">
+  <section id="preguntas" class="t31-sec t31-faq" style="padding:60px 24px;background:white">
     <div class="container" style="max-width:900px">
-      <div style="margin-bottom:48px;text-align:center">
+      <div class="t31-hd" style="margin-bottom:48px;text-align:center">
         <div class="section-label" style="color:var(--green);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px">FREQUENTLY ASKED QUESTIONS</div>
         <h2 style="font-size:2.2rem;font-weight:700;color:var(--navy);line-height:1.3">The questions we hear all the time</h2>
       </div>
@@ -1473,7 +1531,31 @@ function toggleMobile() {
 })();
 </script>
 <!-- T-031 contact bar (phones only) -->
-<nav class="t31-bar" aria-label="Contact"><a class="t31-fill" href="tel:+13105979142"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Call</span></a><a class="t31-line" href="https://wa.me/13105979142?text=Hi%2C%20I%20need%20help%20with%20Medicare" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>WhatsApp</span></a></nav>
+<nav class="t31-bar" aria-label="Contact"><a class="t31-fill" href="tel:+13105979142"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Call</span></a><a class="t31-line" href="https://wa.me/13105979142?text=Hi%2C%20I%20need%20help%20with%20Medicare" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>WhatsApp</span></a><button type="button" class="t31-next"><span>Continue</span> &rarr;</button></nav>
 <script>/* T-031: the bottom contact bar steps aside while the on-screen keyboard is open, so it never sits over a field being typed in, on this page or inside the plan finder. Pinch-zoom is not mistaken for a keyboard. */(function(){var v=window.visualViewport;if(!v)return;function f(){document.body.classList.toggle('t31-kb',v.scale<1.05&&v.height<window.innerHeight*0.75)}v.addEventListener('resize',f);})();</script>
+<script>/* T-031 (b): what the bottom bar and the navy block show while the plan finder is open. The widget reports
+each screen (widget-step). Question 1 and the plans keep the contact buttons; from question 2 on, one big Continuar
+presses the widget's own next button, and a screen with no next button (tap an answer) hides the bar. */
+(function(){
+  var bar=document.querySelector('.t31-bar'), next=bar&&bar.querySelector('.t31-next'), frame=document.getElementById('widget-frame');
+  if(!bar||!next||!frame) return;
+  var OK=/^https:\/\/((www\.)?beneficiosmedicare\.com|([a-z0-9-]+\.)?beneficiosmedicare\.pages\.dev)$/, b=document.body, label=next.querySelector('span');
+  window.addEventListener('message',function(e){
+    if(!OK.test(e.origin)||!e.data||e.data.type!=='widget-step') return;
+    var d=e.data, q=!d.results&&d.depth>=2;
+    b.classList.toggle('t31-thin',q);
+    b.classList.toggle('t31-q',q&&!!d.hasNext);
+    b.classList.toggle('t31-qn',q&&!d.hasNext);
+    if(d.label) label.textContent=d.label;
+    next.disabled=!!d.disabled;
+  });
+  next.addEventListener('click',function(){
+    if(next.disabled) return;
+    try{frame.contentWindow.postMessage({type:'widget-next'},new URL(frame.src,location.href).origin);}catch(err){}
+  });
+})();
+/* desktop shows the city list open; on phones it waits behind its toggle */
+if(window.matchMedia&&window.matchMedia('(min-width:769px)').matches){[].forEach.call(document.querySelectorAll('details.t31-cities'),function(d){d.open=true;});}
+</script>
 </body>
 </html>
