@@ -739,6 +739,8 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
   html body .t31-faq .faq-item,html body .t31-faq .accordion-item{margin-bottom:8px!important}
   html body .t31-faq .faq-question,html body .t31-faq .accordion-header{padding:16px 18px!important;font-size:17px!important;min-height:56px}
 }
+html body .t31-team .team-photo-banner img{object-position:50% 72%!important}
+@media (max-width:768px){html body .t31-team .team-photo-banner img{height:250px!important}}
 </style>
 </head>
 
@@ -921,16 +923,30 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
   <section id="equipo" class="t31-sec t31-team" style="padding:56px 24px;max-width:900px;margin:0 auto">
     <div class="section-label">WHO WE ARE</div>
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">The Family Behind Your Guidance</h2>
-    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">We are a family of licensed agents. We help you find your plan, in Spanish or English.</p>
+    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">We are a family of licensed agents. We help you find your plan.</p>
 
     <div class="team-photo-banner">
       <picture>
         <source srcset="images/family-yosemite.webp" type="image/webp">
-        <img src="images/family-yosemite.jpg" alt="Alejandra y Susana en Yosemite" fetchpriority="high" width="600" height="600">
+        <img src="images/family-yosemite.jpg" alt="Ale Brizuela and Susana Marcos at Yosemite" fetchpriority="high" width="600" height="600">
       </picture>
     </div>
 
     <div class="team-grid">
+      <div class="team-card">
+        <picture>
+          <source srcset="images/alejandra-headshot.webp" type="image/webp">
+          <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Ale Brizuela" loading="lazy" width="200" height="200">
+        </picture>
+        <h3>Ale Brizuela</h3>
+        <div class="role">CPTO &amp; Licensed Agent</div>
+        <p class="team-bio">Alejandra's mission: make Medicare reachable for every family, especially Hispanic communities and the adult children helping their parents.</p>
+        <div class="credentials">
+          <span class="credential-tag">Licensed in CA</span>
+          <span class="credential-tag">AHIP Certified</span>
+          <span class="credential-tag">Bilingual</span>
+        </div>
+      </div>
       <div class="team-card">
         <picture>
           <source srcset="images/susana-headshot.webp" type="image/webp">
@@ -941,20 +957,6 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
         <p class="team-bio">An Argentine lawyer and a mother of six. Susana brings decades of experience and treats every client like family. She keeps obsessively current on every detail of every plan.</p>
         <div class="credentials">
           <span class="credential-tag">Licensed in 8 States</span>
-          <span class="credential-tag">AHIP Certified</span>
-          <span class="credential-tag">Bilingual</span>
-        </div>
-      </div>
-      <div class="team-card">
-        <picture>
-          <source srcset="images/alejandra-headshot.webp" type="image/webp">
-          <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy" width="200" height="200">
-        </picture>
-        <h3>Alejandra Brizuela Marcos</h3>
-        <div class="role">CPTO &amp; Licensed Agent</div>
-        <p class="team-bio">Alejandra's mission: make Medicare reachable for every family, especially Hispanic communities and the adult children helping their parents.</p>
-        <div class="credentials">
-          <span class="credential-tag">Licensed in CA</span>
           <span class="credential-tag">AHIP Certified</span>
           <span class="credential-tag">Bilingual</span>
         </div>

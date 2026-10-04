@@ -914,6 +914,8 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
   html body .t31-faq .faq-item,html body .t31-faq .accordion-item{margin-bottom:8px!important}
   html body .t31-faq .faq-question,html body .t31-faq .accordion-header{padding:16px 18px!important;font-size:17px!important;min-height:56px}
 }
+html body .t31-team .team-photo-banner img{object-position:50% 72%!important}
+@media (max-width:768px){html body .t31-team .team-photo-banner img{height:250px!important}}
 </style>
 </head>
 
@@ -1096,16 +1098,30 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
   <section id="equipo" class="t31-sec t31-team" style="padding:56px 24px;max-width:900px;margin:0 auto">
     <div class="section-label">QUIÉNES SOMOS</div>
     <h2 style="text-align:center;font-family:'Open Sans',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:700;color:var(--navy);margin-bottom:12px">La Familia Detrás de Su Guía</h2>
-    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">Somos una familia de agentes licenciadas. Le ayudamos a encontrar su plan, en español o en inglés.</p>
+    <p style="text-align:center;font-size:16px;color:var(--gray);margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto">Somos una familia de agentes licenciadas. Le ayudamos a encontrar su plan.</p>
 
     <div class="team-photo-banner">
       <picture>
         <source srcset="images/family-yosemite.webp" type="image/webp">
-        <img src="images/family-yosemite.jpg" alt="Alejandra y Susana en Yosemite" fetchpriority="high" width="600" height="600">
+        <img src="images/family-yosemite.jpg" alt="Ale Brizuela y Susana Marcos en Yosemite" fetchpriority="high" width="600" height="600">
       </picture>
     </div>
 
     <div class="team-grid">
+      <div class="team-card">
+        <picture>
+          <source srcset="images/alejandra-headshot.webp" type="image/webp">
+          <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Ale Brizuela" loading="lazy" width="200" height="200">
+        </picture>
+        <h3>Ale Brizuela</h3>
+        <div class="role">CPTO y Agente Licenciada</div>
+        <p class="team-bio">La misión de Alejandra: hacer que Medicare sea accesible para cada familia, especialmente las comunidades hispanas y los hijos adultos que ayudan a sus padres.</p>
+        <div class="credentials">
+          <span class="credential-tag">Licenciada en CA</span>
+          <span class="credential-tag">Certificada AHIP</span>
+          <span class="credential-tag">Bilingüe</span>
+        </div>
+      </div>
       <div class="team-card">
         <picture>
           <source srcset="images/susana-headshot.webp" type="image/webp">
@@ -1116,20 +1132,6 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
         <p class="team-bio">Abogada argentina y madre de seis. Susana aporta décadas de experiencia y trata a cada cliente como familia. Se mantiene obsesivamente actualizada en cada detalle de los planes.</p>
         <div class="credentials">
           <span class="credential-tag">Licenciada en 8 Estados</span>
-          <span class="credential-tag">Certificada AHIP</span>
-          <span class="credential-tag">Bilingüe</span>
-        </div>
-      </div>
-      <div class="team-card">
-        <picture>
-          <source srcset="images/alejandra-headshot.webp" type="image/webp">
-          <img class="team-card-photo" src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela Marcos" loading="lazy" width="200" height="200">
-        </picture>
-        <h3>Alejandra Brizuela Marcos</h3>
-        <div class="role">CPTO y Agente Licenciada</div>
-        <p class="team-bio">La misión de Alejandra: hacer que Medicare sea accesible para cada familia, especialmente las comunidades hispanas y los hijos adultos que ayudan a sus padres.</p>
-        <div class="credentials">
-          <span class="credential-tag">Licenciada en CA</span>
           <span class="credential-tag">Certificada AHIP</span>
           <span class="credential-tag">Bilingüe</span>
         </div>
