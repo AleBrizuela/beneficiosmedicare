@@ -50,9 +50,13 @@ body.in-iframe .bot-msg{font-size:16px;padding:2px 0 8px}
 .widget-header p{font-size:13px;opacity:.8;margin-top:2px}
 
 /* ── PROGRESS ── */
-/* T-031: the progress bar sits inside the card with rounded ends; it used to run flat along the card's top edge and read as a cut-off stripe. */
-.progress-bar{height:6px;margin:12px 16px 0;border-radius:999px;background:#E6ECF2;overflow:hidden}
-.progress-fill{height:100%;background:#007B7B;transition:width .4s ease;border-radius:999px}
+/* T-031 (AB 2026-10-03): no progress bar. The flow branches, so a bar cannot show how far along a visitor
+   really is, and at a few pixels with no label it read as a stray line. The element stays so prog() has a target. */
+.progress-bar{display:none}
+.progress-fill{height:100%}
+/* T-031: on phones the host page shows the one Continuar in its bottom bar; the widget's own button steps aside
+   only while the page says that bar button is on screen (host-next), so there is never zero and never two. */
+body.host-next #wb .btn-p{display:none!important}
 
 /* ── BODY ── */
 .widget-body{padding:18px 22px 8px}
@@ -564,7 +568,6 @@ if (THEMES[_theme] && _theme !== 'default') {
     .success-cta:hover { background: var(--sage-dark) !important; box-shadow: 0 4px 12px rgba(0,128,212,.3) !important; }
     .plan-sel:hover { border-color: var(--sage) !important; }
     .plan-sel.checked { background: var(--sage) !important; border-color: var(--sage) !important; }
-    .progress-fill { background: var(--sage) !important; }
   `;
   document.head.appendChild(styleEl);
 }
@@ -2265,7 +2268,9 @@ go(startZip);
   var last='';
   function primary(){
     if(document.querySelector('#wb .lead-consent')) return null;
+    var on=document.body.classList.contains('host-next'); if(on) document.body.classList.remove('host-next');
     var b=[].slice.call(document.querySelectorAll('#wb .btn-p')).filter(function(x){return x.offsetParent!==null;});
+    if(on) document.body.classList.add('host-next');
     return b.length===1?b[0]:null;
   }
   function report(){
@@ -2281,7 +2286,9 @@ go(startZip);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
   window.addEventListener('message',function(e){
-    if(!HOSTS.test(e.origin)||!e.data||e.data.type!=='widget-next') return;
+    if(!HOSTS.test(e.origin)||!e.data) return;
+    if(e.data.type==='host-next'){document.body.classList.toggle('host-next',!!e.data.on);return;}
+    if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
 })();
