@@ -2258,7 +2258,7 @@ go(startZip);
 /* T-031: the host page's bottom bar shows one big "Continuar" from question 2 on. The widget tells the page
    which screen it is on (depth 1 = first question) and whether that screen has a next button, and presses
    that button when the page asks. Never offered on a screen that sends a lead: the consent text has to sit
-   next to the button the visitor taps. Requests are accepted only from the two sites' own addresses. */
+   next to the button the visitor taps, and the page hides its bar there (lead:true) so it cannot cover Enviar. Requests are accepted only from the two sites' own addresses. */
 (function(){
   if(window.self===window.top) return;
   var HOSTS=/^https:\/\/((www\.)?beneficiosmedicare\.com|(www\.)?medicare-california\.com|([a-z0-9-]+\.)?(beneficiosmedicare|medicare-california)\.pages\.dev)$/;
@@ -2270,7 +2270,7 @@ go(startZip);
   }
   function report(){
     var b=primary();
-    var st={type:'widget-step',depth:hist.length,results:!!_plansView,hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
+    var st={type:'widget-step',depth:hist.length,results:!!_plansView,lead:!!document.querySelector('#wb .lead-consent'),hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
     var k=JSON.stringify(st); if(k===last) return; last=k;
     window.parent.postMessage(st,'*');
   }
