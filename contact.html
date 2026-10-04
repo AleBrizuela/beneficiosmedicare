@@ -914,6 +914,11 @@ html body .t31-bar{display:none}
   html body .sm-foot-in{padding-bottom:0!important}
 }
 </style>
+<style id="logo-align">/* logo: same colour, size and position as the standard sm-header pages (Medicare 101) */
+html body .t31-head,html body .t33-head{max-width:960px!important;min-height:0!important;height:66px!important;padding:0 24px!important;align-items:center!important;box-sizing:border-box!important}
+@media (min-width:1024px){html body .t31-head .logo svg,html body .t33-head .sm-logo svg{width:252px!important}}
+@media (max-width:768px){html body .t31-head,html body .t33-head{padding:0 8px 0 12px!important;height:64px!important;gap:4px!important}html body .t31-head .logo svg,html body .t33-head .sm-logo svg{width:244px!important}}
+</style>
 <style id="t035">html{--t35-pill-label:#B2DFDB;--t35-soft:#EDF8F7;--t35-soft-ink:#00544F}
 /* T-035 (AB 2026-10-04), contact round 2: phone pill in the navy block, one-box birth date like the plan finder,
    family consent note, thank-you card. Same block on all 4 contact pages; only the colour line differs. */
@@ -967,7 +972,7 @@ html body .t35-next{display:block;text-align:center;margin:14px 0 0;padding:8px 
 <!-- sm-header:start -->
 <header class="sm-header sm-bm" id="header">
   <div class="sm-header-in t33-head">
-    <a href="/en" class="sm-logo"><svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#007B7B">Medicare</tspan></text></svg></a>
+    <a href="/en" class="sm-logo"><svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B40"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text></svg></a>
     <div class="sm-nav" role="navigation" aria-label="Main navigation">
       <a href="/benefits">Medicare 101</a>
       <a href="/contacto" hreflang="es" lang="es">En Español</a>
@@ -988,14 +993,14 @@ html body .t35-next{display:block;text-align:center;margin:14px 0 0;padding:8px 
 
 <main id="main-content">
 <!-- AEP 2027 Countdown Banner -->
-<style>.aep-more{display:none;color:#FFD54F;font-weight:700;text-decoration:underline;margin-left:6px}@media(max-width:480px){#aep-banner{padding:12px 8px!important}#aep-banner>div{gap:8px 12px!important}#aep-banner>div>div{font-size:clamp(11px,3.5vw,14px)!important;letter-spacing:0!important;line-height:1.35;white-space:nowrap}#aep-banner>div>div>span:first-child{padding:3px 8px!important;margin-right:5px!important;font-size:clamp(10px,3vw,12px)!important}#aep-banner>div>a{display:none!important}#aep-countdown{display:none!important}#aep-banner .aep-more{display:inline-block!important;padding:6px 4px;margin:-6px 0 -6px 2px}}</style>
+<style>#aep-banner>div>a{display:none!important}.aep-more{display:inline-block;color:#FFD54F;font-weight:700;text-decoration:underline;text-underline-offset:3px;margin-left:10px}@media(max-width:480px){#aep-banner{padding:12px 8px!important}#aep-banner>div{gap:8px 12px!important}#aep-banner>div>div{font-size:clamp(11px,3.5vw,14px)!important;letter-spacing:0!important;line-height:1.35;white-space:nowrap}#aep-banner>div>div>span:first-child{padding:3px 8px!important;margin-right:5px!important;font-size:clamp(10px,3vw,12px)!important}#aep-countdown{display:none!important}#aep-banner .aep-more{padding:6px 4px;margin:-6px 0 -6px 2px}}</style>
 <div id="aep-banner" style="background:linear-gradient(135deg,#002147 0%,#007B7B 100%);color:#fff;text-align:center;padding:18px 24px;line-height:1.8;position:relative;z-index:50">
   <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 24px">
     <div style="font-size:15px;font-weight:600;letter-spacing:0.5px">
       <span style="background:rgba(255,255,255,0.18);padding:4px 12px;border-radius:20px;font-size:13px;margin-right:8px">AEP 2027</span>
       <strong>Oct. 15 to Dec. 7</strong>
       <span id="aep-countdown" style="margin-left:6px;color:#FFD54F;font-weight:700"></span>
-      <a class="aep-more" href="https://medicare-california.com/blog/medicare-aep-2027-california-changes">Changes &rarr;</a>
+      <a class="aep-more" href="https://medicare-california.com/blog/medicare-aep-2027-california-changes">See changes &rarr;</a>
     </div>
     <a href="https://medicare-california.com/blog/medicare-aep-2027-california-changes" style="background:#FFD54F;color:#002147;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap">See what's changing &rarr;</a>
   </div>
