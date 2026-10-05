@@ -24,3 +24,10 @@
 /robots.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public, max-age=3600
+
+# T-039: social post images, fetched by the Claude browser from Facebook/Instagram/GBP/LinkedIn.
+# Not linked, not in the sitemap, not indexed.
+/social/*
+  Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=3600
