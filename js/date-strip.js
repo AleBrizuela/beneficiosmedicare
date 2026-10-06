@@ -7,7 +7,7 @@
    Change wording here, never on the pages. Same file on both sites except SITE below. */
 (function () {
   var SITE = {
-    bg: '#00594F',   // BM: one shade deeper than teal so the yellow link passes contrast (5.9:1, white 8.3:1)
+    bg: 'linear-gradient(135deg,#002147 0%,#007B7B 100%)',   // BM: the standard banner gradient (AB 2026-10-05, chosen knowing the yellow link is 3.0-3.6:1 on the light end)
     links: {
       es: { aep: '/blog/inscripcion-anual-aep-2027-california', aepYear: 2027, contact: '/contacto',
             oep: '/blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california', t65: '/blog/inscripcion-inicial-cumplir-65' },
