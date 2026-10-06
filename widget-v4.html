@@ -1273,7 +1273,7 @@ function bb_experiment(){expOrNext(flowResults)}
 //  SNOOZE / REMIND ME
 // ═══════════════════════════════════════
 function snoozeStep(){
-  prog(35);
+  prog(35); wEvt('form_open',{source:'reminder'});
   const ew=getEnrollmentWindow();
   const opensStr=ew?`${monthName(ew.month)} ${ew.year}`:'';
   wb().innerHTML=`${bk()}
@@ -1564,7 +1564,7 @@ function cmpBox(p){
 }
 const TOG=()=>[L('See hospital and drugs','Ver hospital y medicamentos'),L('See less','Ver menos')];
 const TOGD=()=>[L('See drug costs by tier','Ver medicamentos por nivel'),L('See less','Ver menos')];
-function togSum(el,pdp){const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
+function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'});const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
@@ -1657,7 +1657,7 @@ function filterByType(plans){
   const pl=PILLS.find(x=>x.id===_typeFilter)||PILLS[0];
   return plans.filter(pl.f);
 }
-function setType(v){_typeFilter=v;_shown=3;selPlans=[];flowResults();}
+function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=3;selPlans=[];flowResults();}
 function pillsHTML(){
   return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
     const n=PLANS.filter(x.f).length;
@@ -1681,7 +1681,7 @@ function sortModes(){
   if(PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
-function setSort(v){_sortMode=v;_shown=3;flowResults();}
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
 function sortMenu(el){const w=el.closest('.schip-wrap');const o=!w.classList.contains('open');w.classList.toggle('open',o);el.setAttribute('aria-expanded',o);}
 document.addEventListener('click',e=>{if(!e.target.closest||e.target.closest('.schip-wrap'))return;document.querySelectorAll('.schip-wrap.open').forEach(w=>w.classList.remove('open'));});
 function sortHTML(){
@@ -1796,7 +1796,7 @@ function listHTML(list){
 }
 function showMore(){
   const list=orderedPlans(), from=_shown;
-  _shown=Math.min(list.length,_shown+5);
+  _shown=Math.min(list.length,_shown+5); wEvt('show_more',{shown:_shown,total:list.length});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
@@ -2004,7 +2004,7 @@ function unlicensedNote(){
 // T-024 contact step (AB 2026-10-03): "Una de nosotras le contacta", no plan name on screen (it can
 // mislead; the plans seen stay in the lead row), consent stated right under "Enviar", no checkbox.
 function planEnroll(){
-  prog(92); _plansView=true;
+  prog(92); _plansView=true; wEvt('form_open',{source:'card'});
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
     ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
@@ -2018,7 +2018,7 @@ function planEnroll(){
 }
 
 function helpChoose(){
-  prog(92); _plansView=true;
+  prog(92); _plansView=true; wEvt('form_open',{source:'compare'});
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
     ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
@@ -2069,10 +2069,12 @@ function sendLead(d){
   return fetch(leadURL(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d),signal:ctl?ctl.signal:undefined})
     .then(function(r){return r.json();})
     .then(function(j){clearTimeout(t);var ok=!!(j&&j.saved===true&&j.emailed===true);
+      try{if(/\b(QA|TEST)\b/i.test(String(d.fullName||d.name||'')))sessionStorage.setItem('qa','1');}catch(e){}
       // T-020: generate_lead ONLY when the script confirmed the save. No personal data in the event.
       if(ok) gaEvent('generate_lead',{site:/california/i.test(String(d.source||d.site||location.hostname))?'mc':'bm',
         lang:String(d.lang||d.language||document.documentElement.lang||'').slice(0,2),
-        form:(d.role!==undefined||d.resume_link!==undefined)?'careers':(d.leadType?'widget_'+d.leadType:'contact')});
+        form:(d.role!==undefined||d.resume_link!==undefined)?'careers':(d.leadType?'widget_'+d.leadType:'contact'),
+        state:String(d.state||''),...(d.leadType?gaContext():(gaInternal()?{traffic_type:'internal'}:{}))});
       return ok;})
     .catch(function(){clearTimeout(t);return false;});
 }
@@ -2088,7 +2090,12 @@ function leadErrorHTML(lang){
 
 // T-020 widget funnel. Params: site, lang, step, state, and at most the 3-digit ZIP prefix. Never a name,
 // phone, email or birth date.
-function wEvt(n,extra){gaEvent(n,Object.assign({site:leadSite()==='medicare-california'?'mc':'bm',lang:lang,state:D.state||'',zip3:String(D.zip||'').slice(0,3)},extra||{}));}
+function wEvt(n,extra){gaEvent(n,Object.assign({site:leadSite()==='medicare-california'?'mc':'bm',lang:lang,state:D.state||'',zip3:String(D.zip||'').slice(0,3)},gaContext(),extra||{}));}
+// T-038: licensed state yes/no, Medi-Cal yes/no, and our own testing tagged traffic_type=internal (GA4 filters it).
+// Still no personal data: no name, phone, email, birth date or full ZIP.
+function gaLicensed(){return !D.state?'':(_rep&&Array.isArray(_rep.licensed)?(_rep.licensed.indexOf(D.state)>=0?'yes':'no'):'unknown');}
+function gaInternal(){try{return /\.pages\.dev$/i.test(location.hostname)||/[?&]qa=1\b/.test(location.search+' '+document.referrer)||sessionStorage.getItem('qa')==='1';}catch(e){return false;}}
+function gaContext(){const c={licensed:gaLicensed(),medicaid:saidMedicaid()?'yes':'no'};if(gaInternal())c.traffic_type='internal';return c;}
 let _gaStartZip='', _gaResultsZip='';
 document.addEventListener('click',function(e){
   const a=e.target&&e.target.closest?e.target.closest('a[href]'):null; if(!a) return;
@@ -2258,7 +2265,7 @@ function lParts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare has
 function lCosts(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Medicare costs breakdown:':'Resumen de costos de Medicare:')}<div style="background:var(--lt-gray);border-radius:var(--radius);padding:14px;margin-bottom:10px"><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part A':'Parte A'}</span><span class="cmp-vl">${lang==='en'?'$0 for most':'$0 para la mayor\u00EDa'}</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Part B':'Parte B'}</span><span class="cmp-vl">$202.90/mo (2026)</span></div><div class="cmp-row"><span class="cmp-lb">${lang==='en'?'Advantage':'Advantage'}</span><span class="cmp-vl">${lang==='en'?'Often $0 extra':'Frecuentemente $0'}</span></div></div>${ic(lang==='en'?'Good to know':'Bueno saber',lang==='en'?'Many Advantage plans have $0 premium and some help pay Part B.':'Muchos planes Advantage tienen $0 prima y algunos ayudan a pagar Parte B.')}${bp(lang==='en'?'Find $0 plans':'Encontrar planes $0','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lAdvVsMed(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Two main options:':'Dos opciones principales:')}${ic(lang==='en'?'Medicare Advantage':'Medicare Advantage',lang==='en'?'All-in-one. Includes drugs + extras. Lower cost, doctor network.':'Todo-en-uno. Incluye medicinas + extras. Menor costo, red de doctores.')}${ic(lang==='en'?'Medigap (Supplement)':'Medigap (Suplemento)',lang==='en'?'Fills gaps in Original Medicare. Any doctor nationwide. Higher premium.':'Llena huecos en Medicare Original. Cualquier doctor. Prima m\u00E1s alta.','bl')}${bp(lang==='en'?'Compare plans':'Comparar planes','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
 function lEnroll(){prog(10);wb().innerHTML=`${bk()}${bm(lang==='en'?'Enrollment periods:':'Periodos de inscripci\u00F3n:')}${ic(lang==='en'?'Initial (IEP)':'Inicial (IEP)',lang==='en'?'7-month window around your 65th birthday.':'Ventana de 7 meses alrededor de su cumplea\u00F1os 65.')}${ic(lang==='en'?'Annual (AEP)':'Anual (AEP)',lang==='en'?'Oct 15 - Dec 7 every year. Switch plans.':'Oct 15 - Dic 7 cada a\u00F1o. Cambiar planes.','bl')}${ic(lang==='en'?'Special (SEP)':'Especial (SEP)',lang==='en'?'If you moved, lost coverage, or qualify for Extra Help.':'Si se mud\u00F3, perdi\u00F3 cobertura, o califica para Ayuda Extra.')}${bp(lang==='en'?'Check plans now':'Ver planes ahora','go(bb_zip)')}${bs(lang==='en'?'More topics':'M\u00E1s temas','go(learnHome)')}`}
-function learnContact(){prog(15);wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}${consentHTML(lang,lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',privacyURL())}<div id="leadErr"></div>`}
+function learnContact(){prog(15);wEvt('form_open',{source:'question'});wb().innerHTML=`${bk()}${bm(lang==='en'?'We can answer your questions. Free, no obligation.':'Podemos responder sus preguntas. Gratis, sin compromiso.')}${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}${inp('phone',lang==='en'?'Phone':'Telefono','(555) 123-4567','tel')}${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}${inp('question',lang==='en'?'Your question (optional)':'Su pregunta (opcional)',lang==='en'?'What would you like to know?':'\u00BFQu\u00E9 le gustar\u00EDa saber?')}${bp(lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',"submitLead('question')")}${consentHTML(lang,lang==='en'?'Request Free Call':'Solicitar Llamada Gratis',privacyURL())}<div id="leadErr"></div>`}
 
 
 // ═══════════════════════════════════════
