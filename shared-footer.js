@@ -45,7 +45,7 @@
     inner += '<a href="tel:+13105979142" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-phone-alt"></i> Llame</a>';
     inner += '<a href="https://calendar.app.google/6D4obxzxERQXBpaf7" target="_blank" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-video"></i> Agende Cita Virtual</a>';
   }
-  inner += '<a href="mailto:alejamedicare@gmail.com" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-envelope"></i> Email</a>';
+  inner += '<a href="mailto:hola@beneficiosmedicare.com" style="color:#E8F2FA;text-decoration:none"><i class="fas fa-envelope"></i> Email</a>';
   inner += '<a href="https://wa.me/13105979142" target="_blank" style="color:#E8F2FA;text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>';
   inner += '</div>';
 
