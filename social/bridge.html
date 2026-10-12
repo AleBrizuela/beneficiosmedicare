@@ -1,0 +1,19 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>bridge</title>
+<script>
+// T-039: lets the Claude browser hand social images to Meta Business Suite (which blocks direct loads).
+// Loaded in a hidden iframe; sends the requested /social/ files to the parent window. Images only, same folder only.
+(async () => {
+  const names = (new URLSearchParams(location.search).get('f') || '').split(',').filter(n => /^[A-Za-z0-9._-]+\.(png|jpe?g)$/.test(n));
+  for (const name of names) {
+    try {
+      const r = await fetch('/social/' + name, { cache: 'no-store' });
+      const buf = await r.arrayBuffer();
+      parent.postMessage({ bm: 'img', name, mime: r.headers.get('content-type') || 'image/png', buf }, '*', [buf]);
+    } catch (e) { parent.postMessage({ bm: 'err', name, msg: String(e) }, '*'); }
+  }
+  parent.postMessage({ bm: 'done', count: names.length }, '*');
+})();
+</script>
