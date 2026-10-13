@@ -52,7 +52,7 @@ Production: https://beneficiosmedicare.com
 | Hero: subtitle on ONE line | Visual |
 | Zip code form visible and functional | Type 90001, click Comenzar |
 | Widget loads after zip submission | Submit zip |
-| Trust badges: Agentes Licenciadas, Certificación AHIP, Equipo Familiar | Visual |
+| Trust badges: Agencia Familiar, Certificación AHIP, Equipo Familiar | Visual |
 | 3-step section: Asesoría, Comparación, Inscripción | Scroll down |
 | Plan types section | Scroll down |
 | Team section with photos | Scroll down |

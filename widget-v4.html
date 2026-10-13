@@ -1889,7 +1889,7 @@ function teamCard(){
   const wa='https://wa.me/13105979142?text='+msg;
   const phone=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));
   const main=phone?`href="sms:+13105979142?&body=${msg}"`:`href="${wa}" target="_blank" rel="noopener"`;
-  const ag=L('Agent','Agente'), lic=L('licensed agent','agente licenciada');
+  const ag=L('Agent','Agente'), lic=L('licensed agent','agente con licencia');
   return `<div class="team2">
     <p class="tt">${L('Rather talk to a person?','¿Prefiere hablar con nosotras?')}</p>
     <div class="people">
