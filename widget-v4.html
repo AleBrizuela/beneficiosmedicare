@@ -227,6 +227,7 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-meta{margin-top:6px;font-size:13px;color:#66727c;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .pc-chip{background:var(--lt-mint);color:var(--sage-dark);font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px}
 .pc-rating{font-size:12px;color:#66727c;margin-top:4px}
+.pc-low{margin-top:6px;padding:7px 10px;border-radius:8px;background:#fdecea;color:#a50e0e;font-size:12px;line-height:1.45}
 .pc-cmp{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sage-dark);border:1px solid #e5e9ec;border-radius:999px;padding:0 10px 0 8px;white-space:nowrap;min-height:36px;background:#fff;cursor:pointer;flex:0 0 auto}
 .pc-cmp input{accent-color:var(--sage);width:18px;height:18px;margin:0;cursor:pointer}
 .pc-keys{display:grid;grid-template-columns:repeat(3,1fr);background:#f3f5f7}
@@ -707,7 +708,7 @@ function medigapToWidgetPlans(stateData){
       otc: 0,
       drug: 'N/A',
       giveback: 0,
-      rating: null,   // Medigap has no CMS star rating
+      rating: null, ratingNA: null, ratingLow: false,   // Medigap has no CMS star rating
       type: 'Medigap',
       _medigap: true,
       _premiumRange: '$' + Math.round(plan.premium_min) + '-$' + Math.round(plan.premium_max) + '/mo',
@@ -788,6 +789,8 @@ function cmsToWidget(p, state){
     dbt: p.dbt||null,
     drug: p.drug?'Included':'N/A',
     rating: (typeof p.stars==='number' && p.stars>0) ? p.stars : null,
+    ratingNA: p.starsna||null,       // 'new' / 'few': CMS's own reason there is no rating
+    ratingLow: !!p.starslow,         // CMS low-performing contract
     type: p.type,
     sanction: !!p.sanction,
     // Represented or not is DATA ONLY, for the lead row (AB 2026-10-02, T-017 e). Every plan in a
@@ -1352,11 +1355,27 @@ function upTo(a,bold){if(!a||a.amt==null) return null;const v=usd(a.amt)+perw(a.
 const EAR={per:[' per ear',' por oído'],both:[', both ears',', ambos oídos'],one:[', one ear',', un oído']};
 function ear(e){const w=EAR[e];return w?L(w[0],w[1]):'';}
 
-// CMS Overall Star Rating. CMS has not published 2027 ratings (blank in the landscape file), so a
-// null rating says exactly that. Never carry 2026 stars onto a 2027 plan.
-function rStar(r){
-  if(r!==null&&r!==undefined) return L('CMS rating ','Calificación CMS ')+planYear()+': ★ '+r;
-  return L('CMS rating: not yet published','Calificación CMS: aún no publicada');
+// CMS Overall Star Rating (T-053). CMS published the 2027 ratings on 2026-10-08, in data tables of
+// their own; the landscape file the rest of the card is built from was cut before that and leaves the
+// star column blank, which is why this line read "aun no publicada" while Medicare.gov already showed
+// stars. A plan with no rating now says WHICH of CMS's two reasons applies rather than implying the
+// whole year is unpublished. Never carry 2026 stars onto a 2027 plan.
+const STARNA={'new':['Too new to be rated','Plan nuevo, sin calificación'],
+              'few':['Not enough data to rate','Sin calificación suficiente']};
+function rStar(p){
+  if(p.rating===null||p.rating===undefined){
+    const w=STARNA[p.ratingNA];
+    return w?L(w[0],w[1]):L('CMS rating: not published','Calificación CMS: no publicada');
+  }
+  return '★ '+p.rating+L(' of 5 (CMS ',' de 5 (CMS ')+planYear()+')';
+}
+// CMS lists a contract as low-performing after three years under 3 stars, and Medicare.gov then drops
+// the number and shows a warning in its place. We show both: hiding the number would be less than
+// Medicare.gov gives, and showing it alone would be less than Medicare.gov warns.
+function rLow(p){
+  if(!p.ratingLow) return '';
+  return `<div class="pc-low">${L('Medicare has rated this plan below 3 stars three years in a row.',
+    'Medicare ha calificado este plan por debajo de 3 estrellas tres años seguidos.')}</div>`;
 }
 function provenanceNote(){
   if(!_planMeta||!_planMeta.year) return '';
@@ -1754,7 +1773,7 @@ function planCard(p,selectable){
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
       <div class="pc-meta">${esc(p.type)} <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
-      <div class="pc-rating">${rStar(p.rating)}</div>
+      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
     ${body}
@@ -1821,8 +1840,11 @@ function sortModes(){
     {id:'moop',    en:'Lowest max out-of-pocket', es:'Máximo de bolsillo más bajo',        sen:'Lowest out-of-pocket', ses:'Máx. bolsillo más bajo'},
     {id:'ded',     en:'Lowest drug deductible',   es:'Deducible de medicamentos más bajo', sen:'Lowest deductible',    ses:'Deducible más bajo'},
   ];
-  // Rating sort only once CMS has published ratings for some plan here.
-  if(PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
+  // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
+  // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
+  // true to restore it; sortPlans already handles mode 'star'.
+  const SORT_BY_RATING=false;
+  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
 function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
