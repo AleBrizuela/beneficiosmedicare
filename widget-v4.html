@@ -307,6 +307,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
 .cbar{position:sticky;bottom:12px;margin-top:12px;background:#1e2a32;color:#fff;border-radius:14px;padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:5}
 .cbar.on{display:flex}
+body.host-cbar .cbar{display:none!important}
 .cbar .n{font-size:14px;font-weight:600}
 .cbar button{background:var(--sage);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer;min-height:40px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
@@ -510,8 +511,8 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .mp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .mp-chip{font:600 14px/1.2 inherit;background:#fff;border:1.5px solid #cfd8de;color:#1e2a32;border-radius:999px;padding:9px 13px;min-height:44px;cursor:pointer}
 .mp-chip.on{border-color:var(--sage);background:var(--lt-mint);color:var(--sage-dark)}
-.mp-wrap{position:relative;margin-top:12px}
-.mp-list{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1px solid #cfd8de;border-radius:10px;box-shadow:0 10px 28px rgba(16,24,40,.16);max-height:280px;overflow:auto;margin-top:4px}
+.mp-wrap{margin-top:12px}
+.mp-list{background:#fff;border:1px solid #cfd8de;border-radius:10px;max-height:320px;overflow:auto;margin-top:6px}
 .mp-list:empty{display:none}
 .mp-opt{display:block;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #eef1f3;padding:10px 12px;font:inherit;cursor:pointer;min-height:48px}
 .mp-opt:last-child{border-bottom:0}
@@ -554,6 +555,8 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 
 /* ── share sheet ── */
 .shm{position:fixed;inset:0;z-index:2147483000;background:rgba(16,24,40,.45);display:flex;align-items:flex-end;justify-content:center}
+.shm.inline{position:static;background:none;display:block;margin:0 0 14px}
+.shm.inline .shc{border:1px solid #cfd8de;border-radius:14px;max-height:none;box-shadow:0 8px 24px rgba(16,24,40,.12)}
 .shm.hide{display:none}
 .shc{background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow:auto;text-align:left}
 @media(min-width:600px){.shm{align-items:center}.shc{border-radius:18px}}
@@ -995,7 +998,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-function go(fn){hist.push(fn);_plansView=false;fn();viewMsg();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function go(fn){hist.push(fn);_plansView=false;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
 function back(){if(hist.length>1){hist.pop();_plansView=false;hist[hist.length-1]();viewMsg();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
@@ -1913,7 +1916,6 @@ function planCard(p,selectable){
     more+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
   }
   else more+=tiersHTML(p);
-  const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}${netLineHTML(p)}
@@ -1921,9 +1923,25 @@ function planCard(p,selectable){
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
-    ${body}
-    ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
+    ${keyStrip(p,isMA,drug)}
+    <details class="pc-all" ontoggle="togAll(this)"><summary>${PCALL()[0]}</summary>${body}${more}</details>
     <div class="pc-foot">${planAction(p)}</div></div>`;
+}
+// The three numbers that decide whether a plan is worth opening at all. Everything else is one tap
+// away and unchanged: same rows, same wording, same CMS values.
+const PCALL=()=>[L('See this plan','Ver este plan'),L('See less','Ver menos')];
+function togAll(el){
+  const s=el.querySelector('summary'); if(s) s.textContent=PCALL()[el.open?1:0];
+  if(el.open) wEvt('details_open',{plan_type:'card'});
+}
+function keyStrip(p,isMA,drug){
+  const k=(v,l,zero)=>`<div class="pc-key${zero?' zero':''}"><div class="v${v==null?' na':''}">${v==null?noInfo():v}</div><div class="l">${l}</div></div>`;
+  const prem=p.premium==null?null:premUsd(p.premium);
+  const moop=isMA?(p.moop==null?null:usd(p.moop)):'—';
+  const ded=drug?(p.ded==null?null:usd(p.ded)):L('None','Ninguno');
+  return `<div class="pc-keys">${k(prem,L('Monthly premium','Prima mensual'),prem==='$0')}`+
+    `${k(moop,L('Max out-of-pocket','Máximo de bolsillo'))}`+
+    `${k(ded,L('Drug deductible','Deducible medicamentos'),ded==='$0')}</div>`;
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
@@ -1968,7 +1986,7 @@ function filterByType(plans){
   const pl=PILLS.find(x=>x.id===_typeFilter)||PILLS[0];
   return plans.filter(pl.f);
 }
-function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=3;selPlans=[];flowResults();}
+function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=PAGE;selPlans=[];flowResults();}
 function pillsHTML(){
   return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
     const n=PLANS.filter(x.f).length;
@@ -1995,7 +2013,7 @@ function sortModes(){
   if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
-function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;flowResults();}
 function sortMenu(el){const w=el.closest('.schip-wrap');const o=!w.classList.contains('open');w.classList.toggle('open',o);el.setAttribute('aria-expanded',o);}
 document.addEventListener('click',e=>{if(!e.target.closest||e.target.closest('.schip-wrap'))return;document.querySelectorAll('.schip-wrap.open').forEach(w=>w.classList.remove('open'));});
 function sortHTML(){
@@ -2018,7 +2036,7 @@ function sortPlans(plans, mode){
 }
 
 // ── RESULTS ──
-let _shown=3, _inAllPlans=false;
+let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // b13: one plain ZIP line (pin + ZIP + "· Cambiar"), then one light grey count line.
 // The data has no ZIP-to-city names, so the line shows the ZIP only (D-054).
@@ -2090,7 +2108,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=3; _typeFilter='all'; delete D.plansSeen; delete D.represented;
+  selPlans=[]; _shown=PAGE; _typeFilter='all'; delete D.plansSeen; delete D.represented;
   flowResults();
 }
 function cmpAllBtn(list){
@@ -2098,23 +2116,37 @@ function cmpAllBtn(list){
   if(c.length<2) return '';
   return `<button class="cmpall" onclick="compareFirst()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="16" y="4" width="5" height="16" rx="1.5"/></svg>${L(`Compare these ${c.length} plans`,`Comparar estos ${c.length} planes`)}</button>`;
 }
+// AB 2026-10-14: "shows only 3 · 3 more · plus 3 more · it takes forever". It was 3, then 5 at a
+// time: 14 taps to see 70 plans. Ten at a time, and one button that ends the tapping for good.
+const PAGE=10;
 function moreBtn(total){
   if(total<=_shown) return '';
-  const k=Math.min(5,total-_shown);
-  return `<button class="showmore" onclick="showMore()">${L(`See ${k} more plan${k===1?'':'s'}`,`Ver ${k} plan${k===1?'':'es'} más`)}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
+  const k=Math.min(PAGE,total-_shown), rest=total-_shown;
+  return `<button class="showmore" onclick="showMore()">${L(`See ${k} more plan${k===1?'':'s'}`,`Ver ${k} plan${k===1?'':'es'} más`)}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`+
+    (rest>PAGE?`<button class="showall" onclick="showMore(true)">${L(`Show all ${total}`,`Ver los ${total}`)}</button>`:'');
 }
 function listHTML(list){
   const first=list.slice(0,Math.min(3,_shown)).map(p=>planCard(p,true)).join('');
   const rest=list.slice(3,_shown).map(p=>planCard(p,true)).join('');
   return `<div id="plist">${first}${cmpAllBtn(list)}${rest}</div><div id="pmore">${moreBtn(list.length)}</div>`;
 }
-function showMore(){
+function showMore(all){
   const list=orderedPlans(), from=_shown;
-  _shown=Math.min(list.length,_shown+5); wEvt('show_more',{shown:_shown,total:list.length});
+  _shown=all?list.length:Math.min(list.length,_shown+PAGE); wEvt('show_more',{shown:_shown,total:list.length,all:all?'yes':'no'});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
   if(m) m.innerHTML=moreBtn(list.length);
+}
+let _cbarLast='';
+function cbarReport(){
+  if(window.self===window.top) return;
+  const k=selPlans.length;
+  const st={type:'widget-cbar',on:k>0&&!!_plansView&&!document.querySelector('#wb .lead-consent'),
+    n:k,label:document.getElementById('cbarN')?document.getElementById('cbarN').textContent:'',
+    canCompare:k>=minPick(),share:L('Share','Compartir'),compare:L('Compare','Comparar')};
+  const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
+  window.parent.postMessage(st,'*');
 }
 function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><span class="btns">`+
   `<button class="sh" id="cbarSh" data-cta="share_bar" onclick="openShare('bar')">${L('Share','Compartir')}</button>`+
@@ -2129,6 +2161,7 @@ function updBar(msg){
   document.getElementById('cbarN').textContent=msg||(k===1&&minPick()>1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
   document.getElementById('cbarGo').disabled=k<minPick();
   const sh=document.getElementById('cbarSh'); if(sh) sh.disabled=k<1;
+  cbarReport();
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2499,6 +2532,7 @@ function myPlanStep(){
         <div class="mp-list" id="mplist" role="listbox"></div>
       </div>
       <div id="mppick"></div>
+      ${bs(L('Compare without my plan','Comparar sin mi plan'),'mpSkip()')}
       ${skip(L('I do not have a plan / I am not sure','No tengo plan / no sé'),'mpSkip()')}`;
     const f=document.getElementById('mpq');
     if(f){f.setAttribute('autocomplete','off');f.addEventListener('input',()=>mpSearch(f.value));f.addEventListener('focus',()=>mpSearch(f.value));}
@@ -2659,8 +2693,12 @@ function openShare(from){
     <p class="sh-priv">${L('Only the plans and your note are shared. Nothing personal.','Solo se comparten los planes y su nota. Nada personal.')}</p>
   </div>`;
   el.addEventListener('click',e=>{if(e.target===el)closeShare();});
-  document.body.appendChild(el);
-  setTimeout(()=>{const t=document.getElementById('shnote');if(t)t.focus();},60);
+  if(window.self!==window.top){
+    el.classList.add('inline');
+    wb().insertBefore(el,wb().firstChild);
+    window.parent.postMessage({type:'widget-scrolltop'},'*');
+  } else document.body.appendChild(el);
+  setTimeout(()=>{const t=document.getElementById('shnote');if(t)t.focus({preventScroll:true});},60);
 }
 function closeShare(){const e=document.getElementById('shm'); if(e) e.remove();}
 function shCount(){const t=document.getElementById('shnote'),c=document.getElementById('shcnt'); if(t&&c)c.textContent=String(t.value.length);}
@@ -3235,6 +3273,9 @@ go(startZip);
   window.addEventListener('message',function(e){
     if(!HOSTS.test(e.origin)||!e.data) return;
     if(e.data.type==='host-next'){document.body.classList.toggle('host-next',!!e.data.on);return;}
+    if(e.data.type==='host-cbar'){document.body.classList.toggle('host-cbar',!!e.data.on);return;}
+    if(e.data.type==='widget-share'){openShare('bar');return;}
+    if(e.data.type==='widget-compare'){goCompare();return;}
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
