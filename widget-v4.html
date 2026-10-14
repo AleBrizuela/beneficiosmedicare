@@ -321,6 +321,11 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmp .tog{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:10px 12px;font-size:13px;font-weight:600;color:var(--sage-dark);border-bottom:1px solid #e5e9ec;cursor:pointer;min-height:44px}
 .cmp .tog input{accent-color:var(--sage);width:18px;height:18px;margin:0}
 .cmp.diff tr.same{display:none}
+.cmp tr.hid{display:none}
+.cmp tr.grp.tg td{cursor:pointer;color:var(--sage-dark)}
+.cmp tr.grp.tg td span{display:flex;justify-content:space-between;align-items:center;min-height:30px}
+.cmp tr.grp.tg td span::after{content:"";width:8px;height:8px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(-135deg);margin:4px 4px 0 8px}
+.cmp tr.grp.tg.shut td span::after{transform:rotate(45deg);margin:-4px 4px 0 8px}
 .cmp-foot{padding:12px}
 .cmp-note{font-size:12px;color:#66727c;margin:0 12px 10px;line-height:1.4}
 @media(max-width:400px){.cmp th,.cmp td{padding:7px 3px;font-size:12px}.cmp td.lab,.cmp thead th.l0{width:27%;padding-left:8px;font-size:11.5px}.cmp td.big{font-size:14px}.cmp thead th{font-size:11.5px}}
@@ -417,6 +422,16 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc .nod{font-size:14px;color:#56616a;margin:4px 0 8px;line-height:1.4}
 .pc details{margin-top:6px}
 .pc summary{justify-content:center}
+/* T-052: "Ver todos los beneficios" groups, each closed to its title until tapped */
+.pc details.grp{margin:0;border-top:1px solid #e5e9ec}
+.pc details.grp>summary{justify-content:space-between;font-size:15px;font-weight:700;color:#1e2a32;padding:12px 14px;min-height:48px}
+.pc details.grp>summary::after,.pc details[open] details.grp>summary::after{border-color:#66727c;transform:rotate(45deg);margin-top:-4px}
+.pc details[open] details.grp[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+.pc .gt{display:flex;align-items:center;gap:8px}
+.pc .gc{font-size:13px;font-weight:500;color:#66727c;margin-left:2px}
+.pc .gb{padding:0 14px 6px 22px;background:#fcfdfd}
+.pc .gb .lr:last-of-type{border-bottom:0}
+.pc .disc{font-size:12px;color:#56616a;line-height:1.45;margin:4px 0 8px}
 .pc-btn{padding:12px;min-height:46px}
 .rh .zl{flex-wrap:nowrap;gap:6px;margin-bottom:2px;min-height:32px}
 .rh .zl>svg{stroke:#66727c;width:14px;height:14px}
@@ -741,6 +756,8 @@ function isRepresented(parent,state){
   const l=_rep.represented[state]; return Array.isArray(l)&&l.indexOf(parent)>=0;
 }
 
+const T052_KEYS=['gb','mded','oon','mhosp','snf','hh','phosp','rehab','mh','ther','chiro','pod','oprof','tele','wwe',
+  'lab','dx','xray','img','rad','dme','pros','diab','dial','partb','acu','meals','pe','x14','ssbci','opt'];
 function cmsToWidget(p, state){
   const rep=isRepresented(p.parent,state);
   return {
@@ -764,6 +781,8 @@ function cmsToWidget(p, state){
     dent: p.dent||null, vis: p.vis||null, hear: p.hear||null,
     ins: p.ins||null, noded: p.noded||null,
     tiers: p.tiers||null,
+    // T-052, every benefit: copied as-is (false = "No incluido" must survive), missing = null = "Sin información".
+    ...T052_KEYS.reduce((o,k)=>{o[k]=p[k]===undefined?null:p[k];return o;},{}),
     dbt: p.dbt||null,
     drug: p.drug?'Included':'N/A',
     rating: (typeof p.stars==='number' && p.stars>0) ? p.stars : null,
@@ -1432,7 +1451,10 @@ const PIC={
   visits:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="12" r="2"/>',
   star:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>',
   hosp:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 7v6M9 10h6M9 21v-4h6v4"/>',
-  drug:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M8.5 8.5l7 7"/>'
+  drug:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M8.5 8.5l7 7"/>',
+  bed:'<path d="M3 20V8M3 14h18v6M21 14v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11" r="2"/>',
+  flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>',
+  kit:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M12 11v5M9.5 13.5h5"/>'
 };
 const V=(t,sub,off)=>({t,sub:sub||'',off:!!off});
 const OFF=(sub)=>V(NOINC(),sub,true);
@@ -1506,13 +1528,105 @@ function tripsL(tr){
   return V(tr.n+' '+L(one?'trip':'trips',one?'viaje':'viajes')+per2(tr.per),
            tr.tt==='round'?L('round trip','de ida y vuelta'):(tr.tt==='oneway'?L('one way','de ida'):''));
 }
+// ---- T-052: every benefit CMS publishes (DECIDE/now/2026-10-13_widget-all-benefits-mockup.html, AB "LUV IT").
+// Plan-file values: a CMS cost string, false = CMS says not offered, 'opt' = optional with an extra premium,
+// true = offered with no cost stated, null/undefined = not in the file ("Sin información", never a guess).
+function sx(v){
+  if(v==null) return null;
+  if(v===false) return OFF();
+  if(v==='opt') return V(OPTX(),'',true);
+  if(v===true) return V(L('Included','Incluido'));
+  return V(money(v));
+}
+// Part B premium reduction, a monthly dollar figure from PBP Section D. 0 = the plan gives none.
+function gbV(g){if(g==null) return null;if(!g) return OFF();const v=V(usd(g)+' '+L('a month','al mes'));v.z=true;return v;}
+// Medical (plan) deductible. {mc} = the plan charges Original Medicare's deductible, whose 2027 amount CMS sets in November.
+function mdedV(m){
+  if(!m) return null;
+  if(m.mc) return V(L('Same as Original Medicare','Igual que Medicare Original'),{A:L('Part A','Parte A'),B:L('Part B','Parte B'),AB:L('Parts A and B','Partes A y B')}[m.mc]||'');
+  return m.amt==null?null:V(usd(m.amt));
+}
+function x14V(p,code){const x=p.x14;if(!x) return null;return x[code]==='m'?V(L('Included','Incluido')):(x[code]==='o'?V(OPTX(),'',true):OFF());}
+function optV(o){
+  if(o==null) return null;
+  if(!o||!o.n) return OFF();
+  const n=o.n===1?L('1 package','1 paquete'):L(o.n+' packages',o.n+' paquetes');
+  return V(n,o.min!=null?L('from ','desde ')+usd(o.min,true)+L('/mo','/mes'):'');
+}
+function ssbciV(v){return v==null?null:(v?V(L('Included','Incluido')):OFF());}   // the row label already says "only if you qualify"
+function vAmt(n){return n==null?null:V(usd(n));}
+// CMS-required wording whenever SSBCI benefits are mentioned (42 CFR 422.2267(e)(34)). Final ES wording: PROTECT.
+const SSBCI_DISC=()=>L('The benefits mentioned are a part of a special supplemental program for the chronically ill. Not all members will qualify for these benefits.',
+  'Los beneficios mencionados son parte de un programa especial de beneficios suplementarios para personas con enfermedades crónicas. No todos los miembros califican para estos beneficios.');
+// The groups behind "Ver todos los beneficios", in the inventory order. Each row: [label, value]. Shared by the card and
+// the comparison table so the two can never list different benefits.
+function benefitGroups(p){
+  const amb=p.amb||{}, o=p.oon, G=[];
+  if(o) G.push({k:'oon',icon:'cost',t:L('Out of network','Fuera de la red'),rows:[
+    ...(o.cmoop!=null?[[L('Max out-of-pocket, in and out of network','Máximo de bolsillo, dentro y fuera de la red'),vAmt(o.cmoop)]]:[]),
+    ...(o.omoop!=null?[[L('Max out-of-pocket, out of network','Máximo de bolsillo fuera de la red'),vAmt(o.omoop)]]:[]),
+    [L('Primary doctor','Médico primario'),vz(o.pcp)],
+    [L('Specialist','Especialista'),vz(o.spec)],
+    [L('Inpatient hospital stay','Hospitalización'),hospL(o.hosp)]]});
+  G.push({k:'hosp',icon:'bed',t:L('Hospital and care','Hospital y cuidados'),rows:[
+    [L('Inpatient hospital stay','Hospitalización'),hospL(p.hosp)],
+    [L('Mental health hospital stay','Hospital de salud mental'),hospL(p.mhosp)],
+    [L('Skilled nursing facility','Centro de enfermería especializada'),hospL(p.snf)],
+    [L('Home health care','Cuidado de salud en el hogar'),vz(p.hh)],
+    [L('Ambulatory surgical center','Centro de cirugía ambulatoria'),vz(p.asc)],
+    [L('Outpatient hospital','Hospital ambulatorio'),vz(p.ohosp)],
+    [L('Partial hospitalization (mental health)','Hospitalización parcial (salud mental)'),vz(p.phosp)],
+    [L('Cardiac and pulmonary rehab','Rehabilitación cardíaca y pulmonar'),vz(p.rehab)]]});
+  G.push({k:'visits',icon:'visits',t:L('Visits','Consultas'),rows:[
+    [L('Mental health (individual or group)','Salud mental (individual o grupo)'),vz(p.mh)],
+    [L('Physical, occupational and speech therapy','Terapia física, ocupacional y del habla'),vz(p.ther)],
+    [L('Routine chiropractic','Quiropráctico de rutina'),sx(p.chiro)],
+    [L('Podiatrist','Podólogo'),vz(p.pod)],
+    [L('Other health professionals','Otros profesionales de salud'),vz(p.oprof)],
+    [L('Telehealth','Telesalud'),sx(p.tele)],
+    [L('Emergency care outside the U.S.','Emergencias fuera del país'),sx(p.wwe)]]});
+  G.push({k:'tests',icon:'flask',t:L('Tests','Pruebas'),rows:[
+    [L('Lab tests','Análisis de laboratorio'),vz(p.lab)],
+    [L('Diagnostic tests and procedures','Pruebas y procedimientos de diagnóstico'),vz(p.dx)],
+    [L('X-rays','Rayos X'),vz(p.xray)],
+    [L('MRI, CT and other imaging','Resonancia, tomografía y otras imágenes'),vz(p.img)]]});
+  G.push({k:'kit',icon:'kit',t:L('Equipment and treatment','Equipo y tratamientos'),rows:[
+    [L('Medical equipment','Equipo médico'),vz(p.dme)],
+    [L('Diabetes supplies','Suministros para diabetes'),vz(p.diab)],
+    [L('Prosthetics and medical supplies','Prótesis y suministros médicos'),vz(p.pros)],
+    [L('Dialysis','Diálisis'),vz(p.dial)],
+    [L('Part B drugs (incl. chemotherapy)','Medicamentos de la Parte B (incl. quimioterapia)'),vz(p.partb)],
+    [L('Radiation therapy','Radioterapia'),vz(p.rad)],
+    [L('Ground ambulance','Ambulancia terrestre'),vz(amb.ground)],
+    [L('Air ambulance','Ambulancia aérea'),vz(amb.air)]]});
+  G.push({k:'extra',icon:'star',t:L('Extra benefits','Beneficios extra'),rows:[
+    [L('Acupuncture','Acupuntura'),sx(p.acu)],
+    [L('Meals after a hospital stay','Comidas después del hospital'),sx(p.meals)],
+    [L('Rides to medical appointments','Transporte a citas médicas'),tripsL(p.trans)],
+    [L('Routine eye exam','Examen de la vista'),p.vis?(p.vis.exam?V(p.vis.exam_cs?money(p.vis.exam_cs):L('Included','Incluido')):OFF()):null],
+    [L('Routine hearing exam','Examen de audición'),p.hear?(p.hear.exam?V(p.hear.exam_cs?money(p.hear.exam_cs):L('Included','Incluido')):OFF()):null],
+    [L('Annual physical exam','Examen físico anual'),sx(p.pe)],
+    [L('Nutrition program','Programa de nutrición'),x14V(p,'14c2')],
+    [L('Extra quit-smoking sessions','Sesiones adicionales para dejar de fumar'),x14V(p,'14c3')],
+    [L('Home and bathroom safety devices','Seguridad en casa y en el baño'),x14V(p,'14c8')],
+    [L('Personal emergency alert device','Botón de emergencia personal'),x14V(p,'14c11')],
+    [L('In-home support','Apoyo en el hogar'),x14V(p,'14c21')],
+    [L('Optional extra packages','Paquetes opcionales'),optV(p.opt)],
+    [L('Chronic condition benefits (only if you qualify)','Beneficios para condiciones crónicas (solo si califica)'),ssbciV(p.ssbci)]],
+    note:p.ssbci?SSBCI_DISC():''});
+  return G;
+}
+function grpOpen(el,k){if(el.open)wEvt('benefit_group_open',{group:k});}
+function grpHTML(key,icon,title,body,n){
+  return `<details class="grp" ontoggle="grpOpen(this,'${key}')"><summary><span class="gt"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}${n?`<span class="gc">${n}</span>`:''}</span></summary><div class="gb">${body}</div></details>`;
+}
 // One list row. big=true for the Costos rows (b18: the one emphasis).
 function lrow(label,v,icon){
   const off=v?v.off:false;
   const ic=icon?`<svg class="ri${!v||off?' off':''}" viewBox="0 0 24 24">${PIC[icon]}</svg>`:'';
   let cls, txt;
   if(!v){cls='na';txt=noInfo();}
-  else{cls=off?'off':(/^\$0(?:\.00)?(?:$|\/| por | per )/.test(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
+  else{cls=off?'off':(v.z||/^\$0(?:\.00)?(?:$|\/| por | per )/.test(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
   return `<div class="lr"><span class="ll">${ic}${label}</span><span class="lv${cls?' '+cls:''}">${txt}${v&&v.sub?`<span class="lsub">${v.sub}</span>`:''}</span></div>`;
 }
 // b20: true when every value in a section is missing from the CMS file (null), so the section shows nothing real.
@@ -1527,12 +1641,13 @@ function andList(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+L(' an
 
 // Medicamentos (open part). b6b: one column ("standard pharmacy") or two (standard / preferred),
 // never mixed, never an empty tier. b17: a plan without Part D says so in one line.
-function tiersHTML(p){
-  if(p.drug!=='Included') return lsec('drug',L('Drugs','Medicamentos'),`<p class="nod">${L('This plan does not include drug coverage (Part D).','Este plan no incluye medicamentos (Parte D).')}</p>`);
+function tiersHTML(p){return lsec('drug',L('Drugs','Medicamentos'),tiersBody(p));}
+function tiersBody(p){
+  if(p.drug!=='Included') return `<p class="nod">${L('This plan does not include drug coverage (Part D).','Este plan no incluye medicamentos (Parte D).')}</p>`;
   const t=p.tiers||[];
   if(!t.length){
     const msg=p.dbt==='1'?L('Medicare standard design: 25% after the deductible.','Diseño estándar de Medicare: 25% después del deducible.'):`<i>${noInfo()}</i>`;
-    return lsec('drug',L('Drugs','Medicamentos'),`<p class="nod">${msg}</p>`);
+    return `<p class="nod">${msg}</p>`;
   }
   const two=t.some(x=>x.p!=null);
   const cell=v=>v==null?(two?`<span class="lv2 off">–</span>`:`<span class="lv na">${noInfo()}</span>`)
@@ -1547,9 +1662,11 @@ function tiersHTML(p){
                 `El deducible de medicamentos de ${usd(p.ded)} no aplica ${n.length>1?'a los niveles':'al nivel'} ${andList(n)}.`));
   }
   if(two&&t.some(x=>x.v==null||x.p==null)) fine.push(L('– = not in the CMS file for this plan.','– = no figura en el archivo de CMS para este plan.'));
-  return `<div class="ls"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.drug}</svg>${L('Drugs','Medicamentos')}</div>
-    <div class="subt">${two?L('(1 month, standard or preferred pharmacy)','(1 mes, farmacia estándar o preferida)'):L('(1 month, standard pharmacy)','(1 mes, farmacia estándar)')}</div>
-    ${head}${rows}${fine.map(f=>`<p class="pc-fine">${f}</p>`).join('')}</div>`;
+  // T-052: 3-month supply by mail, per tier, as CMS lists it (standard mail; preferred mail in brackets when the plan has one).
+  const ml=t.filter(x=>x.m3!=null).map(x=>`${L('tier','nivel')} ${x.t} ${money(x.m3)}${x.m3p!=null&&x.m3p!==x.m3?' ('+L('preferred','preferida')+' '+money(x.m3p)+')':''}`);
+  if(ml.length) fine.push(`<b>${L('By mail, 3 months:','Por correo, 3 meses:')}</b> ${ml.join(' · ')}`);
+  return `<div class="subt">${two?L('(1 month, standard or preferred pharmacy)','(1 mes, farmacia estándar o preferida)'):L('(1 month, standard pharmacy)','(1 mes, farmacia estándar)')}</div>
+    ${head}${rows}${fine.map(f=>`<p class="pc-fine">${f}</p>`).join('')}`;
 }
 // What a card offers at the bottom (b8, e, f, g): the same button on every plan in a licensed
 // state, none on a CMS-sanctioned plan, information only where we are not licensed.
@@ -1564,7 +1681,7 @@ function cmpBox(p){
   const on=selPlans.includes(p.id);
   return `<label class="pc-cmp"><input type="checkbox" data-pid="${esc(p.id)}" ${on?'checked':''} onchange="toggleCmp(this)"> ${L('Compare','Comparar')}</label>`;
 }
-const TOG=()=>[L('See hospital and drugs','Ver hospital y medicamentos'),L('See less','Ver menos')];
+const TOG=()=>[L('See all benefits','Ver todos los beneficios'),L('See less','Ver menos')];
 const TOGD=()=>[L('See drug costs by tier','Ver medicamentos por nivel'),L('See less','Ver menos')];
 function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'});const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
 function planCard(p,selectable){
@@ -1581,7 +1698,10 @@ function planCard(p,selectable){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
   const prem=p.premium==null?null:V(premUsd(p.premium)+L('/mo','/mes'));
   const ded=drug?(p.ded==null?null:V(usd(p.ded))):V('—',L('No drug coverage','Sin cobertura de medicamentos'),true);
+  // T-052: drug deductible says which tiers skip it, on the card (it was only in the drug fine print).
+  if(drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
   let rows=lrow(L('Monthly premium','Prima mensual'),prem);
+  if(isMA) rows+=lrow(L('Part B money back','Le devuelven de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
   if(isMA) rows+=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
   rows+=lrow(L('Drug deductible','Deducible de medicamentos'),ded);
   let body=lsec('cost',L('Costs','Costos'),rows,'cost'), more='', gap=false;
@@ -1597,17 +1717,18 @@ function planCard(p,selectable){
       lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+
       lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+lrow(L('Fitness','Ejercicio'),ext[4],'fit'));
     const amb=p.amb||{};
-    const hs=[hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)];
-    if(allNull(hs)) gap=true;
-    else more=lsec('hosp',L('Hospital and surgery','Hospital y cirugía'),
-      lrow(L('Inpatient hospital stay','Hospitalización'),hs[0])+
-      lrow(L('Ambulatory surgical center','Centro de cirugía ambulatoria'),hs[1])+
-      lrow(L('Outpatient hospital','Hospital ambulatorio'),hs[2])+
-      lrow(L('Ground ambulance','Ambulancia terrestre'),hs[3])+
-      lrow(L('Air ambulance','Ambulancia aérea'),hs[4])+
-      lrow(L('Rides to medical appointments','Transporte a citas médicas'),hs[5]));
+    if(allNull([hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)])) gap=true;
+    // T-052: every group closed to its title until tapped. A group with no value at all in the CMS file is left out.
+    benefitGroups(p).forEach(g=>{
+      if(allNull(g.rows.map(r=>r[1]))) return;
+      more+=grpHTML(g.k,g.icon,g.t,g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),g.rows.length);
+    });
   }
   if(p.drug==='Included'&&!(p.tiers&&p.tiers.length)&&p.dbt!=='1') gap=true;
+  else if(isMA){
+    const t=p.tiers||[];
+    more+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
+  }
   else more+=tiersHTML(p);
   const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
@@ -1924,28 +2045,52 @@ function flowCompare(){
   const row=(lab,cells,big)=>R.push({lab,cells,big});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
+  // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
+  // (tap the grey bar). A V-object cell keeps its own "No incluido" / "Sin información" state.
+  const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
+  const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  if(plans.some(ma)){
+    row(L('Part B money back','Le devuelven de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
+    row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
+  }
   row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
   row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
   if(plans.some(ma)){
     grp(L('Visits','Consultas'));
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
       .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
-    grp(L('Hospital and surgery','Hospital y cirugía'));
-    row(L('Inpatient hospital stay','Hospitalización'),plans.map(p=>ma(p)?txt(hospText(p.hosp,true)):dash));
-    row(L('Outpatient surgery (center)','Cirugía ambulatoria (centro)'),plans.map(p=>ma(p)?txt(money(p.asc)):dash));
-    row(L('Ground ambulance','Ambulancia terrestre'),plans.map(p=>ma(p)?txt(p.amb&&money(p.amb.ground)):dash));
-    row(L('Rides to appointments','Transporte a citas'),plans.map(p=>{if(!ma(p))return dash;const t=tripsText(p.trans,true);return t===null?{t:NOINC(),off:true}:txt(t);}));
     grp(L('Extra benefits','Beneficios extra'));
     row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
     row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
     row(L('Hearing aids','Audífonos'),plans.map(p=>ma(p)?off(hearingB(p,true)):dash));
     row('OTC',plans.map(p=>ma(p)?off(otcB(p,true)):dash));
     row(L('Fitness','Ejercicio'),plans.map(p=>ma(p)?off(fitB(p)):dash));
+    // Group list from benefitGroups(), so the table and the card can never list different benefits. Stays use the
+    // short hospital text; "Fuera de la red" only when one of the plans has out-of-network coverage.
+    const gs=plans.map(p=>ma(p)?benefitGroups(p):null), ref=gs.find(Boolean);
+    // Hospital-type stays use the short text so 3 columns fit at 375px.
+    const STAY={hosp:[p=>p.hosp,p=>p.mhosp,p=>p.snf],oon:[null,null,null,null,p=>p.oon&&p.oon.hosp]};
+    ['oon','hosp','visits','tests','kit','extra'].forEach(k=>{
+      const has=gs.map(g=>g&&g.find(x=>x.k===k));
+      const base=has.find(Boolean); if(!base) return;
+      const labs=[]; has.forEach(g=>g&&g.rows.forEach(r=>{if(labs.indexOf(r[0])<0)labs.push(r[0]);}));
+      shut(base.t);
+      labs.forEach(lab=>{
+        row(lab,plans.map((p,j)=>{
+          if(!ma(p)) return dash;
+          const g=has[j]; if(!g) return k==='oon'?{t:L('In-network only','Solo en la red'),off:true}:dash;
+          const i=g.rows.findIndex(x=>x[0]===lab); if(i<0) return {t:'–',off:true};
+          const st=k==='oon'?(/^(Inpatient|Hospitalizaci)/.test(lab)?STAY.oon[4]:null):(STAY[k]&&STAY[k][i]);
+          if(st){const t=hospText(st(p),true);return t==null?cv(null):{t,off:false};}
+          return cv(g.rows[i][1]);
+        }));
+      });
+    });
   }
   if(plans.some(p=>p.drug==='Included'&&p.tiers&&p.tiers.length)){
-    grp(L('Drugs (1 month, standard pharmacy)','Medicamentos (1 mes, farmacia estándar)'));
+    shut(L('Drugs (1 month, standard pharmacy)','Medicamentos (1 mes, farmacia estándar)'));
     const ids=[...new Set(plans.flatMap(p=>(p.tiers||[]).map(t=>t.t)))].sort((a,b)=>a-b);
     ids.forEach(n=>{
       const named=plans.map(p=>(p.tiers||[]).find(t=>t.t===n)).find(Boolean);
@@ -1954,10 +2099,12 @@ function flowCompare(){
       row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
     });
   }
+  let gi=-1, closed=false;
   const body=R.map(r=>{
-    if(r.g) return `<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;
+    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
+                                       :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
     const same=r.cells.every(c=>c.t===r.cells[0].t);
-    return `<tr class="r${same?' same':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
   const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(shortPlan(p.name))}</th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
@@ -1973,6 +2120,7 @@ function flowCompare(){
     ${provenanceHTML()}
     ${bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
+function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
 // The full name is on every card; this is a label, not the plan's legal name.
 function shortPlan(n){
