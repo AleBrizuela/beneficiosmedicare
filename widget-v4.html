@@ -483,6 +483,97 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .team2 .alt a{color:var(--sage-dark);font-weight:600;text-decoration:none;display:inline-block;padding:8px 2px}
 .cmp td.v.na{color:#66727c;font-weight:500;font-style:italic;font-size:12px}
 @media(max-width:360px){.pn{font-size:12.5px}.pp img{width:38px;height:38px}.pp{gap:6px}.team2{padding:14px 10px}.people{gap:6px}}
+
+/* ══ T-055 / T-056 · plan type tags, network line, share + compare (preview build) ══
+   Tag palette: AB 2026-10-14. Network tag = brand navy outline; who-it-is-for = deep teal
+   solid; everything else grey. The network LINE never wraps at 375px (AB: "fit it in ONE
+   line"), so it is nowrap and sized to the longest string in either language. */
+.pc-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.tg{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.35;white-space:nowrap}
+.tg-net{border:1.5px solid #002147;color:#002147;background:#fff;padding:2px 8px}
+.tg-who{background:#00796B;color:#fff}
+.tg-plain{background:#E2E7EC;color:#4A5568}
+.pc-net{margin-top:7px;display:flex;align-items:center;gap:6px;min-width:0}
+.pc-net .nt{font-size:12px;color:#5f6b75;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nfo{flex:0 0 auto;width:19px;height:19px;border-radius:50%;border:1.3px solid #a6b0b8;background:#fff;color:#5f6b75;font:700 11px/1 inherit;cursor:pointer;padding:0}
+.pc-eoc{margin-top:6px;font-size:11.5px;color:#66727c;line-height:1.4}
+.pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
+.pc-idline .pid{font-weight:700;color:#4A5568}
+
+/* the bar after picking plans: brand navy (AB 2026-10-14: the old #1e2a32 read as off-palette black) */
+.cbar{background:var(--cbar-bg,#1E3A5F)}
+.cbar .btns{display:flex;gap:8px;flex:0 0 auto}
+.cbar .sh{background:#fff;color:var(--cbar-bg,#1E3A5F)}
+.cbar .sh:disabled{opacity:.45}
+
+/* ── "¿Qué plan tiene hoy?" ── */
+.mp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.mp-chip{font:600 14px/1.2 inherit;background:#fff;border:1.5px solid #cfd8de;color:#1e2a32;border-radius:999px;padding:9px 13px;min-height:44px;cursor:pointer}
+.mp-chip.on{border-color:var(--sage);background:var(--lt-mint);color:var(--sage-dark)}
+.mp-wrap{position:relative;margin-top:12px}
+.mp-list{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1px solid #cfd8de;border-radius:10px;box-shadow:0 10px 28px rgba(16,24,40,.16);max-height:280px;overflow:auto;margin-top:4px}
+.mp-list:empty{display:none}
+.mp-opt{display:block;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #eef1f3;padding:10px 12px;font:inherit;cursor:pointer;min-height:48px}
+.mp-opt:last-child{border-bottom:0}
+.mp-opt:hover,.mp-opt:focus{background:var(--lt-mint)}
+.mp-opt b{display:block;font-size:14.5px;color:#1e2a32;font-weight:700;line-height:1.3}
+.mp-opt span{font-size:12px;color:#66727c}
+.mp-none{padding:10px 12px;font-size:13px;color:#66727c}
+.mp-pick{background:var(--lt-mint);border:1px solid #bfe0da;border-radius:12px;padding:12px 13px;margin-top:12px}
+.mp-pick .n{font-size:15px;font-weight:700;color:#1e2a32;line-height:1.3}
+.mp-pick .w{font-size:13.5px;color:#36505c;margin-top:5px;line-height:1.45}
+.mp-pick .src{font-size:11.5px;color:#66727c;margin-top:7px;line-height:1.4}
+.mp-chg{background:none;border:0;color:var(--sage-dark);font:700 13px/1 inherit;padding:8px 0 0;cursor:pointer;min-height:36px}
+
+/* ── comparison: Su plan column, the yearly difference, "Igual en los N" ── */
+.cmp thead th.mine{box-shadow:inset 0 4px 0 #1E3A5F}
+.cmp thead th.mine .eb{color:#1E3A5F}
+.cmp td.mine,.cmp th.mine{background:#F2F6FA}
+.cmp tr.diffrow td{font-weight:800}
+.cmp td.up{color:#a50e0e}.cmp td.dn{color:var(--sage-dark)}
+.cmp thead th .eb{-webkit-line-clamp:none;display:block;overflow:visible}
+.cmp-top{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:0 0 10px}
+.cmp-top .ttl{font-size:15px;font-weight:800;color:#1e2a32}
+.btn-share{display:inline-flex;align-items:center;gap:7px;background:var(--cbar-bg,#1E3A5F);color:#fff;border:0;border-radius:10px;padding:10px 14px;font:800 14px/1 inherit;min-height:44px;cursor:pointer}
+.btn-share svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cmp-same{margin:12px 0 0;background:#f3f5f7;border-radius:10px;padding:10px 12px}
+.cmp-same h5{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#5f6b75;margin:0 0 6px}
+.cmp-same p{font-size:13px;color:#36505c;margin:0;line-height:1.5}
+.cmp-sw{font-size:13.5px;color:#36505c;line-height:1.55;margin:10px 0 0}
+.cmp-sw b{color:#1e2a32}
+.cmp-prem{font-size:11.5px;color:#66727c;margin:6px 0 0;line-height:1.4}
+
+/* ── the ask block: one photo, one line, one button ── */
+.askb{background:#fff;border:1px solid #e5e9ec;border-radius:14px;padding:14px;margin-top:14px;text-align:center}
+.askb img{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 9px}
+.askb h4{font-size:17px;font-weight:800;color:#1e2a32;margin:0 0 4px;line-height:1.3;text-wrap:balance}
+.askb p{font-size:14px;color:#5f6b75;margin:0 0 11px;line-height:1.45;text-wrap:pretty}
+.askb .b1{display:block;width:100%;background:var(--sage);color:#fff;border:0;border-radius:10px;padding:13px 14px;font:800 15.5px/1.2 inherit;min-height:48px;cursor:pointer}
+.askb .alt{display:block;margin-top:9px;font-size:13.5px;color:#5f6b75}
+.askb .alt a{color:var(--sage-dark);font-weight:700;text-decoration:none;white-space:nowrap}
+
+/* ── share sheet ── */
+.shm{position:fixed;inset:0;z-index:2147483000;background:rgba(16,24,40,.45);display:flex;align-items:flex-end;justify-content:center}
+.shm.hide{display:none}
+.shc{background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow:auto;text-align:left}
+@media(min-width:600px){.shm{align-items:center}.shc{border-radius:18px}}
+.shc h4{font-size:18px;font-weight:800;margin:0 0 3px;color:#1e2a32}
+.shc .sub{font-size:13px;color:#5f6b75;margin:0 0 12px;line-height:1.45}
+.sh-note{width:100%;border:1.5px solid #cfd8de;border-radius:10px;padding:11px 12px;font:16px/1.45 inherit;color:#1e2a32;resize:vertical;min-height:72px}
+.sh-note:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.12)}
+.sh-cnt{font-size:11.5px;color:#8b959d;text-align:right;margin:4px 0 12px}
+.sh-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.sh-b{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:10px 4px;font:700 11.5px/1.2 inherit;color:#1e2a32;cursor:pointer;min-height:76px}
+.sh-b i{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sh-b svg{width:17px;height:17px}
+.sh-more{display:block;width:100%;background:none;border:0;color:var(--sage-dark);font:700 13.5px/1 inherit;padding:13px 0 4px;cursor:pointer;min-height:44px}
+.sh-priv{font-size:12px;color:#66727c;margin:10px 0 0;line-height:1.45}
+.sh-x{position:absolute;right:12px;top:10px;background:none;border:0;font:700 22px/1 inherit;color:#8b959d;cursor:pointer;padding:6px 10px}
+.shc{position:relative}
+.sh-ok{font-size:13px;font-weight:700;color:var(--sage-dark);margin:10px 0 0;min-height:18px}
+
+/* ── preview badge (T-056): never the live site ── */
+.prev-badge{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:2147483646;background:#5f6b75;color:#fff;font:700 11px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.04em;padding:6px 12px;border-radius:999px;opacity:.9;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1710,6 +1801,55 @@ function tiersBody(p){
   return `<div class="subt">${two?L('(1 month, standard or preferred pharmacy)','(1 mes, farmacia estándar o preferida)'):L('(1 month, standard pharmacy)','(1 mes, farmacia estándar)')}</div>
     ${head}${rows}${fine.map(f=>`<p class="pc-fine">${f}</p>`).join('')}`;
 }
+// ── T-055: plan type tag, who-it-is-for tag, network line (AB 2026-10-14) ──
+// The "Plan 2027" chip is gone: the year is in the results header, the compare header and the CMS
+// source line, and it said nothing a visitor could act on. In its place, the two facts that change
+// what a plan costs them: what kind of network it is, and the ID on their own plan documents.
+// Wording: PROTECT 2026-10-14, matched to Medicare.gov's own plan-type pages. AB signs at PRD.
+// baseType strips the SNP suffix CMS writes into the type ("HMO C-SNP" -> "HMO").
+function baseType(p){return String(p.type||'').replace(/\s*[CDI]-SNP\s*/g,'').trim();}
+const NETLINE={
+  'HMO':     ['Network doctors, except emergencies',        'Médicos de la red, salvo emergencias'],
+  'HMO-POS': ['Network; some care outside, usually costs more','Red, y a veces fuera, pagando más'],
+  'PPO':     ['In or out of network; out usually costs more','Red o fuera; fuera suele costar más'],
+  'PDP':     ['Used with Original Medicare',                 'Se usa con Medicare Original'],
+};
+function snpWho(p){
+  if(!isSNP(p)) return null;
+  if(p.snp==='Dual-Eligible') return L('With '+mcd(),'Con '+mcd());
+  if(p.snp==='Institutional') return L('Care facility','Centro de cuidado');
+  if(p.snp) return L('Chronic condition','Condición crónica');
+  return null;
+}
+// Grey tags: a plan that is not Medicare Advantage with drugs says so in one word.
+function plainTag(p){
+  if(p._medigap) return L('Supplement','Suplemento');
+  if(isPDP(p)) return L('Drugs only','Solo medicamentos');
+  if(p.cat!=='PDP'&&p.drug!=='Included') return L('No drug coverage','Sin medicamentos');
+  return null;
+}
+function planTags(p){
+  const out=[];
+  if(!p._medigap&&!isPDP(p)) out.push(`<span class="tg tg-net">${esc(baseType(p))}</span>`);
+  const who=snpWho(p); if(who) out.push(`<span class="tg tg-who">${esc(who)}</span>`);
+  const pl=plainTag(p); if(pl) out.push(`<span class="tg tg-plain">${esc(pl)}</span>`);
+  return out.length?`<div class="pc-tags">${out.join('')}</div>`:'';
+}
+let _eocN=0;
+function netLineHTML(p){
+  if(p._medigap) return '';
+  const w=NETLINE[isPDP(p)?'PDP':baseType(p)];
+  if(!w) return '';
+  const id='eoc'+(++_eocN);
+  return `<div class="pc-net"><span class="nt">${L(w[0],w[1])}</span>`+
+    `<button class="nfo" type="button" aria-expanded="false" aria-controls="${id}" aria-label="${L('About the network','Sobre la red')}" onclick="eocTog(this,'${id}')">i</button></div>`+
+    `<p class="pc-eoc" id="${id}" hidden>${EOC()}</p>`;
+}
+const EOC=()=>L("The exact network rules are in each plan's Evidence of Coverage.",
+                'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.');
+function eocTog(b,id){const n=document.getElementById(id); if(!n) return; const open=n.hasAttribute('hidden');
+  if(open){n.removeAttribute('hidden');}else{n.setAttribute('hidden','');} b.setAttribute('aria-expanded',open?'true':'false');}
+
 // What a card offers at the bottom (b8, e, f, g): the same button on every plan in a licensed
 // state, none on a CMS-sanctioned plan, information only where we are not licensed.
 function planAction(p){
@@ -1731,7 +1871,8 @@ function planCard(p,selectable){
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
     return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
-      <div class="pc-meta">${L('Supplement','Suplemento')} · ${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
+      ${planTags(p)}
+      <div class="pc-idline">${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
       <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
@@ -1775,7 +1916,8 @@ function planCard(p,selectable){
   const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
-      <div class="pc-meta">${esc(p.type)} · <span class="pid">${planId(p)}</span> <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
+      ${planTags(p)}${netLineHTML(p)}
+      <div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
@@ -1815,7 +1957,10 @@ const PILLS=[
   {id:'ppo',  en:'PPO',                  es:'PPO',                    f:p=>inTodos(p)&&/PPO/.test(p.type||'')},
   {id:'zero', en:'$0 premium',           es:'$0 prima',               f:p=>inTodos(p)&&p.premium===0},
   {id:'dsnp', en:()=>'With '+mcd(),       es:()=>'Con '+mcd(),         f:isDual},
-  {id:'snp',  en:'Other special needs',  es:'Otras necesidades especiales', f:p=>isSNP(p)&&!isDual(p)},
+  {id:'condicion_cronica', en:'Chronic condition', es:'Condición crónica',
+     f:p=>isSNP(p)&&!isDual(p)&&p.snp!=='Institutional'},
+  {id:'centro_de_cuidado',  en:'Care facility',     es:'Centro de cuidado',
+     f:p=>isSNP(p)&&p.snp==='Institutional'},
   {id:'pdp',  en:'Drug plans (Part D)',  es:'Medicamentos (Parte D)', f:isPDP, opt:true},
   {id:'supp', en:'Medigap',              es:'Medigap',                f:p=>!!p._medigap, opt:true},
 ];
@@ -1971,13 +2116,19 @@ function showMore(){
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
   if(m) m.innerHTML=moreBtn(list.length);
 }
-function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="go(flowCompare)">${L('Compare','Comparar')}</button></div>`;}
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><span class="btns">`+
+  `<button class="sh" id="cbarSh" data-cta="share_bar" onclick="openShare('bar')">${L('Share','Compartir')}</button>`+
+  `<button id="cbarGo" data-cta="share_bar" onclick="goCompare()">${L('Compare','Comparar')}</button></span></div>`;}
+// With a plan of their own on file, one ticked plan is already a comparison (theirs vs that one).
+function minPick(){return (D.myPlan&&D.myPlan.to)?1:2;}
+function goCompare(){if(selPlans.length<minPick())return; if(D.myPlan||selPlans.length<1){go(flowCompare);return;} go(myPlanStep);}
 function updBar(msg){
   const b=document.getElementById('cbar'); if(!b) return;
   const k=selPlans.length;
   b.classList.toggle('on',k>0||!!msg);
-  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
-  document.getElementById('cbarGo').disabled=k<2;
+  document.getElementById('cbarN').textContent=msg||(k===1&&minPick()>1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
+  document.getElementById('cbarGo').disabled=k<minPick();
+  const sh=document.getElementById('cbarSh'); if(sh) sh.disabled=k<1;
 }
 let _barT=0;
 function toggleCmp(el){
@@ -1986,6 +2137,7 @@ function toggleCmp(el){
     if(i<0){
       if(selPlans.length>=3){el.checked=false;updBar(L('You can compare up to 3 plans','Puede comparar hasta 3 planes'));clearTimeout(_barT);_barT=setTimeout(()=>updBar(),2500);return;}
       selPlans.push(id);
+      wEvt('compare_pick',{plans:selPlans.length});
     }
   } else if(i>=0) selPlans.splice(i,1);
   updBar();
@@ -2082,8 +2234,14 @@ function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 function flowCompare(){
   prog(88); _plansView=true;
-  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
-  if(plans.length<2){back();return;}
+  const picked=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
+  // T-056 (4): the visitor's own 2027 plan is the first column when they told us what they have
+  // today and CMS's crosswalk lands it on a plan this county actually has. Never a guessed plan.
+  const mine=myPlan27();
+  const plans=(mine&&!picked.some(p=>p.id===mine.id)?[Object.assign({},mine,{_mine:true})]:[]).concat(picked);
+  if(mine) plans.forEach(p=>{if(p.id===mine.id)p._mine=true;});
+  if(picked.length<2&&!mine){back();return;}
+  if(!picked.length){back();return;}
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
@@ -2097,6 +2255,18 @@ function flowCompare(){
   const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  // T-056 (4) "Diferencia al año". Premium only, and it says so: copays and drug costs depend on
+  // what a person actually uses, and CMS publishes no figure for that. Never presented as total cost.
+  if(mine&&mine.premium!=null){
+    R.push({lab:L('Difference a year (premium)','Diferencia al año (prima)'),big:true,diff:true,
+      cells:plans.map(p=>{
+        if(p._mine) return {t:'—',off:true};
+        if(p.premium==null) return {t:noInfo(),na:true};
+        const d=Math.round((p.premium-mine.premium)*12);
+        if(d===0) return {t:L('Same','Igual'),off:false};
+        return {t:(d>0?'+':'−')+usd(Math.abs(d)),cls:d>0?'up':'dn'};
+      })});
+  }
   if(plans.some(ma)){
     row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
@@ -2107,6 +2277,10 @@ function flowCompare(){
     grp(L('Visits','Consultas'));
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
       .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
+    // AB's client sheet carries this row and so does the site: whether a person's own doctors and
+    // hospital are in a plan's network is not in any CMS file, and we are not going to pretend it is.
+    R.push({lab:L('Your doctors and hospital','Sus médicos y hospital'),keep:true,
+      cells:plans.map(()=>({t:L('We check them for you','Lo revisamos por usted'),off:false}))});
     grp(L('Extra benefits','Beneficios extra'));
     row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
     row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
@@ -2145,26 +2319,54 @@ function flowCompare(){
       row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
     });
   }
+  // AB's client-sheet rule: a row whose value is the same in every column tells the reader nothing,
+  // so it leaves the table and is listed once under "Igual en los N". On a phone that is the
+  // difference between a table you can read and one you scroll past.
+  const sameLabels=[];
   let gi=-1, closed=false;
-  const body=R.map(r=>{
+  const keep=[];
+  R.forEach(r=>{
+    if(r.g){keep.push(r);return;}
+    const same=r.cells.length>1&&r.cells.every(c=>c.t===r.cells[0].t);
+    if(same&&!r.diff&&!r.big&&!r.keep){sameLabels.push(String(r.lab).replace(/<[^>]+>/g,''));return;}
+    keep.push(r);
+  });
+  // a group header left with no rows under it goes too
+  const body=keep.filter((r,i)=>!(r.g&&(i===keep.length-1||keep[i+1].g))).map(r=>{
     if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
                                        :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
-    const same=r.cells.every(c=>c.t===r.cells[0].t);
-    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r g${gi}${r.diff?' diffrow':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map((c,j)=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${c.cls?' '+c.cls:''}${plans[j]&&plans[j]._mine?' mine':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(shortPlan(p.name))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const sameBlock=sameLabels.length?`<div class="cmp-same"><h5>${L('The same in all '+plans.length,'Igual en los '+plans.length)}</h5><p>${esc(sameLabels.join(' · '))}</p></div>`:'';
+  // "Si cambia a ...": the yearly premium difference said in a sentence, only where we have both figures.
+  const switchLines=(mine&&mine.premium!=null)?plans.filter(p=>!p._mine&&p.premium!=null).map(p=>{
+    const d=Math.round((p.premium-mine.premium)*12);
+    const w=d===0?L('you pay the same premium','paga la misma prima')
+      :(d>0?L('you pay '+usd(d)+' more a year in premium','paga '+usd(d)+' más al año en prima')
+           :L('you pay '+usd(-d)+' less a year in premium','paga '+usd(-d)+' menos al año en prima'));
+    return `<p class="cmp-sw">${L('If you switch to','Si cambia a')} <b>${esc(p.name)}</b>, ${w}.</p>`;
+  }).join(''):'';
+  // T-055 (2): the full official carrier and plan name, not shortPlan and not a 2-line clamp. Names
+  // alone are not unique, so the type and the Medicare ID sit under every column, as on the card.
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th class="${p._mine?'mine':''}" style="--cc:${p._mine?'#1E3A5F':carrierColor(p)}"><span class="eb">${p._mine?L('YOUR PLAN','SU PLAN'):esc(p.carrier)}</span>${esc(p.name)}<span class="pid">${esc(p.carrier)}<br>${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
+  wEvt('compare_view',{plans:plans.length,my_plan:mine?'yes':'no'});
   wb().innerHTML=`${bk()}
+    <div class="cmp-top"><span class="ttl">${L('Your comparison','Su comparación')}</span>
+      ${shareBtnHTML('compare_top')}</div>
+    ${mine?myPlanStripHTML():myPlanOfferHTML()}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
-    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
+    <div class="cmp" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(shortPlan(p.name))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
+      ${mine&&mine.premium!=null?`<p class="cmp-prem">${L('The yearly difference compares the monthly premium only. Copays and drug costs depend on the care you use; CMS publishes no figure for that.','La diferencia al año compara solo la prima mensual. Los copagos y los medicamentos dependen de la atención que use; CMS no publica una cifra para eso.')}</p>`:''}
+      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(p.name)} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
-      <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
-        :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
+    ${sameBlock}
+    ${switchLines}
+    ${can?askBoxHTML('compare_ask'):(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}
     ${provenanceHTML()}
     ${bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
@@ -2204,6 +2406,478 @@ function unlicensedNote(){
   return `<div class="info-card"><p>${lang==='en'
     ? 'We are not licensed in this state, so these plans are shown for information only. For help choosing a plan, visit <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a> or call 1-800-MEDICARE (1-800-633-4227), TTY 1-877-486-2048, 24 hours a day, 7 days a week.'
     : 'No tenemos licencia en este estado, así que estos planes se muestran solo como información. Para ayuda para elegir un plan, visite <a href="https://www.medicare.gov/es" target="_blank" rel="noopener">Medicare.gov</a> o llame al 1-800-MEDICARE (1-800-633-4227), TTY 1-877-486-2048, las 24 horas del día, los 7 días de la semana.'}</p></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  T-056 · "¿QUÉ PLAN TIENE HOY?", SHARE, THE ASK BLOCK  (preview build)
+// ═══════════════════════════════════════════════════════════════════════════
+// Everything below is new in T-056. It never changes a plan fact: the 2026 -> 2027 mapping comes
+// from the CMS Plan Crosswalk and nothing else, and where the file cannot answer, the screen says so.
+
+// ── the CMS 2026 -> 2027 crosswalk, built by SHIP/reference/tools/build-crosswalk-2027.py ──
+let _xw=null, _xwTried=false;
+function loadCrosswalk(st){
+  if(_xw||_xwTried) return Promise.resolve(_xw);
+  _xwTried=true;
+  return fetch('data/crosswalk_'+st+'_2027.json').then(r=>r.ok?r.json():null)
+    .then(j=>{_xw=j||null;return _xw;}).catch(()=>{_xw=null;return null;});
+}
+// Plans the visitor could have in 2026, in their own county. No county match = the whole state.
+function xwPlans(){
+  if(!_xw) return [];
+  const idx=_xw.counties&&_xw.counties[D.county];
+  return (idx?idx.map(i=>_xw.plans[i]):_xw.plans).filter(Boolean);
+}
+
+// ── text matching: accents, capitals and one-character typos ignored (AB 2026-10-14 "YES") ──
+function fold(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
+function foldId(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
+function near(a,b){ // true when b is a, or a with one character typed wrong, added or missing
+  if(a===b) return true;
+  if(Math.abs(a.length-b.length)>1) return false;
+  let i=0,j=0,e=0;
+  while(i<a.length&&j<b.length){
+    if(a[i]===b[j]){i++;j++;continue;}
+    if(++e>1) return false;
+    if(a.length>b.length) i++; else if(a.length<b.length) j++; else {i++;j++;}
+  }
+  return e+(a.length-i)+(b.length-j)<=1;
+}
+function matchPlan(p,q){
+  const qi=foldId(q);
+  if(qi.length>=4&&foldId(p.id).indexOf(qi)>=0) return true;
+  const hay=fold(p.n+' '+p.c+' '+p.t).split(' ');
+  return fold(q).split(' ').filter(Boolean).every(w=>hay.some(h=>h.indexOf(w)===0||(w.length>3&&near(h,w))));
+}
+
+// ── where a 2026 plan goes in 2027, narrowed by the county the ZIP is in ──
+// A plan CMS splits across counties has several candidates; only the ones this county actually has
+// are considered, and where that still leaves more than one the screen offers no mapping at all.
+function resolveXw(rec){
+  const here=id=>PLANS.some(p=>p.id===id);
+  if(rec.s==='split'){
+    const live=(rec.outs||[]).filter(o=>here(o.to));
+    if(live.length===1) return {s:live[0].s,to:live[0].to,tn:live[0].tn};
+    if(live.length>1) return {s:'split'};
+    return {s:'notarea'};
+  }
+  if(rec.s==='ended') return {s:'ended'};
+  if(rec.s==='unknown') return {s:'unknown'};
+  if(rec.to&&here(rec.to)) return {s:rec.s,to:rec.to,tn:rec.tn};
+  // CMS names where the plan goes, but that plan is not sold in this county. Say both: the reader
+  // needs to know their plan moved AND that the new one is not an option where they live.
+  return {s:'notarea',tn:rec.tn||''};
+}
+// Fallback used only when the crosswalk file is missing: the same contract and plan number in 2027.
+// It is labelled as a guess-free fallback on screen, never presented as CMS's mapping.
+function sameIdIn2027(id26){
+  const k=String(id26).split('_').slice(0,2).join('_');
+  return (PLANS.find(p=>!p._medigap&&String(p.id).split('_').slice(0,2).join('_')===k)||null);
+}
+function myPlan27(){
+  const m=D.myPlan;
+  if(!m||!m.to) return null;
+  return PLANS.find(p=>p.id===m.to)||null;
+}
+
+// ── screen 3 ──
+function myPlanStep(){
+  prog(86); _plansView=true;
+  wEvt('my_plan_start',{});
+  const run=()=>{
+    const all=xwPlans();
+    const cars=[...new Set(all.map(p=>p.c).filter(Boolean))]
+      .map(c=>({c,n:all.filter(p=>p.c===c).length})).sort((a,b)=>b.n-a.n).slice(0,6);
+    const fail=!_xw;
+    wb().innerHTML=`${bk()}
+      ${bm(L('Which plan do you have today?','¿Qué plan tiene hoy?'))}
+      <p class="lead-sub">${L('Optional. With it, the comparison shows your plan side by side.','Opcional. Así la comparación le muestra su plan al lado.')}</p>
+      ${fail?`<p class="pc-eoc">${L('We could not load this year’s plan list, so type the plan ID from your card.','No pudimos cargar la lista de planes de este año; escriba el ID que aparece en su tarjeta.')}</p>`
+             :`<div class="mp-chips">${cars.map(x=>`<button type="button" class="mp-chip" onclick="mpChip(this,'${esc(x.c).replace(/'/g,"&#39;")}')">${esc(x.c)}</button>`).join('')}</div>`}
+      <div class="mp-wrap">
+        ${inp('mpq',L('Carrier, plan name or ID','Aseguradora, nombre del plan o ID'),L('e.g. Blue Shield Inspire or H0504-041','ej. Blue Shield Inspire o H0504-041'))}
+        <div class="mp-list" id="mplist" role="listbox"></div>
+      </div>
+      <div id="mppick"></div>
+      ${skip(L('I do not have a plan / I am not sure','No tengo plan / no sé'),'mpSkip()')}`;
+    const f=document.getElementById('mpq');
+    if(f){f.setAttribute('autocomplete','off');f.addEventListener('input',()=>mpSearch(f.value));f.addEventListener('focus',()=>mpSearch(f.value));}
+  };
+  if(_xw||_xwTried) run(); else loadCrosswalk(D.state||'CA').then(run);
+}
+function mpChip(btn,carrier){
+  document.querySelectorAll('.mp-chip').forEach(b=>b.classList.toggle('on',b===btn));
+  const f=document.getElementById('mpq'); if(f){f.value=carrier;f.focus();}
+  mpSearch(carrier);
+}
+let _mpHits=[];
+function mpSearch(q){
+  const box=document.getElementById('mplist'); if(!box) return;
+  q=String(q||'').trim();
+  if(q.length<2){box.innerHTML='';_mpHits=[];return;}
+  _mpHits=xwPlans().filter(p=>matchPlan(p,q)).slice(0,12);
+  if(!_mpHits.length){box.innerHTML=`<p class="mp-none">${L('No plan found. Check the ID on your card, or skip this step.','No encontramos ese plan. Revise el ID de su tarjeta, o salte este paso.')}</p>`;return;}
+  box.innerHTML=_mpHits.map((p,i)=>`<button type="button" class="mp-opt" role="option" onclick="mpPick(${i},'${q.length&&foldId(q).length>=4?'id':'typed'}')"><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.t)} · ${esc(dashId(p.id))}</span></button>`).join('');
+}
+function dashId(id){const m=String(id||'').split('_');return m[0]+(m[1]?'-'+m[1]:'')+(m[2]&&m[2]!=='0'?'-'+m[2]:'');}
+function mpPick(i,method){
+  const rec=_mpHits[i]; if(!rec) return;
+  const r=_xw?resolveXw(rec):null;
+  let m={id26:rec.id,n:rec.n,c:rec.c,t:rec.t};
+  if(r){ m.s=r.s; if(r.to){m.to=r.to;m.tn=r.tn;} }
+  else { const alt=sameIdIn2027(rec.id); m.s=alt?'fallback':'unknown'; if(alt){m.to=alt.id;m.tn=alt.name;} }
+  D.myPlan=m;
+  wEvt('my_plan_set',{method:method||'typed',match:({same:'same_id',renamed:'renamed',consolidated:'renamed',ended:'ends',split:'split',notarea:'ends',fallback:'no_crosswalk',unknown:'no_crosswalk'})[m.s]||'no_crosswalk'});
+  const box=document.getElementById('mplist'); if(box) box.innerHTML='';
+  const f=document.getElementById('mpq'); if(f) f.value='';
+  const out=document.getElementById('mppick');
+  if(out) out.innerHTML=myPlanStripHTML()+`<div style="margin-top:12px">${bp(L('Compare with my plan','Comparar con mi plan'),'go(flowCompare)')}</div>`;
+}
+function mpSkip(){wEvt('my_plan_skip',{});delete D.myPlan;go(flowCompare);}
+function mpClear(){delete D.myPlan;go(myPlanStep);}
+
+// What we say about their plan. Every branch below is something the CMS file states; where it states
+// nothing, the screen says that, and the comparison simply runs without a "Su plan" column.
+function myPlanWord(m){
+  const id=m.to?dashId(m.to):'';
+  switch(m.s){
+    case 'same':   return L('Your 2026 plan continues in 2027 as '+id+'.','Su plan 2026 sigue en 2027 como '+id+'.');
+    case 'renamed':
+    case 'consolidated': return L('In 2027 your plan becomes <b>'+esc(m.tn||'')+'</b> · '+id+'.','En 2027 su plan pasa a <b>'+esc(m.tn||'')+'</b> · '+id+'.');
+    case 'ended':  return L('Your plan ends on December 31, 2026. CMS names no plan to take it over.','Su plan termina el 31 de diciembre de 2026. CMS no nombra un plan que lo reemplace.');
+    case 'notarea':return m.tn
+      ?L('In 2027 your plan becomes <b>'+esc(m.tn)+'</b>, which is not offered in your area.','En 2027 su plan pasa a <b>'+esc(m.tn)+'</b>, que no se ofrece en su área.')
+      :L('That plan is not offered in your area in 2027.','Ese plan no se ofrece en su área en 2027.');
+    case 'split':  return L('CMS moves this plan to more than one plan depending on the county. We check yours with you.','CMS lo pasa a más de un plan según el condado. Lo revisamos con usted.');
+    case 'fallback': return L('We matched the plan with the same Medicare number in 2027 ('+id+'). CMS has not published its change file yet.','Lo emparejamos con el plan del mismo número de Medicare en 2027 ('+id+'). CMS aún no publicó su archivo de cambios.');
+    default:       return L('CMS does not say where this plan goes in 2027.','CMS no dice a dónde pasa este plan en 2027.');
+  }
+}
+function xwSource(){
+  if(!_xw) return L('CMS 2027 plan list.','Lista de planes CMS 2027.');
+  return L('Source: '+(_xw.source||'CMS Plan Crosswalk 2027')+'.','Fuente: '+(_xw.source||'CMS Plan Crosswalk 2027')+'.');
+}
+function myPlanStripHTML(){
+  const m=D.myPlan; if(!m) return '';
+  return `<div class="mp-pick"><p class="n">${L('Your plan today','Su plan hoy')}: ${esc(m.n)} · ${esc(dashId(m.id26))}</p>
+    <p class="w">${myPlanWord(m)}</p><p class="src">${esc(xwSource().replace(/<[^>]+>/g,''))}</p>
+    <button class="mp-chg" type="button" onclick="mpClear()">${L('Change','Cambiar')}</button></div>`;
+}
+function myPlanOfferHTML(){
+  return `<div class="mp-pick"><p class="n">${L('Compare against the plan you have today','Compare frente al plan que tiene hoy')}</p>
+    <p class="w">${L('Optional. We look up what happens to it in 2027.','Opcional. Buscamos qué pasa con él en 2027.')}</p>
+    <button class="mp-chg" type="button" onclick="go(myPlanStep)">${L('Add my plan','Agregar mi plan')} &rarr;</button></div>`;
+}
+
+// ── the people we are: one advisor on every shared thing (AB 2026-10-14 "ONLY ONE of us") ──
+const ADV={name:'Alejandra Brizuela',lic:'4507923',tel:'+13105979142',telShown:'(310) 597-9142',
+  photo:'images/alejandra-headshot.webp'};
+function advEmail(){return leadSite()==='medicare-california'?'Alejandra@Medicare-California.com':'Alejandra@BeneficiosMedicare.com';}
+function advBrand(){return leadSite()==='medicare-california'?'Medicare California':'Beneficios Medicare';}
+
+// ── the ask block: her face, one line, one button (AB 2026-10-14 "keep content SUPER short") ──
+function askBoxHTML(placement){
+  return `<div class="askb">
+    <img src="${ADV.photo}" width="64" height="64" alt="${esc(ADV.name)}" loading="lazy">
+    <h4>${L('Which one is right for you?','¿Cuál le conviene?')}</h4>
+    <p>${L('I tell you, based on your doctors.','Se lo digo según sus médicos.')}</p>
+    <button class="b1" data-cta="${placement}" onclick="askPersonal('${placement}')">${L('Ask for your personal comparison','Pida su comparación personal')}</button>
+    <span class="alt">${L('or text','o texto al')} <a href="sms:${ADV.tel}" data-cta="${placement}">${ADV.telShown}</a></span>
+  </div>`;
+}
+function askPersonal(placement){
+  const plans=comparedPlans();
+  if(!plans.length||!plans.every(p=>p.agent)) return;
+  D.selectedPlan=L('Compared: ','Comparó: ')+plans.map(p=>p.name).join('; ');
+  D.selectedPlanId=plans.map(p=>p.id).join(';');
+  D.plansSeen=plans.map(planLeadTag).join(' | ');
+  D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
+  wEvt('widget_plan_select',{step:'personal',placement:placement||'compare_ask',plans:plans.length});
+  go(personalForm);
+}
+function comparedPlans(){
+  const picked=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap);
+  const m=myPlan27();
+  const out=(m&&!picked.some(p=>p.id===m.id)?[Object.assign({},m,{_mine:true})]:[]).concat(picked);
+  if(m) out.forEach(p=>{if(p.id===m.id)p._mine=true;});
+  return out;
+}
+
+// ═══════════════════════════════════════
+//  SHARE
+// ═══════════════════════════════════════
+// Nothing is stored by us. The plans and the ZIP travel in the query, the note after the "#", which
+// browsers never send to a server. The link always points at the host the widget itself is served
+// from, so a link made on the preview can only ever open the preview (T-056 QA rule b).
+const SHARE_PATH='/planes/compartidos';
+function hash8(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36).slice(0,8);}
+function newShareId(){const a='abcdefghijkmnpqrstuvwxyz23456789';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s;}
+function shareNote(){const t=document.getElementById('shnote');return t?t.value.trim().slice(0,280):'';}
+function shareURL(channel){
+  const plans=comparedPlans();
+  if(!D.shareId) D.shareId=newShareId();
+  const q=new URLSearchParams();
+  q.set('z',D.zip||''); q.set('p',plans.map(p=>p.id).join(';')); q.set('l',lang);
+  q.set('d',new Date().toISOString().slice(0,10)); q.set('s',D.shareId);
+  if(D.myPlan&&D.myPlan.to) q.set('m',D.myPlan.to);
+  if(_planMeta&&_planMeta.source) q.set('v',hash8(_planMeta.source));
+  q.set('utm_source','share'); q.set('utm_medium',channel||'link'); q.set('utm_campaign','plan_share');
+  const n=shareNote();
+  return location.origin+SHARE_PATH+'?'+q.toString()+(n?'#n='+encodeURIComponent(n):'');
+}
+const SHI={
+  whatsapp:'<svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.1 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.3.4-.3.3c-.1.1-.2.3-.1.5.1.2.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg>',
+  sms:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2.5-3A8 8 0 1 1 21 12z"/></svg>',
+  email:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"/><path d="M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z"/><path d="M9 14h6M9 17h4"/></svg>'};
+const SHLAB={whatsapp:['WhatsApp','WhatsApp'],sms:['Text','Texto'],email:['Email','Email'],
+  copy:['Copy link','Copiar enlace'],pdf:['PDF','PDF']};
+// Order by the language of the page: the first spot is the one people tap (AB 2026-10-14,
+// Spanish speakers use WhatsApp more than text). PROVE reorders it after a month of share_send.
+function shareOrder(){return lang==='es'?['whatsapp','sms','email','copy','pdf']:['sms','email','whatsapp','copy','pdf'];}
+function shareBtnHTML(placement){
+  return `<button class="btn-share" data-cta="${placement}" onclick="openShare('${placement}')">
+    <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M12 16V3"/><path d="m7 8 5-5 5 5"/></svg>${L('Share','Compartir')}</button>`;
+}
+function openShare(from){
+  const plans=comparedPlans();
+  if(plans.length<1) return;
+  wEvt('share_open',{from:from||'bar',plans:plans.length});
+  const ph=L('e.g. Mom, take a look at these. Talk Sunday?','Ej: Mamá, mira estos planes. ¿Los vemos el domingo?');
+  const el=document.createElement('div');
+  el.className='shm'; el.id='shm';
+  el.innerHTML=`<div class="shc" role="dialog" aria-modal="true" aria-label="${L('Share these plans','Compartir estos planes')}">
+    <button class="sh-x" type="button" aria-label="${L('Close','Cerrar')}" onclick="closeShare()">&times;</button>
+    <h4>${L('Share these plans','Compartir estos planes')}</h4>
+    <p class="sub">${esc(plans.length+' ')}${L(plans.length===1?'plan':'plans',plans.length===1?'plan':'planes')} · ZIP ${esc(D.zip||'')}${D.county?' · '+esc(D.county):''}</p>
+    <textarea class="sh-note" id="shnote" maxlength="280" placeholder="${esc(ph)}" oninput="shCount()"></textarea>
+    <p class="sh-cnt"><span id="shcnt">0</span>/280</p>
+    <div class="sh-row">${shareOrder().map(k=>`<button class="sh-b" type="button" onclick="doShare('${k}')"><i>${SHI[k]}</i>${L(SHLAB[k][0],SHLAB[k][1])}</button>`).join('')}</div>
+    <button class="sh-more" type="button" id="shmore" onclick="doShare('more')" ${navigator.share?'':'hidden'}>${L('More options','Más opciones')}</button>
+    <p class="sh-ok" id="shok"></p>
+    <p class="sh-priv">${L('Only the plans and your note are shared. Nothing personal.','Solo se comparten los planes y su nota. Nada personal.')}</p>
+  </div>`;
+  el.addEventListener('click',e=>{if(e.target===el)closeShare();});
+  document.body.appendChild(el);
+  setTimeout(()=>{const t=document.getElementById('shnote');if(t)t.focus();},60);
+}
+function closeShare(){const e=document.getElementById('shm'); if(e) e.remove();}
+function shCount(){const t=document.getElementById('shnote'),c=document.getElementById('shcnt'); if(t&&c)c.textContent=String(t.value.length);}
+function shOk(msg){const o=document.getElementById('shok'); if(o) o.textContent=msg;}
+function isPhone(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));}
+function doShare(ch){
+  const note=shareNote();
+  wEvt('share_send',{channel:ch,has_note:note?'yes':'no',plans:comparedPlans().length,share_id:D.shareId||''});
+  if(ch==='pdf'){ makeSharePDF(); return; }
+  const url=shareURL(ch==='more'?'more':ch);
+  const subj=L('Medicare plans 2027','Planes de Medicare 2027')+(D.zip?' · ZIP '+D.zip:'');
+  if(ch==='whatsapp'){ window.open('https://wa.me/?text='+encodeURIComponent(url),'_blank','noopener'); return; }
+  if(ch==='sms'){ location.href=(/Android/i.test(navigator.userAgent)?'sms:?body=':'sms:&body=')+encodeURIComponent(url); return; }
+  if(ch==='email'){ location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(url); return; }
+  if(ch==='copy'){
+    const done=()=>shOk(L('Link copied.','Enlace copiado.'));
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done,()=>shOk(url));
+    else shOk(url);
+    return;
+  }
+  if(ch==='more'&&navigator.share){ navigator.share({title:subj,text:subj,url:url}).catch(()=>{}); }
+}
+
+// ═══════════════════════════════════════
+//  PDF  (a real file, built here, no library, no network)
+// ═══════════════════════════════════════
+// AB 2026-10-14: a real one-page PDF, not the print dialog and not an image, so WhatsApp sends it as
+// a document and Files / Print can take it. Letter landscape, 792x612pt. When it does not fit, rows
+// are cut (the template's rule), never the type size.
+// NOT in this build: the QR code to the live link. A QR that does not scan is worse than none and
+// there is no way to verify a scan from here, so the PDF prints the link in full instead. T-056 round 2.
+const HW=(function(){const w={},a='!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+  v=[278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+  for(let i=0;i<a.length;i++)w[a[i]]=v[i]; w[' ']=278; return w;})();
+function tw(s,size,bold){let t=0;s=String(s);for(let i=0;i<s.length;i++)t+=(HW[s[i]]||556);return t*size/1000*(bold?1.06:1);}
+function fit(s,maxW,size,bold){s=String(s==null?'':s);if(tw(s,size,bold)<=maxW)return s;
+  while(s.length>1&&tw(s+'…',size,bold)>maxW)s=s.slice(0,-1);return s+'…';}
+// cp1252: every character Spanish and English need. Anything else becomes a question mark rather
+// than a wrong glyph.
+function win1252(s){const M={'‘':145,'’':146,'“':147,'”':148,'–':150,'—':151,'•':149,'…':133,'€':128,'−':45,' ':32,'➜':62,'→':62};
+  let o='';for(const c of s){const n=c.codePointAt(0);
+    if(M[c]!==undefined)o+=String.fromCharCode(M[c]);
+    else if(n<256)o+=c; else o+='?';}
+  return o;}
+function pesc(s){return win1252(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');}
+function hx(c){const n=parseInt(c.slice(1),16);return [((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255].map(x=>x.toFixed(3)).join(' ');}
+function PDFPage(W,H){
+  const ops=[]; const Y=y=>(H-y).toFixed(2);
+  return {
+    rect:(x,y,w,h,col)=>ops.push(`${hx(col)} rg ${x.toFixed(2)} ${(H-y-h).toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re f`),
+    line:(x1,y1,x2,y2,col,lw)=>ops.push(`${hx(col)} RG ${(lw||.6).toFixed(2)} w ${x1.toFixed(2)} ${Y(y1)} m ${x2.toFixed(2)} ${Y(y2)} l S`),
+    text:(x,y,s,size,bold,col,align,boxW)=>{let xx=x;
+      if(align==='r') xx=x-tw(s,size,bold);
+      else if(align==='c') xx=x+((boxW||0)-tw(s,size,bold))/2;
+      ops.push(`BT ${hx(col||'#000000')} rg /${bold?'FB':'FR'} ${size} Tf ${xx.toFixed(2)} ${Y(y)} Td (${pesc(s)}) Tj ET`);},
+    build:()=>ops.join('\n')
+  };
+}
+function pdfBlob(W,H,content){
+  const objs=[];
+  objs[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+  objs[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /FR 5 0 R /FB 6 0 R >> >> /Contents 4 0 R >>`;
+  objs[4]=`<< /Length ${content.length} >>\nstream\n${content}\nendstream`;
+  objs[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[6]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  let out='%PDF-1.4\n', off=[];
+  for(let i=1;i<objs.length;i++){off[i]=out.length;out+=`${i} 0 obj\n${objs[i]}\nendobj\n`;}
+  const xref=out.length;
+  out+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objs.length;i++) out+=String(off[i]).padStart(10,'0')+' 00000 n \n';
+  out+=`trailer\n<< /Size ${objs.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new Blob([Uint8Array.from(out,c=>c.charCodeAt(0)&255)],{type:'application/pdf'});
+}
+function pdfRows(plans,mine){
+  const r=[];
+  const num=v=>v==null?noInfo():v;
+  r.push([L('Monthly premium','Prima mensual'),plans.map(p=>num(premUsd(p.premium)))]);
+  if(mine&&mine.premium!=null) r.push([L('Difference a year (premium)','Diferencia al año (prima)'),
+    plans.map(p=>{if(p._mine)return '—';if(p.premium==null)return noInfo();
+      const d=Math.round((p.premium-mine.premium)*12);return d===0?L('Same','Igual'):(d>0?'+':'-')+usd(Math.abs(d));})]);
+  r.push([L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>p.moop==null?noInfo():usd(p.moop))]);
+  r.push([L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?(p.ded==null?noInfo():usd(p.ded)):L('No drug coverage','Sin medicamentos'))]);
+  r.push([L('Primary doctor','Médico primario'),plans.map(p=>money(p.pcp)||noInfo())]);
+  r.push([L('Specialist','Especialista'),plans.map(p=>money(p.spec)||noInfo())]);
+  r.push([L('Emergency room','Emergencias'),plans.map(p=>money(p.er)||noInfo())]);
+  const txt=v=>v==null?noInfo():(v.t!==undefined?String(v.t).replace(/<[^>]+>/g,''):String(v));
+  r.push(['Dental',plans.map(p=>txt(dentalB(p,true)))]);
+  r.push([L('Eyewear','Anteojos'),plans.map(p=>txt(visionB(p,true)))]);
+  r.push([L('Hearing aids','Audífonos'),plans.map(p=>txt(hearingB(p,true)))]);
+  r.push(['OTC',plans.map(p=>txt(otcB(p,true)))]);
+  r.push([L('Your doctors and hospital','Sus médicos y hospital'),plans.map(()=>L('We check them for you','Lo revisamos por usted'))]);
+  if(plans.some(p=>typeof p.rating==='number'&&p.rating>0))
+    r.push([L('Overall star rating','Estrellas (general)'),plans.map(p=>
+      (typeof p.rating==='number'&&p.rating>0)?String(p.rating).replace(/\.0$/,'')+' / 5'
+        :L('Not rated yet','Sin calificación todavía'))]);
+  return r;
+}
+function makeSharePDF(){
+  const plans=comparedPlans(); if(!plans.length) return;
+  const mine=myPlan27();
+  wEvt('pdf_open',{from:'share'});
+  const W=792,H=612,M=34,g=PDFPage(W,H);
+  const NAVY='#1E3A5F', TEAL='#00796B', GREY='#5F6B75', LINE='#D8DEE4', GOLD='#B7791F', DARK='#1C2B3A';
+  const note=shareNote();
+  const today=new Date().toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'});
+  // The CMS source line the build writes is in English; on a Spanish sheet we print its date.
+  const sm=/(\d{2})\/(\d{2})\/(\d{4})/.exec((_planMeta&&_planMeta.source)||'');
+  const dstamp=sm?new Date(sm[3]+'-'+sm[1]+'-'+sm[2]+'T12:00:00').toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'}):'';
+  // band: the advisor sits top right, as on the client sheet
+  g.rect(0,0,W,68,NAVY);
+  g.text(M,27,L('Your 2027 Medicare options','Sus opciones de Medicare 2027')+(D.zip?' · ZIP '+D.zip:'')+(D.county?' · '+D.county:''),17,true,'#FFFFFF');
+  if(dstamp) g.text(M,46,L('CMS plan data of ','Datos de CMS del ')+dstamp,8.5,false,'#C9D6E4');
+  g.text(W-M,25,advBrand(),12,true,'#FFFFFF','r');
+  g.text(W-M,40,ADV.name+'  ·  '+L('Lic. #','Lic. #')+ADV.lic,9,true,'#FFFFFF','r');
+  g.text(W-M,54,ADV.telShown+'  ·  '+advEmail(),8.5,false,'#C9D6E4','r');
+  let y=84;
+  // table
+  const labW=168, colW=(W-2*M-labW)/plans.length, rows=pdfRows(plans,mine);
+  const headH=40;
+  plans.forEach((p,i)=>{
+    const x=M+labW+i*colW;
+    g.rect(x,y,colW-6,4,p._mine?NAVY:(CARRIER_COLORS[p.carrier]||'#C9D1D8'));
+    g.text(x,y+16,fit(p._mine?L('YOUR PLAN','SU PLAN'):p.carrier,colW-12,8,true),8,true,GREY);
+    g.text(x,y+28,fit(p.name,colW-12,10,true),10,true,DARK);
+    g.text(x,y+38,fit(baseType(p)+' · '+dashId(p.id),colW-12,8,false),8,false,GREY);
+  });
+  let ry=y+headH+10;
+  const rowH=19, bottomReserve=150;
+  rows.forEach(([lab,cells])=>{
+    if(ry>H-bottomReserve) return;                       // cut rows, never the type size
+    g.line(M,ry-12,W-M,ry-12,LINE,.5);
+    g.text(M,ry,fit(lab,labW-10,9,false),9,false,GREY);
+    cells.forEach((c,i)=>g.text(M+labW+i*colW,ry,fit(String(c),colW-12,10,true),10,true,
+      /^\+/.test(String(c))?'#A50E0E':(/^-\$/.test(String(c))||String(c)==='$0'?TEAL:DARK)));
+    ry+=rowH;
+  });
+  g.line(M,ry-12,W-M,ry-12,LINE,.5);
+  // the ask follows the table, with the one gold thing on the page
+  let by=Math.min(ry+26,H-128);
+  g.text(M,by,L('Which one is right for you?','¿Cuál le conviene?'),13,true,DARK);
+  g.text(M,by+16,L('I tell you, based on your doctors. Ask for your personal comparison >','Se lo digo según sus médicos. Pida su comparación personal >'),10,false,GREY);
+  const chip=L('Open enrollment ends December 7','La inscripción termina el 7 de diciembre');
+  const cw=tw(chip,9,true)+16;
+  g.rect(W-M-cw,by-11,cw,19,'#FDF3E0');
+  g.text(W-M-cw+8,by+2,chip,9,true,GOLD);
+  if(note){ g.text(M,by+34,fit(L('Note: ','Nota: ')+note,W-2*M,9.5,false),9.5,false,DARK); }
+  // the rows that are the same in every plan, said once
+  const pdfSame=[];
+  pdfRows(plans,mine).forEach(([lab,cells])=>{ if(cells.length>1&&cells.every(c=>String(c)===String(cells[0]))) pdfSame.push(lab); });
+  if(pdfSame.length) g.text(M,by+66,fit(L('The same in all '+plans.length+': ','Igual en los '+plans.length+': ')+pdfSame.join(' · '),W-2*M,8.5,false),8.5,false,GREY);
+  // three steps
+  const st=[[L('Step 1','Paso 1'),L('You tell me your doctors.','Usted me dice sus médicos.')],
+            [L('Step 2','Paso 2'),L('I check them against each plan.','Yo los reviso en cada plan.')],
+            [L('Step 3','Paso 3'),L('We decide together.','Decidimos juntas.')]];
+  const sw=(W-2*M-20)/3, sy=Math.min(by+84,H-86);
+  st.forEach(([h,t],i)=>{const x=M+i*(sw+10);
+    g.rect(x,sy,sw,30,'#F3F5F7');
+    g.text(x+9,sy+13,h,8,true,TEAL); g.text(x+9,sy+25,fit(t,sw-18,9,false),9,false,DARK);});
+  g.text(M,by+50,fit(L('This comparison: ','Esta comparación: ')+shareURL('pdf').split('#')[0].split('&utm_')[0],W-2*M,8,false),8,false,TEAL);
+  // fine print
+  const fp1=L('We do not offer every plan available in your area. Currently we represent 7 organizations which offer 255 products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.',
+              'No ofrecemos todos los planes disponibles en su área. Actualmente representamos 7 organizaciones que ofrecen 255 productos en su área. Comuníquese con Medicare.gov o llame al 1-800-MEDICARE para obtener información sobre todas sus opciones.');
+  const fp2=L('Not connected with or endorsed by the federal government or the Medicare program. A fixed picture of the plan data on '+today+'; plan details can change. Every year, Medicare evaluates plans based on a 5-star rating system.',
+              'No está relacionado ni respaldado por el gobierno federal ni por el programa Medicare. Es una foto fija de los datos del '+today+'; los detalles del plan pueden cambiar. Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas.');
+  let fy=H-56;
+  [fp1,fp2].forEach(t=>{
+    // wrap by width, 7pt
+    let line='',out=[];
+    t.split(' ').forEach(w=>{const n=line?line+' '+w:w; if(tw(n,7,false)>W-2*M){out.push(line);line=w;}else line=n;});
+    if(line)out.push(line);
+    out.slice(0,2).forEach(l=>{g.text(M,fy,l,7,false,GREY);fy+=9;});
+  });
+  const name=L('Medicare plans 2027','Planes Medicare 2027')+(D.zip?' - '+D.zip:'')+'.pdf';
+  const blob=pdfBlob(W,H,g.build());
+  const file=(window.File&&navigator.canShare)?new File([blob],name,{type:'application/pdf'}):null;
+  if(file&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:name}).then(()=>shOk(L('PDF shared.','PDF compartido.'))).catch(()=>pdfDownload(blob,name));
+  } else pdfDownload(blob,name);
+}
+function pdfDownload(blob,name){
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+  shOk(L('PDF saved.','PDF guardado.'));
+}
+
+// ── "Guardar mi contacto": a .vcf the phone opens on its own Add Contact screen ──
+// AB 2026-10-14: people fear spam, so the Recibido screen says which number will write to them and
+// lets them save it before it does.
+function saveContact(step){
+  wEvt('save_contact',{step:step||'recibido'});
+  const v=['BEGIN:VCARD','VERSION:3.0','N:Brizuela;Alejandra;;;','FN:'+ADV.name,'ORG:'+advBrand(),
+    'TITLE:'+L('Licensed Medicare Agent','Agente de Medicare con licencia'),
+    'TEL;TYPE=CELL,VOICE:'+ADV.tel,'EMAIL;TYPE=INTERNET:'+advEmail(),
+    'URL:'+location.origin,'END:VCARD'].join('\r\n');
+  const blob=new Blob([v],{type:'text/vcard;charset=utf-8'});
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download='Alejandra-Brizuela.vcf';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+
+// ── the personal-comparison form (screen 15) ──
+function personalForm(){
+  prog(94); _plansView=true; wEvt('form_open',{source:'personal'});
+  const n=comparedPlans().length;
+  wb().innerHTML=`${bk()}
+    <h3 class="lead-title">${L('Your personal comparison','Su comparación personal')}</h3>
+    <p class="lead-about">${L(n+' plan'+(n===1?'':'s')+' attached.',n+' plan'+(n===1?'':'es')+' adjunto'+(n===1?'':'s')+'.')}</p>
+    <p class="lead-sub">${L('I look at your doctors and tell you which one fits.','Reviso sus médicos y le digo cuál le conviene.')}</p>
+    ${inp('fullName',L('Full name','Nombre completo'),L('First and last name','Nombre y apellido'))}
+    ${inp('phone',L('Phone number','Número de teléfono'),'(555) 123-4567','tel')}
+    ${inp('email',L('Email (optional)','Email (opcional)'),'email@example.com','email')}
+    ${inp('doctors',L('Your doctors (optional)','Sus médicos (opcional)'),L('Doctor or clinic names','Nombres de sus médicos o clínica'))}
+    ${bp(L('Send','Enviar'),"submitLead('personal')")}
+    ${consentHTML(lang,L('Send','Enviar'),privacyURL())}
+    <div id="leadErr"></div>`;
 }
 
 // ═══════════════════════════════════════
@@ -2252,7 +2926,16 @@ var LEAD_URL_PROD='https://script.google.com/macros/s/AKfycby8F8kXyTGFcCh2bzk92_
 var LEAD_URL_STAGING='https://script.google.com/macros/s/AKfycbwuoMJQEAK5aQ_JRQiAcJrscb0NOqfH9cFgvOKel4UpU_Z2FSiMh4Wd-BWLfTNRDAL5xw/exec';
 var CONSENT_VERSION='2026-10-03-v1';
 function leadURL(){return /(^|\.)staging\.|\.pages\.dev$|^localhost$|^127\./.test(location.hostname)?LEAD_URL_STAGING:LEAD_URL_PROD;}
+// T-056: the preview shows the wording proposed to PROTECT / Golden Outlook (D-009), which names who
+// will contact them. Everywhere else this returns exactly the live text, unchanged, so nothing
+// unsigned can reach a real lead form.
+function consentProposed(lang,btn){
+  return lang==='en'
+    ?`By tapping ${btn}, you agree that Alejandra Brizuela of Beneficios Medicare may contact you by call, text or WhatsApp. Not a condition of purchase. Message rates may apply; reply STOP to opt out.`
+    :`Al tocar ${btn}, acepta que Alejandra Brizuela de Beneficios Medicare le contacte por llamada, texto o WhatsApp. No es condición de compra. Pueden aplicar tarifas de mensajes; responda STOP para cancelar.`;
+}
 function consentText(lang,btn){
+  if(typeof isSharePreview==='function'&&isSharePreview()) return consentProposed(lang,btn);
   return lang==='en'
     ?'By tapping '+(btn||'Send')+', you agree that we may contact you by call, text or WhatsApp. Not a condition of purchase. Message rates may apply; reply STOP to opt out.'
     :'Al tocar '+(btn||'Enviar')+', acepta que le contactemos por llamada, texto o WhatsApp. No es condición de compra. Pueden aplicar tarifas de mensajes; responda STOP para cancelar.';
@@ -2269,7 +2952,22 @@ function withConsent(d,lang,btn,page){
 /* T-020: one way to report an event. Inside the plan-finder iframe it goes to the host page, which sends it
    to that site's own GA4 property (BM or MC); anywhere else straight to this page's gtag. */
 function gaEvent(n,p){try{if(window.self!==window.top){window.parent.postMessage({type:'widget-ga',name:n,params:p},'*');}else if(typeof gtag==='function'){gtag('event',n,p);}}catch(e){}}
+// T-056 QA rule (c): on the SHARE PREVIEW host every lead goes to the Tests tab, is named "QA · ...",
+// is marked Fuente = preview and its alert email is subject-prefixed, so a real name typed by a real
+// person (Susana, family) still cannot land in Leads. Keyed on the hostname at send time, and only on
+// this one host: staging keeps its own env tag and is not relabelled.
+function isSharePreview(){return /^share-preview\./i.test(location.hostname)||/^localhost$|^127\./.test(location.hostname);}
+function tagPreview(d){
+  if(!isSharePreview()) return d;
+  d.test=true; d.sheetTab='Tests'; d.fuente='preview'; d.source_detail='preview';
+  d.emailSubjectPrefix='[QA PREVIEW]';
+  if(d.firstName&&!/^QA · /.test(d.firstName)) d.firstName='QA · '+d.firstName;
+  if(d.fullName&&!/^QA · /.test(d.fullName)) d.fullName='QA · '+d.fullName;
+  return d;
+}
 function sendLead(d){
+  // Tag a copy: what we send is labelled, what the thank-you screen reads back is the visitor's own name.
+  d=tagPreview(Object.assign({},d));
   if(!d.leadId) d.leadId='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   d.env=leadURL()===LEAD_URL_STAGING?'staging':'production';   // AB 2026-10-03: tell STG leads from PROD
   var ctl=window.AbortController?new AbortController():null;
@@ -2281,7 +2979,8 @@ function sendLead(d){
       // T-020: generate_lead ONLY when the script confirmed the save. No personal data in the event.
       if(ok) gaEvent('generate_lead',{site:/california/i.test(String(d.source||d.site||location.hostname))?'mc':'bm',
         lang:String(d.lang||d.language||document.documentElement.lang||'').slice(0,2),
-        form:(d.role!==undefined||d.resume_link!==undefined)?'careers':(d.leadType?'widget_'+d.leadType:'contact'),
+        form:(d.role!==undefined||d.resume_link!==undefined)?'careers':(d.leadType==='personal'?'personal':(d.leadType?'widget_'+d.leadType:'contact')),
+        from_share:d.fromShare==='yes'?'yes':'no',my_plan:d.myPlan2026?'yes':'no',share_id:String(d.shareId||''),
         state:String(d.state||''),...(d.leadType?gaContext():(gaInternal()?{traffic_type:'internal'}:{}))});
       return ok;})
     .catch(function(){clearTimeout(t);return false;});
@@ -2333,7 +3032,7 @@ function cfErrorHTML(){
     <div class="cf-errbox">${L('It may be a connection problem. Nothing you did wrong.','Puede ser un problema de conexión. No es por algo que usted hizo.')}</div>
     ${cfContact(true)}</div>`;
 }
-const CONSENT_BTN={enroll:['Send','Enviar'],help:['Send','Enviar'],snooze:['Set Reminder','Programar Recordatorio'],question:['Request Free Call','Solicitar Llamada Gratis']};
+const CONSENT_BTN={enroll:['Send','Enviar'],help:['Send','Enviar'],personal:['Send','Enviar'],snooze:['Set Reminder','Programar Recordatorio'],question:['Request Free Call','Solicitar Llamada Gratis']};
 
 function submitLead(type){
   if(_submitting) return;
@@ -2369,7 +3068,11 @@ function submitLead(type){
   D.lang=lang;D.conditions=[...selConds];
   D.timestamp=new Date().toISOString();
   D.leadType=type;
-  if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
+  if(type!=='enroll'&&type!=='help'&&type!=='personal'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
+  const docs=document.getElementById('doctors')?document.getElementById('doctors').value.trim():'';
+  if(docs) D.doctors=docs;
+  if(D.myPlan) D.myPlan2026=D.myPlan.n+' ['+dashId(D.myPlan.id26)+'] 2027: '+D.myPlan.s+(D.myPlan.to?' '+dashId(D.myPlan.to):'');
+  if(D.shareId) D.shareId=D.shareId;
 
   const parentHost=(window.self!==window.top)?document.referrer:'';
   D.source=leadSite();
@@ -2436,6 +3139,21 @@ function flowSuccess(){
         ${w?cfRow(L('When','Cuándo'),L('Before ','Antes del ')+fmt(w.start)):''}
         ${fix}</div>
       ${cfContact(false)}
+      <div class="cf-links">${restart}</div></div>`;
+    return;
+  }
+  if(D.leadType==='personal'){
+    wb().innerHTML=`<div class="cf" style="text-align:center">
+      <img src="${ADV.photo}" width="72" height="72" alt="${esc(ADV.name)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;margin:4px auto 10px">
+      <p class="cf-t" style="text-align:center">${L('Got it'+(first?', '+first:'')+'.','Recibido'+(first?', '+first:'')+'.')}</p>
+      <p class="cf-s" style="text-align:center">${L('Alejandra will text you.','Alejandra le escribe por texto.')}</p>
+      <p class="cf-s" style="text-align:center;font-size:14px">${L('I write from ','Le escribo desde el ')}${ADV.telShown}.</p>
+      <button class="b1" data-cta="recibido" style="display:block;width:100%;background:var(--sage);color:#fff;border:0;border-radius:10px;padding:13px;font:800 15.5px/1.2 inherit;min-height:48px;cursor:pointer" onclick="saveContact('recibido')">${L('Save my contact','Guardar mi contacto')}</button>
+      <div class="cf-band" style="margin-top:14px"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
+        ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
+        ${email?cfRow(L('Email','Correo'),email):''}
+        ${D.doctors?cfRow(L('Your doctors','Sus médicos'),esc(D.doctors)):''}
+        ${fix}</div>
       <div class="cf-links">${restart}</div></div>`;
     return;
   }
@@ -2516,6 +3234,6 @@ go(startZip);
   });
 })();
 </script>
-<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent='STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
+<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent=/^share-preview\./i.test(location.hostname)?'VISTA DE PRUEBA':'STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
 </body>
 </html>
