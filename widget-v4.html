@@ -3282,6 +3282,6 @@ go(startZip);
   });
 })();
 </script>
-<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent=/^share-preview\./i.test(location.hostname)?'VISTA DE PRUEBA':'STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
+<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)&&window.self===window.top){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent=/^share-preview\./i.test(location.hostname)?'VISTA DE PRUEBA':'STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
 </body>
 </html>
