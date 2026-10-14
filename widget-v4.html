@@ -1557,7 +1557,11 @@ function optV(o){
 }
 function ssbciV(v){return v==null?null:(v?V(L('Included','Incluido')):OFF());}   // the row label already says "only if you qualify"
 function vAmt(n){return n==null?null:V(usd(n));}
-// CMS-required wording whenever SSBCI benefits are mentioned (42 CFR 422.2267(e)(34)). Final ES wording: PROTECT.
+// SSBCI row OFF (PROTECT review 2026-10-14): 42 CFR 422.2267(e)(34) requires any material that mentions SSBCI to
+// list the eligible chronic conditions, the top five "as determined by the organization", and say having one does not
+// guarantee the benefit. The plan's top five are not in the CMS files, so we cannot show a compliant disclaimer.
+// Data stays in the plan files (ssbci). Turn on only with wording Golden Outlook signs. Old one-line text kept below.
+const SHOW_SSBCI=false;
 const SSBCI_DISC=()=>L('The benefits mentioned are a part of a special supplemental program for the chronically ill. Not all members will qualify for these benefits.',
   'Los beneficios mencionados son parte de un programa especial de beneficios suplementarios para personas con enfermedades crónicas. No todos los miembros califican para estos beneficios.');
 // The groups behind "Ver todos los beneficios", in the inventory order. Each row: [label, value]. Shared by the card and
@@ -1614,8 +1618,8 @@ function benefitGroups(p){
     [L('Personal emergency alert device','Botón de emergencia personal'),x14V(p,'14c11')],
     [L('In-home support','Apoyo en el hogar'),x14V(p,'14c21')],
     [L('Optional extra packages','Paquetes opcionales'),optV(p.opt)],
-    [L('Chronic condition benefits (only if you qualify)','Beneficios para condiciones crónicas (solo si califica)'),ssbciV(p.ssbci)]],
-    note:p.ssbci?SSBCI_DISC():''});
+    ...(SHOW_SSBCI?[[L('Chronic condition benefits (only if you qualify)','Beneficios para condiciones crónicas (solo si califica)'),ssbciV(p.ssbci)]]:[])],
+    note:SHOW_SSBCI&&p.ssbci?SSBCI_DISC():''});
   return G;
 }
 function grpOpen(el,k){if(el.open)wEvt('benefit_group_open',{group:k});}
@@ -1703,7 +1707,7 @@ function planCard(p,selectable){
   // T-052: drug deductible says which tiers skip it, on the card (it was only in the drug fine print).
   if(drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
   let rows=lrow(L('Monthly premium','Prima mensual'),prem);
-  if(isMA) rows+=lrow(L('Part B money back','Le devuelven de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
+  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
   if(isMA) rows+=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
   rows+=lrow(L('Drug deductible','Deducible de medicamentos'),ded);
   let body=lsec('cost',L('Costs','Costos'),rows,'cost'), more='', gap=false;
@@ -2055,7 +2059,7 @@ function flowCompare(){
   grp(L('Costs','Costos'));
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
   if(plans.some(ma)){
-    row(L('Part B money back','Le devuelven de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
+    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
   }
   row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
