@@ -982,9 +982,16 @@ function loadPlanData(stateCode){
 }
 // Load ZIP index (small file, maps ZIP to state code)
 let _zipIndex = null;
+// data/zip_index.js declares `const ZIP_INDEX`, so loading it twice throws
+// "Identifier 'ZIP_INDEX' has already been declared". Until flow v2 there was one caller and no
+// way to race; flow v2's step 1 reads the state from the index while the boot prefetch is already
+// fetching it. So: hold the in-flight promise, and never inject a second copy of the script.
+var _zipIndexP = null;
 function loadZipIndex(){
   if(_zipIndex) return Promise.resolve(_zipIndex);
-  return new Promise((resolve, reject) => {
+  if(typeof ZIP_INDEX !== 'undefined'){ _zipIndex = ZIP_INDEX; return Promise.resolve(_zipIndex); }
+  if(_zipIndexP) return _zipIndexP;
+  return _zipIndexP = new Promise((resolve, reject) => {
     const s = document.createElement('script');
     s.src = 'data/zip_index.js';
     s.onload = () => {
@@ -993,7 +1000,7 @@ function loadZipIndex(){
         resolve(_zipIndex);
       } else reject(new Error('ZIP index not found'));
     };
-    s.onerror = () => reject(new Error('Failed to load ZIP index'));
+    s.onerror = () => { _zipIndexP = null; reject(new Error('Failed to load ZIP index')); };
     document.head.appendChild(s);
   });
 }
