@@ -1386,9 +1386,15 @@ function provenanceNote(){
   return L(`Plan year ${y} costs and benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`,
            `Costos y beneficios del año del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
 }
+// 42 CFR 422.2267(e)(33): wherever Star Ratings appear, say Medicare rates plans yearly on a 5-star system.
+// Missing from T-053 star ratings (live 2026-10-14 13:04); added with T-060 star sort. 12px: required disclaimer.
+function starDiscHTML(){
+  if(!PLANS.some(p=>!p._medigap&&p.rating!=null)) return '';
+  return `<p style="font-size:12px;line-height:1.5;color:#56616a;margin:10px 2px 0">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas.')}</p>`;
+}
 function provenanceHTML(){
   const t=provenanceNote(); if(!t) return '';
-  return `<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${esc(t)}</p>`;
+  return starDiscHTML()+`<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${esc(t)}</p>`;
 }
 
 // ---- benefit text, ES + EN. CMS PBP category names, one fixed translation (T-017 b4) ----
@@ -1846,8 +1852,10 @@ function sortModes(){
   // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
   // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
   // true to restore it; sortPlans already handles mode 'star'.
-  const SORT_BY_RATING=false;
-  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
+  // T-060 star sort: AB said yes 2026-10-14. Highest CMS rating first, unrated plans last, ties by lower premium.
+  // Label states the order, never "best" (superlative rule).
+  const SORT_BY_RATING=true;
+  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'Highest CMS star rating', es:'Calificación CMS más alta', sen:'Highest rating', ses:'Calificación más alta'});
   return m;
 }
 function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
