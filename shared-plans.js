@@ -411,8 +411,10 @@ function done(d){
     '</div>';
   $('formCard').scrollIntoView({block: 'start', behavior: 'smooth'});
 }
-// A preview lead is a test lead, labelled in three places so it cannot be mistaken for a real one
-// even when a real person (Susana) types her real name (T-056 QA rule c).
+// A preview lead is labelled so it cannot be mistaken for a real one even when a real person (Susana)
+// types her real name: "QA · " makes the Apps Script's isTest() true, which greys the row, writes
+// "TEST · " in Tipo, prefixes the subject and stops the text alert. It does NOT move the row out of
+// the Leads tab — the sheet has been ONE TAB since 2026-10-13. See the widget's tagPreview.
 function applyPreviewTag(d){
   if(!isSharePreview()) return;
   d.test = true; d.sheetTab = 'Tests'; d.fuente = 'preview'; d.source_detail = 'preview';

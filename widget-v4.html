@@ -2952,10 +2952,16 @@ function withConsent(d,lang,btn,page){
 /* T-020: one way to report an event. Inside the plan-finder iframe it goes to the host page, which sends it
    to that site's own GA4 property (BM or MC); anywhere else straight to this page's gtag. */
 function gaEvent(n,p){try{if(window.self!==window.top){window.parent.postMessage({type:'widget-ga',name:n,params:p},'*');}else if(typeof gtag==='function'){gtag('event',n,p);}}catch(e){}}
-// T-056 QA rule (c): on the SHARE PREVIEW host every lead goes to the Tests tab, is named "QA · ...",
-// is marked Fuente = preview and its alert email is subject-prefixed, so a real name typed by a real
-// person (Susana, family) still cannot land in Leads. Keyed on the hostname at send time, and only on
-// this one host: staging keeps its own env tag and is not relabelled.
+// T-056 QA rule (c), as far as the site can carry it. Keyed on the hostname at send time, and only on
+// the share-preview host: staging keeps its own env tag and is not relabelled.
+// WHAT THIS ACTUALLY DOES TODAY: the "QA · " name makes the Apps Script's isTest() true, so the row is
+// grey, its Tipo reads "TEST · ", the subject is prefixed "STG TEST " and NO text alert is sent.
+// WHAT IT DOES NOT DO: send the row to a Tests tab. AB moved the sheet to ONE TAB on 2026-10-13
+// ("too complicated in separate tabs"); since then every lead, tests included, goes to "Leads", and
+// Tests holds job applications only. sheetTab / fuente / emailSubjectPrefix are sent anyway — the
+// script gives every unknown field its own column — but the script does not read them. Routing a
+// preview lead out of Leads is a change to the lead path, so it is AB's call, not ours: see the
+// blocked line on T-056 in NOW.md.
 function isSharePreview(){return /^share-preview\./i.test(location.hostname)||/^localhost$|^127\./.test(location.hostname);}
 function tagPreview(d){
   if(!isSharePreview()) return d;
