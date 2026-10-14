@@ -18,18 +18,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #1E3A5F; --green: #00796B; --blue: #2E6BA4;
-  --teal: #00897B; --mint: #B2DFDB;
-  --lt-blue: #D6EAF7; --lt-green: #E0F2F1;
-  --lt-mint: #E0F2F1; --lt-gray: #F3F5F7;
+  --navy: #1E3A5F; --green: #007B40; --blue: #2E6BA4;
+  --teal: #007B7B; --mint: #A8D8B9;
+  --lt-blue: #D6EAF7; --lt-green: #D4EDE1;
+  --lt-mint: #EAF6EE; --lt-gray: #F3F5F7;
   --gray: #5A6577; --dark: #1C2B3A; --white: #FFFFFF;
-  --sage: #00897B; --sage-dark: #00796B; --slate: #3D5A80;
+  --sage: #007B7B; --sage-dark: #005C5C; --slate: #3D5A80;
+  /* channel triplet so shadows and focus rings derive from --sage instead of
+     restating it; THEMES below overrides it alongside --sage. */
+  --sage-rgb: 0,123,123;
   --radius: 12px;
   --shadow: 0 4px 24px rgba(30,58,95,0.10);
   --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,#E0F2F1 0%,#D6EAF7 50%,#E0F2F1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,var(--lt-mint) 0%,var(--lt-blue) 50%,var(--lt-mint) 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 body.in-iframe{padding:0;min-height:auto;background:var(--white);align-items:flex-start}
 body.in-iframe .widget-wrap{border-radius:0;box-shadow:none}
 body.in-iframe .widget-header{display:none}
@@ -90,13 +93,13 @@ body.host-next #wb .btn-p{display:none!important}
 .input-group{margin-bottom:14px;text-align:center}
 .input-group label{display:block;font-size:13px;font-weight:500;color:#5f6368;margin-bottom:6px;text-align:center}
 .input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:#202124;transition:border-color .2s;text-align:center;display:block;margin:0 auto}
-.input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
+.input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(var(--sage-rgb),.15)}
 .input-field::placeholder{color:#A0AEC0}
 .input-group.zip-group .input-field{width:140px;min-width:140px;font-size:22px;letter-spacing:3px}
 
 /* ── BUTTONS ── */
 .btn-p{width:100%;padding:16px;background:var(--sage);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
-.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,137,123,.3)}.btn-p:active{transform:translateY(0)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(var(--sage-rgb),.3)}.btn-p:active{transform:translateY(0)}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
@@ -125,12 +128,12 @@ body.host-next #wb .btn-p{display:none!important}
 .cond-chip.sel .cond-label{color:white}
 .cond-chip.sel .cond-icon svg{filter:brightness(0) invert(1)}
 .health-textarea{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--dark);resize:vertical;min-height:70px;transition:border-color .2s}
-.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
+.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(var(--sage-rgb),.15)}
 .health-textarea::placeholder{color:#A0AEC0}
 
 /* ── RANK BADGES (priority step) ── */
 .opt-card{position:relative}
-.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,137,123,.3);animation:popIn .25s ease}
+.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(var(--sage-rgb),.3);animation:popIn .25s ease}
 .opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
 
 /* ── PLAN CARDS ── */
@@ -202,7 +205,7 @@ body.host-next #wb .btn-p{display:none!important}
 .success-bullets li{font-size:14px;color:#2D3748;line-height:1.5;padding:5px 0;display:flex;align-items:flex-start;gap:8px}
 .success-bullets li span.sb-icon{flex-shrink:0;font-size:16px;margin-top:1px}
 .success-cta{display:inline-block;background:var(--sage);color:white;font-size:15px;font-weight:600;padding:13px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
-.success-cta:hover{background:#1A8A6E;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,138,110,.3)}
+.success-cta:hover{background:var(--sage-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(var(--sage-rgb),.3)}
 .success-links{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .success-links button{background:none;border:none;color:var(--navy);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px}
 
@@ -565,6 +568,7 @@ const THEMES = {
   california: {
     '--sage':      '#0080D4',
     '--sage-dark': '#0068B0',
+    '--sage-rgb':  '0,128,212',
     '--navy':      '#1a1a1a',
     '--slate':     '#4a4a4a',
     '--lt-mint':   '#E8F2FC',
@@ -1751,7 +1755,7 @@ function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
+    return `<div class="pc" style="--cc:var(--teal)"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
       <div class="pc-meta">${L('Supplement','Suplemento')} · ${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
       <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
@@ -2050,7 +2054,7 @@ async function flowResults(){
       </div>
       ${bp(lang==='en'?'Try again':'Intentar de nuevo','retryZip()')}
       <div style="text-align:center;margin-top:14px;font-size:15px;line-height:2">
-        <a href="tel:${tel}" style="color:#00796B;font-weight:700;text-decoration:none">&#128222; ${telShown}</a><br>
+        <a href="tel:${tel}" style="color:var(--sage-dark);font-weight:700;text-decoration:none">&#128222; ${telShown}</a><br>
         <a href="https://wa.me/13105979142" target="_blank" rel="noopener" style="color:#25D366;font-weight:700;text-decoration:none">WhatsApp</a>
       </div>`;
     setTimeout(()=>{const f=document.getElementById('zip-retry'); if(f) f.focus();},50);
