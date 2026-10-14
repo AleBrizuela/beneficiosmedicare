@@ -433,10 +433,13 @@ window.saveContact = function(){
 };
 
 // ── preview badge: nobody should mistake this for the live site (T-056 QA rule e) ──
+// It lives in the sticky top bar, not floating over the page: floating, it covered a figure in the
+// comparison table at 375px, and a badge that hides a number is worse than no badge.
 if(/\.pages\.dev$/i.test(location.hostname)){
-  var b = document.createElement('div'); b.className = 'prev-badge';
-  b.textContent = /^share-preview\./i.test(location.hostname) ? 'VISTA DE PRUEBA' : 'STAGING · no es el sitio real';
-  document.body.appendChild(b);
+  var b = document.createElement('span'); b.className = 'prev-badge';
+  b.textContent = /^share-preview\./i.test(location.hostname) ? 'VISTA DE PRUEBA' : 'STAGING';
+  var bar = document.querySelector('.tb .wrap'), ln = document.getElementById('langLink');
+  if(bar && ln) bar.insertBefore(b, ln); else document.body.appendChild(b);
 }
 boot();
 })();
