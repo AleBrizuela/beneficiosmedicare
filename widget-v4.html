@@ -2036,6 +2036,7 @@ function sortPlans(plans, mode){
 }
 
 // ── RESULTS ──
+const PAGE=10;   // plans rendered per page; declared here because _shown reads it immediately
 let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // b13: one plain ZIP line (pin + ZIP + "· Cambiar"), then one light grey count line.
@@ -2118,7 +2119,6 @@ function cmpAllBtn(list){
 }
 // AB 2026-10-14: "shows only 3 · 3 more · plus 3 more · it takes forever". It was 3, then 5 at a
 // time: 14 taps to see 70 plans. Ten at a time, and one button that ends the tapping for good.
-const PAGE=10;
 function moreBtn(total){
   if(total<=_shown) return '';
   const k=Math.min(PAGE,total-_shown), rest=total-_shown;
