@@ -501,11 +501,18 @@ body.host-cbar .cbar{display:none!important}
 .pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
 .pc-idline .pid{font-weight:700;color:#4A5568}
 
-/* the bar after picking plans: brand navy (AB 2026-10-14: the old #1e2a32 read as off-palette black) */
-.cbar{background:var(--cbar-bg,#1E3A5F)}
+/* The bar after picking plans. AB 2026-10-14, twice: #1e2a32 read as black, then #1E3A5F still did.
+   Flow v2: white, 2px brand border, count in navy, Compartir outline, Comparar solid. The ticket
+   writes the green as #00796B, which is the Material default CLAUDE.md names wrong on sight and is
+   what the widget is painted in today; the brand teal #007B7B is used instead, and it is already
+   what the home page's own bottom bar uses (--t31-brand). Flagged to AB, not decided here. */
+.cbar{background:#fff;color:#002147;border:2px solid var(--brand-teal,#007B7B);box-shadow:0 6px 18px rgba(0,33,71,.14)}
+.cbar .n{font-size:16px;font-weight:800;color:#002147}
 .cbar .btns{display:flex;gap:8px;flex:0 0 auto}
-.cbar .sh{background:#fff;color:var(--cbar-bg,#1E3A5F)}
+.cbar button{min-height:48px;font-size:15px;border-radius:10px}
+.cbar .sh{background:#fff;color:var(--brand-teal,#007B7B);border:2px solid var(--brand-teal,#007B7B)}
 .cbar .sh:disabled{opacity:.45}
+.cbar #cbarGo{background:var(--brand-teal,#007B7B);border:2px solid var(--brand-teal,#007B7B);color:#fff}
 
 /* ── "¿Qué plan tiene hoy?" ── */
 .mp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
@@ -525,6 +532,63 @@ body.host-cbar .cbar{display:none!important}
 .mp-pick .w{font-size:13.5px;color:#36505c;margin-top:5px;line-height:1.45}
 .mp-pick .src{font-size:11.5px;color:#66727c;margin-top:7px;line-height:1.4}
 .mp-chg{background:none;border:0;color:var(--sage-dark);font:700 13px/1 inherit;padding:8px 0 0;cursor:pointer;min-height:36px}
+
+/* ── T-056 flow v2 (AB 2026-10-14): your plan first, then your doctor. Two steps, each skippable,
+   each with her face and number at the bottom. 65+: 17px body minimum, 56px buttons. ── */
+.fv2-step{font:800 13px/1 inherit;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-teal,#007B7B);margin:2px 0 7px}
+.fv2-prog{height:6px;border-radius:4px;background:#e5e9ec;overflow:hidden;margin-bottom:16px}
+.fv2-prog i{display:block;height:100%;background:var(--brand-teal,#007B7B);border-radius:4px}
+.fv2-h{font:800 26px/1.2 inherit;color:#002147;margin:0 0 6px;text-align:left}
+.fv2-sub{font-size:17px;line-height:1.45;color:#5f6b75;margin:0 0 16px;text-align:left}
+.fv2-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  background:#fff;border:1.5px solid #cfd8de;border-radius:12px;padding:14px 16px;margin-top:10px;
+  font:700 17px/1.3 inherit;color:#002147;text-align:left;cursor:pointer;min-height:56px}
+.fv2-opt:hover,.fv2-opt:focus-visible{border-color:var(--brand-teal,#007B7B);background:#f6fbfb}
+.fv2-opt .ch{color:#8a97a3;font-weight:400;font-size:20px;flex:0 0 auto}
+.fv2-help{display:flex;align-items:center;gap:12px;background:#f3f5f7;border-radius:12px;padding:12px 14px;margin-top:20px;text-align:left}
+.fv2-help img{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:0 0 auto}
+.fv2-help p{margin:0;font-size:15px;line-height:1.4;color:#36505c}
+.fv2-help a{color:#002147;font-weight:800;text-decoration:none;font-size:17px;display:block}
+.fv2-field{width:100%;max-width:none;text-align:left;font-size:17px;min-height:56px;box-sizing:border-box}
+.fv2-search{display:flex;align-items:center;gap:10px;border:2px solid var(--brand-teal,#007B7B);border-radius:12px;
+  background:#fff;padding:0 14px;min-height:60px}
+.fv2-search svg{width:21px;height:21px;flex:0 0 auto;fill:none;stroke:#8a97a3;stroke-width:2;stroke-linecap:round}
+.fv2-search input{flex:1;min-width:0;border:0;outline:none;background:none;font:400 17px/1.3 inherit;color:#202124;padding:16px 0}
+.fv2-search input::placeholder{color:#8a97a3}
+.fv2-skip{display:block;width:100%;text-align:center;background:none;border:0;color:var(--sage-dark);
+  font:700 16px/1 inherit;text-decoration:underline;text-underline-offset:3px;padding:14px 0;margin-top:6px;cursor:pointer;min-height:48px}
+/* the rule behind the two options: factual, on screen, changeable (PROTECT 2026-10-14, item 4) */
+.fv2-rule{background:#f3f5f7;border-radius:12px;padding:11px 13px;margin:0 0 12px;font-size:14.5px;line-height:1.45;color:#5f6b75}
+.fv2-rule button{background:none;border:0;color:var(--sage-dark);font:800 14.5px/1 inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
+/* the doctor box: the one ask under the table */
+.fv2-doc{background:#E3F2EF;border-radius:14px;padding:16px;margin:14px 0 0;text-align:left}
+.fv2-doc h4{margin:0 0 4px;font:800 19px/1.3 inherit;color:#002147}
+.fv2-doc p{margin:0 0 12px;font-size:16px;color:#36505c}
+.fv2-doc button{width:100%;background:var(--brand-teal,#007B7B);color:#fff;border:0;border-radius:12px;
+  padding:16px;font:800 17px/1 inherit;cursor:pointer;min-height:56px}
+.fv2-more{text-align:center;margin:14px 0 0;font-size:16px;color:#8a97a3;line-height:1.5}
+.gl2{background:none;border:0;color:var(--sage-dark);font:800 16px/1.5 inherit;cursor:pointer;
+  padding:10px 2px;text-decoration:underline;text-underline-offset:3px;min-height:44px}
+/* comparison opens on the rows that decide most */
+.cmp.lite tbody tr:not(.kr){display:none}
+.cmp.lite td.v{font-size:15px}
+.cmp.lite td.v.big{font-size:16px}
+.cmp.lite td.lab{font-size:13.5px}
+.cmp.lite thead th .pc2{display:none}
+.cmp.lite thead th,.cmp.lite td.lab{hyphens:none;-webkit-hyphens:none}
+.cmp.lite th,.cmp.lite td{padding:11px 5px}
+/* a tapped term explains itself in one sentence, in the flow (never fixed: the iframe does not scroll) */
+.gl{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;
+  text-decoration:underline dotted;text-underline-offset:3px}
+.glos{background:#002147;color:#fff;border-radius:14px;padding:16px;margin:12px 0 0;text-align:left}
+.glos h5{margin:0 0 5px;font:800 18px/1.3 inherit;color:#fff}
+.glos p{margin:0;font-size:16px;line-height:1.5;color:#dbe6f0}
+.glos button{display:block;margin-left:auto;background:none;border:0;color:#fff;font:800 17px/1 inherit;cursor:pointer;padding:12px 0 0;min-height:44px}
+@media(max-width:480px){
+  .fv2-h{font-size:23px}
+  .btn-p,.btn-s{min-height:56px;font-size:17px}
+  .fv2-opt,.fv2-doc button{min-height:56px}
+}
 
 /* ── comparison: Su plan column, the yearly difference, "Igual en los N" ── */
 .cmp thead th.mine{box-shadow:inset 0 4px 0 #1E3A5F}
@@ -1278,7 +1342,10 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';ft_dob();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
+/* T-056 flow v2 (AB 2026-10-14, PREVIEW BRANCH ONLY): after the ZIP there are two questions, not six.
+   The old chain (ft_dob -> ft_eligibility -> ft_docAsk -> ft_docName -> ft_health -> ft_priority) is
+   left in the file untouched; the "moved" and "better benefits" entry points still use its steps. */
+function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';fv2_plan();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',fv2_plan)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
@@ -2158,7 +2225,7 @@ function updBar(msg){
   const b=document.getElementById('cbar'); if(!b) return;
   const k=selPlans.length;
   b.classList.toggle('on',k>0||!!msg);
-  document.getElementById('cbarN').textContent=msg||(k===1&&minPick()>1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
+  document.getElementById('cbarN').textContent=msg||(k===1&&minPick()>1?L('1 plan · choose up to 3','1 plan · elija hasta 3'):L(`${k} plan${k===1?'':'s'}`,`${k} plan${k===1?'':'es'}`));
   document.getElementById('cbarGo').disabled=k<minPick();
   const sh=document.getElementById('cbarSh'); if(sh) sh.disabled=k<1;
   cbarReport();
@@ -2178,7 +2245,7 @@ function toggleCmp(el){
 function compareFirst(){selPlans=orderedPlans().filter(p=>!p._medigap).slice(0,3).map(p=>p.id);go(flowCompare);}
 
 async function flowResults(){
-  prog(82); _inAllPlans=false; _plansView=true;
+  prog(82); _inAllPlans=false; _plansView=true; _fv2Land=false;
   if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
   // Some rural counties have only special-needs, drug-only or Medigap plans: never open on an empty
   // "Todos"; open on the first type that has plans instead (KS Finney, OK Beaver, ...).
@@ -2272,6 +2339,7 @@ function flowCompare(){
   // T-056 (4): the visitor's own 2027 plan is the first column when they told us what they have
   // today and CMS's crosswalk lands it on a plan this county actually has. Never a guessed plan.
   const mine=myPlan27();
+  const land=_fv2Land&&!!mine;
   const plans=(mine&&!picked.some(p=>p.id===mine.id)?[Object.assign({},mine,{_mine:true})]:[]).concat(picked);
   if(mine) plans.forEach(p=>{if(p.id===mine.id)p._mine=true;});
   if(picked.length<2&&!mine){back();return;}
@@ -2280,7 +2348,7 @@ function flowCompare(){
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
   const R=[], grp=g=>R.push({g});
-  const row=(lab,cells,big)=>R.push({lab,cells,big});
+  const row=(lab,cells,big,k)=>R.push({lab,cells,big,k});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
   // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
@@ -2288,11 +2356,11 @@ function flowCompare(){
   const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
   const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
-  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true,1);
   // T-056 (4) "Diferencia al año". Premium only, and it says so: copays and drug costs depend on
   // what a person actually uses, and CMS publishes no figure for that. Never presented as total cost.
   if(mine&&mine.premium!=null){
-    R.push({lab:L('Difference a year (premium)','Diferencia al año (prima)'),big:true,diff:true,
+    R.push({lab:L('Difference a year (premium)','Diferencia al año (prima)'),big:true,diff:true,k:1,
       cells:plans.map(p=>{
         if(p._mine) return {t:'—',off:true};
         if(p.premium==null) return {t:noInfo(),na:true};
@@ -2302,15 +2370,15 @@ function flowCompare(){
       })});
   }
   if(plans.some(ma)){
-    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
+    row(glab(L('Part B premium reduction','Reducción de la prima de la Parte B'),'partb'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash),false,1);
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
   }
-  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
-  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
+  row(glab(L('Max out-of-pocket','Máximo de bolsillo'),'moop'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true,1);
+  row(glab(L('Drug deductible','Deducible de medicamentos'),'ded'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true,1);
   if(plans.some(ma)){
     grp(L('Visits','Consultas'));
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
-      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
+      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash),false,k==='pcp'?1:0));
     // AB's client sheet carries this row and so does the site: whether a person's own doctors and
     // hospital are in a plan's network is not in any CMS file, and we are not going to pretend it is.
     R.push({lab:L('Your doctors and hospital','Sus médicos y hospital'),keep:true,
@@ -2362,14 +2430,14 @@ function flowCompare(){
   R.forEach(r=>{
     if(r.g){keep.push(r);return;}
     const same=r.cells.length>1&&r.cells.every(c=>c.t===r.cells[0].t);
-    if(same&&!r.diff&&!r.big&&!r.keep){sameLabels.push(String(r.lab).replace(/<[^>]+>/g,''));return;}
+    if(same&&!r.diff&&!r.big&&!r.keep&&!(land&&r.k)){sameLabels.push(String(r.lab).replace(/<[^>]+>/g,''));return;}
     keep.push(r);
   });
   // a group header left with no rows under it goes too
   const body=keep.filter((r,i)=>!(r.g&&(i===keep.length-1||keep[i+1].g))).map(r=>{
     if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
                                        :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
-    return `<tr class="r g${gi}${r.diff?' diffrow':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map((c,j)=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${c.cls?' '+c.cls:''}${plans[j]&&plans[j]._mine?' mine':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r g${gi}${r.k?' kr':''}${r.diff?' diffrow':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map((c,j)=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${c.cls?' '+c.cls:''}${plans[j]&&plans[j]._mine?' mine':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
   const sameBlock=sameLabels.length?`<div class="cmp-same"><h5>${L('The same in all '+plans.length,'Igual en los '+plans.length)}</h5><p>${esc(sameLabels.join(' · '))}</p></div>`:'';
   // "Si cambia a ...": the yearly premium difference said in a sentence, only where we have both figures.
@@ -2382,27 +2450,31 @@ function flowCompare(){
   }).join(''):'';
   // T-055 (2): the full official carrier and plan name, not shortPlan and not a 2-line clamp. Names
   // alone are not unique, so the type and the Medicare ID sit under every column, as on the card.
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th class="${p._mine?'mine':''}" style="--cc:${p._mine?'#1E3A5F':carrierColor(p)}"><span class="eb">${p._mine?L('YOUR PLAN','SU PLAN'):esc(p.carrier)}</span>${esc(p.name)}<span class="pid">${esc(p.carrier)}<br>${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th class="${p._mine?'mine':''}" style="--cc:${p._mine?'#1E3A5F':carrierColor(p)}"><span class="eb">${p._mine?L('YOUR PLAN','SU PLAN'):esc(p.carrier)}</span>${esc(p.name)}<span class="pid"><span class="pc2">${esc(p.carrier)}<br></span>${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   wEvt('compare_view',{plans:plans.length,my_plan:mine?'yes':'no'});
   wb().innerHTML=`${bk()}
-    <div class="cmp-top"><span class="ttl">${L('Your comparison','Su comparación')}</span>
+    <div class="cmp-top"><span class="ttl">${land?L('Your plan and 2 options','Su plan y 2 opciones'):L('Your comparison','Su comparación')}</span>
       ${shareBtnHTML('compare_top')}</div>
-    ${mine?myPlanStripHTML():myPlanOfferHTML()}
+    ${land?fv2RuleHTML(mine):''}
+    ${land?'':(mine?myPlanStripHTML():myPlanOfferHTML())}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
-    <div class="cmp" id="cmp">
+    <div class="cmp${land?' lite':''}" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${mine&&mine.premium!=null?`<p class="cmp-prem">${L('The yearly difference compares the monthly premium only. Copays and drug costs depend on the care you use; CMS publishes no figure for that.','La diferencia al año compara solo la prima mensual. Los copagos y los medicamentos dependen de la atención que use; CMS no publica una cifra para eso.')}</p>`:''}
       ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(p.name)} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
     </div>
+    <div id="glosbox"></div>
+    ${land?`<p class="fv2-more"><button type="button" class="gl2" onclick="fv2More()">${L('See all benefits','Ver todos los beneficios')}</button> · <button type="button" class="gl2" onclick="fv2Change()">${L('See the '+allCount()+' plans','Ver los '+allCount()+' planes')}</button></p>`:''}
+    ${land?fv2DoctorHTML(plans.length):''}
     ${sameBlock}
     ${switchLines}
-    ${can?askBoxHTML('compare_ask'):(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}
+    ${(land&&docKeep())?'':(can?askBoxHTML('compare_ask'):(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`))}
     ${provenanceHTML()}
-    ${bs(L('Back to plans','Volver a planes'),'back()')}`;
+    ${land?bs(L('See all '+allCount()+' plans','Ver los '+allCount()+' planes'),'fv2Change()'):bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
 function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
@@ -2516,6 +2588,7 @@ function myPlan27(){
 
 // ── screen 3 ──
 function myPlanStep(){
+  _fv2=false;
   prog(86); _plansView=true;
   wEvt('my_plan_start',{});
   const run=()=>{
@@ -2565,11 +2638,12 @@ function mpPick(i,method){
   wEvt('my_plan_set',{method:method||'typed',match:({same:'same_id',renamed:'renamed',consolidated:'renamed',ended:'ends',split:'split',notarea:'ends',fallback:'no_crosswalk',unknown:'no_crosswalk'})[m.s]||'no_crosswalk'});
   const box=document.getElementById('mplist'); if(box) box.innerHTML='';
   const f=document.getElementById('mpq'); if(f) f.value='';
+  if(_fv2){go(fv2_doctor);return;}
   const out=document.getElementById('mppick');
   if(out) out.innerHTML=myPlanStripHTML()+`<div style="margin-top:12px">${bp(L('Compare with my plan','Comparar con mi plan'),'go(flowCompare)')}</div>`;
 }
-function mpSkip(){wEvt('my_plan_skip',{});delete D.myPlan;go(flowCompare);}
-function mpClear(){delete D.myPlan;go(myPlanStep);}
+function mpSkip(){wEvt('my_plan_skip',{});delete D.myPlan;if(_fv2){go(fv2_doctor);return;}go(flowCompare);}
+function mpClear(){delete D.myPlan;go(_fv2?fv2_plan:myPlanStep);}
 
 // What we say about their plan. Every branch below is something the CMS file states; where it states
 // nothing, the screen says that, and the comparison simply runs without a "Su plan" column.
@@ -2602,6 +2676,153 @@ function myPlanOfferHTML(){
   return `<div class="mp-pick"><p class="n">${L('Compare against the plan you have today','Compare frente al plan que tiene hoy')}</p>
     <p class="w">${L('Optional. We look up what happens to it in 2027.','Opcional. Buscamos qué pasa con él en 2027.')}</p>
     <button class="mp-chg" type="button" onclick="go(myPlanStep)">${L('Add my plan','Agregar mi plan')} &rarr;</button></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════
+//  T-056 FLOW V2 (AB 2026-10-14) · PREVIEW BRANCH ONLY
+//  After the ZIP: "¿Qué plan tiene hoy?", then "¿Tiene un médico que quiere mantener?".
+//  Both skippable. With a plan: their plan and the 2 plans of the same type with the lowest
+//  yearly max out-of-pocket in the county -- over ALL plans, never filtered by who we represent
+//  (PROTECT 2026-10-14, item 4), rule on screen and changeable, never called best or recommended.
+//  Without one: today's list. `var`, not `let`: round 2 died on a const read before its line.
+// ═══════════════════════════════════════════════════════════════════════════════════════
+var _fv2=false, _fv2Land=false, _docKeep='';
+function docKeep(){return (_docKeep||'').trim();}
+function fv2Help(line){
+  return `<div class="fv2-help"><img src="${ADV.photo}" width="48" height="48" alt="${esc(ADV.name)}" loading="lazy">
+    <p>${line||L('Need a hand? Call or text me:','¿Le ayudo? Llámeme o escríbame:')}${line?'':`<a href="tel:${ADV.tel}" data-cta="widget">${ADV.telShown}</a>`}</p></div>`;
+}
+function fv2Head(n){
+  return `<p class="fv2-step">${L('Step '+n+' of 2','Paso '+n+' de 2')}</p><div class="fv2-prog"><i style="width:${n*50}%"></i></div>`;
+}
+
+// ── step 1 of 2 ──
+function fv2_plan(){
+  _fv2=true; _fv2Land=false; prog(30); _plansView=false;
+  wEvt('my_plan_start',{});
+  const run=()=>{
+    const fail=!_xw;
+    wb().innerHTML=`${bk()}
+      ${fv2Head(1)}
+      <h3 class="fv2-h">${L('Which plan do you have today?','¿Qué plan tiene hoy?')}</h3>
+      <p class="fv2-sub">${L('So we can show you what changes in 2027.','Así le mostramos qué cambia en 2027.')}</p>
+      ${fail?`<p class="pc-eoc">${L('We could not load this year’s plan list, so type the plan ID from your card.','No pudimos cargar la lista de planes de este año; escriba el ID que aparece en su tarjeta.')}</p>`:''}
+      <div class="mp-wrap">
+        <div class="fv2-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+          <input type="text" id="mpq" autocomplete="off" aria-label="${L('Name or ID from your card','Nombre o ID de su tarjeta')}" placeholder="${L('Name or ID from your card','Nombre o ID de su tarjeta')}"></div>
+        <div class="mp-list" id="mplist" role="listbox"></div>
+      </div>
+      <div id="mppick"></div>
+      <button type="button" class="fv2-opt" onclick="fv2NoPlan('new')">${L('I am new to Medicare','Soy nuevo en Medicare')}<span class="ch">&rsaquo;</span></button>
+      <button type="button" class="fv2-opt" onclick="fv2NoPlan('orig')">${L('I have Original Medicare or '+mcd(),'Tengo Medicare Original o '+mcd())}<span class="ch">&rsaquo;</span></button>
+      <button type="button" class="fv2-skip" onclick="mpSkip()">${L('I am not sure / prefer not to say','No sé / prefiero no decir')}</button>
+      ${fv2Help()}`;
+    const f=document.getElementById('mpq');
+    if(f){f.addEventListener('input',()=>mpSearch(f.value));f.addEventListener('focus',()=>mpSearch(f.value));}
+  };
+  const ready=()=>{ if(_xw||_xwTried) run(); else loadCrosswalk(D.state||'CA').then(run); };
+  if(D.state||!D.zip) ready();
+  else loadZipIndex().then(idx=>{const s=idx[D.zip]; if(s) D.state=s;}).catch(()=>{}).then(ready,ready);
+}
+// "Soy nuevo" and "Tengo Medicare Original o Medi-Cal" are recorded, not acted on: neither tells us
+// the person has Medi-Cal, and opening on D-SNP for someone with Original Medicare alone would be wrong.
+function fv2NoPlan(kind){
+  wEvt('my_plan_skip',{choice:kind});
+  delete D.myPlan; D.myPlanAnswer=kind;
+  go(fv2_doctor);
+}
+
+// ── step 2 of 2 ──
+function fv2_doctor(){
+  _fv2=true; prog(55); _plansView=false;
+  wb().innerHTML=`${bk()}
+    ${fv2Head(2)}
+    <h3 class="fv2-h">${L('Do you have a doctor you want to keep?','¿Tiene un médico que quiere mantener?')}</h3>
+    <p class="fv2-sub">${L('I check whether they are in each plan’s network.','Le confirmo si está en la red de cada plan.')}</p>
+    <div class="input-group"><label for="fv2doc">${L('Doctor or clinic','Médico o clínica')}</label>
+      <input class="input-field fv2-field" type="text" id="fv2doc" autocomplete="off" placeholder="${L('e.g. Dr. Lopez','Ej: Dra. López')}" value="${esc(docKeep())}"></div>
+    ${bp(L('See my plans','Ver mis planes'),'fv2DocNext()')}
+    <button type="button" class="fv2-skip" onclick="fv2DocSkip()">${L('I do not have one / skip','No tengo / saltar')}</button>
+    ${fv2Help(L('We only use it to check the network for you.','Solo lo usamos para confirmarle la red.'))}`;
+}
+// The name stays in this tab until they send a form; it is never put in a GA4 event (PROTECT item 8).
+function fv2DocNext(){
+  const f=document.getElementById('fv2doc');
+  _docKeep=f?f.value.trim().slice(0,80):'';
+  if(_docKeep) D.doctors=_docKeep;
+  wEvt('doctor_entered',{has:_docKeep?'yes':'no'});
+  fv2_land();
+}
+function fv2DocSkip(){_docKeep='';delete D.doctors;wEvt('doctor_entered',{has:'no'});fv2_land();}
+
+// ── where the two answers land ──
+async function fv2_land(){
+  if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
+  const mine=myPlan27();
+  const two=mine?fv2TwoOptions(mine):[];
+  if(mine&&two.length){
+    selPlans=two.map(p=>p.id);
+    _fv2Land=true;
+    go(flowCompare);
+    return;
+  }
+  _fv2Land=false;
+  go(flowResults);
+}
+// The rule, in full: same base plan type as theirs, lowest yearly max out-of-pocket, over every plan
+// the county has. No representation filter, no premium tie-break ahead of the stated rule.
+function fv2TwoOptions(mine){
+  const bt=baseType(mine), snp=isSNP(mine)?(mine.snp||'snp'):'';
+  return PLANS.filter(p=>!p._medigap&&p.id!==mine.id&&p.moop!=null&&baseType(p)===bt
+      &&(isSNP(p)?(p.snp||'snp'):'')===snp)
+    .sort((a,b)=>(a.moop-b.moop)||((a.premium==null?1e9:a.premium)-(b.premium==null?1e9:b.premium)))
+    .slice(0,2);
+}
+function fv2RuleHTML(mine){
+  const ty=esc(isSNP(mine)?(mine.type||baseType(mine)):baseType(mine));
+  return `<p class="fv2-rule">${L('Chosen by: same type ('+ty+'), lowest max out-of-pocket.','Elegidas por: mismo tipo ('+ty+'), máximo de bolsillo más bajo.')}
+    <button type="button" onclick="fv2Change()">${L('Change','Cambiar')}</button></p>`;
+}
+function fv2Change(){selPlans=[];_fv2Land=false;go(flowResults);}
+function allCount(){return orderedPlans().length;}
+function fv2More(){
+  const c=document.getElementById('cmp');
+  if(c&&c.classList.contains('lite')){c.classList.remove('lite');wEvt('benefit_group_open',{group:'compare_all'});}
+}
+// The one ask under the table, when they named a doctor. The pinned "Pregúntele a Alejandra" stands
+// down while this is on screen, so there is one ask, not two.
+function fv2DoctorHTML(n){
+  const d=docKeep(); if(!d) return '';
+  return `<div class="fv2-doc">
+    <h4>${L('Is '+esc(d)+' in these '+n+' plans?','¿'+esc(d)+' está en estos '+n+' planes?')}</h4>
+    <p>${L('I confirm it for you by text.','Se lo confirmo por texto.')}</p>
+    <button type="button" data-cta="compare_doctor" onclick="fv2DocConfirm()">${L('Confirm my doctor','Confirmar mi médico')}</button></div>`;
+}
+function fv2DocConfirm(){
+  wEvt('doctor_confirm_click',{placement:'compare_doctor'});
+  if(docKeep()) D.doctors=docKeep();
+  askPersonal('compare_doctor');
+}
+
+// ── a tapped term says what it means, in one sentence, in the flow ──
+// The max-out-of-pocket sentence is AB's own wording from the ticket. The other two are new and
+// wait on PROTECT before this reaches staging. Built when tapped, never at load time.
+function glab(text,key){return `<button type="button" class="gl" onclick="glos('${key}')">${text}</button>`;}
+function glosText(key){
+  if(key==='moop') return [L('Max out-of-pocket','Máximo de bolsillo'),
+    L('The most you pay in a year for visits and hospital. After that, the plan pays 100%.','Lo más que paga en un año por consultas y hospital. Después, el plan paga el 100%.')];
+  if(key==='ded') return [L('Drug deductible','Deducible de medicamentos'),
+    L('What you pay yourself first each year, before the plan starts paying for your medicines.','Lo que paga usted primero cada año, antes de que el plan empiece a pagar sus medicinas.')];
+  if(key==='partb') return [L('Part B','Parte B'),
+    L('The part of Medicare that covers doctor visits and outpatient care. It has its own monthly premium.','La parte de Medicare que cubre consultas médicas y atención ambulatoria. Tiene su propia prima mensual.')];
+  return null;
+}
+function glos(key){
+  const g=glosText(key), box=document.getElementById('glosbox');
+  if(!g||!box) return;
+  box.innerHTML=`<div class="glos"><h5>${esc(g[0])}</h5><p>${esc(g[1])}</p>
+    <button type="button" onclick="document.getElementById('glosbox').innerHTML=''">${L('Got it','Entendido')}</button></div>`;
+  box.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 
 // ── the people we are: one advisor on every shared thing (AB 2026-10-14 "ONLY ONE of us") ──
@@ -2873,7 +3094,10 @@ function makeSharePDF(){
     if(line)out.push(line);
     out.slice(0,2).forEach(l=>{g.text(M,fy,l,7,false,GREY);fy+=9;});
   });
-  const name=L('Medicare plans 2027','Planes Medicare 2027')+(D.zip?' - '+D.zip:'')+'.pdf';
+  // AB 2026-10-14 ("include NAME and ZIP code"): a file name she can search for later.
+  const who=String(D.fullName||'').replace(/^QA · /,'').trim().replace(/[\\/:*?"<>|]/g,'');
+  const name=(who?who+' - ':'')+(D.zip?'ZIP '+D.zip+' - ':'')
+    +L('Medicare plans '+planYear(),'Planes Medicare '+planYear())+' - '+new Date().toISOString().slice(0,10)+'.pdf';
   const blob=pdfBlob(W,H,g.build());
   const file=(window.File&&navigator.canShare)?new File([blob],name,{type:'application/pdf'}):null;
   if(file&&navigator.canShare({files:[file]})){
