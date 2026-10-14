@@ -759,7 +759,7 @@ function isRepresented(parent,state){
 }
 
 const T052_KEYS=['gb','mded','oon','mhosp','snf','hh','phosp','rehab','mh','ther','chiro','pod','oprof','tele','wwe',
-  'lab','dx','xray','img','rad','dme','pros','diab','dial','partb','acu','meals','pe','x14','ssbci','opt'];
+  'lab','dx','xray','img','rad','dme','pros','diab','dial','partb','acu','meals','pe','x14','ssbci','opt','ssbcic','ssbcio'];
 function cmsToWidget(p, state){
   const rep=isRepresented(p.parent,state);
   return {
@@ -1557,15 +1557,29 @@ function optV(o){
 }
 function ssbciV(v){return v==null?null:(v?V(L('Included','Incluido')):OFF());}   // the row label already says "only if you qualify"
 function vAmt(n){return n==null?null:V(usd(n));}
-// SSBCI row OFF (PROTECT review 2026-10-14): 42 CFR 422.2267(e)(34) requires any material that mentions SSBCI to
-// list the eligible chronic conditions, the top five "as determined by the organization", and say having one does not
-// guarantee the benefit. The plan's top five are not in the CMS files, so we cannot show a compliant disclaimer.
-// Data stays in the plan files (ssbci). Turn on only with wording Golden Outlook signs. Old one-line text kept below.
-const SHOW_SSBCI=false;
-const SSBCI_DISC=()=>L('The benefits mentioned are a part of a special supplemental program for the chronically ill. Not all members will qualify for these benefits.',
-  'Los beneficios mencionados son parte de un programa especial de beneficios suplementarios para personas con enfermedades crónicas. No todos los miembros califican para estos beneficios.');
-// The groups behind "Ver todos los beneficios", in the inventory order. Each row: [label, value]. Shared by the card and
-// the comparison table so the two can never list different benefits.
+// SSBCI row ON (AB 2026-10-14: Golden Outlook / Kevin, D-009 ask 10, said an agency may show one line per plan).
+// 42 CFR 422.2267(e)(34): say it is a special supplemental program, name the eligible conditions (all if 5 or fewer,
+// else 5 and "y otras"), and say a condition does not guarantee the benefit. Wording: AB-approved draft, Kevin OK.
+// The plan's own "top 5" is not in the CMS files, so 5 are taken in this fixed order (most common at 65+ first).
+const SHOW_SSBCI=true;
+const SSBCI_ORDER=[8,6,5,14,11,4,7,17,15,9,3,16,10,12,13,18,19,20,21,22,23,2];
+const SSBCI_COND={2:['alcohol or substance use disorder','trastorno por consumo de alcohol u otras sustancias'],3:['autoimmune disorders','enfermedades autoinmunes'],
+  4:['cancer','cáncer'],5:['cardiovascular disorders','enfermedades cardiovasculares'],6:['chronic heart failure','insuficiencia cardíaca crónica'],7:['dementia','demencia'],
+  8:['diabetes','diabetes'],9:['overweight, obesity or metabolic syndrome','sobrepeso, obesidad o síndrome metabólico'],10:['chronic gastrointestinal disease','enfermedad gastrointestinal crónica'],
+  11:['chronic kidney disease','enfermedad renal crónica'],12:['severe blood disorders','trastornos graves de la sangre'],13:['HIV/AIDS','VIH/SIDA'],14:['chronic lung disorders','enfermedades pulmonares crónicas'],
+  15:['chronic and disabling mental health conditions','condiciones de salud mental crónicas e incapacitantes'],16:['neurologic disorders','trastornos neurológicos'],17:['stroke','derrame cerebral'],
+  18:['post-organ transplant','después de un trasplante de órgano'],19:['immune deficiency disorders','trastornos de inmunodeficiencia'],20:['cognitive impairment','deterioro cognitivo'],
+  21:['functional challenges','limitaciones funcionales'],22:['loss of vision, hearing, taste, touch or smell','pérdida de vista, oído, gusto, tacto u olfato'],23:['conditions that need ongoing therapy','condiciones que requieren terapia continua']};
+const SSBCI_DISC=()=>L('These benefits are part of a special supplemental program for people with certain chronic illnesses. Having a condition does not guarantee the benefit; the plan decides who qualifies.',
+  'Estos beneficios son parte de un programa especial para personas con ciertas enfermedades crónicas. Tener una condición no garantiza el beneficio; el plan decide quién califica.');
+function ssbciConds(p){
+  const c=SSBCI_ORDER.filter(i=>(p.ssbcic||[]).indexOf(i)>=0).map(i=>SSBCI_COND[i][lang==='en'?0:1]);
+  const more=c.length>5||(p.ssbcio||0)>0, shown=c.slice(0,5);
+  if(!shown.length) return '';
+  const list=more?shown.join(', ')+L(' and others',' y otras'):andList(shown);
+  return L('Qualifying conditions: ','Condiciones que califican: ')+list+'. ';
+}
+function ssbciNote(p){return `<b>${L('Chronic condition benefits:','Beneficios para condiciones crónicas:')}</b> ${ssbciConds(p)}${SSBCI_DISC()}`;}
 function benefitGroups(p){
   const amb=p.amb||{}, o=p.oon, G=[];
   if(o) G.push({k:'oon',icon:'cost',t:L('Out of network','Fuera de la red'),rows:[
@@ -1619,7 +1633,7 @@ function benefitGroups(p){
     [L('In-home support','Apoyo en el hogar'),x14V(p,'14c21')],
     [L('Optional extra packages','Paquetes opcionales'),optV(p.opt)],
     ...(SHOW_SSBCI?[[L('Chronic condition benefits (only if you qualify)','Beneficios para condiciones crónicas (solo si califica)'),ssbciV(p.ssbci)]]:[])],
-    note:SHOW_SSBCI&&p.ssbci?SSBCI_DISC():''});
+    note:SHOW_SSBCI&&p.ssbci?ssbciNote(p):''});
   return G;
 }
 function grpOpen(el,k){if(el.open)wEvt('benefit_group_open',{group:k});}
@@ -2121,6 +2135,7 @@ function flowCompare(){
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
+      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(shortPlan(p.name))}: ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
       <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
