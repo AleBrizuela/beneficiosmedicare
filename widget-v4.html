@@ -998,8 +998,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-function go(fn){hist.push(fn);_plansView=false;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
-function back(){if(hist.length>1){hist.pop();_plansView=false;hist[hist.length-1]();viewMsg();}}
+function go(fn){hist.push(fn);_plansView=false;_onResults=false;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function back(){if(hist.length>1){hist.pop();_plansView=false;_onResults=false;hist[hist.length-1]();viewMsg();cbarReport();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
@@ -2138,11 +2138,11 @@ function showMore(all){
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
   if(m) m.innerHTML=moreBtn(list.length);
 }
-let _cbarLast='';
+let _cbarLast='', _onResults=false;   // the results list is the only screen the host bar serves
 function cbarReport(){
   if(window.self===window.top) return;
   const k=selPlans.length;
-  const st={type:'widget-cbar',on:k>0&&!!_plansView&&!document.querySelector('#wb .lead-consent'),
+  const st={type:'widget-cbar',on:k>0&&!!_onResults&&!document.querySelector('#wb .lead-consent'),
     n:k,label:document.getElementById('cbarN')?document.getElementById('cbarN').textContent:'',
     canCompare:k>=minPick(),share:L('Share','Compartir'),compare:L('Compare','Comparar')};
   const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
@@ -2227,6 +2227,7 @@ async function flowResults(){
     ${teamCard()}
     ${cbarHTML()}
     ${provenanceHTML()}`;
+  _onResults=true;
   updBar();
   viewMsg();
   if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
