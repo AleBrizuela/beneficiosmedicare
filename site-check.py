@@ -48,6 +48,16 @@ BRAND = {
 NON_PUBLIC = ("index-v", "index-dev", "index-localtest", "index-current", "404",
               "bot-evals", "widget")
 
+# ...but a colour is not a function of whether a page is indexed, and the blanket
+# exemption above hid the one file that matters most. widget-v4.html IS the lead form:
+# it is embedded on both home pages and is the most-seen interactive surface on either
+# site, and it carried the Material defaults #00897B / #00796B in its :root the whole
+# time the brand check was firing correctly on ordinary pages (found 2026-10-14 while
+# building T-056). These stems stay exempt from every OTHER check — sitemap, canonical,
+# hreflang, CTA labels, and above all check_bodies, for the reason recorded above — and
+# are checked for brand colour anyway.
+BRAND_CHECKED_ANYWAY = ("widget",)
+
 SKIP_DIRS = {".git", "node_modules", ".github", "__pycache__", ".cloudflare", "images",
              "tools"}  # tools/ holds internal scrapers, noindex and unlinked
 
@@ -94,9 +104,17 @@ def iter_html(root):
                 yield fp, os.path.relpath(fp, root)
 
 
-def is_non_public(rel):
+def is_non_public(rel, check=None):
+    """Is this page exempt from `check` (or, with no check named, from all of them)?
+
+    Pass check="brand" to honour BRAND_CHECKED_ANYWAY. Narrow the exemption per check
+    rather than per file: the widget needs the body check skipped and the brand check
+    run, and one blanket answer cannot express that.
+    """
     stem = os.path.basename(rel)
     stem = stem[:-5] if stem.endswith(".html") else stem
+    if check == "brand" and stem.startswith(BRAND_CHECKED_ANYWAY):
+        return False
     return stem.startswith(NON_PUBLIC)
 
 
@@ -309,7 +327,7 @@ def check_brand(root, domain, f):
     if not spec:
         return
     for fp, rel in iter_html(root):
-        if is_non_public(rel):
+        if is_non_public(rel, check="brand"):
             continue
         src = open(fp, encoding="utf-8", errors="ignore").read()
         for bad, good in spec["wrong"].items():
