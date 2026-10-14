@@ -396,6 +396,8 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc-head{border-bottom:0}
 .pc details{margin-top:0}
 .pc .nodet{font-size:13px;color:#56616a;margin:6px 0 0;line-height:1.4}
+.dualnote{font-size:13.5px;line-height:1.45;color:#1e2a32;background:#e7f4ef;border-left:3px solid var(--sage-dark);border-radius:6px;padding:8px 10px;margin:8px 0 0}
+.dualnote.cmpdual{margin:0 0 10px;text-align:left}
 .rh .elig{font-size:13.5px;color:#2b3640;margin:0 0 8px;line-height:1.45}
 .rh .t1.dual a{color:var(--sage-dark);font-weight:600}
 .rh .elig a{color:var(--sage-dark);font-weight:600;white-space:nowrap}
@@ -1735,6 +1737,7 @@ function planCard(p,selectable){
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
       <div class="pc-meta">${esc(p.type)} <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
       <div class="pc-rating">${rStar(p.rating)}</div>
+      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
     ${body}
     ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
@@ -2111,6 +2114,7 @@ function flowCompare(){
   const sanct=plans.some(p=>p.sanction);
   wb().innerHTML=`${bk()}
     ${unlicensedNote()}
+    ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
@@ -2141,6 +2145,12 @@ function helpCompare(){
 function customCompare(){return flowCompare();}
 
 // Shown wherever plans are listed for a state we are not licensed in.
+// T-052 (AB 2026-10-13): D-SNP cards show the cost sharing the plan files with CMS (e.g. 20%), which a member with
+// full Medi-Cal/Medicaid usually does not pay. Medicare.gov Plan Finder says "Most people with Medicare and Medicaid
+// pay $0"; this is that statement. Checked on H1224-001 (L.A. Care Medicare Plus): file 20%, Plan Finder $0.
+function dualNote(){const m=mcd();
+  return L(`Most people with Medicare and ${m} pay $0. The costs below are the plan's costs before ${m} help.`,
+           `La mayoría de las personas con Medicare y ${m} pagan $0. Los costos de abajo son los del plan antes de la ayuda de ${m}.`);}
 function unlicensedNote(){
   if(!knownUnlicensed()) return '';
   return `<div class="info-card"><p>${lang==='en'
