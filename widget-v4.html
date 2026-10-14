@@ -366,6 +366,13 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmpall svg{stroke:#66727c}
 .nw{white-space:nowrap}
 .lead-about{font-size:14px;color:#3b4650;margin:0 0 6px;text-align:left;line-height:1.4}
+/* T-051: the optional details on the lead form (health chips + notes), shut until tapped. 48px summary. */
+.lead-more{margin:2px 0 6px;border-top:1px solid #e6eaee}
+.lead-more>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:48px;font-size:15px;font-weight:600;color:var(--sage-dark)}
+.lead-more>summary::-webkit-details-marker{display:none}
+.lead-more>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(45deg);margin:-4px 4px 0 8px;flex:none}
+.lead-more[open]>summary::after{transform:rotate(-135deg);margin:4px 4px 0 8px}
+.lead-more .cond-grid{margin-top:4px}
 .cf{text-align:left}
 .cf-ic{width:52px;height:52px;border-radius:50%;background:var(--lt-mint);display:flex;align-items:center;justify-content:center;margin:4px 0 12px}
 .cf-ic svg{width:26px;height:26px;fill:none;stroke:var(--sage-dark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -1184,7 +1191,15 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';ft_dob();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
+/* T-051 plans first (AB 2026-10-13 "let's simplify what happens here", yes 2026-10-14): the ZIP goes
+   straight to the plan list. It used to go through six screens -- birth date, eligibility, "do you have
+   a doctor", the doctor's last name, health conditions, what matters most -- and last week on MC 31
+   people typed a ZIP and 3 reached a plan. "What matters most" was never a filter: the list is the same
+   for everyone in the county (T-017), so the pills on the results do that job, "Con Medi-Cal" included.
+   The birth date and the health chips now sit in the "Ayudeme a elegir" form, where they are used.
+   The ft_* question chain below is kept, unreferenced, so the doctor question can come back next to the
+   comparison in T-056; nothing reaches it today. */
+function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';flowResults();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',flowResults)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
@@ -1281,7 +1296,7 @@ function mv_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 //  FLOW: BETTER BENEFITS (Compare)
 // ═══════════════════════════════════════
-function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';bb_dob();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
+function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';flowResults();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',flowResults,'hl')}
 function bb_dob(){dobStep(bb_benefits)}
 function bb_benefits(){
   prog(35);
@@ -2219,6 +2234,24 @@ function unlicensedNote(){
 // ═══════════════════════════════════════
 // T-024 contact step (AB 2026-10-03): "Una de nosotras le contacta", no plan name on screen (it can
 // mislead; the plans seen stay in the lead row), consent stated right under "Enviar", no checkbox.
+/* T-051: the birth date and the health chips used to stand between the ZIP and the plans. They are
+   here now, on the form where they are used: the birth date goes on the lead row and sets the age in
+   the alert email (T-029), the chips tell whoever calls what to prepare for. Empty is fine, as the old
+   "Prefiero no decir" was; a half-typed date blocks the send, as on the contact form (T-048). */
+function leadDob(){
+  const v=(D.dob_month&&D.dob_day&&D.dob_year)?`${D.dob_month} / ${D.dob_day} / ${D.dob_year}`:'';
+  return `<div class="input-group"><label for="dobInput">${L('Date of birth (optional)','Fecha de nacimiento (opcional)')}</label>
+    <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="${L('MM / DD / YYYY','MM / DD / AAAA')}" value="${v}" maxlength="14" oninput="formatDob(this)">
+    <p style="font-size:12px;color:#999;margin-top:4px">${L('month / day / year','mes / d\u00EDa / a\u00F1o')}</p></div>`;
+}
+function leadMore(){
+  const chips=CONDITIONS.map(c=>`<div class="cond-chip ${selConds.includes(c.id)?'sel':''}" data-cid="${c.id}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCond('${c.id}')}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`).join('');
+  return `<details class="lead-more"><summary>${L('Anything we should know? (optional)','\u00BFAlgo que debamos saber? (opcional)')}</summary>
+    <div class="cond-grid">${chips}</div>
+    <div class="input-group" style="margin-top:4px"><label for="healthNotes">${L('Anything else you\u2019d like us to know?','\u00BFAlgo m\u00E1s que quiera contarnos?')}</label>
+    <textarea class="health-textarea" id="healthNotes" maxlength="500" placeholder="${L('e.g. I take a few medications but don\u2019t remember the names, I need dental work...','ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental...')}" oninput="D.healthNotes=this.value">${esc(D.healthNotes||'')}</textarea></div>
+  </details>`;
+}
 function planEnroll(){
   prog(92); _plansView=true; wEvt('form_open',{source:'card'});
   wb().innerHTML=`${bk()}
@@ -2227,7 +2260,9 @@ function planEnroll(){
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
+    ${leadDob()}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
+    ${leadMore()}
     ${bp(lang==='en'?'Send':'Enviar',"submitLead('enroll')")}
     ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
     <div id="leadErr"></div>`;
@@ -2241,7 +2276,9 @@ function helpChoose(){
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
+    ${leadDob()}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
+    ${leadMore()}
     ${bp(lang==='en'?'Send':'Enviar',"submitLead('help')")}
     ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
     <div id="leadErr"></div>`;
@@ -2371,6 +2408,17 @@ function submitLead(type){
     _submitting=false;
     if(btn){btn.disabled=false;btn.textContent=_btnLabel}
     return;
+  }
+  // A half-typed birth date is a mistake, not a choice: it blocks the send. An empty box sends empty.
+  const dobEl=document.getElementById('dobInput');
+  if(dobEl){
+    if(!(dobEl.value||'').replace(/\D/g,'')){ D.dob_month='';D.dob_day='';D.dob_year=''; }
+    else if(!parseDob()){
+      alert(lang==='en'?'Please check the date of birth (month / day / year), or leave it empty.':'Revise la fecha de nacimiento (mes / d\u00EDa / a\u00F1o), o d\u00E9jela vac\u00EDa.');
+      _submitting=false;
+      if(btn){btn.disabled=false;btn.textContent=_btnLabel}
+      return;
+    }
   }
   D.fullName=name;D.phone=phone;D.email=email;
   if(question) D.question=question;
