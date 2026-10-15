@@ -32,6 +32,7 @@
   --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+button,input,select,textarea{font-family:inherit}   /* T-066 (5): no control falls back to the system font */
 body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,var(--lt-mint) 0%,var(--lt-blue) 50%,var(--lt-mint) 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 body.in-iframe{padding:0;min-height:auto;background:var(--white);align-items:flex-start}
 body.in-iframe .widget-wrap{border-radius:0;box-shadow:none}
@@ -101,7 +102,7 @@ body.host-next #wb .btn-p{display:none!important}
 .btn-p{width:100%;padding:16px;background:var(--sage);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
 .btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(var(--sage-rgb),.3)}.btn-p:active{transform:translateY(0)}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
+.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:17px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
 .btn-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gray);font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:6px 0;min-height:36px}
 .btn-back:hover{color:var(--dark)}
@@ -304,7 +305,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .rh .sr{display:flex;gap:8px;align-items:center;font-size:13px;color:#66727c;margin-top:6px}
 .rh .sr label{flex:0 0 86px;white-space:nowrap}
 .rh .sr select{flex:1;min-width:0;font:inherit;font-size:14px;padding:8px;border:1px solid #e5e9ec;border-radius:9px;background:#f3f5f7;color:#1e2a32;font-weight:600;min-height:40px}
-.cmpall{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1.5px solid var(--sage);color:var(--sage-dark);border-radius:10px;padding:11px;font-weight:700;font-size:15px;background:#fff;cursor:pointer;font-family:inherit;margin:0 0 10px;min-height:48px}
+.cmpall{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1.5px solid var(--sage);color:var(--sage-dark);border-radius:10px;padding:11px;font-weight:700;font-size:17px;background:#fff;cursor:pointer;font-family:inherit;margin:0 0 10px;min-height:48px}
 .cmpall svg{width:18px;height:18px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round}
 .showmore{display:block;width:100%;text-align:center;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:12px;font-weight:700;color:#1e2a32;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:6px}
 .showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
@@ -325,10 +326,22 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmp td.v.zero{color:var(--sage-dark)}
 .cmp td.v.off{color:#56616a;font-weight:600;font-style:italic}
 .cmp td.big{font-size:16px;font-weight:800}
-.cmp .tog{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:10px 12px;font-size:13px;font-weight:600;color:var(--sage-dark);border-bottom:1px solid #e5e9ec;cursor:pointer;min-height:44px}
-.cmp .tog input{accent-color:var(--sage);width:18px;height:18px;margin:0}
-.cmp.diff tr.same{display:none}
+/* T-066 (3): the compare opens on the key rows only (the T-056 "lite" view). "Ver todos los
+   beneficios" takes the class off and the whole table appears. */
+.cmp.lite tbody tr:not(.kr){display:none}
+.cmp.lite td.v{font-size:15px}
+.cmp.lite td.v.big{font-size:16px}
+.cmp.lite td.lab{font-size:13.5px}
+.cmp.lite thead th,.cmp.lite td.lab{hyphens:none;-webkit-hyphens:none}
+.cmp.lite th,.cmp.lite td{padding:11px 5px}
+/* the footnotes explain rows the lite view does not show yet, so they wait for the full table */
+.cmp.lite .cmp-note{display:none}
 .cmp tr.hid{display:none}
+/* a row whose value is the same in every column tells the reader nothing: it leaves the table and
+   is listed once here. AB's client-sheet rule. */
+.cmp-same{margin:12px 0 0;background:#f3f5f7;border-radius:10px;padding:10px 12px}
+.cmp-same h5{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#5f6b75;margin:0 0 6px}
+.cmp-same p{font-size:13px;color:#36505c;margin:0;line-height:1.5}
 .cmp tr.grp.tg td{cursor:pointer;color:var(--sage-dark)}
 .cmp tr.grp.tg td span{display:flex;justify-content:space-between;align-items:center;min-height:30px}
 .cmp tr.grp.tg td span::after{content:"";width:8px;height:8px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(-135deg);margin:4px 4px 0 8px}
@@ -352,7 +365,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
   .opt-card .tx p{font-size:13px}
   .input-field{padding:14px 16px;font-size:18px}
   .btn-p{padding:16px;font-size:16px;min-height:52px}
-  .btn-s{padding:14px;font-size:15px;min-height:48px}
+  .btn-s{padding:14px;font-size:17px;min-height:48px}
   .plan-row{font-size:14px;padding:7px 0}
   .plan-card h4{font-size:15px}
   .plan-cta{padding:14px;font-size:15px;min-height:50px}
@@ -518,7 +531,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 body.host-cbar .cbar{display:none!important}
 /* ── T-064: one button instead of fourteen taps ── */
 .showall{display:block;width:100%;background:#fff;border:2px solid var(--sage);color:var(--sage-dark);
-  border-radius:12px;padding:14px;font:800 16px/1.2 inherit;min-height:52px;cursor:pointer;margin-top:4px}
+  border-radius:12px;padding:14px;font-family:inherit;font-size:17px;font-weight:800;line-height:1.2;min-height:52px;cursor:pointer;margin-top:4px}
 .showcount{text-align:center;font-size:12.5px;color:#66727c;margin-top:7px}
 .zinlab{display:block;font-size:12px;font-weight:600;color:#66727c;margin-bottom:4px}
 </style>
@@ -701,7 +714,6 @@ const CARRIER_FALLBACK = ['#1F6F8B','#B45309','#2E7D32','#A4262C','#5B4B8A','#0F
 // ── SVG ICON LIBRARY (dual-tone filled) ──
 const _s=(p)=>'<svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'+p+'</s'+'vg>';
 const I={
-  doctor:_s('<circle cx="12" cy="7" r="4" fill="#4A90D9" opacity=".2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#2563EB" stroke-width="2"/><path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/><path d="M17 3h4M19 1v4" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>'),
   search:_s('<circle cx="11" cy="11" r="7" fill="#E0F2FE" stroke="#0369A1" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#0369A1" stroke-width="2.5" stroke-linecap="round"/>'),
   cost:_s('<circle cx="12" cy="12" r="10" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/><path d="M12 6v12M16 8.5c0-1.4-1.8-2.5-4-2.5s-4 1.1-4 2.5 1.8 2.5 4 2.5 4 1.1 4 2.5-1.8 2.5-4 2.5-4-1.1-4-2.5" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>'),
   pill:_s('<rect x="3" y="3" width="18" height="18" rx="4" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/><path d="M7 12h10M12 7v10" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"/>'),
@@ -1182,26 +1194,9 @@ function timeAwayStr(months){
 // ═══════════════════════════════════════
 //  STEP: DOCTOR
 // ═══════════════════════════════════════
-function doctorAsk(nextYes,nextNo){
-  prog(35);
-  _cb.docY=nextYes; _cb.docN=nextNo;
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'\u00BFTiene un doctor que quiere mantener?')}
-    <div class="opt-grid">
-      ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
-      ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
-    </div>`;
-}
-
-function doctorName(nextFn){
-  prog(40);
-  _cb.docName=nextFn;
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?"What is your doctor's last name?":'\u00BFCu\u00E1l es el apellido de su doctor?')}
-    ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
-    ${bp(t('next'),'go(_cb.docName)')}
-    ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
-}
+// T-066 (4), AB 2026-10-14: the two doctor screens are gone. We never used the answer, and asking
+// implied we did. D.hasDoc and D.docName are now never set, so the lead arrives with them empty;
+// the Apps Script and the Leads sheet columns are untouched.
 
 
 // ═══════════════════════════════════════
@@ -1238,7 +1233,6 @@ function toggleCond(id){
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
 const PRI_OPTIONS=[
-  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'My current doctor accepts the plan.',esD:'Que mi doctor acepte el plan.'},
   {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
   {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision and hearing coverage.',esD:'Cobertura dental, visi\u00F3n y audici\u00F3n.'},
   {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
@@ -1287,8 +1281,8 @@ function savePriority(){
    people typed a ZIP and 3 reached a plan. "What matters most" was never a filter: the list is the same
    for everyone in the county (T-017), so the pills on the results do that job, "Con Medi-Cal" included.
    The birth date and the health chips now sit in the "Ayudeme a elegir" form, where they are used.
-   The ft_* question chain below is kept, unreferenced, so the doctor question can come back next to the
-   comparison in T-056; nothing reaches it today. */
+   The ft_* question chain below is kept, unreferenced; nothing reaches it today. T-066 (AB
+   2026-10-14) took the two doctor screens out of it for good: we never used the answer. */
 function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';flowResults();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',flowResults)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
@@ -1296,18 +1290,18 @@ function ft_eligibility(){
   const age=getAge();
   const ew=getEnrollmentWindow();
   if(age===null){
-    // No DOB provided (skipped), go straight to doctor
-    go(ft_docAsk);
+    // No DOB provided (skipped)
+    go(ft_health);
     return;
   }
   if(age>=65){
     /* T-031 (AB 2026-10-03): this screen is for people who just turned 65. From 65 years and 7 months on, skip it and
-       go straight to the doctor question: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
-    if(monthsPast65()>6){ go(ft_docAsk); return; }
+       go straight on: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
+    if(monthsPast65()>6){ go(ft_health); return; }
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
       ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
-    setTimeout(()=>go(ft_docAsk),1500);
+    setTimeout(()=>go(ft_health),1500);
   } else if(ew){
     const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
     const now=new Date();
@@ -1319,23 +1313,21 @@ function ft_eligibility(){
         ${leadOK()?'':'<!-- no reminder sign-up: state not licensed -->'}<button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px;${leadOK()?'':'display:none'}">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
-          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
-          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
-          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
+          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_health)};_cb.u65dis()')}
+          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_health)};_cb.u65esrd()')}
+          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_health)};_cb.u65als()')}
         </div>
         ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Su ventana de inscripci\u00F3n abre ${opensStr}!`,'hl')}
         ${ic(lang==='en'?'Good timing':'Buen momento', lang==='en'?'Now is a great time to start comparing plans.':'Ahora es un gran momento para empezar a comparar planes.')}`;
-      setTimeout(()=>go(ft_docAsk),1200);
+      setTimeout(()=>go(ft_health),1200);
     }
   } else {
-    go(ft_docAsk);
+    go(ft_health);
   }
 }
-function ft_docAsk(){doctorAsk(ft_docName,ft_health)}
-function ft_docName(){doctorName(ft_health)}
 function ft_health(){healthStep(_activeExps.length>0?ft_experiment:ft_priority)}
 function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
@@ -2296,7 +2288,7 @@ function flowCompare(){
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
   const R=[], grp=g=>R.push({g});
-  const row=(lab,cells,big)=>R.push({lab,cells,big});
+  const row=(lab,cells,big,k)=>R.push({lab,cells,big,k});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
   // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
@@ -2304,17 +2296,19 @@ function flowCompare(){
   const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
   const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
-  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  // T-066 (3): the five rows the comparison opens on. Médico primario is the plan's own copay --
+  // plan data, not a question about anyone's doctor -- so it stays.
+  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true,1);
   if(plans.some(ma)){
-    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
+    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash),false,1);
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
   }
-  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
-  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
+  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true,1);
+  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true,1);
   if(plans.some(ma)){
     grp(L('Visits','Consultas'));
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
-      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
+      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash),false,k==='pcp'?1:0));
     grp(L('Extra benefits','Beneficios extra'));
     row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
     row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
@@ -2353,13 +2347,24 @@ function flowCompare(){
       row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
     });
   }
+  // A row with the same value in every column leaves the table and is named once under
+  // "Igual en los N". Key rows and the big money rows stay wherever they land, so the opening
+  // screen always answers the same five questions.
+  const sameLabels=[], keep=[];
+  R.forEach(r=>{
+    if(r.g){keep.push(r);return;}
+    const same=r.cells.length>1&&r.cells.every(c=>c.t===r.cells[0].t);
+    if(same&&!r.big&&!r.k){sameLabels.push(String(r.lab).replace(/<[^>]+>/g,''));return;}
+    keep.push(Object.assign({same},r));
+  });
   let gi=-1, closed=false;
-  const body=R.map(r=>{
+  // a group header left with nothing under it goes too
+  const body=keep.filter((r,i)=>!(r.g&&(i===keep.length-1||keep[i+1].g))).map(r=>{
     if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
                                        :`<tr class="grp" data-gi="${gi}"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
-    const same=r.cells.every(c=>c.t===r.cells[0].t);
-    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r g${gi}${r.k?' kr':''}${r.same?'':' diffrow'}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
+  const sameBlock=sameLabels.length?`<div class="cmp-same"><h5>${L('The same in all '+plans.length,'Igual en los '+plans.length)}</h5><p>${esc(sameLabels.join(' · '))}</p></div>`:'';
   // T-055 (2): the full official carrier and plan name. Names alone are not unique, so the type and
   // the Medicare ID sit under every column, as on the card.
   const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(p.name)}<span class="pid">${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
@@ -2368,13 +2373,15 @@ function flowCompare(){
   wb().innerHTML=`${bk()}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
-    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label>
+    <div class="cmp lite" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(p.name)} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
-      <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
+      <div class="cmp-foot"><button class="showall" id="cmp-all" type="button" onclick="cmpAll()">${L('See all benefits','Ver todos los beneficios')}</button>
+        ${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
+    ${sameBlock}
     ${eocNote(plans)}
     ${provenanceHTML()}
     ${bs(L('Back to plans','Volver a planes'),'back()')}`;
@@ -2383,24 +2390,17 @@ function flowCompare(){
 // "Ver todos los beneficios" group stayed closed with it, so the toggle hid rows instead of showing
 // differences. ON now opens every group that holds a difference and drops the groups that hold none;
 // OFF puts the groups back exactly as the visitor had them.
-function cmpDiff(cb){
+// T-066 (3): one button instead of a checkbox. It takes the table out of the lite view AND opens
+// every closed group that holds a row the plans do not agree on, so one tap shows every difference.
+function cmpAll(){
   const c=document.getElementById('cmp'); if(!c) return;
-  const on=!!cb.checked;
-  c.classList.toggle('diff',on);
-  c.querySelectorAll('tr.grp').forEach(g=>{
-    const rows=[...c.querySelectorAll('tr.r.g'+g.dataset.gi)], tg=g.classList.contains('tg');
-    if(on){
-      if(tg&&g.dataset.was==null) g.dataset.was=g.classList.contains('shut')?'1':'0';
-      const diff=rows.some(r=>!r.classList.contains('same'));
-      g.classList.toggle('hid',!diff);
-      if(tg&&diff){g.classList.remove('shut');rows.forEach(r=>r.classList.remove('hid'));}
-    }else{
-      g.classList.remove('hid');
-      if(tg){const shut=g.dataset.was!=='0';g.classList.toggle('shut',shut);
-             rows.forEach(r=>r.classList.toggle('hid',shut));delete g.dataset.was;}
-    }
+  c.classList.remove('lite');
+  c.querySelectorAll('tr.grp.tg').forEach(g=>{
+    const rows=[...c.querySelectorAll('tr.r.g'+g.dataset.gi)];
+    if(rows.some(r=>r.classList.contains('diffrow'))){g.classList.remove('shut');rows.forEach(r=>r.classList.remove('hid'));}
   });
-  wEvt('compare_diff_toggle',{on});
+  const b=document.getElementById('cmp-all'); if(b) b.remove();
+  wEvt('benefit_group_open',{group:'compare_all'});
 }
 function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
