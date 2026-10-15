@@ -428,10 +428,34 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cbar.solid button{flex:1 1 auto;width:100%;border-radius:12px;min-height:52px;padding:0 14px}
 /* inside the iframe the PAGE draws a fixed bar over this content, so the content ends above it */
 body.in-iframe.has-bar .widget-body{padding-bottom:96px}
+/* T-096 round 4 g (AB: "is the SHARE or HELP button sticky on bottom of screen?"). Where THIS file
+   draws the bar -- the widget opened on its own -- it is fixed to the screen from first paint and
+   stays there for the whole scroll, fine print included. Inside the iframe it cannot be: position
+   is relative to the frame, which is as tall as its content, so the page draws it instead and the
+   copy here stands down (host-cbar). */
+body:not(.in-iframe) .cbar{position:fixed;left:10px;right:10px;bottom:10px;margin:0;max-width:560px}
+body:not(.in-iframe).has-bar .widget-body{padding-bottom:104px}
 .cbar .n{font-size:15px;font-weight:400;color:#4A5568}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
 body.host-cbar .cbar{display:none!important}
+/* ── T-096 round 4 d (AB 2026-10-15 23:30, with a screenshot of the staging compare) ───────────
+   "cuando alguien dice muéstreme plan details, show THIS level of info. No more." The plan screen
+   is now the comparison's own open level for one plan: three groups, the same rows in the same
+   order, label over value, and nothing collapsed underneath. This supersedes T-091's cost strip on
+   this screen -- the strip is what the CARD shows, and the card is still right above it. */
+.dsec{display:flex;align-items:center;background:#f3f5f7;font-size:13px;letter-spacing:.03em;font-weight:600;color:#1e2a32;padding:8px 14px;margin:0 -14px;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
+.dsec svg{width:17px;height:17px;margin-right:7px;flex:0 0 17px;fill:none;stroke:var(--cbar-brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drow{padding:9px 0 10px;border-bottom:1px solid #eef1f3}
+.drow:last-child{border-bottom:0}
+.dl{font-size:14px;font-weight:400;color:#3a4650;line-height:1.3}
+.dv{font-size:16px;font-weight:700;color:#1e2a32;margin-top:2px}
+.dv.z{color:var(--sage-dark)}
+.dv.off{color:#56616a;font-weight:400;font-style:italic;font-size:14.5px}
+.dv.na{color:#56616a;font-weight:400;font-size:13.5px}
+.dcall{display:flex;align-items:flex-start;gap:9px;background:#E0F2F1;border-radius:10px;padding:10px 12px;margin:12px 0 0;font-size:14.5px;line-height:1.4;color:var(--cbar-ink)}
+.dcall svg{width:18px;height:18px;flex:0 0 18px;margin-top:1px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dcall a{color:var(--cbar-brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 /* ── T-078 (AB 2026-10-15, round 8 final): the share sheet ─────────────────────────────────────
    Pixel spec: TODO-en-uno-v9 section 3. Five channels, no note box and no name field — people write
    their own message in WhatsApp. The icons are the shapes a 70-year-old already recognises on their
@@ -576,7 +600,7 @@ body.host-cbar .cbar{display:none!important}
 .cf-links a{color:#5f6b75;text-decoration:underline;text-underline-offset:2px;padding:6px 2px}
 .cf-errbox{background:#fdecea;color:#b42318;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:0 0 12px}
 .cf-err{margin-top:14px;border-top:1px solid #e5e9ec;padding-top:14px}
-.stg-badge{position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none}
+.stg-badge{position:fixed;bottom:8px;left:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none}
 /* T-017 b13-b18 (AB 2026-10-02): list card, plain ZIP line, filter pills, sort menu, team card,
    lighter numbers, empty states. Source of truth: DECIDE/now/2026-10-02_widget-2027-results-mockup.html.
    Colours stay the widget's theme variables (BM teal, MC blue), as in the first build. */
@@ -1829,91 +1853,6 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
 // ── T-073 (AB 2026-10-14): the card is short — who it is, what it costs, one button.
 // Everything else moved to the plan's own screen, so the list is scannable and each plan
 // gets exactly one ask instead of seventy cards each carrying their own.
-/* T-089 (AB 2026-10-15): the Comparar box is on the plan screen too, in the same place in the same
-   header, so a plan can be added to the comparison where it is being read instead of going back to
-   find its card. One list, selPlans, so a tick here is a tick on the card and the other way round,
-   and the same "up to 3" message appears on either screen. `detail` keeps the plan screen's own
-   header spacing; it no longer doubles as "this header has no checkbox". */
-function planHead(p,selectable,detail){
-  return `<div class="pc-head${detail?' pd-head':''}">
-      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(p.carrier)}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>
-      ${planTags(p)}
-      ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
-      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
-      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}</div>`;
-}
-function detBtn(p){
-  return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
-}
-/* T-091 (AB 2026-10-15, with her screenshots): "when I click Ver detalles off this view, we need
-   the same view on details with TOP reading COSTOS and then all other dimensions underneath."
-   So the plan screen opens with the card's own header and then the SAME three-number strip under a
-   COSTOS band -- tapping "Ver detalles" now reads as more of the plan it was tapped on, instead of
-   the same three figures redrawn as a different-looking list. The cost rows the strip does not
-   carry stay directly under it, so nothing CMS publishes is lost: the Part B premium reduction, the
-   medical deductible, and the tiers CMS exempts from the drug deductible where there are any.
-   The max-out-of-pocket figure keeps its "(en la red)" qualifier nowhere now that it is a tile; the
-   network sentence in the fine print at the bottom of this screen is what carries it. */
-function costBlock(p){
-  const isMA=p.cat!=='PDP', drug=p.drug==='Included';
-  let rows='';
-  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))
-                +lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
-  if(drug&&p.ded>0&&p.noded&&p.noded.length){
-    const n=p.noded.map(String);
-    rows+=lrow(L('Drug deductible exceptions','Excepciones al deducible'),
-      V(L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`)));
-  }
-  return `<div class="ls cost hdr"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.cost}</s`+`vg>${L('Costs','Costos')}</div></div>`
-    +keyStrip(p)+(rows?`<div class="ls nohead cost undr">${rows}</div>`:'');
-}
-// Everything below Costos on the plan screen. T-076: every group renders OPEN, so "see plan details"
-// shows the plan rather than the card again; the bars stay, so a visitor can still close one.
-function detailGroups(p){
-  const isMA=p.cat!=='PDP';
-  let out='', gap=false;
-  if(isMA){
-    const vis=[vz(p.pcp),vz(p.spec),vz(p.er),vz(p.urg)];
-    if(allNull(vis)) gap=true;
-    const ext=[dentalL(p),visionL(p),hearingL(p),otcL(p),fitL(p)];
-    if(allNull(ext)) gap=true;
-    const amb=p.amb||{};
-    if(allNull([hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)])) gap=true;
-    // benefitGroups already has a "Consultas" and a "Beneficios extra", with different rows from the
-    // four and five the card used to show open. Two bars with the same name is the bug; these rows
-    // lead the group that already carries their title.
-    const LEAD={
-      visits: allNull(vis)?'':lrow(L('Primary doctor','Médico primario'),vis[0])+lrow(L('Specialist','Especialista'),vis[1])+
-              lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]),
-      extra:  allNull(ext)?'':lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+
-              lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+
-              lrow(L('Fitness','Ejercicio'),ext[4],'fit')
-    };
-    const LEADN={visits:allNull(vis)?0:4, extra:allNull(ext)?0:5};
-    benefitGroups(p).forEach(g=>{
-      const lead=LEAD[g.k]||'';
-      if(!lead && allNull(g.rows.map(r=>r[1]))) return;
-      out+=grpHTML(g.k,g.icon,g.t,
-        lead+g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),
-        g.rows.length+(LEADN[g.k]||0));
-    });
-  }
-  if(p.drug==='Included'&&!(p.tiers&&p.tiers.length)&&p.dbt!=='1') gap=true;
-  else if(isMA){
-    const t=p.tiers||[];
-    out+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
-  }
-  else out+=tiersHTML(p);
-  return {html:out,gap};
-}
-// All the fine print, at the very bottom of the plan screen and nowhere above it (T-073 (2)).
-// ── T-086 (AB 2026-10-15): ONE fine-print block, and it is the LAST thing on every screen.
-// "I don't want any CTAs showing under a bunch of little text." So the order on a screen is
-// content -> main button -> secondary button -> this block, and nothing clickable comes after it.
-// Inside the block: the notes that explain the plans on screen, then three lines that are NOT ours
-// to shorten or re-place — the network sentence, the 5-star disclaimer (42 CFR 422.2267(e)(33),
-// required wherever stars appear) and the CMS source line, which stays on the screen it describes.
-// Callers pass their own notes; everything below them is identical on all three screens.
 function fineBlock(notes,net){
   const nl=net?L("The exact network rules are in each plan's Evidence of Coverage.",
     'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.'):'';
@@ -1947,6 +1886,49 @@ function _scrollToCard(){
   const top=Math.max(0,Math.round(card.getBoundingClientRect().top-wrap.getBoundingClientRect().top));
   window.parent.postMessage({type:'widget-scrollto',top:top,height:Math.round(wrap.offsetHeight)},'*');
 }
+/* The comparison's open level, for one plan. Same three groups, same rows, same order, same
+   label-over-value shape -- so "Ver detalles" and "Comparar" never disagree about what a plan is.
+   Every value comes from the same helpers the table uses. */
+function dRow(label,v){
+  if(v===undefined) return '';
+  let cls='',txt;
+  if(!v){cls='na';txt=noInfo();}
+  else{cls=v.off?'off':(v.z||isZero(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
+  return `<div class="drow"><div class="dl">${label}</div><div class="dv${cls?' '+cls:''}">${txt}</div></div>`;
+}
+function dSec(icon,title){return `<div class="dsec"><svg viewBox="0 0 24 24">${PIC[icon]}</s`+`vg>${title}</div>`;}
+function detailLevel(p){
+  const isMA=p.cat!=='PDP', drug=p.drug==='Included';
+  const V2=t=>({t,off:false});
+  let out=dSec('cost',L('Costs','Costos'))+
+    dRow(L('Monthly premium','Prima mensual'),p.premium==null?null:V2(premUsd(p.premium)))+
+    (isMA?dRow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb)):'')+
+    (isMA?dRow(L('Medical deductible','Deducible médico'),mdedV(p.mded)):'')+
+    (isMA?dRow(L('Max out-of-pocket','Máximo de bolsillo'),p.moop==null?null:V2(usd(p.moop))):'')+
+    dRow(L('Drug deductible','Deducible de medicamentos'),
+      drug?(p.ded==null?null:V2(usd(p.ded))):{t:L('No drug coverage','Sin medicamentos'),off:true});
+  if(isMA){
+    out+=dSec('visits',L('Visits','Consultas'))+
+      dRow(L('Primary doctor','Médico primario'),vz(p.pcp))+
+      dRow(L('Specialist','Especialista'),vz(p.spec))+
+      dRow(L('Emergency room','Emergencias'),vz(p.er))+
+      dRow(L('Urgent care','Urgencias'),vz(p.urg));
+    out+=dSec('star',L('Extra benefits','Beneficios extra'))+
+      dRow('Dental',dentalB(p,true))+
+      dRow(L('Eyewear','Anteojos'),visionB(p,true))+
+      dRow(L('Hearing aids','Audífonos'),hearingB(p,true))+
+      dRow('OTC',otcB(p,true))+
+      dRow(L('Fitness','Ejercicio'),fitB(p));
+  }
+  return `<div class="ls nohead">${out}</div>`;
+}
+// The two things CMS cannot answer, on the screen where a visitor is deciding.
+function dCallRow(){
+  const TEL='(310) 597\u20119142';
+  return `<div class="dcall"><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg><span>${
+    L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')
+  } <a href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'plan_detail'})">${TEL}</a></span></div>`;
+}
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
@@ -1959,12 +1941,11 @@ function planDetail(id){
     const rng=usd(Math.round(p._pmin))+L('\u00a0to\u00a0','\u00a0a\u00a0')+usd(Math.round(p._pmax));
     // T-091: a Medigap plan screen opens like its card too -- the same two tiles under COSTOS.
     body=`<div class="ls cost hdr"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.cost}</s`+`vg>${L('Costs','Costos')}</div></div>`
-      +`<div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>`
+      +`<div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(carrierName(p.carrier)),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>`
       +`<div class="ls undr"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>`;
   } else {
-    const d=detailGroups(p); gap=d.gap;
-    body=costBlock(p)+d.html;
+    body=detailLevel(p)+dCallRow();
   }
   wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to plans','\u2039 Volver a los planes'),'backToPlans()')}</div>
     <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,true,true)}
@@ -2007,13 +1988,29 @@ function keyStrip(p){
          :kTile(L('None','Ninguno'),KL('Drug','deductible','Deducible','medicamentos'),'word'))+
   `</div>`;
 }
+/* T-089 (AB 2026-10-15): the Comparar box is on the plan screen too, in the same place in the same
+   header, so a plan can be added to the comparison where it is being read instead of going back to
+   find its card. One list, selPlans, so a tick here is a tick on the card and the other way round,
+   and the same "up to 3" message appears on either screen. `detail` keeps the plan screen's own
+   header spacing; it no longer doubles as "this header has no checkbox". */
+function planHead(p,selectable,detail){
+  return `<div class="pc-head${detail?' pd-head':''}">
+      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>
+      ${planTags(p)}
+      ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
+      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
+      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}</div>`;
+}
+function detBtn(p){
+  return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
+}
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   // Two tiles, not three: a supplement has no out-of-pocket maximum and no drug deductible.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L('\u00a0to\u00a0','\u00a0a\u00a0')+usd(Math.round(p._pmax));
     return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
-      <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
+      <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(carrierName(p.carrier)),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
   }
   return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
@@ -2077,7 +2074,12 @@ function keep2(short,full){return short.split(/\s+/).filter(Boolean).length>=2?s
 /* The carrier, short enough to sit above a one-third-wide column. CMS keeps the legal name
    ("Imperial Health Plan of California, Inc."); the corporate tail is what a visitor skips. */
 const _CARR_CUT=/[\s,]*(Inc\.?|LLC|Life Insurance Company|Mutual Automobile Insurance Company|Insurance Company|Healthcare of California|Health Plan of California|Health Plan|Partnership Plan|Advantage Plan|of California|Medicare|Health)$/i;
+/* T-096 round 4 h: CMS writes "Champion Heath Plan" for H6170. We show the name correctly and do
+   not touch the CMS file -- the plan ID, which is what identifies it, is unchanged. */
+const CARRIER_FIX={'Champion Heath Plan':'Champion Health Plan'};
+function carrierName(c){return CARRIER_FIX[String(c||'').trim()]||c;}
 function carrierShort(c){
+  c=carrierName(c);
   let t=String(c||'').trim(), prev=null;
   while(t!==prev&&t.split(/\s+/).length>1){prev=t;t=t.replace(_CARR_CUT,'').replace(/[\s,]+$/,'').trim();}
   return t||String(c||'').trim();
@@ -2433,9 +2435,10 @@ function barState(){
   // on the comparison the main action is the point of the screen, so it wins over the compare bar
   if(_act&&(_act.wins||k===0)) return {mode:_act.sec?'duo':'action',on:true,label:'',compare:_act.label,
     secondary:_act.sec||'',canCompare:true,action:_act.id};
-  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,
-    label:k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`),
-    compare:L('Compare','Comparar'),canCompare:k>=1&&total>=2};
+  // T-096 round 4 f (AB: "Compare (2)"): the count rides in the button, so the bar is one thing to
+  // read and one thing to tap instead of a label and a button competing.
+  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,label:'',
+    compare:L(`Compare (${k})`,`Comparar (${k})`),canCompare:k>=1&&total>=2};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
 }
 function barAct(){
@@ -2605,11 +2608,20 @@ function sugWhy(p,plans){
   if(/PPO/.test(String(p.type||''))&&others.every(o=>!/PPO/.test(String(o.type||'')))) out.push(L('more freedom to choose a doctor','más libertad para elegir médico'));
   return out.slice(0,3);
 }
-function sugCard(p,plans){
+/* T-096 round 4 e (AB 23:40: "para 0 de prima, o Paga?" -- "Para $0 de prima:" read as an
+   instruction, not as a reminder of what they said). The line now names their answer back to them
+   as a sentence, then gives the reason in a second one. With no answer, the reason stands alone. */
+function sugLine(p,plans){
   const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
   const why=sugWhy(p,plans);
-  const lead=sh?L(`For ${sh}:`,`Para ${sh}:`):L('Among these plans:','Entre estos planes:');
-  const line=why.length?`${lead} ${andList(why)}.`:'';
+  const reason=why.length?L(`This one has ${andList(why)}.`,`Este tiene ${andList(why)}.`):'';
+  // AB's own sentence for "Sin preferencia", word for word.
+  if(!sh) return L('This one has the best rating and the lowest cost of the ones you picked.',
+                   'Este tiene la mejor calificación y el costo más bajo de los que eligió.');
+  return L(`What matters most to you: ${sh}. `,`Lo más importante para usted: ${sh}. `)+reason;
+}
+function sugCard(p,plans){
+  const line=sugLine(p,plans);
   const TEL='(310) 597\u20119142';
   return `<div class="sug" style="--sc:${carrierColor(p)}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
@@ -2799,7 +2811,10 @@ function flowCompare(){
     const gs=plans.map(p=>ma(p)?benefitGroups(p):null), ref=gs.find(Boolean);
     // Hospital-type stays use the short text so 3 columns fit at 375px.
     const STAY={hosp:[p=>p.hosp,p=>p.mhosp,p=>p.snf],oon:[null,null,null,null,p=>p.oon&&p.oon.hosp]};
-    ['oon','hosp','visits','tests','kit','extra'].forEach(k=>{
+    /* Closed bars = only the groups NOT already open above (AB 2026-10-15, screenshot: the list
+       repeated "Consultas" and "Beneficios extra"). Order is hers: hospital, tests, equipment,
+       then drugs, which is appended after this loop. */
+    ['hosp','oon','tests','kit'].forEach(k=>{
       const has=gs.map(g=>g&&g.find(x=>x.k===k));
       const base=has.find(Boolean); if(!base) return;
       const labs=[]; has.forEach(g=>g&&g.rows.forEach(r=>{if(labs.indexOf(r[0])<0)labs.push(r[0]);}));
@@ -3267,6 +3282,6 @@ if(!_dataOnly) go(startZip);
   });
 })();
 </script>
-<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent='STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;top:8px;right:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
+<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent='STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));left:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
 </body>
 </html>
