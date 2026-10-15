@@ -622,6 +622,8 @@ body.host-cbar .cbar{display:none!important}
 .pc .nodet{font-size:13px;color:#56616a;margin:6px 0 0;line-height:1.4}
 .dualnote{font-size:13.5px;line-height:1.45;color:#1e2a32;background:#e7f4ef;border-left:3px solid var(--sage-dark);border-radius:6px;padding:8px 10px;margin:8px 0 0}
 .dualnote.cmpdual{margin:0 0 10px;text-align:left}
+/* round 4 b2: the one copy above the list — mint, no left bar, two lines at 375 */
+.dualnote.above{margin:0 0 10px;border-left:0;border-radius:10px;background:#E0F2F1;padding:10px 12px;font-size:14.5px;line-height:1.4}
 .rh .elig{font-size:13.5px;color:#2b3640;margin:0 0 8px;line-height:1.45}
 .rh .t1.dual a{color:var(--sage-dark);font-weight:600}
 .rh .elig a{color:var(--sage-dark);font-weight:600;white-space:nowrap}
@@ -2004,7 +2006,7 @@ function planHead(p,selectable,detail){
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
-      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}</div>`;
+      </div>`;
 }
 function detBtn(p){
   return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
@@ -2187,7 +2189,7 @@ function setType(v){
   wEvt('filter_pill',{pill:v});
   // "$0 prima" toggles (one tap on, one tap off). The others pick the type, as before.
   if(v==='zero') _zeroOnly=!_zeroOnly; else _typeFilter=v;
-  _shown=3;selPlans=[];flowResults();
+  _shown=PAGE;selPlans=[];flowResults();
 }
 // T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
 // filters ONCE per ZIP, the first time the plans are shown. After that the visitor's own pills and
@@ -2214,7 +2216,7 @@ function applyPriority(){
 function clearFilter(k){
   wEvt('filter_pill',{pill:'clear_'+k});
   if(k==='zero') _zeroOnly=false; else if(k==='drug') _drugOnly=false; else _typeFilter='all';
-  _shown=3;selPlans=[];flowResults();
+  _shown=PAGE;selPlans=[];flowResults();
 }
 function pillsHTML(){
   return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
@@ -2250,7 +2252,7 @@ function sortModes(){
   if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
-function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;flowResults();}
 // Unknown values (null) always sort last; ties fall back to plan name so the order is stable.
 function _asc(x,y){const a=(x===null||x===undefined)?Infinity:x, b=(y===null||y===undefined)?Infinity:y; return a===b?0:(a<b?-1:1);}
 // T-088 helpers. "Seguir con mis médicos": plan type is the only network fact in the CMS file, and
@@ -2280,7 +2282,12 @@ function sortPlans(plans, mode){
 }
 
 // ── RESULTS ──
-let _shown=3, _inAllPlans=false;
+/* T-096 round 4 b (AB 2026-10-15 23:10, "7 or 10? what is the magic number" -> 10): the first
+   screen is not three plans any more. Ten, and if the filtered list holds thirteen or fewer there is
+   no "Ver más" at all -- showing 11 and hiding 1 is a button for nothing. After that, ten per tap
+   until every plan is on screen, and the last tap says how many are left. */
+const PAGE=10, PAGE_ALL=12;
+let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // Results top, T-088 round 3 + "less is more" (AB 2026-10-15). Pixel spec: flujo-completo-v11
 // screen 3 and 1545_sus-planes-titulo-v5 (B). Three things and no more: the count as a title, one
@@ -2371,28 +2378,29 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=3; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
+  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
   delete D.plansSeen; delete D.represented;
   flowResults();
 }
-function cmpAllBtn(list){
-  const c=list.filter(p=>!p._medigap).slice(0,3);
-  if(c.length<2) return '';
-  return `<button class="cmpall" onclick="compareFirst()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="16" y="4" width="5" height="16" rx="1.5"/></svg>${L(`Compare these ${c.length} plans`,`Comparar estos ${c.length} planes`)}</button>`;
-}
 function moreBtn(total){
   if(total<=_shown) return '';
-  const k=Math.min(5,total-_shown);
-  return `<button class="showmore" onclick="showMore()">${L(`See ${k} more plan${k===1?'':'s'}`,`Ver ${k} plan${k===1?'':'es'} más`)}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
+  const left=total-_shown, k=Math.min(PAGE,left);
+  // the last tap says it is the last one, so nobody wonders how deep this goes
+  const lab=left<=PAGE
+    ? L(`See the last ${left}`,`Ver los últimos ${left}`)
+    : L(`See ${k} more plans`,`Ver ${k} planes más`);
+  return `<button class="showmore" onclick="showMore()">${lab}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
 }
 function listHTML(list){
-  const first=list.slice(0,Math.min(3,_shown)).map(p=>planCard(p,true)).join('');
-  const rest=list.slice(3,_shown).map(p=>planCard(p,true)).join('');
-  return `<div id="plist">${first}${cmpAllBtn(list)}${rest}</div><div id="pmore">${moreBtn(list.length)}</div>`;
+  // Thirteen or fewer: all of them, and no button. "Comparar estos 3 planes" is gone -- comparing is
+  // a tick box and the bar at the bottom now, and the old button said the same thing a third time.
+  const n=list.length<=PAGE_ALL?list.length:_shown;
+  return `${dualNoteBox(list)}<div id="plist">${list.slice(0,n).map(p=>planCard(p,true)).join('')}</div>`+
+    `<div id="pmore">${list.length<=PAGE_ALL?'':moreBtn(list.length)}</div>`;
 }
 function showMore(){
   const list=orderedPlans(), from=_shown;
-  _shown=Math.min(list.length,_shown+5); wEvt('show_more',{shown:_shown,total:list.length});
+  _shown=Math.min(list.length,_shown+PAGE); wEvt('show_more',{shown:_shown,total:list.length});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
@@ -2483,7 +2491,6 @@ function toggleCmp(el){
   } else if(i>=0) selPlans.splice(i,1);
   updBar();
 }
-function compareFirst(){selPlans=orderedPlans().filter(p=>!p._medigap).slice(0,3).map(p=>p.id);go(flowCompare);}
 
 async function flowResults(){
   prog(82); _inAllPlans=false; _plansView=true;
@@ -2960,6 +2967,15 @@ function customCompare(){return flowCompare();}
 // pay $0"; this is that statement. Checked on H1224-001 (L.A. Care Medicare Plus): file 20%, Plan Finder $0.
 // PROTECT approved this wording 2026-10-14 (T-052 review #3). T-086 moves it under the compare table,
 // so the one word that points at the costs has to point the other way; every fact is unchanged.
+/* T-096 round 4 b2 (AB 2026-10-15 23:25, "on EVERY card? THREE lines?"): the same three lines sat
+   on every dual card. It is one short pair of sentences now, once, above the list. Same facts as
+   the wording PROTECT approved in T-052, shorter -- PROTECT to OK the short form before PRD. */
+function dualNoteBox(list){
+  if(!list.some(isDual)) return '';
+  const m=mcd();
+  return `<p class="dualnote above">${L(`With ${m}, most people pay $0. The costs below are before that help.`,
+    `Con ${m}, la mayoría paga $0. Los costos de abajo son sin esa ayuda.`)}</p>`;
+}
 function dualNote(above){const m=mcd();
   return L(`Most people with Medicare and ${m} pay $0. The costs ${above?'above':'below'} are the plan's costs before ${m} help.`,
            `La mayoría de las personas con Medicare y ${m} pagan $0. Los costos de ${above?'arriba':'abajo'} son los del plan antes de la ayuda de ${m}.`);}
@@ -3187,7 +3203,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=3;go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=PAGE;go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
