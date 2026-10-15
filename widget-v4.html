@@ -143,8 +143,13 @@ body.host-next #wb .btn-p{display:none!important}
 .q3opt.on{border:2px solid var(--cbar-brand);background:#f2faf9;padding:8.5px 11.5px}
 .q3ic{width:42px;height:42px;border-radius:50%;flex:0 0 42px;display:flex;align-items:center;justify-content:center}
 .q3ic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.q3c1{background:#007B7B}.q3c2{background:#002147}.q3c3{background:#5E9C76}
-.q3c4{background:#FFD54F}.q3c4 svg{stroke:#002147}.q3c5{background:#4A90D9}
+/* T-096 round 3 (AB 2026-10-15): ONE family. Five circles of five colours read as five unrelated
+   things; one mint circle with a teal line icon reads as five of the same kind, and the one you
+   chose is the one that fills in. */
+.q3ic{background:#E0F2F1}
+.q3ic svg{stroke:#007B7B}
+.q3opt.on .q3ic{background:var(--cbar-brand)}
+.q3opt.on .q3ic svg{stroke:#fff}
 .q3tx{padding-right:26px;min-width:0}
 .q3tx b{display:block;font-size:18px;line-height:1.2;font-weight:600;color:#1e2a32}
 .q3tx span{display:block;font-size:14.5px;color:#5b6670;line-height:1.3;margin-top:2px}
@@ -1143,19 +1148,19 @@ const PRI_OPTIONS=[
   // with "Solo" HIDES plans; one that starts with "Primero" hides nothing and only reorders. The
   // last two words of each are joined with a non-breaking space so no line ends on one word, and
   // Medi-Cal carries a non-breaking hyphen so it never splits.
-  {id:'cost',    ic:'cost',  c:'q3c1', en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
+  {id:'cost',    ic:'cost', en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
    enD:'<em>Only</em> plans with no monthly&nbsp;premium.',            esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
-  {id:'doctors', ic:'visits',c:'q3c2', en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
+  {id:'doctors', ic:'visits', en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
    enD:'<em>First</em>, the ones with more freedom to choose a&nbsp;doctor.', esD:'<em>Primero</em> los de m\u00E1s libertad para elegir&nbsp;m\u00E9dico.'},
-  {id:'drugs',   ic:'drug',  c:'q3c3', en:()=>'My medicines',     es:()=>'Mis medicamentos',
+  {id:'drugs',   ic:'drug', en:()=>'My medicines',     es:()=>'Mis medicamentos',
    enD:'<em>Only</em> plans that include drug&nbsp;coverage.',         esD:'<em>Solo</em> planes con&nbsp;medicamentos.'},
-  {id:'benefits',ic:'dental',c:'q3c4', en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
+  {id:'benefits',ic:'dental', en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
    enD:'<em>First</em>, the ones that cover all&nbsp;three.',          esD:'<em>Primero</em> los que cubren los&nbsp;tres.'},
-  {id:'medicaid',ic:'shield',c:'q3c5', en:()=>'I have '+nbMcd(),   es:()=>'Tengo '+nbMcd(),
+  {id:'medicaid',ic:'shield', en:()=>'I have '+nbMcd(),   es:()=>'Tengo '+nbMcd(),
    enD:()=>'<em>Only</em> plans for Medicare and&nbsp;'+nbMcd()+'.',   esD:()=>'<em>Solo</em> planes para Medicare y&nbsp;'+nbMcd()+'.'}
 ];
 function nbMcd(){return mcd().replace('-','\u2011');}
-function priIcon(o){return `<span class="q3ic ${o.c}"><svg viewBox="0 0 24 24">${PIC[o.ic]}</s`+`vg></span>`;}
+function priIcon(o){return `<span class="q3ic"><svg viewBox="0 0 24 24">${PIC[o.ic]}</s`+`vg></span>`;}
 /* T-088 round 3 (AB 2026-10-15, "perhaps we should not allow multiple"): one answer, not several.
    Tapping an option is the whole interaction -- it marks teal for 0.4s so the visitor sees what they
    picked, then the plans open. No "Ver mis planes" button to find, no checkbox to understand. The
@@ -1475,7 +1480,7 @@ const PIC={
   visits:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="12" r="2"/>',
   star:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>',
   hosp:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 7v6M9 10h6M9 21v-4h6v4"/>',
-  drug:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M8.5 8.5l7 7"/>',
+  drug:'<g transform="rotate(-35 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></g>',
   bed:'<path d="M3 20V8M3 14h18v6M21 14v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11" r="2"/>',
   flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>',
   shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
