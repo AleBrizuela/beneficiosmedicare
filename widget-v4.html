@@ -1766,19 +1766,27 @@ function detailGroups(p){
   if(isMA){
     const vis=[vz(p.pcp),vz(p.spec),vz(p.er),vz(p.urg)];
     if(allNull(vis)) gap=true;
-    else out+=grpHTML('visits','visits',L('Visits','Consultas'),
-      lrow(L('Primary doctor','Médico primario'),vis[0])+lrow(L('Specialist','Especialista'),vis[1])+
-      lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]),4);
     const ext=[dentalL(p),visionL(p),hearingL(p),otcL(p),fitL(p)];
     if(allNull(ext)) gap=true;
-    else out+=grpHTML('extra','star',L('Extra benefits','Beneficios extra'),
-      lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+
-      lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+lrow(L('Fitness','Ejercicio'),ext[4],'fit'),5);
     const amb=p.amb||{};
     if(allNull([hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)])) gap=true;
+    // benefitGroups already has a "Consultas" and a "Beneficios extra", with different rows from the
+    // four and five the card used to show open. Two bars with the same name is the bug; these rows
+    // lead the group that already carries their title.
+    const LEAD={
+      visits: allNull(vis)?'':lrow(L('Primary doctor','Médico primario'),vis[0])+lrow(L('Specialist','Especialista'),vis[1])+
+              lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]),
+      extra:  allNull(ext)?'':lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+
+              lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+
+              lrow(L('Fitness','Ejercicio'),ext[4],'fit')
+    };
+    const LEADN={visits:allNull(vis)?0:4, extra:allNull(ext)?0:5};
     benefitGroups(p).forEach(g=>{
-      if(allNull(g.rows.map(r=>r[1]))) return;
-      out+=grpHTML(g.k,g.icon,g.t,g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),g.rows.length);
+      const lead=LEAD[g.k]||'';
+      if(!lead && allNull(g.rows.map(r=>r[1]))) return;
+      out+=grpHTML(g.k,g.icon,g.t,
+        lead+g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),
+        g.rows.length+(LEADN[g.k]||0));
     });
   }
   if(p.drug==='Included'&&!(p.tiers&&p.tiers.length)&&p.dbt!=='1') gap=true;
