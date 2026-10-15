@@ -1887,9 +1887,6 @@ function cmpBox(p){
   const on=selPlans.includes(p.id);
   return `<label class="pc-cmp"><input type="checkbox" data-pid="${esc(p.id)}" ${on?'checked':''} onchange="toggleCmp(this)"> ${L('Compare','Comparar')}</label>`;
 }
-const TOG=()=>[L('See all benefits','Ver todos los beneficios'),L('See less','Ver menos')];
-const TOGD=()=>[L('See drug costs by tier','Ver medicamentos por nivel'),L('See less','Ver menos')];
-function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'});const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
@@ -1937,7 +1934,6 @@ function planCard(p,selectable){
     more+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
   }
   else more+=tiersHTML(p);
-  const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
       <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}${netLineHTML(p)}
@@ -1945,9 +1941,26 @@ function planCard(p,selectable){
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
-    ${body}
-    ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
+    ${keyStrip(p,isMA,drug)}
+    <details class="pc-all" ontoggle="togAll(this)"><summary>${PCALL()[0]}</summary>${body}${more}</details>
     <div class="pc-foot">${planAction(p)}</div></div>`;
+}
+// AB 2026-10-14: "i am still NOT seeing the SUMMARY CARDS with KEY info at top". The three numbers
+// that decide whether a plan is worth opening at all; everything else is one tap away and unchanged
+// -- same rows, same wording, same CMS values, nothing dropped.
+const PCALL=()=>[L('See this plan','Ver este plan'),L('See less','Ver menos')];
+function togAll(el){
+  const s=el.querySelector('summary'); if(s) s.textContent=PCALL()[el.open?1:0];
+  if(el.open) wEvt('details_open',{plan_type:'card'});
+}
+function keyStrip(p,isMA,drug){
+  const k=(v,l,zero)=>`<div class="pc-key${zero?' zero':''}"><div class="v${v==null?' na':''}">${v==null?noInfo():v}</div><div class="l">${l}</div></div>`;
+  const prem=p.premium==null?null:premUsd(p.premium);
+  const moop=isMA?(p.moop==null?null:usd(p.moop)):'—';
+  const ded=drug?(p.ded==null?null:usd(p.ded)):L('None','Ninguno');
+  return `<div class="pc-keys">${k(prem,L('Monthly premium','Prima mensual'),prem==='$0')}`+
+    `${k(moop,L('Max out-of-pocket','Máximo de bolsillo'))}`+
+    `${k(ded,L('Drug deductible','Deducible medicamentos'),ded==='$0')}</div>`;
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
