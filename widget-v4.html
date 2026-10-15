@@ -103,6 +103,16 @@ body.host-next #wb .btn-p{display:none!important}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
+/* NO WIDOWS (AB's standing rule, written out in T-088 round 3): no line a visitor reads ends up
+   holding one word on its own. text-wrap:pretty is the browser's own fix for exactly that, and it
+   costs nothing where a block already fits on one line. The forced two-line cost labels under the
+   card numbers are NOT covered by it on purpose: their break is written in (T-079 round 2) and the
+   second line is meant to be one word. */
+.q3q,.q3h,.q3tx b,.q3tx span,.q3skip,.rh .hl,.rh .zl,.chip,.fomore,.fopt,.btn-back,.btn-p,.btn-s,.pc-det,.pd-cta,.cbar button,
+.pc-eb,.pc-name,.cmp thead th .nm2,.cmp tr.lr td,.cmp tr.vr td,.cmp tr.grp td,.lr .ll,.lr .lv,.bot-msg,.diffline{text-wrap:balance}
+.fine p,.pc-fine,.disc,.psrc,.dualnote{text-wrap:pretty}
+/* the two-line cost labels keep their own written-in break (T-079 round 2) */
+.pc-key .l,.pc-key .l *{text-wrap:wrap}
 .btn-back{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:2px solid var(--cbar-brand);border-radius:12px;color:var(--cbar-brand);font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:10px;padding:8px 12px;min-height:48px}
 .btn-back:hover{background:#f2faf9}
 .bkrow{margin:2px 0 0}
@@ -526,6 +536,7 @@ body.host-cbar .cbar{display:none!important}
 .pc .lr{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid #eef1f3}
 .pc .ls .lr:last-child{border-bottom:0}
 .pc .ll{flex:1;min-width:0;display:flex;align-items:center;font-size:14.5px;color:#3b4650}
+.pc .llt{min-width:0;text-wrap:balance}
 .pc .lv{font-size:15px;font-weight:600;color:#2b3640;text-align:right;max-width:58%;overflow-wrap:anywhere}
 .pc .lv2{font-size:15px;font-weight:600;color:#2b3640;text-align:right;width:62px;flex:0 0 62px}
 .pc .lr.th{padding:2px 0;border-bottom:0}
@@ -1280,6 +1291,17 @@ function bb_experiment(){expOrNext(flowResults)}
 // ..._missing-and-compare-mockup.html (T-017 b2-b13).
 function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
 
+/* NO WIDOWS (AB's standing rule): join the last two words of a label, a name or a value with a
+   non-breaking space, so a line can never end up holding one word on its own. Only from three
+   words up -- gluing a two-word label would make it unbreakable and push the column sideways,
+   which is worse than the widow. Markup is left alone: a string with a tag in it is skipped. */
+function nbLast(x){
+  const t=String(x==null?'':x);
+  if(/[<>]/.test(t)) return t;
+  const w=t.trim().split(/\s+/);
+  if(w.length<3) return t;
+  return t.replace(/\s+(\S+)\s*$/, '\u00a0$1');
+}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const L=(en,es)=>lang==='en'?en:es;
 function planYear(){return (_planMeta&&_planMeta.year)||PLAN_FILE_YEAR;}
@@ -1527,7 +1549,7 @@ function sx(v){
   return V(money(v));
 }
 // Part B premium reduction, a monthly dollar figure from PBP Section D. 0 = the plan gives none.
-function gbV(g){if(g==null) return null;if(!g) return OFF();const v=V(usd(g)+' '+L('a month','al mes'));v.z=true;return v;}
+function gbV(g){if(g==null) return null;if(!g) return OFF();const v=V(usd(g)+L('\u00a0a\u00a0month','\u00a0al\u00a0mes'));v.z=true;return v;}
 // Medical (plan) deductible. {mc} = the plan charges Original Medicare's deductible, whose 2027 amount CMS sets in November.
 function mdedV(m){
   if(!m) return null;
@@ -1588,7 +1610,7 @@ function benefitGroups(p){
     [L('Routine hearing exam','Examen de audición'),p.hear?(p.hear.exam?V(p.hear.exam_cs?money(p.hear.exam_cs):L('Included','Incluido')):OFF()):null],
     [L('Annual physical exam','Examen físico anual'),sx(p.pe)],
     [L('Nutrition program','Programa de nutrición'),x14V(p,'14c2')],
-    [L('Extra quit-smoking sessions','Sesiones adicionales para dejar de fumar'),x14V(p,'14c3')],
+    [L('Extra quit\u2011smoking sessions','Sesiones adicionales para dejar de fumar'),x14V(p,'14c3')],
     [L('Home and bathroom safety devices','Seguridad en casa y en el baño'),x14V(p,'14c8')],
     [L('Personal emergency alert device','Botón de emergencia personal'),x14V(p,'14c11')],
     [L('In-home support','Apoyo en el hogar'),x14V(p,'14c21')],
@@ -1641,7 +1663,7 @@ function lrow(label,v,icon){
   let cls, txt;
   if(!v){cls='na';txt=noInfo();}
   else{cls=off?'off':(v.z||/^\$0(?:\.00)?(?:$|\/| por | per )/.test(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
-  return `<div class="lr"><span class="ll">${ic}${label}</span><span class="lv${cls?' '+cls:''}">${txt}${v&&v.sub?`<span class="lsub">${v.sub}</span>`:''}</span></div>`;
+  return `<div class="lr"><span class="ll">${ic}<span class="llt">${nbLast(label)}</span></span><span class="lv${cls?' '+cls:''}">${txt}${v&&v.sub?`<span class="lsub">${v.sub}</span>`:''}</span></div>`;
 }
 // b20: true when every value in a section is missing from the CMS file (null), so the section shows nothing real.
 function allNull(vals){return vals.every(v=>v==null);}
@@ -1710,7 +1732,7 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
    header spacing; it no longer doubles as "this header has no checkbox". */
 function planHead(p,selectable,detail){
   return `<div class="pc-head${detail?' pd-head':''}">
-      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(p.carrier)}</p>`}<p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
+      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(p.carrier)}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
@@ -1830,7 +1852,7 @@ function planDetail(id){
   _act=can?{id:'plan:'+p.id,label:L('Help me choose this plan','Ayúdeme a elegir este plan')}:null;
   let body,gap=false;
   if(p._medigap){
-    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
+    const rng=usd(Math.round(p._pmin))+L('\u00a0to\u00a0','\u00a0a\u00a0')+usd(Math.round(p._pmax));
     // T-091: a Medigap plan screen opens like its card too -- the same two tiles under COSTOS.
     body=`<div class="ls cost hdr"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.cost}</s`+`vg>${L('Costs','Costos')}</div></div>`
       +`<div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>`
@@ -1885,7 +1907,7 @@ function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   // Two tiles, not three: a supplement has no out-of-pocket maximum and no drug deductible.
   if(p._medigap){
-    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
+    const rng=usd(Math.round(p._pmin))+L('\u00a0to\u00a0','\u00a0a\u00a0')+usd(Math.round(p._pmax));
     return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
       <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
@@ -2499,12 +2521,12 @@ function flowCompare(){
     const same=r.cells.every(c=>c.t===r.cells[0].t);
     const cls=`g${gi}${same?' same':''}${closed?' hid':''}`;
     const ric=r.icon?`<svg class="ric" viewBox="0 0 24 24">${PIC[r.icon]}</s`+`vg>`:'';
-    return `<tr class="r lr ${cls}"><td class="lab" colspan="${plans.length}">${ric}${r.lab}</td></tr>`+
-      `<tr class="r vr ${cls}">${r.cells.map(c=>`<td class="v${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r lr ${cls}"><td class="lab" colspan="${plans.length}">${ric}${nbLast(r.lab)}</td></tr>`+
+      `<tr class="r vr ${cls}">${r.cells.map(c=>`<td class="v${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${nbLast(c.t)}</td>`).join('')}</tr>`;
   }).join('');
   /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
      three, and the name block reserves two lines so the type · ID line and the stars line up too. */
-  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${esc(cmpName(p))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span></th>`).join('')}</tr>`;
+  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   _act=can?{id:'compare',label:L('Help me choose between these plans','Ayúdeme a elegir estos planes'),wins:true}:null;
