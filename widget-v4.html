@@ -261,8 +261,11 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-idline .pid{font-weight:700;color:#4A5568}
 /* T-073: the card ends in ONE outline button; the plan opens on its own screen. */
 .pc-det{display:block;width:100%;background:#fff;border:1.5px solid var(--sage);color:var(--sage-dark);
-  border-radius:10px;padding:13px;font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;
-  text-align:center;cursor:pointer;min-height:50px;margin:12px 0 0}
+  border-radius:10px;padding:12px;font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;
+  text-align:center;cursor:pointer;min-height:48px;margin:10px 0 0}
+/* T-073: a three-row cost block on the short card needs no "COSTOS" bar above it. */
+.ls.nohead{padding-top:2px}
+.ls.nohead .lr{padding-top:9px;padding-bottom:9px}
 .pd-head{margin:0 0 14px}
 .pd-cta{display:block;width:100%;background:var(--sage);color:#fff;border:0;border-radius:10px;padding:15px;
   font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;text-align:center;cursor:pointer;
@@ -1672,7 +1675,7 @@ function lrow(label,v,icon){
 }
 // b20: true when every value in a section is missing from the CMS file (null), so the section shows nothing real.
 function allNull(vals){return vals.every(v=>v==null);}
-function lsec(icon,title,rows,cls){return `<div class="ls${cls?' '+cls:''}"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}</div>${rows}</div>`;}
+function lsec(icon,title,rows,cls,noHead){return `<div class="ls${cls?' '+cls:''}${noHead?' nohead':''}">${noHead?'':`<div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}</div>`}${rows}</div>`;}
 
 const TIER_ES={'Preferred Generic':'Genérico preferido','Generic':'Genérico','Preferred Brand':'Marca preferida',
   'Non-Preferred Drug':'No preferido','Non-Preferred Brand':'Marca no preferida','Specialty Tier':'Especialidad','Specialty':'Especialidad','Injectable Drugs':'Medicamentos inyectables'};
@@ -1746,7 +1749,7 @@ function costRows(p,short){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
   const prem=p.premium==null?null:V(premUsd(p.premium)+L('/mo','/mes'));
   const ded=drug?(p.ded==null?null:V(usd(p.ded))):V('—',L('No drug coverage','Sin cobertura de medicamentos'),true);
-  if(drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
+  if(!short&&drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
   const moop=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
   let rows=lrow(L('Monthly premium','Prima mensual'),prem);
   if(short){
@@ -1830,11 +1833,11 @@ function planCard(p,selectable){
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
     return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
-      ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
+      ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost',true)}
       ${detBtn(p)}</div>`;
   }
   return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
-    ${lsec('cost',L('Costs','Costos'),costRows(p,true),'cost')}
+    ${lsec('cost',L('Costs','Costos'),costRows(p,true),'cost',true)}
     ${detBtn(p)}</div>`;
 }
 
