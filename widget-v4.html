@@ -18,22 +18,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #1E3A5F; --green: #007B40; --blue: #2E6BA4;
-  --teal: #007B7B; --mint: #A8D8B9;
-  --lt-blue: #D6EAF7; --lt-green: #D4EDE1;
-  --lt-mint: #EAF6EE; --lt-gray: #F3F5F7;
+  --navy: #1E3A5F; --green: #00796B; --blue: #2E6BA4;
+  --teal: #00897B; --mint: #B2DFDB;
+  --lt-blue: #D6EAF7; --lt-green: #E0F2F1;
+  --lt-mint: #E0F2F1; --lt-gray: #F3F5F7;
   --gray: #5A6577; --dark: #1C2B3A; --white: #FFFFFF;
-  --sage: #007B7B; --sage-dark: #005C5C; --slate: #3D5A80;
-  /* channel triplet so shadows and focus rings derive from --sage instead of
-     restating it; THEMES below overrides it alongside --sage. */
-  --sage-rgb: 0,123,123;
+  --sage: #00897B; --sage-dark: #00796B; --slate: #3D5A80;
   --radius: 12px;
   --shadow: 0 4px 24px rgba(30,58,95,0.10);
   --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-button,input,select,textarea{font-family:inherit}   /* T-066 (5): no control falls back to the system font */
-body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,var(--lt-mint) 0%,var(--lt-blue) 50%,var(--lt-mint) 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body{font-family:'Open Sans',-apple-system,sans-serif;background:linear-gradient(135deg,#E0F2F1 0%,#D6EAF7 50%,#E0F2F1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 body.in-iframe{padding:0;min-height:auto;background:var(--white);align-items:flex-start}
 body.in-iframe .widget-wrap{border-radius:0;box-shadow:none}
 body.in-iframe .widget-header{display:none}
@@ -94,15 +90,15 @@ body.host-next #wb .btn-p{display:none!important}
 .input-group{margin-bottom:14px;text-align:center}
 .input-group label{display:block;font-size:13px;font-weight:500;color:#5f6368;margin-bottom:6px;text-align:center}
 .input-field{width:auto;min-width:180px;max-width:260px;padding:14px 16px;border:1.5px solid #dadce0;border-radius:var(--radius);font-size:18px;font-family:inherit;color:#202124;transition:border-color .2s;text-align:center;display:block;margin:0 auto}
-.input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(var(--sage-rgb),.15)}
+.input-field:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
 .input-field::placeholder{color:#A0AEC0}
 .input-group.zip-group .input-field{width:140px;min-width:140px;font-size:22px;letter-spacing:3px}
 
 /* ── BUTTONS ── */
 .btn-p{width:100%;padding:16px;background:var(--sage);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:52px}
-.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(var(--sage-rgb),.3)}.btn-p:active{transform:translateY(0)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,137,123,.3)}.btn-p:active{transform:translateY(0)}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:17px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
+.btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
 .btn-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gray);font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:6px 0;min-height:36px}
 .btn-back:hover{color:var(--dark)}
@@ -129,12 +125,12 @@ body.host-next #wb .btn-p{display:none!important}
 .cond-chip.sel .cond-label{color:white}
 .cond-chip.sel .cond-icon svg{filter:brightness(0) invert(1)}
 .health-textarea{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--dark);resize:vertical;min-height:70px;transition:border-color .2s}
-.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(var(--sage-rgb),.15)}
+.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
 .health-textarea::placeholder{color:#A0AEC0}
 
 /* ── RANK BADGES (priority step) ── */
 .opt-card{position:relative}
-.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(var(--sage-rgb),.3);animation:popIn .25s ease}
+.rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,137,123,.3);animation:popIn .25s ease}
 .opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
 
 /* ── PLAN CARDS ── */
@@ -206,7 +202,7 @@ body.host-next #wb .btn-p{display:none!important}
 .success-bullets li{font-size:14px;color:#2D3748;line-height:1.5;padding:5px 0;display:flex;align-items:flex-start;gap:8px}
 .success-bullets li span.sb-icon{flex-shrink:0;font-size:16px;margin-top:1px}
 .success-cta{display:inline-block;background:var(--sage);color:white;font-size:15px;font-weight:600;padding:13px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
-.success-cta:hover{background:var(--sage-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(var(--sage-rgb),.3)}
+.success-cta:hover{background:#1A8A6E;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,138,110,.3)}
 .success-links{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .success-links button{background:none;border:none;color:var(--navy);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px}
 
@@ -260,11 +256,9 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
 .pc-chips .c.off b{color:#a3adb5}
 .pc details{border-top:1px solid #e5e9ec;margin-top:10px}
-.pc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:15px;font-weight:600;color:#36505c;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px}
-.pc details.pc-all>summary{background:#fff}
-.pc details.pc-all[open]>summary{border-bottom:1px solid #e5e9ec}
+.pc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:14.5px;font-weight:700;color:var(--sage-dark);display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px}
 .pc summary::-webkit-details-marker{display:none}
-.pc summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid #8a97a1;border-bottom:2px solid #8a97a1;transform:rotate(45deg);margin-top:-4px}
+.pc summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(45deg);margin-top:-4px}
 .pc details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .pc-ben{list-style:none;margin:0;padding:0}
 .pc-ben li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid #e5e9ec}
@@ -307,7 +301,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .rh .sr{display:flex;gap:8px;align-items:center;font-size:13px;color:#66727c;margin-top:6px}
 .rh .sr label{flex:0 0 86px;white-space:nowrap}
 .rh .sr select{flex:1;min-width:0;font:inherit;font-size:14px;padding:8px;border:1px solid #e5e9ec;border-radius:9px;background:#f3f5f7;color:#1e2a32;font-weight:600;min-height:40px}
-.cmpall{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1.5px solid var(--sage);color:var(--sage-dark);border-radius:10px;padding:11px;font-weight:700;font-size:17px;background:#fff;cursor:pointer;font-family:inherit;margin:0 0 10px;min-height:48px}
+.cmpall{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1.5px solid var(--sage);color:var(--sage-dark);border-radius:10px;padding:11px;font-weight:700;font-size:15px;background:#fff;cursor:pointer;font-family:inherit;margin:0 0 10px;min-height:48px}
 .cmpall svg{width:18px;height:18px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round}
 .showmore{display:block;width:100%;text-align:center;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:12px;font-weight:700;color:#1e2a32;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:6px}
 .showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
@@ -328,25 +322,10 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmp td.v.zero{color:var(--sage-dark)}
 .cmp td.v.off{color:#56616a;font-weight:600;font-style:italic}
 .cmp td.big{font-size:16px;font-weight:800}
-/* T-066 (3): the compare opens on the key rows only (the T-056 "lite" view). "Ver todos los
-   beneficios" takes the class off and the whole table appears. */
-.cmp.lite tbody tr:not(.kr){display:none}
-.cmp.lite td.v{font-size:15px}
-.cmp.lite td.v.big{font-size:16px}
-.cmp.lite td.lab{font-size:13.5px}
-.cmp.lite thead th,.cmp.lite td.lab{hyphens:none;-webkit-hyphens:none}
-.cmp.lite th,.cmp.lite td{padding:11px 5px}
-/* the footnotes explain rows the lite view does not show yet, so they wait for the full table */
-.cmp.lite .cmp-note{display:none}
+.cmp .tog{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:10px 12px;font-size:13px;font-weight:600;color:var(--sage-dark);border-bottom:1px solid #e5e9ec;cursor:pointer;min-height:44px}
+.cmp .tog input{accent-color:var(--sage);width:18px;height:18px;margin:0}
+.cmp.diff tr.same{display:none}
 .cmp tr.hid{display:none}
-/* a row whose value is the same in every column tells the reader nothing: it leaves the table and
-   is listed once here. AB's client-sheet rule. */
-.land-rh{padding:8px 12px;margin-bottom:8px}
-.land-h{font-size:18px;font-weight:800;color:var(--navy);line-height:1.25;margin:0 0 3px;text-align:left}
-.land-rule{font-size:13px;color:#5f6b75;line-height:1.4;margin:0 0 10px;text-align:left}
-.cmp-same{margin:12px 0 0;background:#f3f5f7;border-radius:10px;padding:10px 12px}
-.cmp-same h5{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#5f6b75;margin:0 0 6px}
-.cmp-same p{font-size:13px;color:#36505c;margin:0;line-height:1.5}
 .cmp tr.grp.tg td{cursor:pointer;color:var(--sage-dark)}
 .cmp tr.grp.tg td span{display:flex;justify-content:space-between;align-items:center;min-height:30px}
 .cmp tr.grp.tg td span::after{content:"";width:8px;height:8px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(-135deg);margin:4px 4px 0 8px}
@@ -370,7 +349,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
   .opt-card .tx p{font-size:13px}
   .input-field{padding:14px 16px;font-size:18px}
   .btn-p{padding:16px;font-size:16px;min-height:52px}
-  .btn-s{padding:14px;font-size:17px;min-height:48px}
+  .btn-s{padding:14px;font-size:15px;min-height:48px}
   .plan-row{font-size:14px;padding:7px 0}
   .plan-card h4{font-size:15px}
   .plan-cta{padding:14px;font-size:15px;min-height:50px}
@@ -387,13 +366,6 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmpall svg{stroke:#66727c}
 .nw{white-space:nowrap}
 .lead-about{font-size:14px;color:#3b4650;margin:0 0 6px;text-align:left;line-height:1.4}
-/* T-051: the optional details on the lead form (health chips + notes), shut until tapped. 48px summary. */
-.lead-more{margin:2px 0 6px;border-top:1px solid #e6eaee}
-.lead-more>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:48px;font-size:15px;font-weight:600;color:var(--sage-dark)}
-.lead-more>summary::-webkit-details-marker{display:none}
-.lead-more>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(45deg);margin:-4px 4px 0 8px;flex:none}
-.lead-more[open]>summary::after{transform:rotate(-135deg);margin:4px 4px 0 8px}
-.lead-more .cond-grid{margin-top:4px}
 .cf{text-align:left}
 .cf-ic{width:52px;height:52px;border-radius:50%;background:var(--lt-mint);display:flex;align-items:center;justify-content:center;margin:4px 0 12px}
 .cf-ic svg{width:26px;height:26px;fill:none;stroke:var(--sage-dark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -456,7 +428,6 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc .nod{font-size:14px;color:#56616a;margin:4px 0 8px;line-height:1.4}
 .pc details{margin-top:6px}
 .pc summary{justify-content:center}
-  .pc details.pc-all>summary{justify-content:space-between}
 /* T-052: "Ver todos los beneficios" groups, each closed to its title until tapped */
 .pc details.grp{margin:0;border-top:1px solid #e5e9ec}
 .pc details.grp>summary{justify-content:space-between;font-size:15px;font-weight:700;color:#1e2a32;padding:12px 14px;min-height:48px}
@@ -512,34 +483,6 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .team2 .alt a{color:var(--sage-dark);font-weight:600;text-decoration:none;display:inline-block;padding:8px 2px}
 .cmp td.v.na{color:#66727c;font-weight:500;font-style:italic;font-size:12px}
 @media(max-width:360px){.pn{font-size:12.5px}.pp img{width:38px;height:38px}.pp{gap:6px}.team2{padding:14px 10px}.people{gap:6px}}
-
-/* ── T-055 plan type tags and network line. Tag palette AB 2026-10-14; the network LINE never wraps
-   at 375px ("fit it in ONE line"), so it is nowrap and sized to the longest string in either language. */
-.pc-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
-.tg{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.35;white-space:nowrap}
-.tg-net{border:1.5px solid #002147;color:#002147;background:#fff;padding:2px 8px}
-.tg-who{background:var(--sage-dark);color:#fff}
-.tg-plain{background:#E2E7EC;color:#4A5568}
-.pc-net{margin-top:7px;display:flex;align-items:center;gap:6px;min-width:0}
-.pc-net .nt{font-size:12px;color:#5f6b75;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.eoc-note{margin:10px 2px 0;font-size:11.5px;color:#66727c;line-height:1.45;text-align:left}
-.pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
-.pc-idline .pid{font-weight:700;color:#4A5568}
-.cmp thead th .eb{-webkit-line-clamp:none;display:block;overflow:visible}
-
-/* ── T-063: the compare bar. White with the brand teal, not near-black (#1e2a32 read as off-palette
-   black). Inside the home page the HOST draws it, fixed above its own Llamar / WhatsApp bar, and the
-   widget hides this copy, so there is never one of each. ── */
-.cbar{background:#fff;border:2px solid var(--sage);box-shadow:0 6px 18px rgba(16,24,40,.14)}
-.cbar .n{color:var(--navy);font-size:14px;font-weight:700}
-.cbar button{background:var(--sage);color:#fff}
-.cbar button:disabled{opacity:.45}
-body.host-cbar .cbar{display:none!important}
-/* ── T-064: one button instead of fourteen taps ── */
-.showall{display:block;width:100%;background:#fff;border:2px solid var(--sage);color:var(--sage-dark);
-  border-radius:12px;padding:14px;font-family:inherit;font-size:17px;font-weight:800;line-height:1.2;min-height:52px;cursor:pointer;margin-top:4px}
-.showcount{text-align:center;font-size:12.5px;color:#66727c;margin-top:7px}
-.zinlab{display:block;font-size:12px;font-weight:600;color:#66727c;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -615,7 +558,6 @@ const THEMES = {
   california: {
     '--sage':      '#0080D4',
     '--sage-dark': '#0068B0',
-    '--sage-rgb':  '0,128,212',
     '--navy':      '#1a1a1a',
     '--slate':     '#4a4a4a',
     '--lt-mint':   '#E8F2FC',
@@ -653,48 +595,26 @@ if (THEMES[_theme] && _theme !== 'default') {
   document.head.appendChild(styleEl);
 }
 
-// ── telling the page how tall we are ──
-// The host iframe cannot scroll; it only grows when this posts a height. Measured on MC staging
-// 2026-10-14: the widget posted widget-view, widget-step, widget-nav, widget-cbar and widget-ga and
-// never ONE widget-resize, so the frame sat at its 500px floor and MC's plan finder was a blank box.
-// BM never showed it because its iframe is same-origin and gets the height another way.
-// So: keep the observer, but never depend on it alone. Height is reported from four independent
-// places, and a 400ms poll underneath them all. It posts only when the number actually changed, so
-// the traffic is a handful of messages per screen. A lead form that renders blank is the worst bug
-// this site can have; it is worth one cheap interval.
 if(window.self!==window.top){
   document.body.classList.add('in-iframe');
-  let _lastH=0;
-  const _postH=()=>{
-    const w=document.querySelector('.widget-wrap'); if(!w) return;
-    const h=Math.max(w.offsetHeight||0,document.documentElement.scrollHeight||0,document.body.scrollHeight||0);
-    if(h>0&&Math.abs(h-_lastH)>2){ _lastH=h; window.parent.postMessage({type:'widget-resize',height:h},'*'); }
-  };
-  window.wPostHeight=_postH;
-  try{ new ResizeObserver(_postH).observe(document.body); }catch(e){}
-  try{ new ResizeObserver(_postH).observe(document.querySelector('.widget-wrap')); }catch(e){}
-  document.addEventListener('DOMContentLoaded',_postH);
-  window.addEventListener('load',_postH);
-  window.addEventListener('resize',_postH);
-  setInterval(_postH,400);
-  _postH();
+  const _ro=new ResizeObserver(()=>{
+    const h=document.querySelector('.widget-wrap').offsetHeight;
+    window.parent.postMessage({type:'widget-resize',height:h},'*');
+  });
+  document.addEventListener('DOMContentLoaded',()=>_ro.observe(document.querySelector('.widget-wrap')));
 }
 
 const _cb={};
 
-// ── CARRIER BRAND COLORS (T-062) ──
-// AB 2026-10-14: "DEVOTED has its own orange color... why gray". Measured the same day: 834 of the
-// 2,160 plans in the 9 licensed states (88 carrier names) fell back to grey, because the map was
-// keyed on the exact CMS organization string and nothing else.
-// Source of truth for the six big ones: AB's client-sheet template, page 2 "Colores de cada
-// aseguradora". Where the widget disagreed with the template, the template wins (Humana was
-// #49A942, Alignment was orange #F37021).
+// ── CARRIER BRAND COLORS ──
 const CARRIER_COLORS = {
-  'UnitedHealthcare':'#002677','Aetna Medicare':'#7D3F98','Aetna':'#7D3F98',
-  'Humana':'#3D7A0C','Devoted Health':'#FF4F00','Anthem Blue Cross':'#0F5BA8','Anthem':'#0F5BA8',
-  'Alignment Health Plan':'#00807A','Alignment Health':'#00807A',
-  'SCAN Health Plan':'#0057A6','Blue Shield of California':'#0073CF','Blue Shield of CA':'#0073CF',
-  'Kaiser Permanente':'#B11226','Wellcare':'#00529B','Centene':'#E31837',
+  'SCAN Health Plan':'#0057A6','Alignment Health Plan':'#F37021','Alignment Health':'#F37021',
+  'UnitedHealthcare':'#002677','Humana':'#49A942',
+  'Blue Shield of California':'#0073CF','Blue Shield of CA':'#0073CF',
+  'Aetna Medicare':'#7D3F98','Aetna':'#7D3F98',
+  'Anthem Blue Cross':'#0055A5','Anthem Blue Cross Partnership Plan':'#0055A5','Anthem':'#0055A5',
+  'Kaiser Permanente':'#B11226',
+  'Wellcare':'#00529B','Centene':'#E31837',
   'L.A. Care Health Plan':'#009CDE','Molina Healthcare of California':'#E31837',
   'Clever Care Health Plan':'#FF6B35','Central Health Medicare Plan':'#2E86AB',
   'UCLA Health Medicare Advantage Plan':'#2774AE','Astiva Health':'#00A5CF',
@@ -702,24 +622,11 @@ const CARRIER_COLORS = {
   'Imperial Health Plan of California, Inc.':'#2E8B57','Champion Heath Plan':'#FF8C00',
   'VillageHealth':'#4B8B3B','Align Senior Care':'#5B8A72'
 };
-// Keyword rules, checked against the CMS organization AND its parent, so a brand's variants inherit
-// its colour instead of each spelling needing its own row.
-const CARRIER_KEYS = [
-  [/devoted/i,'#FF4F00'], [/humana|careplus/i,'#3D7A0C'],
-  [/anthem|wellpoint|healthkeepers/i,'#0F5BA8'], [/unitedhealth|aarp|optum/i,'#002677'],
-  [/aetna/i,'#7D3F98'], [/alignment/i,'#00807A'], [/healthspring|cigna/i,'#00A6A0'],
-  [/kaiser/i,'#B11226'], [/wellcare|centene/i,'#00529B'], [/molina/i,'#E31837'],
-  [/scan health/i,'#0057A6'], [/blue cross|blue shield|bcbs|florida blue|highmark|premera|regence/i,'#0073CF'],
-];
-// Anything still unmatched gets a stable colour from this list, chosen by the carrier's own name, so
-// the same carrier is the same colour on every screen and every visit. Never grey; no purple here,
-// that reads as Aetna.
-const CARRIER_FALLBACK = ['#1F6F8B','#B45309','#2E7D32','#A4262C','#5B4B8A','#0F766E',
-                          '#9A3412','#1D4ED8','#065F46','#7C2D12','#155E75','#BE123C'];
 
 // ── SVG ICON LIBRARY (dual-tone filled) ──
 const _s=(p)=>'<svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'+p+'</s'+'vg>';
 const I={
+  doctor:_s('<circle cx="12" cy="7" r="4" fill="#4A90D9" opacity=".2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#2563EB" stroke-width="2"/><path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/><path d="M17 3h4M19 1v4" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>'),
   search:_s('<circle cx="11" cy="11" r="7" fill="#E0F2FE" stroke="#0369A1" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#0369A1" stroke-width="2.5" stroke-linecap="round"/>'),
   cost:_s('<circle cx="12" cy="12" r="10" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/><path d="M12 6v12M16 8.5c0-1.4-1.8-2.5-4-2.5s-4 1.1-4 2.5 1.8 2.5 4 2.5 4 1.1 4 2.5-1.8 2.5-4 2.5-4-1.1-4-2.5" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>'),
   pill:_s('<rect x="3" y="3" width="18" height="18" rx="4" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/><path d="M7 12h10M12 7v10" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"/>'),
@@ -997,30 +904,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-// T-064 (AB 2026-10-14 on staging): "the browser Back button does not work". The widget kept its own
-// screen history in hist[] and never told the browser, and inside the home page it lives in an
-// iframe, so Back left the site entirely. Each screen now adds one browser history entry — the host
-// page's when embedded, our own when standalone — and Back walks the widget back one screen instead.
-const NAVHASH={flowResults:'planes',flowCompare:'comparar',planEnroll:'contacto',helpChoose:'contacto',
-  flowSuccess:'recibido',learnHome:'aprender',snoozeStep:'recordar'};
-let _navSkip=false;
-function navPush(fn){
-  if(_navSkip) return;
-  const h=NAVHASH[fn&&fn.name]||'';
-  if(window.self!==window.top){ window.parent.postMessage({type:'widget-nav',hash:h},'*'); return; }
-  try{ history.pushState({w:hist.length},'',h?'#'+h:location.pathname+location.search); }catch(e){}
-}
-// One Back press = one screen back, and no second history entry for the move itself.
-function navBack(){
-  if(hist.length<=1) return false;
-  _navSkip=true; try{ back(); } finally { _navSkip=false; }
-  return true;
-}
-if(window.self===window.top) window.addEventListener('popstate',function(){ navBack(); });
-function go(fn){hist.push(fn);_plansView=false;_onResults=false;fn();viewMsg();cbarReport();navPush(fn);
-  if(window.wPostHeight){window.wPostHeight();setTimeout(window.wPostHeight,60);setTimeout(window.wPostHeight,400);}
-  if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
-function back(){if(hist.length>1){hist.pop();_plansView=false;_onResults=false;hist[hist.length-1]();viewMsg();cbarReport();}}
+function go(fn){hist.push(fn);_plansView=false;fn();viewMsg();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function back(){if(hist.length>1){hist.pop();_plansView=false;hist[hist.length-1]();viewMsg();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
@@ -1200,9 +1085,26 @@ function timeAwayStr(months){
 // ═══════════════════════════════════════
 //  STEP: DOCTOR
 // ═══════════════════════════════════════
-// T-066 (4), AB 2026-10-14: the two doctor screens are gone. We never used the answer, and asking
-// implied we did. D.hasDoc and D.docName are now never set, so the lead arrives with them empty;
-// the Apps Script and the Leads sheet columns are untouched.
+function doctorAsk(nextYes,nextNo){
+  prog(35);
+  _cb.docY=nextYes; _cb.docN=nextNo;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'\u00BFTiene un doctor que quiere mantener?')}
+    <div class="opt-grid">
+      ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
+      ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
+    </div>`;
+}
+
+function doctorName(nextFn){
+  prog(40);
+  _cb.docName=nextFn;
+  wb().innerHTML=`${bk()}
+    ${bm(lang==='en'?"What is your doctor's last name?":'\u00BFCu\u00E1l es el apellido de su doctor?')}
+    ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
+    ${bp(t('next'),'go(_cb.docName)')}
+    ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
+}
 
 
 // ═══════════════════════════════════════
@@ -1239,6 +1141,7 @@ function toggleCond(id){
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
 const PRI_OPTIONS=[
+  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'My current doctor accepts the plan.',esD:'Que mi doctor acepte el plan.'},
   {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
   {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision and hearing coverage.',esD:'Cobertura dental, visi\u00F3n y audici\u00F3n.'},
   {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
@@ -1281,33 +1184,25 @@ function savePriority(){
 // ═══════════════════════════════════════
 //  FLOW: MAIN (replaces all 3 old flows)
 // ═══════════════════════════════════════
-/* T-051 plans first (AB 2026-10-13 "let's simplify what happens here", yes 2026-10-14): the ZIP goes
-   straight to the plan list. It used to go through six screens -- birth date, eligibility, "do you have
-   a doctor", the doctor's last name, health conditions, what matters most -- and last week on MC 31
-   people typed a ZIP and 3 reached a plan. "What matters most" was never a filter: the list is the same
-   for everyone in the county (T-017), so the pills on the results do that job, "Con Medi-Cal" included.
-   The birth date and the health chips now sit in the "Ayudeme a elegir" form, where they are used.
-   The ft_* question chain below is kept, unreferenced; nothing reaches it today. T-066 (AB
-   2026-10-14) took the two doctor screens out of it for good: we never used the answer. */
-function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';flowLand();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',flowLand)}
+function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';ft_dob();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
   const age=getAge();
   const ew=getEnrollmentWindow();
   if(age===null){
-    // No DOB provided (skipped)
-    go(ft_health);
+    // No DOB provided (skipped), go straight to doctor
+    go(ft_docAsk);
     return;
   }
   if(age>=65){
     /* T-031 (AB 2026-10-03): this screen is for people who just turned 65. From 65 years and 7 months on, skip it and
-       go straight on: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
-    if(monthsPast65()>6){ go(ft_health); return; }
+       go straight to the doctor question: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
+    if(monthsPast65()>6){ go(ft_docAsk); return; }
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
       ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
-    setTimeout(()=>go(ft_health),1500);
+    setTimeout(()=>go(ft_docAsk),1500);
   } else if(ew){
     const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
     const now=new Date();
@@ -1319,21 +1214,23 @@ function ft_eligibility(){
         ${leadOK()?'':'<!-- no reminder sign-up: state not licensed -->'}<button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px;${leadOK()?'':'display:none'}">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
-          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_health)};_cb.u65dis()')}
-          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_health)};_cb.u65esrd()')}
-          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_health)};_cb.u65als()')}
+          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
+          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
+          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
         </div>
         ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Su ventana de inscripci\u00F3n abre ${opensStr}!`,'hl')}
         ${ic(lang==='en'?'Good timing':'Buen momento', lang==='en'?'Now is a great time to start comparing plans.':'Ahora es un gran momento para empezar a comparar planes.')}`;
-      setTimeout(()=>go(ft_health),1200);
+      setTimeout(()=>go(ft_docAsk),1200);
     }
   } else {
-    go(ft_health);
+    go(ft_docAsk);
   }
 }
+function ft_docAsk(){doctorAsk(ft_docName,ft_health)}
+function ft_docName(){doctorName(ft_health)}
 function ft_health(){healthStep(_activeExps.length>0?ft_experiment:ft_priority)}
 function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
@@ -1358,7 +1255,7 @@ function mv_zipTo(){
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'And where are you moving to?':'Y a d\u00F3nde se muda?')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
-    <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="" value="${D.zipTo||''}" maxlength="5"
+    <input class="input-field" type="tel" inputmode="numeric" id="zipTo" placeholder="90210" value="${D.zipTo||''}" maxlength="5"
       oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5); D.zipTo=this.value; D.zip=this.value; if(this.value.length===5){loadPlansForZip(this.value); setTimeout(()=>go(mv_dob),300)}">
     </div>
     ${bp(t('next'),'go(mv_dob)')}`;
@@ -1384,7 +1281,7 @@ function mv_priority(){priorityStep(flowResults)}
 // ═══════════════════════════════════════
 //  FLOW: BETTER BENEFITS (Compare)
 // ═══════════════════════════════════════
-function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';flowResults();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',flowResults,'hl')}
+function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';bb_dob();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
 function bb_dob(){dobStep(bb_benefits)}
 function bb_benefits(){
   prog(35);
@@ -1490,10 +1387,12 @@ function provenanceNote(){
            `Costos y beneficios del año del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
 }
 // 42 CFR 422.2267(e)(33): wherever Star Ratings appear, say Medicare rates plans yearly on a 5-star system.
-// Missing from T-053 star ratings (live 2026-10-14 13:04); added with T-060 star sort. 12px: required disclaimer.
+// Missing from T-053 star ratings (live 2026-10-14 13:04); added with T-060 (7207816) at 22:10. T-069 rolls
+// production back past T-060, so the line is carried across by hand: the stars are on the cards either way,
+// and the rollback must not re-open a CMS disclosure gap. The T-060 sort is NOT carried; only this.
 function starDiscHTML(){
   if(!PLANS.some(p=>!p._medigap&&p.rating!=null)) return '';
-  return `<p style="font-size:12px;line-height:1.5;color:#56616a;margin:10px 2px 0">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas.')}</p>`;
+  return `<p style="font-size:12px;line-height:1.5;color:#56616a;margin:10px 2px 0">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada a\u00F1o, Medicare eval\u00faa los planes seg\u00fan un sistema de calificaci\u00f3n de 5 estrellas.')}</p>`;
 }
 function provenanceHTML(){
   const t=provenanceNote(); if(!t) return '';
@@ -1819,55 +1718,6 @@ function tiersBody(p){
   return `<div class="subt">${two?L('(1 month, standard or preferred pharmacy)','(1 mes, farmacia estándar o preferida)'):L('(1 month, standard pharmacy)','(1 mes, farmacia estándar)')}</div>
     ${head}${rows}${fine.map(f=>`<p class="pc-fine">${f}</p>`).join('')}`;
 }
-// ── T-055: plan type tag, who-it-is-for tag, network line (AB 2026-10-14) ──
-// The "Plan 2027" chip is gone: the year is already in the results header, the compare header and the
-// CMS source line, and it said nothing a visitor could act on. In its place, the two facts that change
-// what a plan costs them: what kind of network it is, and the ID printed on their own plan documents.
-// Wording: PROTECT 2026-10-14, matched to Medicare.gov's own plan-type pages.
-// baseType strips the SNP suffix CMS writes into the type ("HMO C-SNP" -> "HMO").
-function baseType(p){return String(p.type||'').replace(/\s*[CDI]-SNP\s*/g,'').trim();}
-const NETLINE={
-  'HMO':     ['Network doctors, except emergencies',         'Médicos de la red, salvo emergencias'],
-  'HMO-POS': ['Network; some care outside, usually costs more','Red, y a veces fuera, pagando más'],
-  'PPO':     ['In or out of network; out usually costs more', 'Red o fuera; fuera suele costar más'],
-  'PDP':     ['Used with Original Medicare',                  'Se usa con Medicare Original'],
-};
-function snpWho(p){
-  if(!isSNP(p)) return null;
-  if(p.snp==='Dual-Eligible') return L('With '+mcd(),'Con '+mcd());
-  if(p.snp==='Institutional') return L('Care facility','Centro de cuidado');
-  if(p.snp) return L('Chronic condition','Condición crónica');
-  return null;
-}
-// Grey tags: a plan that is not Medicare Advantage with drugs says so in one word.
-function plainTag(p){
-  if(p._medigap) return L('Supplement','Suplemento');
-  if(isPDP(p)) return L('Drugs only','Solo medicamentos');
-  if(p.cat!=='PDP'&&p.drug!=='Included') return L('No drug coverage','Sin medicamentos');
-  return null;
-}
-function planTags(p){
-  const out=[];
-  if(!p._medigap&&!isPDP(p)) out.push(`<span class="tg tg-net">${esc(baseType(p))}</span>`);
-  const who=snpWho(p); if(who) out.push(`<span class="tg tg-who">${esc(who)}</span>`);
-  const pl=plainTag(p); if(pl) out.push(`<span class="tg tg-plain">${esc(pl)}</span>`);
-  return out.length?`<div class="pc-tags">${out.join('')}</div>`:'';
-}
-// T-066 (AB 2026-10-14): every card carried an (i) that opened the same one sentence, so it was a
-// tap target that never said anything new. Button and hidden paragraph gone, network line kept; the
-// sentence itself, unchanged, now shows once under the plan list and once under the comparison.
-function netLineHTML(p){
-  if(p._medigap) return '';
-  const w=NETLINE[isPDP(p)?'PDP':baseType(p)];
-  if(!w) return '';
-  return `<div class="pc-net"><span class="nt">${L(w[0],w[1])}</span></div>`;
-}
-const EOC=()=>L("The exact network rules are in each plan's Evidence of Coverage.",
-                'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.');
-// Only where a network line was actually drawn, so it never explains something nothing said.
-const hasNetLine=l=>l.some(p=>!p._medigap&&NETLINE[isPDP(p)?'PDP':baseType(p)]);
-const eocNote=l=>hasNetLine(l)?`<p class="eoc-note">${EOC()}</p>`:'';
-
 // What a card offers at the bottom (b8, e, f, g): the same button on every plan in a licensed
 // state, none on a CMS-sanctioned plan, information only where we are not licensed.
 function planAction(p){
@@ -1875,28 +1725,21 @@ function planAction(p){
   if(!p.agent) return `<p class="plan-flag">${L('Information only','Solo información')}</p>`;
   return `<button class="pc-btn" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`;
 }
-const _ccCache={};
-function carrierColor(p){
-  const name=String(p.carrier||''), parent=String(p.parent||'');
-  if(_ccCache[name]!==undefined) return _ccCache[name];
-  let c=CARRIER_COLORS[name];
-  if(!c){ const hit=CARRIER_KEYS.find(([re])=>re.test(name)||re.test(parent)); if(hit) c=hit[1]; }
-  if(!c){ let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0;
-          c=CARRIER_FALLBACK[h%CARRIER_FALLBACK.length]; }
-  return (_ccCache[name]=c);
-}
+function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#c9d1d8';}
 function cmpBox(p){
   if(p._medigap) return '';
   const on=selPlans.includes(p.id);
   return `<label class="pc-cmp"><input type="checkbox" data-pid="${esc(p.id)}" ${on?'checked':''} onchange="toggleCmp(this)"> ${L('Compare','Comparar')}</label>`;
 }
+const TOG=()=>[L('See all benefits','Ver todos los beneficios'),L('See less','Ver menos')];
+const TOGD=()=>[L('See drug costs by tier','Ver medicamentos por nivel'),L('See less','Ver menos')];
+function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'});const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    return `<div class="pc" style="--cc:var(--teal)"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(dispName(p))}</p>
-      ${planTags(p)}
-      <div class="pc-idline">${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
+    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
+      <div class="pc-meta">${L('Supplement','Suplemento')} · ${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
       <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
@@ -1937,48 +1780,19 @@ function planCard(p,selectable){
     more+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
   }
   else more+=tiersHTML(p);
+  const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
-      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
-      ${planTags(p)}${netLineHTML(p)}
-      <div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>
+      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
+      <div class="pc-meta">${esc(p.type)} · <span class="pid">${planId(p)}</span> <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
-    ${keyStrip(p,isMA,drug)}
-    <details class="pc-all" ontoggle="togAll(this)"><summary>${PCALL()[0]}</summary>${body}${more}
-      <div class="pc-foot">${planAction(p)}</div></details></div>`;
-}
-// AB 2026-10-14: "i am still NOT seeing the SUMMARY CARDS with KEY info at top". The three numbers
-// that decide whether a plan is worth opening at all; everything else is one tap away and unchanged
-// -- same rows, same wording, same CMS values, nothing dropped.
-const PCALL=()=>[L('See this plan','Ver este plan'),L('See less','Ver menos')];
-function togAll(el){
-  const s=el.querySelector('summary'); if(s) s.textContent=PCALL()[el.open?1:0];
-  if(el.open) wEvt('details_open',{plan_type:'card'});
-}
-function keyStrip(p,isMA,drug){
-  const k=(v,l,zero)=>`<div class="pc-key${zero?' zero':''}"><div class="v${v==null?' na':''}">${v==null?noInfo():v}</div><div class="l">${l}</div></div>`;
-  const prem=p.premium==null?null:premUsd(p.premium);
-  const moop=isMA?(p.moop==null?null:usd(p.moop)):'—';
-  const ded=drug?(p.ded==null?null:usd(p.ded)):L('None','Ninguno');
-  return `<div class="pc-keys">${k(prem,L('Monthly premium','Prima mensual'),prem==='$0')}`+
-    `${k(moop,L('Max out-of-pocket','Máximo de bolsillo'))}`+
-    `${k(ded,L('Drug deductible','Deducible medicamentos'),ded==='$0')}</div>`;
+    ${body}
+    ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
+    <div class="pc-foot">${planAction(p)}</div></div>`;
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
-// AB 2026-10-14: "can you remove all (HMO)s in data since we are leaving the PILL". Done at render,
-// not in the data: the CMS name is what identifies the plan, so it stays untouched in the files, in
-// planLeadTag, in D.selectedPlan and in everything that reaches the leads sheet and the agent's email.
-// Only the label a visitor reads loses the parenthetical, and only when it repeats the plan's own
-// type -- a parenthetical that says anything else is left alone.
-function dispName(p){
-  const n=String(p.name||''), m=n.match(/^(.*?)\s*\(([^()]+)\)\s*$/);
-  if(!m) return n;
-  const inside=m[2].trim().toUpperCase();
-  const types=[baseType(p),p.type,p.cat].filter(Boolean).map(x=>String(x).trim().toUpperCase());
-  return types.indexOf(inside)>=0 ? m[1].trim() : n;
-}
 function planLeadTag(p){return `${p.name} [${p.id}] represented: ${p._medigap?'n/a (Medigap)':(p.rep?'yes':'no')}`;}
 function pickPlan(id){
   const p=PLANS.find(x=>x.id===id); if(!p) return;
@@ -2009,10 +1823,7 @@ const PILLS=[
   {id:'ppo',  en:'PPO',                  es:'PPO',                    f:p=>inTodos(p)&&/PPO/.test(p.type||'')},
   {id:'zero', en:'$0 premium',           es:'$0 prima',               f:p=>inTodos(p)&&p.premium===0},
   {id:'dsnp', en:()=>'With '+mcd(),       es:()=>'Con '+mcd(),         f:isDual},
-  {id:'condicion_cronica', en:'Chronic condition', es:'Condición crónica',
-     f:p=>isSNP(p)&&!isDual(p)&&p.snp!=='Institutional'},
-  {id:'centro_de_cuidado',  en:'Care facility',     es:'Centro de cuidado',
-     f:p=>isSNP(p)&&p.snp==='Institutional'},
+  {id:'snp',  en:'Other special needs',  es:'Otras necesidades especiales', f:p=>isSNP(p)&&!isDual(p)},
   {id:'pdp',  en:'Drug plans (Part D)',  es:'Medicamentos (Parte D)', f:isPDP, opt:true},
   {id:'supp', en:'Medigap',              es:'Medigap',                f:p=>!!p._medigap, opt:true},
 ];
@@ -2020,7 +1831,7 @@ function filterByType(plans){
   const pl=PILLS.find(x=>x.id===_typeFilter)||PILLS[0];
   return plans.filter(pl.f);
 }
-function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=START_SHOWN;selPlans=[];flowResults();}
+function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=3;selPlans=[];flowResults();}
 function pillsHTML(){
   return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
     const n=PLANS.filter(x.f).length;
@@ -2043,13 +1854,11 @@ function sortModes(){
   // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
   // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
   // true to restore it; sortPlans already handles mode 'star'.
-  // T-060 star sort: AB said yes 2026-10-14. Highest CMS rating first, unrated plans last, ties by lower premium.
-  // Label states the order, never "best" (superlative rule).
-  const SORT_BY_RATING=true;
-  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'Highest CMS star rating', es:'Calificación CMS más alta', sen:'Highest rating', ses:'Calificación más alta'});
+  const SORT_BY_RATING=false;
+  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
-function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=START_SHOWN;flowResults();}
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=3;flowResults();}
 function sortMenu(el){const w=el.closest('.schip-wrap');const o=!w.classList.contains('open');w.classList.toggle('open',o);el.setAttribute('aria-expanded',o);}
 document.addEventListener('click',e=>{if(!e.target.closest||e.target.closest('.schip-wrap'))return;document.querySelectorAll('.schip-wrap.open').forEach(w=>w.classList.remove('open'));});
 function sortHTML(){
@@ -2072,23 +1881,10 @@ function sortPlans(plans, mode){
 }
 
 // ── RESULTS ──
-const START_SHOWN=5;   // T-064: the list opens on five plans
-let _shown=START_SHOWN, _inAllPlans=false;
+let _shown=3, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // b13: one plain ZIP line (pin + ZIP + "· Cambiar"), then one light grey count line.
 // The data has no ZIP-to-city names, so the line shows the ZIP only (D-054).
-// T-066 landing: the ZIP line is the only way to correct a mistyped ZIP once the page's own ZIP card
-// has been hidden, so the landing draws the same one the results head does. One source, not two.
-function zipLineHTML(){
-  return `<div class="zl" id="zl">${PIN}
-      <span class="zv">${esc(D.zip||'')}</span>
-      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
-      <form class="zf" onsubmit="event.preventDefault();zipChange()">
-        <label class="zinlab" for="zin">${L('ZIP code','Código postal')}</label>
-        <input id="zin" type="tel" inputmode="numeric" maxlength="5" value="${esc(D.zip||'')}" placeholder="" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
-        <button type="submit">${L('See','Ver')}</button>
-      </form></div>`;
-}
 function resultsHead(list){
   const n=list.length, y=planYear(), cty=D.county?esc(D.county):'';
   const mg=_typeFilter==='supp';
@@ -2097,7 +1893,13 @@ function resultsHead(list){
   const st=D.state?', '+esc(D.state):'';
   const where=cty?L(` in <span class="nw"><b>${cty}</b> County${st}</span>`,` <span class="nw">en el condado de <b>${cty}</b>${st}</span>`):'';
   return `<div class="rh">
-    ${zipLineHTML()}
+    <div class="zl" id="zl">${PIN}
+      <span class="zv">${esc(D.zip||'')}</span>
+      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
+      <form class="zf" onsubmit="event.preventDefault();zipChange()">
+        <input id="zin" type="tel" inputmode="numeric" maxlength="5" placeholder="${esc(D.zip||'')}" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
+        <button type="submit">${L('See','Ver')}</button>
+      </form></div>
     <p class="zerr" id="zerr"></p>
     <p class="t1">${what}${where}</p>
     ${dualLine()}
@@ -2151,7 +1953,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=START_SHOWN; _typeFilter='all'; delete D.plansSeen; delete D.represented;
+  selPlans=[]; _shown=3; _typeFilter='all'; delete D.plansSeen; delete D.represented;
   flowResults();
 }
 function cmpAllBtn(list){
@@ -2159,12 +1961,10 @@ function cmpAllBtn(list){
   if(c.length<2) return '';
   return `<button class="cmpall" onclick="compareFirst()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="16" y="4" width="5" height="16" rx="1.5"/></svg>${L(`Compare these ${c.length} plans`,`Comparar estos ${c.length} planes`)}</button>`;
 }
-// T-064 (AB 2026-10-14 on staging): "\"Ver 5 planes más\" again and again is annoying". It was 3,
-// then 5 at a time: 14 taps to get through a county. One button, the real count, one tap.
 function moreBtn(total){
   if(total<=_shown) return '';
-  return `<button class="showall" onclick="showMore()">${L(`See all ${total} plans`,`Ver los ${total} planes`)}</button>`+
-    `<p class="showcount">${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</p>`;
+  const k=Math.min(5,total-_shown);
+  return `<button class="showmore" onclick="showMore()">${L(`See ${k} more plan${k===1?'':'s'}`,`Ver ${k} plan${k===1?'':'es'} más`)}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
 }
 function listHTML(list){
   const first=list.slice(0,Math.min(3,_shown)).map(p=>planCard(p,true)).join('');
@@ -2173,44 +1973,19 @@ function listHTML(list){
 }
 function showMore(){
   const list=orderedPlans(), from=_shown;
-  _shown=list.length; wEvt('show_more',{shown:_shown,total:list.length});
+  _shown=Math.min(list.length,_shown+5); wEvt('show_more',{shown:_shown,total:list.length});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
   if(m) m.innerHTML=moreBtn(list.length);
 }
-// T-063: the bar shows from ONE plan, and Comparar with one plan opens it next to the next two in
-// the list, exactly like the "Comparar estos 3 planes" button already does.
-function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" data-cta="share_bar" onclick="goCompare()">${L('Compare','Comparar')}</button></div>`;}
-function goCompare(){
-  if(!selPlans.length) return;
-  if(selPlans.length===1){
-    const rest=orderedPlans().filter(p=>!p._medigap&&p.id!==selPlans[0]).slice(0,2).map(p=>p.id);
-    selPlans=selPlans.concat(rest);
-  }
-  if(selPlans.length<2) return;
-  go(flowCompare);
-}
-// What the host page needs to draw the same bar above its own Llamar / WhatsApp bar. Inside the home
-// page the widget cannot stick anything to the bottom of the screen: the iframe does not scroll, it
-// grows to fit, so position:sticky has nothing to stick to and the bar lands at the end of the list.
-let _cbarLast='', _onResults=false;
-function cbarReport(){
-  if(window.self===window.top) return;
-  const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
-  const st={type:'widget-cbar',on:k>0&&!!_onResults&&!document.querySelector('#wb .lead-consent'),
-    n:k,label:k===1?L('1 plan selected','1 plan elegido'):L(k+' plans selected',k+' planes elegidos'),
-    compare:L('Compare','Comparar'),canCompare:k>=1&&total>=2};
-  const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
-  window.parent.postMessage(st,'*');
-}
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="go(flowCompare)">${L('Compare','Comparar')}</button></div>`;}
 function updBar(msg){
   const b=document.getElementById('cbar'); if(!b) return;
   const k=selPlans.length;
   b.classList.toggle('on',k>0||!!msg);
-  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`));
-  document.getElementById('cbarGo').disabled=k<1;
-  cbarReport();
+  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
+  document.getElementById('cbarGo').disabled=k<2;
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2219,7 +1994,6 @@ function toggleCmp(el){
     if(i<0){
       if(selPlans.length>=3){el.checked=false;updBar(L('You can compare up to 3 plans','Puede comparar hasta 3 planes'));clearTimeout(_barT);_barT=setTimeout(()=>updBar(),2500);return;}
       selPlans.push(id);
-      wEvt('compare_pick',{plans:selPlans.length});
     }
   } else if(i>=0) selPlans.splice(i,1);
   updBar();
@@ -2261,7 +2035,7 @@ async function flowResults(){
       </div>
       ${bp(lang==='en'?'Try again':'Intentar de nuevo','retryZip()')}
       <div style="text-align:center;margin-top:14px;font-size:15px;line-height:2">
-        <a href="tel:${tel}" style="color:var(--sage-dark);font-weight:700;text-decoration:none">&#128222; ${telShown}</a><br>
+        <a href="tel:${tel}" style="color:#00796B;font-weight:700;text-decoration:none">&#128222; ${telShown}</a><br>
         <a href="https://wa.me/13105979142" target="_blank" rel="noopener" style="color:#25D366;font-weight:700;text-decoration:none">WhatsApp</a>
       </div>`;
     setTimeout(()=>{const f=document.getElementById('zip-retry'); if(f) f.focus();},50);
@@ -2273,11 +2047,9 @@ async function flowResults(){
     ${unlicensedNote()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#66727c;font-size:14px">${L('No plans of this type here. Choose another type above.','No hay planes de este tipo aquí. Elija otro tipo arriba.')}</div>`:''}
     ${listHTML(plans)}
-    ${eocNote(plans)}
     ${teamCard()}
     ${cbarHTML()}
     ${provenanceHTML()}`;
-  _onResults=true;
   updBar();
   viewMsg();
   if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
@@ -2306,28 +2078,6 @@ function teamCard(){
     <p class="alt"><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+13105979142">${L('Call','Llamar')} (310) 597-9142</a></p>
   </div>`;
 }
-// AB 2026-10-14, looking at staging: "this is NOT the simplified TOP UI that was being shown on the
-// PREVIEW link before". On the preview the simple first screen only appeared for people who named
-// their current plan; everyone else fell through to this same list of full-height cards. So the ZIP
-// now lands on three plans side by side, with no question asked of anyone. The three are the first
-// three of the list in its own default order (lowest premium), exactly the set the "Comparar estos 3
-// planes" button has always taken -- the visitor's own ordering, not our recommendation, and the
-// rule is written on the screen with a way to change it.
-let _land=false;
-async function flowLand(){
-  _land=false;
-  if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
-  const pick=orderedPlans().filter(p=>!p._medigap).slice(0,3);
-  // A county with fewer than two plans to put side by side has nothing to compare: show the list.
-  if(pick.length<2) return flowResults();
-  selPlans=pick.map(p=>p.id);
-  _land=true;
-  if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'landing',plan_count:PLANS.filter(p=>!p._medigap).length}); }
-  wEvt('landing_view',{plans:pick.length});
-  go(flowCompare);
-}
-// "Ver los N planes": the full list, with nothing pre-ticked -- the three were ours, not theirs.
-function goAllPlans(){_land=false;selPlans=[];go(flowResults);}
 // b16: tell the home page whether plans are on screen, so it can set aside the sections below the
 // widget while they are. Results, compare, the contact step and the thank-you all count as "plans";
 // going back to the questions before the results brings the home page back.
@@ -2339,15 +2089,14 @@ function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 // ── COMPARE (b9): up to 3 plans, same group order as the card, label column + plan columns,
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 function flowCompare(){
-  const land=_land; _land=false;
-  prog(land?82:88); _plansView=true;
+  prog(88); _plansView=true;
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
-  if(plans.length<2){ if(land){flowResults();return;} back();return; }
+  if(plans.length<2){back();return;}
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
   const R=[], grp=g=>R.push({g});
-  const row=(lab,cells,big,k)=>R.push({lab,cells,big,k});
+  const row=(lab,cells,big)=>R.push({lab,cells,big});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
   // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
@@ -2355,19 +2104,17 @@ function flowCompare(){
   const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
   const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
-  // T-066 (3): the five rows the comparison opens on. Médico primario is the plan's own copay --
-  // plan data, not a question about anyone's doctor -- so it stays.
-  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true,1);
+  row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
   if(plans.some(ma)){
-    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash),false,1);
+    row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
   }
-  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true,1);
-  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true,1);
+  row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
+  row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
   if(plans.some(ma)){
     grp(L('Visits','Consultas'));
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
-      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash),false,k==='pcp'?1:0));
+      .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
     grp(L('Extra benefits','Beneficios extra'));
     row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
     row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
@@ -2406,65 +2153,28 @@ function flowCompare(){
       row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
     });
   }
-  // A row with the same value in every column leaves the table and is named once under
-  // "Igual en los N". Key rows and the big money rows stay wherever they land, so the opening
-  // screen always answers the same five questions.
-  const sameLabels=[], keep=[];
-  R.forEach(r=>{
-    if(r.g){keep.push(r);return;}
-    const same=r.cells.length>1&&r.cells.every(c=>c.t===r.cells[0].t);
-    if(same&&!r.big&&!r.k){sameLabels.push(String(r.lab).replace(/<[^>]+>/g,''));return;}
-    keep.push(Object.assign({same},r));
-  });
   let gi=-1, closed=false;
-  // a group header left with nothing under it goes too
-  const body=keep.filter((r,i)=>!(r.g&&(i===keep.length-1||keep[i+1].g))).map(r=>{
-    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
-                                       :`<tr class="grp" data-gi="${gi}"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
-    return `<tr class="r g${gi}${r.k?' kr':''}${r.same?'':' diffrow'}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+  const body=R.map(r=>{
+    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
+                                       :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
+    const same=r.cells.every(c=>c.t===r.cells[0].t);
+    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const sameBlock=sameLabels.length?`<div class="cmp-same"><h5>${L('The same in all '+plans.length,'Igual en los '+plans.length)}</h5><p>${esc(sameLabels.join(' · '))}</p></div>`:'';
-  // T-055 (2): the full official carrier and plan name. Names alone are not unique, so the type and
-  // the Medicare ID sit under every column, as on the card.
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(shortPlan(p.name))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
-  const total=orderedPlans().filter(p=>!p._medigap).length;
-  wb().innerHTML=`${land?'':bk()}
-    ${land?`<div class="rh land-rh">${zipLineHTML()}<p class="zerr" id="zerr"></p></div>
-      <h2 class="land-h">${L('Three of the '+total+' plans in your area','Tres de los '+total+' planes de su zona')}</h2>
-      <p class="land-rule">${L('Sorted by lowest monthly premium.','Ordenados por prima mensual más baja.')}</p>`:''}
+  wb().innerHTML=`${bk()}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
-    <div class="cmp lite" id="cmp">
+    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
+      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(shortPlan(p.name))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
-      <div class="cmp-foot"><button class="showall" id="cmp-all" type="button" onclick="cmpAll()">${L('See all benefits','Ver todos los beneficios')}</button>
-        ${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
+      <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
-    ${sameBlock}
-    ${eocNote(plans)}
     ${provenanceHTML()}
-    ${land?bs(L('See all '+total+' plans','Ver los '+total+' planes'),'goAllPlans()')
-          :bs(L('Back to plans','Volver a planes'),'back()')}`;
-}
-// T-066 (AB 2026-10-14): the toggle hid every identical row, but a row that DIFFERS inside a closed
-// "Ver todos los beneficios" group stayed closed with it, so the toggle hid rows instead of showing
-// differences. ON now opens every group that holds a difference and drops the groups that hold none;
-// OFF puts the groups back exactly as the visitor had them.
-// T-066 (3): one button instead of a checkbox. It takes the table out of the lite view AND opens
-// every closed group that holds a row the plans do not agree on, so one tap shows every difference.
-function cmpAll(){
-  const c=document.getElementById('cmp'); if(!c) return;
-  c.classList.remove('lite');
-  c.querySelectorAll('tr.grp.tg').forEach(g=>{
-    const rows=[...c.querySelectorAll('tr.r.g'+g.dataset.gi)];
-    if(rows.some(r=>r.classList.contains('diffrow'))){g.classList.remove('shut');rows.forEach(r=>r.classList.remove('hid'));}
-  });
-  const b=document.getElementById('cmp-all'); if(b) b.remove();
-  wEvt('benefit_group_open',{group:'compare_all'});
+    ${bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
 function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
@@ -2509,24 +2219,6 @@ function unlicensedNote(){
 // ═══════════════════════════════════════
 // T-024 contact step (AB 2026-10-03): "Una de nosotras le contacta", no plan name on screen (it can
 // mislead; the plans seen stay in the lead row), consent stated right under "Enviar", no checkbox.
-/* T-051: the birth date and the health chips used to stand between the ZIP and the plans. They are
-   here now, on the form where they are used: the birth date goes on the lead row and sets the age in
-   the alert email (T-029), the chips tell whoever calls what to prepare for. Empty is fine, as the old
-   "Prefiero no decir" was; a half-typed date blocks the send, as on the contact form (T-048). */
-function leadDob(){
-  const v=(D.dob_month&&D.dob_day&&D.dob_year)?`${D.dob_month} / ${D.dob_day} / ${D.dob_year}`:'';
-  return `<div class="input-group"><label for="dobInput">${L('Date of birth (optional)','Fecha de nacimiento (opcional)')}</label>
-    <input class="input-field" type="tel" inputmode="numeric" id="dobInput" placeholder="${L('MM / DD / YYYY','MM / DD / AAAA')}" value="${v}" maxlength="14" oninput="formatDob(this)">
-    <p style="font-size:12px;color:#999;margin-top:4px">${L('month / day / year','mes / d\u00EDa / a\u00F1o')}</p></div>`;
-}
-function leadMore(){
-  const chips=CONDITIONS.map(c=>`<div class="cond-chip ${selConds.includes(c.id)?'sel':''}" data-cid="${c.id}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCond('${c.id}')}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`).join('');
-  return `<details class="lead-more"><summary>${L('Anything we should know? (optional)','\u00BFAlgo que debamos saber? (opcional)')}</summary>
-    <div class="cond-grid">${chips}</div>
-    <div class="input-group" style="margin-top:4px"><label for="healthNotes">${L('Anything else you\u2019d like us to know?','\u00BFAlgo m\u00E1s que quiera contarnos?')}</label>
-    <textarea class="health-textarea" id="healthNotes" maxlength="500" placeholder="${L('e.g. I take a few medications but don\u2019t remember the names, I need dental work...','ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental...')}" oninput="D.healthNotes=this.value">${esc(D.healthNotes||'')}</textarea></div>
-  </details>`;
-}
 function planEnroll(){
   prog(92); _plansView=true; wEvt('form_open',{source:'card'});
   wb().innerHTML=`${bk()}
@@ -2535,9 +2227,7 @@ function planEnroll(){
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
-    ${leadDob()}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${leadMore()}
     ${bp(lang==='en'?'Send':'Enviar',"submitLead('enroll')")}
     ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
     <div id="leadErr"></div>`;
@@ -2551,9 +2241,7 @@ function helpChoose(){
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
-    ${leadDob()}
     ${inp('email',lang==='en'?'Email (optional)':'Email (opcional)','email@example.com','email')}
-    ${leadMore()}
     ${bp(lang==='en'?'Send':'Enviar',"submitLead('help')")}
     ${consentHTML(lang,lang==='en'?'Send':'Enviar',privacyURL())}
     <div id="leadErr"></div>`;
@@ -2683,17 +2371,6 @@ function submitLead(type){
     _submitting=false;
     if(btn){btn.disabled=false;btn.textContent=_btnLabel}
     return;
-  }
-  // A half-typed birth date is a mistake, not a choice: it blocks the send. An empty box sends empty.
-  const dobEl=document.getElementById('dobInput');
-  if(dobEl){
-    if(!(dobEl.value||'').replace(/\D/g,'')){ D.dob_month='';D.dob_day='';D.dob_year=''; }
-    else if(!parseDob()){
-      alert(lang==='en'?'Please check the date of birth (month / day / year), or leave it empty.':'Revise la fecha de nacimiento (mes / d\u00EDa / a\u00F1o), o d\u00E9jela vac\u00EDa.');
-      _submitting=false;
-      if(btn){btn.disabled=false;btn.textContent=_btnLabel}
-      return;
-    }
   }
   D.fullName=name;D.phone=phone;D.email=email;
   if(question) D.question=question;
@@ -2842,9 +2519,6 @@ go(startZip);
   window.addEventListener('message',function(e){
     if(!HOSTS.test(e.origin)||!e.data) return;
     if(e.data.type==='host-next'){document.body.classList.toggle('host-next',!!e.data.on);return;}
-    if(e.data.type==='host-cbar'){document.body.classList.toggle('host-cbar',!!e.data.on);return;}
-    if(e.data.type==='widget-back'){window.parent.postMessage({type:'widget-backed',ok:navBack()},'*');return;}
-    if(e.data.type==='widget-compare'){goCompare();return;}
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
