@@ -1626,7 +1626,7 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
 // gets exactly one ask instead of seventy cards each carrying their own.
 function planHead(p,selectable){
   return `<div class="pc-head${selectable?'':' pd-head'}">
-      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
+      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(p.carrier)}</p>`}<p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
@@ -1826,11 +1826,67 @@ function planTags(p){
 // A parenthetical with anything else stays. DISPLAY ONLY: p.name is what goes to the sheet,
 // the lead payload, D.selectedPlan and the agent email.
 const _TYPEWORDS=['HMO','PPO','POS','HMO-POS','PFFS','MSA','SNP','C-SNP','D-SNP','I-SNP','LOCAL','REGIONAL'];
+/* T-094 (AB 2026-10-15): "do these need the word Plan in them? I want to clean all views."
+   Three display-only rules, in order. The official CMS name is untouched everywhere it has to be
+   exact -- the data, the lead payload, D.selectedPlan, the agent email and the PDF all keep p.name.
+     1. the type in brackets goes (T-074, unchanged below);
+     2. a trailing "Plan" goes: "Blue Shield Value Advantage Plan" -> "Blue Shield Value Advantage";
+     3. in the compare header ONLY, where the carrier is already printed above the name in its own
+        colour, the leading words that repeat it go: "Imperial Dynamic" under IMPERIAL -> "Dynamic".
+   Nothing is ever cut below two words, and nothing is cut at all if it would leave two plans in the
+   county reading the same. The plan ID line is on every card, header and column, so a plan stays
+   identifiable whatever its name is shortened to. */
 function dispName(p){
   const n=String(p.name||''), m=n.match(/^(.*?)\s*\(([^()]+)\)\s*$/);
-  if(!m) return n;
-  const words=m[2].trim().toUpperCase().split(/[\s/]+/).filter(Boolean);
-  return words.length&&words.every(w=>_TYPEWORDS.indexOf(w)>=0) ? m[1].trim() : n;
+  let base=n;
+  if(m){
+    const words=m[2].trim().toUpperCase().split(/[\s/]+/).filter(Boolean);
+    if(words.length&&words.every(w=>_TYPEWORDS.indexOf(w)>=0)) base=m[1].trim();
+  }
+  return keep2(base.replace(/\s+Plan\s*$/i,'').trim(), base);
+}
+// Never leave fewer than two words: "Dynamic" alone is a word, "Imperial Dynamic" is a plan.
+function keep2(short,full){return short.split(/\s+/).filter(Boolean).length>=2?short:full;}
+/* The carrier, short enough to sit above a one-third-wide column. CMS keeps the legal name
+   ("Imperial Health Plan of California, Inc."); the corporate tail is what a visitor skips. */
+const _CARR_CUT=/[\s,]*(Inc\.?|LLC|Life Insurance Company|Mutual Automobile Insurance Company|Insurance Company|Healthcare of California|Health Plan of California|Health Plan|Partnership Plan|Advantage Plan|of California|Medicare|Health)$/i;
+function carrierShort(c){
+  let t=String(c||'').trim(), prev=null;
+  while(t!==prev&&t.split(/\s+/).length>1){prev=t;t=t.replace(_CARR_CUT,'').replace(/[\s,]+$/,'').trim();}
+  return t||String(c||'').trim();
+}
+// Does the plan's own name already say who sells it? Then the eyebrow line above it is the same
+// words twice, and the carrier colour stripe still tells the cards apart (AB: "less is more").
+function sameCarrier(p){
+  const c=carrierShort(p.carrier).toLowerCase();
+  return !!c&&dispName(p).toLowerCase().startsWith(c);
+}
+/* Compare header only. The repeat to remove is the longest run of leading words the plan name and
+   the carrier's own name share, word for word -- "Alignment Health Plan" + "Alignment Health BRIDGE
+   003" share two, so the column reads "BRIDGE 003", not "Health BRIDGE 003". Then we give words back
+   one at a time until at least two are left, which is how "Aetna Medicare Prime" under AETNA comes
+   out as "Medicare Prime" rather than a bare "Prime". */
+function _words(x){return String(x||'').trim().split(/\s+/).filter(Boolean);}
+/* The repeat to remove is the longest run of leading words the plan name shares with the carrier's
+   own name -- "Alignment Health Plan" + "Alignment Health BRIDGE 003" share two, so the column
+   reads "BRIDGE 003", not "Health BRIDGE 003". "Medicare" is never counted as one of the carrier's
+   words: it is the product, not the brand, which is why "Aetna Medicare Prime" under AETNA comes
+   out as "Medicare Prime" and not a bare "Prime". One word is allowed here and only here, because
+   the carrier is printed directly above it in its own colour; the cards, which no longer carry that
+   line, keep the two-word floor. */
+const _PUNC=/[.,]/g;
+function _carrWords(c){return _words(String(c||'').replace(_PUNC,'')).filter(w=>!/^(medicare|inc|llc)$/i.test(w));}
+function _cmpCut(p){
+  const nw=_words(dispName(p)), cw=_carrWords(p.carrier);
+  let k=0;
+  while(k<cw.length&&k<nw.length&&nw[k].replace(_PUNC,'').toLowerCase()===cw[k].toLowerCase()) k++;
+  return k>=nw.length?'':nw.slice(k).join(' ');
+}
+function cmpName(p){
+  const full=dispName(p), short=_cmpCut(p);
+  if(!short||short===full) return full;
+  // Two plans in this county reading the same short name is worse than one long one.
+  return PLANS.some(q=>q.id!==p.id&&(_cmpCut(q)===short||dispName(q)===short))?full:short;
 }
 function planLeadTag(p){return `${p.name} [${p.id}] represented: ${p._medigap?'n/a (Medigap)':(p.rep?'yes':'no')}`;}
 function pickPlan(id){
@@ -2307,7 +2363,7 @@ function flowCompare(){
     const same=r.cells.every(c=>c.t===r.cells[0].t);
     return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span>${esc(cmpName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   wb().innerHTML=`${bk()}
