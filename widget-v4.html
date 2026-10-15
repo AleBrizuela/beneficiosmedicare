@@ -1696,7 +1696,9 @@ function tiersBody(p){
 function planAction(p){
   if(p.sanction) return `<p class="plan-flag warn">${L('CMS sanction, see','Sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`;
   if(!p.agent) return `<p class="plan-flag">${L('Information only','Solo información')}</p>`;
-  return `<button class="pc-btn" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`;
+  // T-072 (AB 2026-10-14): no "Ayúdeme a elegir" on the card. Too many CTAs; the lead form is
+  // reached from Comparar and the bottom bar. The two notices above are notices, not CTAs, and stay.
+  return '';
 }
 function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#c9d1d8';}
 function cmpBox(p){
@@ -1716,7 +1718,7 @@ function planCard(p,selectable){
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
       <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
-      <div class="pc-foot">${leadOK()&&!(D.state&&!_rep)?`<button class="pc-btn" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div></div>`;
+      ${leadOK()&&!(D.state&&!_rep)?'':`<div class="pc-foot"><p class="plan-flag">${L('Information only','Solo información')}</p></div>`}</div>`;
   }
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
   const prem=p.premium==null?null:V(premUsd(p.premium)+L('/mo','/mes'));
@@ -1762,7 +1764,7 @@ function planCard(p,selectable){
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
     ${body}
     ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
-    <div class="pc-foot">${planAction(p)}</div></div>`;
+    ${(pa=>pa?`<div class="pc-foot">${pa}</div>`:'')(planAction(p))}</div>`;
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
