@@ -462,6 +462,10 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pill.on{background:var(--lt-mint);border-color:var(--sage);color:var(--sage-dark)}
 .pill.on span{color:var(--sage-dark)}
 .sortB{border-top:1px solid #e5e9ec;padding-top:10px}
+.fline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.fll{font-size:13px;color:#66727c}
+.fchip{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--sage-dark);background:var(--lt-mint);border:1px solid var(--sage);border-radius:999px;padding:5px 10px;cursor:pointer;min-height:32px;line-height:1.2}
+.fchip span{font-size:12px;font-weight:400;color:var(--sage-dark);opacity:.75}
 .sbrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .sbl{font-size:13px;color:#66727c}
 .schip-wrap{position:relative}
@@ -1074,23 +1078,37 @@ function timeAwayStr(months){
 // ═══════════════════════════════════════
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
+// T-088 (AB 2026-10-15): this is the one question the plan finder still asks, so it has to do
+// something. Each option sets the ORDER of the first results page, and the ones that are filters
+// switch that filter on, visibly and undoably. None of it is a recommendation: the list stays the
+// county's whole list, in an order the visitor asked for. The Medi-Cal label follows the state
+// (mcd() reads "Medi-Cal" in California, "Medicaid" everywhere else).
 const PRI_OPTIONS=[
-  {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
-  {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision and hearing coverage.',esD:'Cobertura dental, visi\u00F3n y audici\u00F3n.'},
-  {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
-  {id:'medicaid',icon:I.shield,icls:'bl',en:'I have Medicaid / Medi-Cal',es:'Tengo Medicaid / Medi-Cal',enD:'Dual eligibility (D-SNP) plans.',esD:'Planes de elegibilidad dual (D-SNP).'}
+  {id:'doctors', icon:I.doctor,icls:'bl',en:'Keep my doctors',      es:'Seguir con mis m\u00E9dicos',
+   enD:'PPO plans first, then HMO-POS and HMO.',  esD:'Primero los planes PPO, despu\u00E9s HMO-POS y HMO.'},
+  {id:'cost',    icon:I.cost,  icls:'gr',en:'Pay $0 premium',        es:'Pagar $0 de prima',
+   enD:'Only plans with a $0 monthly premium.',   esD:'Solo planes con prima mensual de $0.'},
+  {id:'drugs',   icon:I.pill,  icls:'mi',en:'My drugs covered',      es:'Medicamentos cubiertos',
+   enD:'Only plans that include drug coverage.',  esD:'Solo planes que incluyen medicamentos.'},
+  {id:'benefits',icon:I.tooth, icls:'sg',en:'Dental, vision, hearing',es:'Dental, vista y audici\u00F3n',
+   enD:'Plans that cover all three first.',       esD:'Primero los planes que cubren los tres.'},
+  {id:'medicaid',icon:I.shield,icls:'bl',en:()=>'I have '+mcd(),     es:()=>'Tengo '+mcd(),
+   enD:'Dual eligibility (D-SNP) plans.',         esD:'Planes de elegibilidad dual (D-SNP).'}
 ];
 function priorityStep(nextFn){
   prog(60);
   _cb.priority=nextFn;
   priRank=[];
-  const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
+  const cards=PRI_OPTIONS.map(o=>{
+    const h=typeof o[lang]==='function'?o[lang]():o[lang];
+    return `<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${h}</h4><p>${o[lang+'D']}</p></div></div>`;
+  }).join('');
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'What matters most to you?':'\u00BFQu\u00E9 es lo m\u00E1s importante para usted?')}
     <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply.':'Seleccione todos los que apliquen.'}</p>
     <div class="opt-grid">${cards}</div>
     ${bp(t('next'),'savePriority();go(_cb.priority)')}
-    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority=\'benefits\';D.priorities=[];go(_cb.priority)')}`;
+    ${skip(lang==='en'?'No strong preference':'Sin preferencia fuerte','D.priority=\'benefits\';D.priorities=[];_priAuto=null;go(_cb.priority)')}`;
 }
 function togglePri(id){
   const i=priRank.indexOf(id);
@@ -1111,6 +1129,7 @@ function togglePri(id){
 function savePriority(){
   D.priorities=[...priRank];
   D.priority=priRank[0]||'benefits';
+  _priAuto=null;   // T-088: a new answer sets the order and the filters once more
 }
 
 
@@ -1848,7 +1867,7 @@ function pickPlan(id){
 // special-needs plan (LA County: 70 = 64 HMO incl. HMO-POS + 6 PPO). Special-needs plans appear
 // only under their own pill. Drug-only plans (PDP) and Medigap get their own pill, shown only
 // where the ZIP has them, so a visitor looking for one can still find it.
-let _typeFilter='all', _dualAuto=null;
+let _typeFilter='all';
 function isSNP(p){return !p._medigap&&(p.cat==='SNP'||!!p.snp||/SNP/.test(p.type||''));}
 function isPDP(p){return !p._medigap&&p.cat==='PDP';}
 function inTodos(p){return !p._medigap&&!isPDP(p)&&!isSNP(p);}
@@ -1867,16 +1886,63 @@ const PILLS=[
   {id:'pdp',  en:'Drug plans (Part D)',  es:'Medicamentos (Parte D)', f:isPDP, opt:true},
   {id:'supp', en:'Medigap',              es:'Medigap',                f:p=>!!p._medigap, opt:true},
 ];
-function filterByType(plans){
-  const pl=PILLS.find(x=>x.id===_typeFilter)||PILLS[0];
-  return plans.filter(pl.f);
+// T-088: two filters that sit ON TOP of the type pill, so "Tengo Medi-Cal" and "Pagar $0 de prima"
+// can both be on at once. Both are off by default, so with no filter on, the list and every pill
+// count are exactly what they were before this ticket.
+let _zeroOnly=false, _drugOnly=false;
+function hasDrug(p){return !p._medigap&&p.drug==='Included';}
+// While "Medicamentos cubiertos" is on, "Todos" means every plan that covers drugs, so the
+// standalone Part D plans belong in it too (the ticket: MAPD + PDP). Off, "Todos" is unchanged.
+function typeSet(id,p){
+  if(id==='all'&&_drugOnly) return !p._medigap&&(inTodos(p)||isPDP(p));
+  const pl=PILLS.find(x=>x.id===id)||PILLS[0];
+  return pl.f(p);
 }
-function setType(v){wEvt('filter_pill',{pill:v});_typeFilter=v;_shown=3;selPlans=[];flowResults();}
+function extrasOK(p){return (!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p));}
+function filterByType(plans){return plans.filter(p=>typeSet(_typeFilter,p)&&extrasOK(p));}
+function setType(v){
+  wEvt('filter_pill',{pill:v});
+  // "$0 prima" toggles (one tap on, one tap off). The others pick the type, as before.
+  if(v==='zero') _zeroOnly=!_zeroOnly; else _typeFilter=v;
+  _shown=3;selPlans=[];flowResults();
+}
+// T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
+// filters ONCE per ZIP, the first time the plans are shown. After that the visitor's own pills and
+// sort stick; a new answer, or a new ZIP, sets them again. The FIRST option ticked decides the
+// order; every ticked option that is a filter switches that filter on. Nothing is ever hidden
+// silently: the line under the sort bar names each filter and undoes it in one tap, and if our own
+// pre-filter would leave an empty list we drop it and show everything.
+let _priAuto=null;
+const PRI_SORT={doctors:'doctors',cost:'moop',drugs:'ded',benefits:'dvh'};
+function applyPriority(){
+  if(!PLANS.length||_priAuto===D.zip) return;
+  _priAuto=D.zip;
+  const pr=Array.isArray(D.priorities)?D.priorities:[];
+  if(!pr.length) return;
+  if(pr.indexOf('cost')>=0&&PLANS.some(p=>inTodos(p)&&p.premium===0)) _zeroOnly=true;
+  if(pr.indexOf('drugs')>=0&&PLANS.some(hasDrug)) _drugOnly=true;
+  if(pr.indexOf('medicaid')>=0&&PLANS.some(isDual)) _typeFilter='dsnp';
+  if(!filterByType(PLANS).length){_zeroOnly=false;if(!filterByType(PLANS).length)_drugOnly=false;}
+  const so=PRI_SORT[pr[0]];
+  if(so) _sortMode=so;
+  wEvt('priority_sort',{priority:pr[0]||'',sort:_sortMode,
+    filters:[(_zeroOnly?'zero':''),(_drugOnly?'drug':''),(_typeFilter==='dsnp'?'dsnp':'')].filter(Boolean).join('+')||'none'});
+}
+function clearFilter(k){
+  wEvt('filter_pill',{pill:'clear_'+k});
+  if(k==='zero') _zeroOnly=false; else if(k==='drug') _drugOnly=false; else if(k==='dsnp') _typeFilter='all';
+  _shown=3;selPlans=[];flowResults();
+}
 function pillsHTML(){
   return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
-    const n=PLANS.filter(x.f).length;
-    if(x.id!=='all'&&!n) return '';
-    const on=_typeFilter===x.id;
+    // Which pills the row holds is still decided by the county's own plans, so the row never
+    // changes shape when a filter goes on. T-088: the NUMBER is what tapping it would show, i.e.
+    // counted with the other filter applied. With no filter on, both are the same number as before.
+    if(x.id!=='all'&&!PLANS.filter(x.f).length) return '';
+    const n=x.id==='zero'
+      ? PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&p.premium===0).length
+      : PLANS.filter(p=>typeSet(x.id,p)&&extrasOK(p)).length;
+    const on=x.id==='zero'?_zeroOnly:(_typeFilter===x.id&&!(x.id==='all'&&_zeroOnly));
     const lb=typeof x[lang]==='function'?x[lang]():x[lang];
     return `<button class="pill${on?' on':''}" aria-pressed="${on}" onclick="setType('${x.id}')">${lb} <span>${n}</span></button>`;
   }).join('')+`</div>`;
@@ -1890,6 +1956,9 @@ function sortModes(){
     {id:'premium', en:'Lowest monthly premium',   es:'Prima mensual más baja',             sen:'Lowest premium',       ses:'Prima más baja'},
     {id:'moop',    en:'Lowest max out-of-pocket', es:'Máximo de bolsillo más bajo',        sen:'Lowest out-of-pocket', ses:'Máx. bolsillo más bajo'},
     {id:'ded',     en:'Lowest drug deductible',   es:'Deducible de medicamentos más bajo', sen:'Lowest deductible',    ses:'Deducible más bajo'},
+    // T-088. Both say what the order IS, never that a plan is better.
+    {id:'doctors', en:'Doctor network: PPO first', es:'Red de médicos: PPO primero',       sen:'PPO first',            ses:'PPO primero'},
+    {id:'dvh',     en:'Dental, vision and hearing first', es:'Dental, vista y audición primero', sen:'Dental, vision, hearing', ses:'Dental, vista, audición'},
   ];
   // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
   // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
@@ -1909,6 +1978,18 @@ function sortHTML(){
 }
 // Unknown values (null) always sort last; ties fall back to plan name so the order is stable.
 function _asc(x,y){const a=(x===null||x===undefined)?Infinity:x, b=(y===null||y===undefined)?Infinity:y; return a===b?0:(a<b?-1:1);}
+// T-088 helpers. "Seguir con mis médicos": plan type is the only network fact in the CMS file, and
+// we do not look anyone's doctor up -- PPO first, then HMO-POS, then HMO, cheapest inside each.
+// "Dental, vista y audición": plans covering all three first, then the largest dental allowance CMS
+// publishes, converted to a year so a /3 meses figure and a /año figure compare honestly.
+const _NETRANK=p=>{const ty=String(p.type||'');return /PPO/.test(ty)?0:(/POS/.test(ty)?1:(/HMO/.test(ty)?2:3));};
+const _PERY={mo:12,'3mo':4,'6mo':2,yr:1,'2y':.5,'3y':1/3};
+const _amtY=a=>(a&&a.amt!=null)?a.amt*(_PERY[a.per]||1):null;
+function _dentAmt(p){const d=p.dent;if(!d)return null;const v=[_amtY(d.cmax),_amtY(d.pmax)].filter(x=>x!=null);return v.length?Math.max.apply(null,v):null;}
+function hasDent(p){return !!(p.dent&&(p.dent.prev||p.dent.comp));}
+function hasVis(p){return !!(p.vis&&(p.vis.exam||p.vis.wear));}
+function hasHear(p){return !!(p.hear&&(p.hear.exam||p.hear.aids));}
+function _dvh3(p){return (hasDent(p)&&hasVis(p)&&hasHear(p))?0:1;}
 function sortPlans(plans, mode){
   const s=[...plans], nm=(a,b)=>String(a.name).localeCompare(String(b.name));
   // Medigap entries carry placeholder 0s for MOOP/deductible: they have neither, so they sort as unknown.
@@ -1916,6 +1997,9 @@ function sortPlans(plans, mode){
   if(mode==='moop')      s.sort((a,b)=>_asc(mo(a),mo(b))||_asc(a.premium,b.premium)||nm(a,b));
   else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   else if(mode==='star') s.sort((a,b)=>_asc(a.rating==null?null:-a.rating,b.rating==null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='doctors') s.sort((a,b)=>_asc(_NETRANK(a),_NETRANK(b))||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='dvh')  s.sort((a,b)=>{const x=_dentAmt(a),y=_dentAmt(b);
+    return _asc(_dvh3(a),_dvh3(b))||_asc(x==null?null:-x,y==null?null:-y)||_asc(a.premium,b.premium)||nm(a,b);});
   else                   s.sort((a,b)=>_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   return s;
 }
@@ -1946,7 +2030,20 @@ function resultsHead(list){
     ${eligLine()}
     ${pillsHTML()}
     ${sortHTML()}
+    ${filterLine()}
   </div>`;
+}
+// T-088: one plain line under the sort bar naming every filter that is on. It says what was done
+// to the list and nothing about the plans themselves, and each chip takes its own filter off.
+function filterLine(){
+  const f=[];
+  if(_zeroOnly) f.push(['zero',L('$0 premium','$0 prima')]);
+  if(_drugOnly) f.push(['drug',L('with drug coverage','con medicamentos')]);
+  if(_typeFilter==='dsnp') f.push(['dsnp',L('With '+mcd(),'Con '+mcd())]);
+  if(!f.length) return '';
+  return `<div class="fline"><span class="fll">${L('Filter','Filtro')}:</span>`+f.map(([k,lb])=>
+    `<button class="fchip" onclick="clearFilter('${k}')" aria-label="${L('Remove filter','Quitar filtro')}: ${esc(lb)}">${esc(lb)}<span aria-hidden="true">\u2715</span></button>`
+  ).join('')+`</div>`;
 }
 // b21 (AB 2026-10-03): one line under the ZIP line, ONLY for someone turning 65 by the birth date
 // they gave; never their age. Window = 3 months before the 65th-birthday month to 3 months after; a
@@ -1993,7 +2090,8 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=3; _typeFilter='all'; delete D.plansSeen; delete D.represented;
+  selPlans=[]; _shown=3; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null;
+  delete D.plansSeen; delete D.represented;
   flowResults();
 }
 function cmpAllBtn(list){
@@ -2047,7 +2145,7 @@ async function flowResults(){
   // "Todos"; open on the first type that has plans instead (KS Finney, OK Beaver, ...).
   // T-028: someone who said they have Medi-Cal / Medicaid opens on their plans, once per ZIP; after
   // that their own pill choice sticks. If the county has none, they open on Todos with a line saying so.
-  if(saidMedicaid()&&_dualAuto!==D.zip&&PLANS.length){_dualAuto=D.zip;if(PLANS.some(isDual))_typeFilter='dsnp';}
+  applyPriority();
   if(_typeFilter==='all'&&PLANS.length&&!PLANS.some(inTodos)){const pl=PILLS.find(x=>x.id!=='all'&&PLANS.some(x.f));if(pl)_typeFilter=pl.id;}
   const plans=orderedPlans();
   D.conditions=[...selConds];
@@ -2471,7 +2569,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=3;go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   if(D.leadType==='snooze'){
     const w=iepWindow();
     const fmt=d=>d.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
