@@ -246,9 +246,12 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
 .pc-idline .pid{font-weight:700;color:#4A5568}
 /* T-073: the card ends in ONE outline button; the plan opens on its own screen. */
-.pc-det{display:block;width:100%;background:#fff;border:1.5px solid var(--sage);color:var(--sage-dark);
+/* T-076 (AB 2026-10-15): the button sits INSIDE the card's own 14px row padding. At full width its
+   border ran along the card's border -- doubled at the bottom, and clipped at the corners by the
+   card's 16px radius + overflow:hidden. 28px = the 14px the cost rows already use on each side. */
+.pc-det{display:block;width:calc(100% - 28px);background:#fff;border:1.5px solid var(--sage);color:var(--sage-dark);
   border-radius:10px;padding:12px;font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;
-  text-align:center;cursor:pointer;min-height:48px;margin:10px 0 0}
+  text-align:center;cursor:pointer;min-height:48px;margin:4px 14px 14px}
 /* T-073: a three-row cost block on the short card needs no "COSTOS" bar above it. */
 .ls.nohead{padding-top:2px}
 .ls.nohead .lr{padding-top:9px;padding-bottom:9px}
@@ -437,6 +440,8 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc details.grp>summary{justify-content:space-between;font-size:15px;font-weight:700;color:#1e2a32;padding:12px 14px;min-height:48px}
 .pc details.grp>summary::after,.pc details[open] details.grp>summary::after{border-color:#66727c;transform:rotate(45deg);margin-top:-4px}
 .pc details[open] details.grp[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+/* T-076: on the plan screen the groups are direct children of .pc, with no open <details> above them. */
+.pc details.grp[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
 .pc .gt{display:flex;align-items:center;gap:8px}
 .pc .gc{font-size:13px;font-weight:500;color:#66727c;margin-left:2px}
 .pc .gb{padding:0 14px 6px 22px;background:#fcfdfd}
@@ -1603,9 +1608,13 @@ function benefitGroups(p){
     note:SHOW_SSBCI&&p.ssbci?ssbciNote(p):''});
   return G;
 }
-function grpOpen(el,k){if(el.open)wEvt('benefit_group_open',{group:k});}
+// T-076 (AB 2026-10-15): groups render OPEN, so the first toggle a group ever sees is not a visitor's
+// -- it is the browser reacting to the `open` attribute. Swallow exactly one toggle per group. A
+// visitor's first tap on an open group can only be a CLOSE, which reports nothing either way, so no
+// real tap is lost whether or not the browser fires that first toggle.
+function grpOpen(el,k){if(el.dataset.ro){delete el.dataset.ro;return;}if(el.open)wEvt('benefit_group_open',{group:k});}
 function grpHTML(key,icon,title,body,n){
-  return `<details class="grp" ontoggle="grpOpen(this,'${key}')"><summary><span class="gt"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}${n?`<span class="gc">${n}</span>`:''}</span></summary><div class="gb">${body}</div></details>`;
+  return `<details class="grp" open data-ro="1" ontoggle="grpOpen(this,'${key}')"><summary><span class="gt"><svg class="hi" viewBox="0 0 24 24">${PIC[icon]}</svg>${title}${n?`<span class="gc">${n}</span>`:''}</span></summary><div class="gb">${body}</div></details>`;
 }
 // One list row. big=true for the Costos rows (b18: the one emphasis).
 function lrow(label,v,icon){
@@ -1702,7 +1711,8 @@ function costRows(p,short){
   if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded))+moop;
   return rows+lrow(L('Drug deductible','Deducible de medicamentos'),ded);
 }
-// Everything below Costos on the plan screen, every group CLOSED to its title (T-073 (2)).
+// Everything below Costos on the plan screen. T-076: every group renders OPEN, so "see plan details"
+// shows the plan rather than the card again; the bars stay, so a visitor can still close one.
 function detailGroups(p){
   const isMA=p.cat!=='PDP';
   let out='', gap=false;
