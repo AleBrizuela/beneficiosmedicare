@@ -1171,6 +1171,11 @@ function bb_experiment(){expOrNext(flowResults)}
 // PROTECT 2026-10-02): ranking plans for a person from their answers is advice that needs a
 // licensed agent and a Scope of Appointment. The public list is the same for everyone in the
 // county, in a neutral order the visitor chooses.
+// T-088 (AB 2026-10-15) does not change that. The visitor picks ONE criterion by name on the
+// previous screen ("Pagar $0 de prima"), the list is put in that order and nothing else, the sort
+// bar says which criterion it used, and any filter it switched on is named and comes off in one
+// tap. No plan carries a label, no two criteria are blended into a score, and no plan is called
+// best or recommended. It is the same sort menu the visitor could reach here, answered earlier.
 // Card, results and compare follow the mockups AB approved for staging on 2026-10-02:
 // DECIDE/now/2026-10-02_widget-2027-card-mockup.html, ..._results-mockup.html,
 // ..._missing-and-compare-mockup.html (T-017 b2-b13).
@@ -1989,27 +1994,6 @@ function filterLine(){
     `<button class="fchip" onclick="clearFilter('${k}')" aria-label="${L('Remove filter','Quitar filtro')}: ${esc(lb)}">${esc(lb)}<span aria-hidden="true">\u2715</span></button>`
   ).join('')+`</div>`;
 }
-// b21 (AB 2026-10-03): one line under the ZIP line, ONLY for someone turning 65 by the birth date
-// they gave; never their age. Window = 3 months before the 65th-birthday month to 3 months after; a
-// birthday on the 1st moves it one month earlier. Before it opens: the date + "Recordarme entonces"
-// (the reminder step, only where we may take a lead). Inside it: "Puede inscribirse ahora." Past it, or
-// anyone else: nothing.
-function iepWindow(){
-  const m=+D.dob_month,d=+D.dob_day,y=+D.dob_year;
-  if(!m||!d||!y||y<1900) return null;
-  const sh=d===1?1:0;
-  return {start:new Date(y+65,m-1-3-sh,1), end:new Date(y+65,m-1+4-sh,0)};
-}
-function eligLine(){
-  const w=iepWindow(), age=getAge(); if(!w||age===null||age<64||age>66) return '';
-  const now=new Date();
-  if(now>w.end) return '';
-  const howTo=leadSite()==='medicare-california'?'https://medicare-california.com/how-to-enroll-medicare-california':'https://beneficiosmedicare.com/como-inscribirse-medicare';
-  if(now>=w.start) return `<p class="elig">${L('You can enroll now.','Puede inscribirse ahora.')} <a href="${howTo}" target="_top">${L('How to enroll','Cómo inscribirse')}</a></p>`;
-  const dt=w.start.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
-  const remind=leadOK()?` <a href="#" onclick="event.preventDefault();go(snoozeStep)">${L('Remind me then','Recordarme entonces')}</a>`:'';
-  return `<p class="elig">${L(`You can enroll starting ${dt}.`,`Puede inscribirse a partir del ${dt}.`)}${remind}</p>`;
-}
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
   if(!saidMedicaid()) return '';
@@ -2583,22 +2567,6 @@ function flowSuccess(){
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
   const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=3;go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
-  if(D.leadType==='snooze'){
-    const w=iepWindow();
-    const fmt=d=>d.toLocaleDateString(lang==='en'?'en-US':'es-US',lang==='en'?{month:'long',day:'numeric',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'});
-    const mY=w?w.start.toLocaleDateString(lang==='en'?'en-US':'es-US',{month:'long',year:'numeric'}):'';
-    wb().innerHTML=`<div class="cf">
-      <div class="cf-ic">${CFI.bell}</div>
-      <p class="cf-t">${w?L(`All set${first?', '+first:''}. We will contact you before ${mY}.`,`Listo${first?', '+first:''}. Le avisamos antes de ${mY.replace(' de ',' de ')}.`):L(`All set${first?', '+first:''}.`,`Listo${first?', '+first:''}.`)}</p>
-      <p class="cf-s">${L('One of us will contact you before your enrollment window opens. Our help is at no cost to you.','Una de nosotras le contacta antes de que abra su período de inscripción. Nuestra ayuda no tiene costo para usted.')}</p>
-      <div class="cf-band"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
-        ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
-        ${w?cfRow(L('When','Cuándo'),L('Before ','Antes del ')+fmt(w.start)):''}
-        ${fix}</div>
-      ${cfContact(false)}
-      <div class="cf-links">${restart}</div></div>`;
-    return;
-  }
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
