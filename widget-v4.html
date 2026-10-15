@@ -282,7 +282,10 @@ body.host-next #wb .btn-p{display:none!important}
   font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;text-align:center;cursor:pointer;
   min-height:52px;margin:18px 0 0}
 .pd-fine{margin-top:18px;border-top:1px solid #e5e9ec;padding-top:12px}
-.pd-fine p{font-size:11.5px;line-height:1.5;color:#66727c;margin:0 2px 7px}
+.pd-fine p{font-size:13px;line-height:1.5;color:#66727c;margin:0 2px 9px}
+.pd-fine p:last-child{margin-bottom:0}
+.sdisc{font-size:12px;line-height:1.5;color:#56616a;margin:10px 2px 0}
+.psrc{font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0}
 .pc-chips .c{font-size:12.5px;font-weight:600;background:#f3f5f7;color:#1e2a32;border:1px solid #e5e9ec;padding:4px 9px;border-radius:999px}
 .pc-chips .c b{color:var(--sage)}
 .pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
@@ -1359,9 +1362,16 @@ function rLow(p){
   return `<div class="pc-low">${L('Medicare has rated this plan below 3 stars three years in a row.',
     'Medicare ha calificado este plan por debajo de 3 estrellas tres años seguidos.')}</div>`;
 }
+// T-086 (3) asked for this line "Spanish fully Spanish". Its frame always was; the source string the
+// CMS data file carries was not — "data last updated" and "released" came through in English on the
+// Spanish site. CMS's own file names are proper nouns and stay exactly as they are; only those two
+// connectives are translated, so no fact, date or name changes.
+function srcText(src){
+  return lang==='en'?src:String(src).replace(/data last updated/gi,'datos actualizados el').replace(/released/gi,'publicado el');
+}
 function provenanceNote(){
   if(!_planMeta||!_planMeta.year) return '';
-  const y=_planMeta.year, src=_planMeta.source||'CMS';
+  const y=_planMeta.year, src=srcText(_planMeta.source||'CMS');
   return L(`Plan year ${y} costs and benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`,
            `Costos y beneficios del año del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
 }
@@ -1371,11 +1381,7 @@ function provenanceNote(){
 // and the rollback must not re-open a CMS disclosure gap. The T-060 sort is NOT carried; only this.
 function starDiscHTML(){
   if(!PLANS.some(p=>!p._medigap&&p.rating!=null)) return '';
-  return `<p style="font-size:12px;line-height:1.5;color:#56616a;margin:10px 2px 0">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada a\u00F1o, Medicare eval\u00faa los planes seg\u00fan un sistema de calificaci\u00f3n de 5 estrellas.')}</p>`;
-}
-function provenanceHTML(){
-  const t=provenanceNote(); if(!t) return '';
-  return starDiscHTML()+`<p style="font-size:11px;line-height:1.5;color:#777;margin:10px 2px 0">${esc(t)}</p>`;
+  return `<p class="sdisc">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada a\u00F1o, Medicare eval\u00faa los planes seg\u00fan un sistema de calificaci\u00f3n de 5 estrellas.')}</p>`;
 }
 
 // ---- benefit text, ES + EN. CMS PBP category names, one fixed translation (T-017 b4) ----
@@ -1788,12 +1794,22 @@ function detailGroups(p){
   return {html:out,gap};
 }
 // All the fine print, at the very bottom of the plan screen and nowhere above it (T-073 (2)).
-function planFine(p){
-  const net=p._medigap?'':L("The exact network rules are in each plan's Evidence of Coverage.",
-    'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.');
-  return `<div class="pd-fine">${net?`<p>${net}</p>`:''}${starDiscHTML()}${provNoteHTML()}</div>`;
+// ── T-086 (AB 2026-10-15): ONE fine-print block, and it is the LAST thing on every screen.
+// "I don't want any CTAs showing under a bunch of little text." So the order on a screen is
+// content -> main button -> secondary button -> this block, and nothing clickable comes after it.
+// Inside the block: the notes that explain the plans on screen, then three lines that are NOT ours
+// to shorten or re-place — the network sentence, the 5-star disclaimer (42 CFR 422.2267(e)(33),
+// required wherever stars appear) and the CMS source line, which stays on the screen it describes.
+// Callers pass their own notes; everything below them is identical on all three screens.
+function fineBlock(notes,net){
+  const nl=net?L("The exact network rules are in each plan's Evidence of Coverage.",
+    'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.'):'';
+  const inner=(notes||[]).filter(Boolean).map(x=>`<p>${x}</p>`).join('')
+    +(nl?`<p>${nl}</p>`:'')+starDiscHTML()+provNoteHTML();
+  return inner?`<div class="pd-fine">${inner}</div>`:'';
 }
-function provNoteHTML(){const t=provenanceNote();return t?`<p>${esc(t)}</p>`:'';}
+function planFine(p){return fineBlock([],!p._medigap);}
+function provNoteHTML(){const t=provenanceNote();return t?`<p class="psrc">${esc(t)}</p>`:'';}
 let _lastPlanId='';
 function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>planDetail(id));}
 // Back from a plan screen returns to the list AND to the card the visitor opened, not to the top (T-075).
@@ -2202,8 +2218,8 @@ async function flowResults(){
     ${listHTML(plans)}
     ${teamCard()}
     ${cbarHTML()}
-    ${provenanceHTML()}`;
-  _planScreen=true;
+    ${fineBlock([],plans.some(p=>!p._medigap))}`;
+  _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
   updBar();
   viewMsg();
   if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
@@ -2319,16 +2335,26 @@ function flowCompare(){
   const sanct=plans.some(p=>p.sanction);
   wb().innerHTML=`${bk()}
     ${unlicensedNote()}
-    ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
-      ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
       <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
-    ${provenanceHTML()}
-    ${bs(L('Back to plans','Volver a planes'),'back()')}`;
+    ${bs(L('Back to plans','Volver a planes'),'back()')}
+    ${fineBlock(cmpNotes(plans),true)}`;
+}
+// T-086: the three notes that used to sit between the table and the buttons. Every word is unchanged
+// and every one of them is signed: the D-SNP line by PROTECT 2026-10-14 (T-052 review #3), the
+// chronic-condition line by 42 CFR 422.2267(e)(34) with AB's and Golden Outlook's yes of the same day,
+// the pharmacy line by the same review. The ticket asked for them in one line each; the pharmacy line
+// already is one, and the other two are NOT shortened here — see the note on this ticket.
+function cmpNotes(plans){
+  const out=[];
+  if(plans.some(isDual)) out.push(L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')+dualNote(true));
+  if(SHOW_SSBCI) plans.filter(p=>p.ssbci).forEach(p=>out.push(`${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}`));
+  if(plans.some(p=>(p.tiers||[]).some(t=>t.p!=null)))
+    out.push(L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.'));
+  return out;
 }
 // T-085 (AB 2026-10-15), the behaviour first built for T-066 and parked with it on parked-2026-10-14
 // (cd832f6): the toggle hid every identical row, but a row that DIFFERS inside a closed "Ver todos los
@@ -2384,9 +2410,11 @@ function customCompare(){return flowCompare();}
 // T-052 (AB 2026-10-13): D-SNP cards show the cost sharing the plan files with CMS (e.g. 20%), which a member with
 // full Medi-Cal/Medicaid usually does not pay. Medicare.gov Plan Finder says "Most people with Medicare and Medicaid
 // pay $0"; this is that statement. Checked on H1224-001 (L.A. Care Medicare Plus): file 20%, Plan Finder $0.
-function dualNote(){const m=mcd();
-  return L(`Most people with Medicare and ${m} pay $0. The costs below are the plan's costs before ${m} help.`,
-           `La mayoría de las personas con Medicare y ${m} pagan $0. Los costos de abajo son los del plan antes de la ayuda de ${m}.`);}
+// PROTECT approved this wording 2026-10-14 (T-052 review #3). T-086 moves it under the compare table,
+// so the one word that points at the costs has to point the other way; every fact is unchanged.
+function dualNote(above){const m=mcd();
+  return L(`Most people with Medicare and ${m} pay $0. The costs ${above?'above':'below'} are the plan's costs before ${m} help.`,
+           `La mayoría de las personas con Medicare y ${m} pagan $0. Los costos de ${above?'arriba':'abajo'} son los del plan antes de la ayuda de ${m}.`);}
 function unlicensedNote(){
   if(!knownUnlicensed()) return '';
   return `<div class="info-card"><p>${lang==='en'
