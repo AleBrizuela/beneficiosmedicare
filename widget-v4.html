@@ -2625,11 +2625,26 @@ function shareOrigin(){
   }catch(e){}
   return leadSite()==='medicare-california'?'https://medicare-california.com':'https://beneficiosmedicare.com';
 }
+/* The readable path AB asked for -- /opciones/90230/H0504-056/... -- is built and rewritten in
+   _redirects, but Cloudflare Pages is not honouring the 200 on that rule: measured on the staging
+   preview, /opciones/<anything> answers 308 to the sheet instead of serving it, so the ZIP and the
+   plan IDs never reach the page. Until that is sorted (a Pages Function would do it; this project
+   does not appear to run the functions/ directory), the link that goes out is the one that works.
+   Everything else is unchanged, and this is one line to flip back. */
+const SHARE_READABLE_PATH=false;
 function shareURL(){
   const plans=sharePlans(); if(!plans.length) return '';
-  const word=leadSite()==='medicare-california'?'options':'opciones';
-  const q=[]; if(lang==='en') q.push('lang=en'); if(D.priority) q.push('r='+encodeURIComponent(D.priority));
-  return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
+  const mc=leadSite()==='medicare-california';
+  const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
+  if(D.priority) q.push('r='+encodeURIComponent(D.priority));
+  if(SHARE_READABLE_PATH){
+    const word=mc?'options':'opciones';
+    return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
+  }
+  const file=mc?'options-shared':'opciones-compartidas';
+  q.unshift('p='+plans.map(planIdRaw).join(','));
+  q.unshift('zip='+encodeURIComponent(D.zip||''));
+  return `${shareOrigin()}/${file}?${q.join('&')}`;
 }
 function sharePlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
 function shareMsg(){
