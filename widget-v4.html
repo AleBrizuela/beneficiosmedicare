@@ -339,6 +339,9 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmp tr.hid{display:none}
 /* a row whose value is the same in every column tells the reader nothing: it leaves the table and
    is listed once here. AB's client-sheet rule. */
+.land-rh{padding:8px 12px;margin-bottom:8px}
+.land-h{font-size:18px;font-weight:800;color:var(--navy);line-height:1.25;margin:0 0 3px;text-align:left}
+.land-rule{font-size:13px;color:#5f6b75;line-height:1.4;margin:0 0 10px;text-align:left}
 .cmp-same{margin:12px 0 0;background:#f3f5f7;border-radius:10px;padding:10px 12px}
 .cmp-same h5{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#5f6b75;margin:0 0 6px}
 .cmp-same p{font-size:13px;color:#36505c;margin:0;line-height:1.5}
@@ -1283,7 +1286,7 @@ function savePriority(){
    The birth date and the health chips now sit in the "Ayudeme a elegir" form, where they are used.
    The ft_* question chain below is kept, unreferenced; nothing reaches it today. T-066 (AB
    2026-10-14) took the two doctor screens out of it for good: we never used the answer. */
-function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';flowResults();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',flowResults)}
+function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';flowLand();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',flowLand)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
   prog(25);
@@ -2046,6 +2049,18 @@ let _shown=START_SHOWN, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // b13: one plain ZIP line (pin + ZIP + "· Cambiar"), then one light grey count line.
 // The data has no ZIP-to-city names, so the line shows the ZIP only (D-054).
+// T-066 landing: the ZIP line is the only way to correct a mistyped ZIP once the page's own ZIP card
+// has been hidden, so the landing draws the same one the results head does. One source, not two.
+function zipLineHTML(){
+  return `<div class="zl" id="zl">${PIN}
+      <span class="zv">${esc(D.zip||'')}</span>
+      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
+      <form class="zf" onsubmit="event.preventDefault();zipChange()">
+        <label class="zinlab" for="zin">${L('ZIP code','Código postal')}</label>
+        <input id="zin" type="tel" inputmode="numeric" maxlength="5" value="${esc(D.zip||'')}" placeholder="" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
+        <button type="submit">${L('See','Ver')}</button>
+      </form></div>`;
+}
 function resultsHead(list){
   const n=list.length, y=planYear(), cty=D.county?esc(D.county):'';
   const mg=_typeFilter==='supp';
@@ -2054,14 +2069,7 @@ function resultsHead(list){
   const st=D.state?', '+esc(D.state):'';
   const where=cty?L(` in <span class="nw"><b>${cty}</b> County${st}</span>`,` <span class="nw">en el condado de <b>${cty}</b>${st}</span>`):'';
   return `<div class="rh">
-    <div class="zl" id="zl">${PIN}
-      <span class="zv">${esc(D.zip||'')}</span>
-      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
-      <form class="zf" onsubmit="event.preventDefault();zipChange()">
-        <label class="zinlab" for="zin">${L('ZIP code','Código postal')}</label>
-        <input id="zin" type="tel" inputmode="numeric" maxlength="5" value="${esc(D.zip||'')}" placeholder="" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
-        <button type="submit">${L('See','Ver')}</button>
-      </form></div>
+    ${zipLineHTML()}
     <p class="zerr" id="zerr"></p>
     <p class="t1">${what}${where}</p>
     ${dualLine()}
@@ -2270,6 +2278,28 @@ function teamCard(){
     <p class="alt"><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+13105979142">${L('Call','Llamar')} (310) 597-9142</a></p>
   </div>`;
 }
+// AB 2026-10-14, looking at staging: "this is NOT the simplified TOP UI that was being shown on the
+// PREVIEW link before". On the preview the simple first screen only appeared for people who named
+// their current plan; everyone else fell through to this same list of full-height cards. So the ZIP
+// now lands on three plans side by side, with no question asked of anyone. The three are the first
+// three of the list in its own default order (lowest premium), exactly the set the "Comparar estos 3
+// planes" button has always taken -- the visitor's own ordering, not our recommendation, and the
+// rule is written on the screen with a way to change it.
+let _land=false;
+async function flowLand(){
+  _land=false;
+  if(PLANS.length===0 && D.zip) await loadPlansForZip(D.zip);
+  const pick=orderedPlans().filter(p=>!p._medigap).slice(0,3);
+  // A county with fewer than two plans to put side by side has nothing to compare: show the list.
+  if(pick.length<2) return flowResults();
+  selPlans=pick.map(p=>p.id);
+  _land=true;
+  if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'landing',plan_count:PLANS.filter(p=>!p._medigap).length}); }
+  wEvt('landing_view',{plans:pick.length});
+  go(flowCompare);
+}
+// "Ver los N planes": the full list, with nothing pre-ticked -- the three were ours, not theirs.
+function goAllPlans(){_land=false;selPlans=[];go(flowResults);}
 // b16: tell the home page whether plans are on screen, so it can set aside the sections below the
 // widget while they are. Results, compare, the contact step and the thank-you all count as "plans";
 // going back to the questions before the results brings the home page back.
@@ -2281,9 +2311,10 @@ function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 // ── COMPARE (b9): up to 3 plans, same group order as the card, label column + plan columns,
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 function flowCompare(){
-  prog(88); _plansView=true;
+  const land=_land; _land=false;
+  prog(land?82:88); _plansView=true;
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
-  if(plans.length<2){back();return;}
+  if(plans.length<2){ if(land){flowResults();return;} back();return; }
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
@@ -2370,7 +2401,11 @@ function flowCompare(){
   const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(p.name)}<span class="pid">${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
-  wb().innerHTML=`${bk()}
+  const total=orderedPlans().filter(p=>!p._medigap).length;
+  wb().innerHTML=`${land?'':bk()}
+    ${land?`<div class="rh land-rh">${zipLineHTML()}<p class="zerr" id="zerr"></p></div>
+      <h2 class="land-h">${L('Three of the '+total+' plans in your area','Tres de los '+total+' planes de su zona')}</h2>
+      <p class="land-rule">${L('Sorted by lowest monthly premium.','Ordenados por prima mensual más baja.')}</p>`:''}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp lite" id="cmp">
@@ -2384,7 +2419,8 @@ function flowCompare(){
     ${sameBlock}
     ${eocNote(plans)}
     ${provenanceHTML()}
-    ${bs(L('Back to plans','Volver a planes'),'back()')}`;
+    ${land?bs(L('See all '+total+' plans','Ver los '+total+' planes'),'goAllPlans()')
+          :bs(L('Back to plans','Volver a planes'),'back()')}`;
 }
 // T-066 (AB 2026-10-14): the toggle hid every identical row, but a row that DIFFERS inside a closed
 // "Ver todos los beneficios" group stayed closed with it, so the toggle hid rows instead of showing
