@@ -513,6 +513,30 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .sh-x{position:absolute;right:12px;top:10px;background:none;border:0;font-family:inherit;font-size:22px;font-weight:700;line-height:1;color:#8b959d;cursor:pointer;padding:6px 10px;min-height:44px;min-width:44px}
 .sh-ok{font-size:13px;font-weight:700;color:var(--sage-dark);margin:10px 0 0;min-height:18px}
 .sh-priv{font-size:12px;color:#66727c;margin:10px 0 0;line-height:1.45}
+/* ══ T-078 · "¿Qué plan tiene hoy?", reached from the compare screen, never from the flow ══ */
+.lead-sub{font-size:15px;color:#4a5560;margin:0 0 14px;text-align:left}
+.mp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.mp-chip{font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;background:#fff;border:1.5px solid #cfd8de;color:var(--dark);border-radius:999px;padding:9px 13px;min-height:44px;cursor:pointer}
+.mp-chip.on{border-color:var(--sage);background:var(--lt-mint);color:var(--sage-dark)}
+.mp-wrap{margin-top:12px}
+.mp-list{background:#fff;border:1px solid #cfd8de;border-radius:10px;max-height:320px;overflow:auto;margin-top:6px}
+.mp-list:empty{display:none}
+.mp-opt{display:block;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #eef1f3;padding:10px 12px;font:inherit;cursor:pointer;min-height:48px}
+.mp-opt:last-child{border-bottom:0}
+.mp-opt:hover,.mp-opt:focus{background:var(--lt-mint)}
+.mp-opt b{display:block;font-size:14.5px;color:var(--dark);font-weight:700;line-height:1.3}
+.mp-opt span{font-size:12px;color:#66727c}
+.mp-none{padding:12px 2px 2px;font-size:13px;color:#66727c}
+.mp-none p{margin:0 0 4px;font-size:15px;line-height:1.45;color:#5f6b75}
+.mp-pick{background:var(--lt-mint);border:1px solid #bfe0da;border-radius:12px;padding:12px 13px;margin:0 0 12px}
+.mp-pick .n{font-size:15px;font-weight:700;color:var(--dark);line-height:1.3}
+.mp-pick .w{font-size:13.5px;color:#36505c;margin-top:5px;line-height:1.45}
+.mp-pick .src{font-size:11.5px;color:#66727c;margin-top:7px;line-height:1.4}
+.mp-chg{background:none;border:0;color:var(--sage-dark);font-family:inherit;font-size:13px;font-weight:700;line-height:1;padding:8px 0 0;cursor:pointer;min-height:36px}
+.cmp-prem{font-size:11.5px;color:#66727c;margin:6px 0 0;line-height:1.4}
+.cmp thead th.mine{box-shadow:inset 0 4px 0 var(--navy);background:#F2F6FA}
+.cmp td.mine{background:#F2F6FA}
+.cmp td.up{color:#A50E0E}.cmp td.dn{color:var(--sage-dark)}
 </style>
 </head>
 <body>
@@ -2156,7 +2180,10 @@ function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 function flowCompare(){
   prog(88); _plansView=true;
-  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
+  // With "su plan" set, the sheet is their plan and TWO options: four columns do not read at 375px.
+  const mine=myPlan27();
+  const picked=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap&&(!mine||p.id!==mine.id)).slice(0,mine?2:3);
+  const plans=(mine?[Object.assign({},mine,{_mine:true})]:[]).concat(picked);
   if(plans.length<2){back();return;}
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
@@ -2171,6 +2198,14 @@ function flowCompare(){
   const shut=g=>R.push({g,shut:true});
   grp(L('Costs','Costos'));
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
+  if(mine&&mine.premium!=null)
+    row(L('Difference a year (premium)','Diferencia al año (prima)'),plans.map(p=>{
+      if(p._mine) return {t:'\u2014',off:true};
+      if(p.premium==null) return {t:noInfo(),na:true};
+      const d=Math.round((p.premium-mine.premium)*12);
+      if(d===0) return {t:L('Same','Igual'),off:false};
+      return {t:(d>0?'+':'\u2212')+usd(Math.abs(d)),off:false,cls:d>0?'up':'dn'};
+    }),true);
   if(plans.some(ma)){
     row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
     row(L('Medical deductible','Deducible médico'),plans.map(p=>ma(p)?cv(mdedV(p.mded)):dash));
@@ -2224,20 +2259,22 @@ function flowCompare(){
     if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
                                        :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
     const same=r.cells.every(c=>c.t===r.cells[0].t);
-    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map((c,ci)=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${c.cls?' '+c.cls:''}${plans[ci]&&plans[ci]._mine?' mine':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th class="${p._mine?'mine':''}" style="--cc:${p._mine?'#1E3A5F':carrierColor(p)}"><span class="eb">${p._mine?L('YOUR PLAN','SU PLAN'):esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   wEvt('compare_view',{plans:plans.length});
   wb().innerHTML=`${bk()}
-    <div class="cmp-top"><span class="ttl">${L('Your comparison','Su comparación')}</span>${shareBtnHTML('compare_top')}</div>
+    <div class="cmp-top"><span class="ttl">${mine?L('Your plan and 2 options','Su plan y 2 opciones'):L('Your comparison','Su comparación')}</span>${shareBtnHTML('compare_top')}</div>
+    ${D.myPlan?myPlanStripHTML():myPlanOfferHTML()}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
+      ${mine&&mine.premium!=null?`<p class="cmp-prem">${L('The yearly difference compares the monthly premium only. Copays and drug costs depend on the care you use; CMS publishes no figure for that.','La diferencia al año compara solo la prima mensual. Los copagos y los medicamentos dependen de la atención que use; CMS no publica una cifra para eso.')}</p>`:''}
       <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
@@ -2611,7 +2648,11 @@ function shareBase(){
 }
 function hash8(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36).slice(0,8);}
 function newShareId(){const a='abcdefghijkmnpqrstuvwxyz23456789';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s;}
-function comparedPlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
+function comparedPlans(){
+  const mine=myPlan27();
+  const picked=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap&&(!mine||p.id!==mine.id)).slice(0,mine?2:3);
+  return (mine?[Object.assign({},mine,{_mine:true})]:[]).concat(picked);
+}
 function shareNote(){const t=document.getElementById('shnote');return t?t.value.trim().slice(0,280):'';}
 function shareURL(channel){
   const plans=comparedPlans();
@@ -2619,6 +2660,7 @@ function shareURL(channel){
   const q=new URLSearchParams();
   q.set('z',D.zip||''); q.set('p',plans.map(p=>p.id).join(';')); q.set('l',lang);
   q.set('d',new Date().toISOString().slice(0,10)); q.set('s',D.shareId);
+  if(D.myPlan&&D.myPlan.to) q.set('m',D.myPlan.to);
   if(_planMeta&&_planMeta.source) q.set('v',hash8(_planMeta.source));
   q.set('utm_source','share'); q.set('utm_medium',channel||'link'); q.set('utm_campaign','plan_share');
   const n=shareNote();
@@ -2803,6 +2845,7 @@ function pdfInsight(plans){
 // The rows, in the template's groups. "keep" rows stay in the table even when every plan matches.
 function pdfSheet(plans){
   const R=[], grp=t=>R.push({g:t});
+  const mine=plans.filter(p=>p._mine)[0]||null;
   const row=(lab,cells,opt)=>R.push(Object.assign({lab:lab,cells:cells},opt||{}));
   const txt=v=>v==null?noInfo():(v.t!==undefined?String(v.t).replace(/<[^>]+>/g,''):String(v));
   const ma=p=>p.cat!=='PDP';
@@ -2813,6 +2856,13 @@ function pdfSheet(plans){
         : L('Not rated yet','Aún sin calificación')),{keep:true,stars:true});
   grp(L('COSTS','COSTOS'));
   row(L('Monthly premium','Prima mensual'),plans.map(p=>premUsd(p.premium)==null?noInfo():premUsd(p.premium)),{keep:true,big:true});
+  if(mine&&mine.premium!=null)
+    row(L('Difference a year','Diferencia al año'),plans.map(p=>{
+      if(p._mine) return '\u2014';
+      if(p.premium==null) return noInfo();
+      const d=Math.round((p.premium-mine.premium)*12);
+      return d===0?L('Same','Igual'):(d>0?'+':'\u2212')+usd(Math.abs(d));
+    }),{keep:true,diff:true});
   if(plans.some(ma)) row(L('Part B giveback (if any)','Devolución Parte B (si hay)'),plans.map(p=>ma(p)?txt(gbV(p.gb)):'–'));
   row(L('Yearly max out-of-pocket','Máximo de gastos al año'),plans.map(p=>p.moop==null?noInfo():usd(p.moop)),{keep:true,big:true});
   row(L('Doctor / specialist','Médico / especialista'),plans.map(p=>(money(p.pcp)||noInfo())+' / '+(money(p.spec)||noInfo())));
@@ -2894,16 +2944,20 @@ function makeSharePDF(){
   // ── column heads: carrier big in its colour, full plan name, type · ID ───────
   y+=30;
   const labW=168, colW=(W-2*M-labW)/plans.length;
-  g.text(M+labW+(W-2*M-labW)/2,y+8,L('OPTIONS '+planYear(),'OPCIONES '+planYear()),8.5,true,SOFT,'c',0);
+  const anyMine=plans.some(p=>p._mine);
+  g.text(M+labW+(W-2*M-labW)/2,y+8,anyMine
+    ? L('YOUR PLAN 2026 TO 2027   AND OPTIONS '+planYear(),'SU PLAN 2026 A 2027   Y OPCIONES '+planYear())
+    : L('OPTIONS '+planYear(),'OPCIONES '+planYear()),8.5,true,SOFT,'c',0);
   g.line(M+labW,y+13,W-M,y+13,ACC,1.5);
   const headTop=y+17, headH=62;
   plans.forEach((p,i)=>{
-    const x=M+labW+i*colW, cc=carrierColor(p), iw=colW-8;
+    const x=M+labW+i*colW, cc=p._mine?'#1E3A5F':carrierColor(p), iw=colW-8;
     g.rect(x+3,headTop,iw,4,cc);
-    g.rect(x+3,headTop+4,iw,headH-4,'#FBFCFD');
+    g.rect(x+3,headTop+4,iw,headH-4,p._mine?'#F2F6FA':'#FBFCFD');
     // the carrier shrinks to fit before it is allowed to wrap, and is never cut
-    let cs=13; while(cs>9.5&&tw(p.carrier,cs,true)>iw-10) cs-=0.5;
-    const cl=wrapCap(p.carrier,iw-10,cs,true,2);
+    const cname=p._mine?L('YOUR PLAN','SU PLAN'):p.carrier;
+    let cs=13; while(cs>9.5&&tw(cname,cs,true)>iw-10) cs-=0.5;
+    const cl=wrapCap(cname,iw-10,cs,true,2);
     cl.forEach((l,k)=>g.text(x+3+iw/2,headTop+20+k*(cs+2),l,cs,true,cc,'c',0));
     const ny=headTop+20+cl.length*(cs+2)+2;
     wrapCap(dispName(p),iw-10,9.5,false,2).forEach((l,k)=>g.text(x+3+iw/2,ny+k*10.5,l,9.5,false,'#3A4554','c',0));
@@ -2935,7 +2989,7 @@ function makeSharePDF(){
     g.text(M+10,base,fit(r.lab,labW-14,r.big?10:9.5,r.big),r.big?10:9.5,r.big,INK);
     r.cells.forEach((c,i)=>{
       const x=M+labW+i*colW, str=String(c), size=r.big?13:11;
-      const col=str==='$0'?OK:INK;
+      const col=(r.diff&&/^\+/.test(str))?'#A50E0E':((r.diff&&/^\u2212/.test(str))||str==='$0'?OK:INK);
       if(r.stars&&/^[0-9]/.test(str)){
         const w=tw(str,size,true)+13;
         g.star(x+colW/2-w/2+5,base-3.5,5,'#E8A33D');
@@ -2997,6 +3051,167 @@ function pdfDownload(blob,name){
   a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(u),4000);
   shOk(L('PDF saved.','PDF guardado.'));
+}
+
+
+// ═══════════════════════════════════════
+//  "¿QUÉ PLAN TIENE HOY?"  (T-078, scope 8)
+// ═══════════════════════════════════════
+// Reached ONLY from a button on the compare screen. It is never a question in the flow: T-077
+// left the flow as ZIP -> birthday -> what matters, and this must not put a question back into it.
+// It never invents a plan fact: the 2026 -> 2027 mapping comes from the CMS Plan Crosswalk and
+// nothing else, and where that file cannot answer, the screen says so.
+let _xw=null,_xwTried=false,_mpHits=[];
+function loadCrosswalk(st){
+  if(_xw||_xwTried) return Promise.resolve(_xw);
+  _xwTried=true;
+  return fetch('data/crosswalk_'+st+'_2027.json').then(r=>r.ok?r.json():null)
+    .then(j=>{_xw=j||null;return _xw;}).catch(()=>{_xw=null;return null;});
+}
+// Plans the visitor could have had in 2026, in their own county. No county match = the whole state.
+function xwPlans(){
+  if(!_xw) return [];
+  const idx=_xw.counties&&_xw.counties[D.county];
+  return (idx?idx.map(i=>_xw.plans[i]):_xw.plans).filter(Boolean);
+}
+// Matching ignores accents, capitals and one mistyped character (AB 2026-10-14 "YES").
+function fold(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
+function foldId(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
+function near(a,b){
+  if(a===b) return true;
+  if(Math.abs(a.length-b.length)>1) return false;
+  let i=0,j=0,e=0;
+  while(i<a.length&&j<b.length){
+    if(a[i]===b[j]){i++;j++;continue;}
+    if(++e>1) return false;
+    if(a.length>b.length) i++; else if(a.length<b.length) j++; else {i++;j++;}
+  }
+  return e+(a.length-i)+(b.length-j)<=1;
+}
+function matchPlan(p,q){
+  const qi=foldId(q);
+  if(qi.length>=4&&foldId(p.id).indexOf(qi)>=0) return true;
+  const hay=fold(p.n+' '+p.c+' '+p.t).split(' ');
+  return fold(q).split(' ').filter(Boolean).every(w=>hay.some(h=>h.indexOf(w)===0||(w.length>3&&near(h,w))));
+}
+// Where a 2026 plan goes in 2027, narrowed to the county the ZIP is in. A plan CMS splits across
+// counties has several candidates; where more than one survives, we offer no mapping at all.
+function resolveXw(rec){
+  const here=id=>PLANS.some(p=>p.id===id);
+  if(rec.s==='split'){
+    const live=(rec.outs||[]).filter(o=>here(o.to));
+    if(live.length===1) return {s:live[0].s,to:live[0].to,tn:live[0].tn};
+    if(live.length>1) return {s:'split'};
+    return {s:'notarea'};
+  }
+  if(rec.s==='ended') return {s:'ended'};
+  if(rec.s==='unknown') return {s:'unknown'};
+  if(rec.to&&here(rec.to)) return {s:rec.s,to:rec.to,tn:rec.tn};
+  // CMS names where the plan goes, but that plan is not sold in this county. Say both.
+  return {s:'notarea',tn:rec.tn||''};
+}
+// Used only when the crosswalk file is missing: the same contract and plan number in 2027,
+// labelled on screen as exactly that, never presented as CMS's mapping.
+function sameIdIn2027(id26){
+  const k=String(id26).split('_').slice(0,2).join('_');
+  return (PLANS.find(p=>!p._medigap&&String(p.id).split('_').slice(0,2).join('_')===k)||null);
+}
+function myPlan27(){
+  const m=D.myPlan;
+  if(!m||!m.to) return null;
+  return PLANS.find(p=>p.id===m.to)||null;
+}
+function myPlanStep(){
+  prog(88); _plansView=true;
+  wEvt('my_plan_start',{});
+  const run=()=>{
+    const all=xwPlans();
+    const cars=[...new Set(all.map(p=>p.c).filter(Boolean))]
+      .map(c=>({c,n:all.filter(p=>p.c===c).length})).sort((a,b)=>b.n-a.n).slice(0,6);
+    const fail=!_xw;
+    wb().innerHTML=`${bk()}
+      ${bm(L('Which plan do you have today?','¿Qué plan tiene hoy?'))}
+      <p class="lead-sub">${L('Optional. With it, the comparison shows your plan side by side.','Opcional. Así la comparación le muestra su plan al lado.')}</p>
+      ${fail?`<p class="mp-none">${L('We could not load this year’s plan list, so type the plan ID from your card.','No pudimos cargar la lista de planes de este año; escriba el ID que aparece en su tarjeta.')}</p>`
+             :`<div class="mp-chips">${cars.map(x=>`<button type="button" class="mp-chip" onclick="mpChip(this,'${esc(x.c).replace(/'/g,'&#39;')}')">${esc(x.c)}</button>`).join('')}</div>`}
+      <div class="mp-wrap">
+        ${inp('mpq',L('Carrier, plan name or ID','Aseguradora, nombre del plan o ID'),L('e.g. Blue Shield Inspire or H0504-041','ej. Blue Shield Inspire o H0504-041'))}
+        <div class="mp-list" id="mplist" role="listbox"></div>
+      </div>
+      <div id="mppick"></div>
+      ${bs(L('Compare without my plan','Comparar sin mi plan'),'mpSkip()')}
+      ${skip(L('I do not have a plan / I am not sure','No tengo plan / no sé'),'mpSkip()')}`;
+    const f=document.getElementById('mpq');
+    if(f){f.setAttribute('autocomplete','off');f.addEventListener('input',()=>mpSearch(f.value));f.addEventListener('focus',()=>mpSearch(f.value));}
+  };
+  if(_xw||_xwTried) run(); else loadCrosswalk(D.state||'CA').then(run,run);
+}
+function mpChip(btn,carrier){
+  document.querySelectorAll('.mp-chip').forEach(b=>b.classList.toggle('on',b===btn));
+  const f=document.getElementById('mpq'); if(f){f.value=carrier;f.focus();}
+  mpSearch(carrier);
+}
+function mpSearch(q){
+  const box=document.getElementById('mplist'); if(!box) return;
+  q=String(q||'').trim();
+  if(q.length<2){box.innerHTML='';_mpHits=[];return;}
+  _mpHits=xwPlans().filter(p=>matchPlan(p,q)).slice(0,12);
+  if(!_mpHits.length){
+    box.innerHTML=`<div class="mp-none"><p>${L('We cannot find that plan. Check the ID on your card.','No encontramos ese plan. Revise el ID de su tarjeta.')}</p></div>`;
+    return;}
+  box.innerHTML=_mpHits.map((p,i)=>`<button type="button" class="mp-opt" role="option" onclick="mpPick(${i},'${foldId(q).length>=4?'id':'typed'}')"><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.t)} · ${esc(dashId(p.id))}</span></button>`).join('');
+}
+function mpPick(i,method){
+  const rec=_mpHits[i]; if(!rec) return;
+  const r=_xw?resolveXw(rec):null;
+  let m={id26:rec.id,n:rec.n,c:rec.c,t:rec.t};
+  if(r){ m.s=r.s; if(r.to){m.to=r.to;m.tn=r.tn;} }
+  else { const alt=sameIdIn2027(rec.id); m.s=alt?'fallback':'unknown'; if(alt){m.to=alt.id;m.tn=alt.name;} }
+  D.myPlan=m;
+  wEvt('my_plan_set',{method:method||'typed',match:({same:'same_id',renamed:'renamed',consolidated:'renamed',ended:'ends',split:'split',notarea:'ends',fallback:'no_crosswalk',unknown:'no_crosswalk'})[m.s]||'no_crosswalk'});
+  const box=document.getElementById('mplist'); if(box) box.innerHTML='';
+  const f=document.getElementById('mpq'); if(f) f.value='';
+  const out=document.getElementById('mppick');
+  if(out) out.innerHTML=myPlanStripHTML()+`<div style="margin-top:12px">${bp(L('Compare with my plan','Comparar con mi plan'),'go(flowCompare)')}</div>`;
+}
+function mpSkip(){wEvt('my_plan_skip',{});delete D.myPlan;go(flowCompare);}
+function mpClear(){delete D.myPlan;go(myPlanStep);}
+// Every branch below is something the CMS file states. Where it states nothing, the screen says
+// that, and the comparison simply runs without a "Su plan" column.
+function myPlanWord(m){
+  const id=m.to?dashId(m.to):'';
+  switch(m.s){
+    case 'same':   return L('Your 2026 plan continues in 2027 as '+id+'.','Su plan 2026 sigue en 2027 como '+id+'.');
+    case 'renamed':
+    case 'consolidated': return L('In 2027 your plan becomes <b>'+esc(m.tn||'')+'</b> · '+id+'.','En 2027 su plan pasa a <b>'+esc(m.tn||'')+'</b> · '+id+'.');
+    case 'ended':  return L('Your plan ends on December 31, 2026. CMS names no plan to take it over.','Su plan termina el 31 de diciembre de 2026. CMS no nombra un plan que lo reemplace.');
+    case 'notarea':return m.tn
+      ?L('In 2027 your plan becomes <b>'+esc(m.tn)+'</b>, which is not offered in your area.','En 2027 su plan pasa a <b>'+esc(m.tn)+'</b>, que no se ofrece en su área.')
+      :L('That plan is not offered in your area in 2027.','Ese plan no se ofrece en su área en 2027.');
+    case 'split':  return L('CMS moves this plan to more than one plan depending on the county. We check yours with you.','CMS lo pasa a más de un plan según el condado. Lo revisamos con usted.');
+    case 'fallback': return L('We matched the plan with the same Medicare number in 2027 ('+id+'). CMS has not published its change file yet.','Lo emparejamos con el plan del mismo número de Medicare en 2027 ('+id+'). CMS aún no publicó su archivo de cambios.');
+    default:       return L('CMS does not say where this plan goes in 2027.','CMS no dice a dónde pasa este plan en 2027.');
+  }
+}
+// The build writes its source line in English. On a Spanish screen we say the same thing in
+// Spanish and print the date out of it, rather than pasting an English sentence (T-056 round 7.8).
+function xwSource(){
+  if(!_xw) return L('CMS 2027 plan list.','Lista de planes CMS 2027.');
+  const m=/CMS posted (\d{4})-(\d{2})-(\d{2})/.exec(_xw.source||'');
+  const d=m?new Date(m[1]+'-'+m[2]+'-'+m[3]+'T12:00:00').toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'}):'';
+  return L('Source: CMS Plan Crosswalk 2027'+(d?', posted '+d:'')+'.',
+           'Fuente: CMS Plan Crosswalk 2027'+(d?', publicado el '+d:'')+'.');
+}
+function myPlanStripHTML(){
+  const m=D.myPlan; if(!m) return '';
+  return `<div class="mp-pick"><p class="n">${L('Your plan today','Su plan hoy')}: ${esc(m.n)} · ${esc(dashId(m.id26))}</p>
+    <p class="w">${myPlanWord(m)}</p><p class="src">${esc(xwSource().replace(/<[^>]+>/g,''))}</p>
+    <button class="mp-chg" type="button" onclick="mpClear()">${L('Change','Cambiar')}</button></div>`;
+}
+function myPlanOfferHTML(){
+  return `<div class="mp-pick"><p class="n">${L('Compare against the plan you have today','Compare frente al plan que tiene hoy')}</p>
+    <p class="w">${L('Optional. We look up what happens to it in 2027.','Opcional. Buscamos qué pasa con él en 2027.')}</p>
+    <button class="mp-chg" type="button" onclick="go(myPlanStep)">${L('Compare with my plan','Comparar con mi plan')} &rarr;</button></div>`;
 }
 
 </script>
