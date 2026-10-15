@@ -354,7 +354,10 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 body.host-cbar .cbar{display:none!important}
 .cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left}
 .cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
-.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:auto}
+/* T-085: hyphens:auto split ordinary words across lines (Hospitaliza-cion, medica-mentos, Advan-tage) for a
+   reader in reading glasses. manual keeps overflow-wrap, so a word still breaks when it genuinely cannot fit,
+   but no longer when it would have fitted on the next line: 13 broken words at 375 down to 2, no sideways scroll. */
+.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:manual}
 .cmp td.lab{text-align:left;color:#66727c;font-size:12px;padding-left:10px;width:31%}
 .cmp thead th{background:#fff;font-size:12px;line-height:1.25;color:#1e2a32;font-weight:700;box-shadow:inset 0 4px 0 var(--cc,#c9d1d8);border-left:3px solid #fff;border-right:3px solid #fff;padding-top:10px}
 .cmp thead th.l0{box-shadow:none;text-align:left;padding-left:10px;font-size:12px;color:#66727c;font-weight:600;width:31%}
@@ -2306,8 +2309,8 @@ function flowCompare(){
   }
   let gi=-1, closed=false;
   const body=R.map(r=>{
-    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
-                                       :`<tr class="grp"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
+    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
+                                       :`<tr class="grp" data-gi="${gi}"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
     const same=r.cells.every(c=>c.t===r.cells[0].t);
     return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
@@ -2317,7 +2320,7 @@ function flowCompare(){
   wb().innerHTML=`${bk()}
     ${unlicensedNote()}
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
-    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
+    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
@@ -2326,6 +2329,32 @@ function flowCompare(){
     </div>
     ${provenanceHTML()}
     ${bs(L('Back to plans','Volver a planes'),'back()')}`;
+}
+// T-085 (AB 2026-10-15), the behaviour first built for T-066 and parked with it on parked-2026-10-14
+// (cd832f6): the toggle hid every identical row, but a row that DIFFERS inside a closed "Ver todos los
+// beneficios" group stayed closed with its group, so the toggle hid rows instead of showing differences.
+// Measured on production f0a2a0e at 375, ZIP 90230, 3 plans: 31 of 60 rows differ and the toggle left 8
+// of them on screen, the other 23 behind six closed bars -- seven taps to see them all. ON now also opens
+// every group that holds a difference and drops the groups that hold none, so it is one tap; OFF puts the
+// groups back exactly as the visitor had them when they ticked it.
+function cmpDiff(cb){
+  const c=document.getElementById('cmp'); if(!c) return;
+  const on=!!cb.checked;
+  c.classList.toggle('diff',on);
+  c.querySelectorAll('tr.grp').forEach(g=>{
+    const rows=[...c.querySelectorAll('tr.r.g'+g.dataset.gi)], tg=g.classList.contains('tg');
+    if(on){
+      if(tg&&g.dataset.was==null) g.dataset.was=g.classList.contains('shut')?'1':'0';
+      const diff=rows.some(r=>!r.classList.contains('same'));
+      g.classList.toggle('hid',!diff);
+      if(tg&&diff){g.classList.remove('shut');rows.forEach(r=>r.classList.remove('hid'));}
+    }else{
+      g.classList.remove('hid');
+      if(tg){const shut=g.dataset.was!=='0';g.classList.toggle('shut',shut);
+             rows.forEach(r=>r.classList.toggle('hid',shut));delete g.dataset.was;}
+    }
+  });
+  wEvt('compare_diff_toggle',{on});
 }
 function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
