@@ -482,6 +482,11 @@ body.host-cbar .cbar{display:none!important}
 /* b19 (AB 2026-10-03): each section header is a full-width light-grey band, like the compare table */
 .pc .lh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#3b4650;margin:0 -14px 4px;padding:8px 14px;background:#f3f5f7;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
 .pc-head{border-bottom:0}
+/* T-091: COSTOS band -> strip -> the small rows, with no gaps between them */
+.pc .ls.hdr{padding:0 14px}
+.pc .ls.hdr .lh{margin-bottom:0;border-bottom:0}
+.pc .ls.hdr + .pc-keys{border-top:1px solid #e5e9ec}
+.pc .ls.undr{padding-top:6px}
 .pc details{margin-top:0}
 .pc .nodet{font-size:13px;color:#56616a;margin:6px 0 0;line-height:1.4}
 .dualnote{font-size:13.5px;line-height:1.45;color:#1e2a32;background:#e7f4ef;border-left:3px solid var(--sage-dark);border-radius:6px;padding:8px 10px;margin:8px 0 0}
@@ -1491,23 +1496,12 @@ function ssbciConds(p){
   return L('Qualifying conditions: ','Condiciones que califican: ')+list+'. ';
 }
 function ssbciNote(p){return `<b>${L('Chronic condition benefits:','Beneficios para condiciones crónicas:')}</b> ${ssbciConds(p)}${SSBCI_DISC()}`;}
+/* T-091 (AB 2026-10-15) + flujo-completo-v11 screens 5-6: the order a visitor reads them in is
+   Consultas, Beneficios extra, Hospital, Fuera de la red, Pruebas, Equipo, Medicamentos -- what
+   they came to look up first, first. One list feeds both the plan screen and the comparison, so
+   the two can never drift apart. */
 function benefitGroups(p){
   const amb=p.amb||{}, o=p.oon, G=[];
-  if(o) G.push({k:'oon',icon:'cost',t:L('Out of network','Fuera de la red'),rows:[
-    ...(o.cmoop!=null?[[L('Max out-of-pocket, in and out of network','Máximo de bolsillo, dentro y fuera de la red'),vAmt(o.cmoop)]]:[]),
-    ...(o.omoop!=null?[[L('Max out-of-pocket, out of network','Máximo de bolsillo fuera de la red'),vAmt(o.omoop)]]:[]),
-    [L('Primary doctor','Médico primario'),vz(o.pcp)],
-    [L('Specialist','Especialista'),vz(o.spec)],
-    [L('Inpatient hospital stay','Hospitalización'),hospL(o.hosp)]]});
-  G.push({k:'hosp',icon:'bed',t:L('Hospital and care','Hospital y cuidados'),rows:[
-    [L('Inpatient hospital stay','Hospitalización'),hospL(p.hosp)],
-    [L('Mental health hospital stay','Hospital de salud mental'),hospL(p.mhosp)],
-    [L('Skilled nursing facility','Centro de enfermería especializada'),hospL(p.snf)],
-    [L('Home health care','Cuidado de salud en el hogar'),vz(p.hh)],
-    [L('Ambulatory surgical center','Centro de cirugía ambulatoria'),vz(p.asc)],
-    [L('Outpatient hospital','Hospital ambulatorio'),vz(p.ohosp)],
-    [L('Partial hospitalization (mental health)','Hospitalización parcial (salud mental)'),vz(p.phosp)],
-    [L('Cardiac and pulmonary rehab','Rehabilitación cardíaca y pulmonar'),vz(p.rehab)]]});
   G.push({k:'visits',icon:'visits',t:L('Visits','Consultas'),rows:[
     [L('Mental health (individual or group)','Salud mental (individual o grupo)'),vz(p.mh)],
     [L('Physical, occupational and speech therapy','Terapia física, ocupacional y del habla'),vz(p.ther)],
@@ -1516,20 +1510,6 @@ function benefitGroups(p){
     [L('Other health professionals','Otros profesionales de salud'),vz(p.oprof)],
     [L('Telehealth','Telesalud'),sx(p.tele)],
     [L('Emergency care outside the U.S.','Emergencias fuera del país'),sx(p.wwe)]]});
-  G.push({k:'tests',icon:'flask',t:L('Tests','Pruebas'),rows:[
-    [L('Lab tests','Análisis de laboratorio'),vz(p.lab)],
-    [L('Diagnostic tests and procedures','Pruebas y procedimientos de diagnóstico'),vz(p.dx)],
-    [L('X-rays','Rayos X'),vz(p.xray)],
-    [L('MRI, CT and other imaging','Resonancia, tomografía y otras imágenes'),vz(p.img)]]});
-  G.push({k:'kit',icon:'kit',t:L('Equipment and treatment','Equipo y tratamientos'),rows:[
-    [L('Medical equipment','Equipo médico'),vz(p.dme)],
-    [L('Diabetes supplies','Suministros para diabetes'),vz(p.diab)],
-    [L('Prosthetics and medical supplies','Prótesis y suministros médicos'),vz(p.pros)],
-    [L('Dialysis','Diálisis'),vz(p.dial)],
-    [L('Part B drugs (incl. chemotherapy)','Medicamentos de la Parte B (incl. quimioterapia)'),vz(p.partb)],
-    [L('Radiation therapy','Radioterapia'),vz(p.rad)],
-    [L('Ground ambulance','Ambulancia terrestre'),vz(amb.ground)],
-    [L('Air ambulance','Ambulancia aérea'),vz(amb.air)]]});
   G.push({k:'extra',icon:'star',t:L('Extra benefits','Beneficios extra'),rows:[
     [L('Acupuncture','Acupuntura'),sx(p.acu)],
     [L('Meals after a hospital stay','Comidas después del hospital'),sx(p.meals)],
@@ -1545,6 +1525,35 @@ function benefitGroups(p){
     [L('Optional extra packages','Paquetes opcionales'),optV(p.opt)],
     ...(SHOW_SSBCI?[[L('Chronic condition benefits (only if you qualify)','Beneficios para condiciones crónicas (solo si califica)'),ssbciV(p.ssbci)]]:[])],
     note:SHOW_SSBCI&&p.ssbci?ssbciNote(p):''});
+  G.push({k:'hosp',icon:'bed',t:L('Hospital and care','Hospital y cuidados'),rows:[
+    [L('Inpatient hospital stay','Hospitalización'),hospL(p.hosp)],
+    [L('Mental health hospital stay','Hospital de salud mental'),hospL(p.mhosp)],
+    [L('Skilled nursing facility','Centro de enfermería especializada'),hospL(p.snf)],
+    [L('Home health care','Cuidado de salud en el hogar'),vz(p.hh)],
+    [L('Ambulatory surgical center','Centro de cirugía ambulatoria'),vz(p.asc)],
+    [L('Outpatient hospital','Hospital ambulatorio'),vz(p.ohosp)],
+    [L('Partial hospitalization (mental health)','Hospitalización parcial (salud mental)'),vz(p.phosp)],
+    [L('Cardiac and pulmonary rehab','Rehabilitación cardíaca y pulmonar'),vz(p.rehab)]]});
+  if(o) G.push({k:'oon',icon:'cost',t:L('Out of network','Fuera de la red'),rows:[
+    ...(o.cmoop!=null?[[L('Max out-of-pocket, in and out of network','Máximo de bolsillo, dentro y fuera de la red'),vAmt(o.cmoop)]]:[]),
+    ...(o.omoop!=null?[[L('Max out-of-pocket, out of network','Máximo de bolsillo fuera de la red'),vAmt(o.omoop)]]:[]),
+    [L('Primary doctor','Médico primario'),vz(o.pcp)],
+    [L('Specialist','Especialista'),vz(o.spec)],
+    [L('Inpatient hospital stay','Hospitalización'),hospL(o.hosp)]]});
+  G.push({k:'tests',icon:'flask',t:L('Tests','Pruebas'),rows:[
+    [L('Lab tests','Análisis de laboratorio'),vz(p.lab)],
+    [L('Diagnostic tests and procedures','Pruebas y procedimientos de diagnóstico'),vz(p.dx)],
+    [L('X-rays','Rayos X'),vz(p.xray)],
+    [L('MRI, CT and other imaging','Resonancia, tomografía y otras imágenes'),vz(p.img)]]});
+  G.push({k:'kit',icon:'kit',t:L('Equipment and treatment','Equipo y tratamientos'),rows:[
+    [L('Medical equipment','Equipo médico'),vz(p.dme)],
+    [L('Diabetes supplies','Suministros para diabetes'),vz(p.diab)],
+    [L('Prosthetics and medical supplies','Prótesis y suministros médicos'),vz(p.pros)],
+    [L('Dialysis','Diálisis'),vz(p.dial)],
+    [L('Part B drugs (incl. chemotherapy)','Medicamentos de la Parte B (incl. quimioterapia)'),vz(p.partb)],
+    [L('Radiation therapy','Radioterapia'),vz(p.rad)],
+    [L('Ground ambulance','Ambulancia terrestre'),vz(amb.ground)],
+    [L('Air ambulance','Ambulancia aérea'),vz(amb.air)]]});
   return G;
 }
 // T-076 (AB 2026-10-15): groups render OPEN, so the first toggle a group ever sees is not a visitor's
@@ -1635,20 +1644,27 @@ function planHead(p,selectable){
 function detBtn(p){
   return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
 }
-// Every cost row CMS gives us. The short card shows three of these; the plan screen shows all.
-function costRows(p,short){
+/* T-091 (AB 2026-10-15, with her screenshots): "when I click Ver detalles off this view, we need
+   the same view on details with TOP reading COSTOS and then all other dimensions underneath."
+   So the plan screen opens with the card's own header and then the SAME three-number strip under a
+   COSTOS band -- tapping "Ver detalles" now reads as more of the plan it was tapped on, instead of
+   the same three figures redrawn as a different-looking list. The cost rows the strip does not
+   carry stay directly under it, so nothing CMS publishes is lost: the Part B premium reduction, the
+   medical deductible, and the tiers CMS exempts from the drug deductible where there are any.
+   The max-out-of-pocket figure keeps its "(en la red)" qualifier nowhere now that it is a tile; the
+   network sentence in the fine print at the bottom of this screen is what carries it. */
+function costBlock(p){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
-  const prem=p.premium==null?null:V(premUsd(p.premium)+L('/mo','/mes'));
-  const ded=drug?(p.ded==null?null:V(usd(p.ded))):V('—',L('No drug coverage','Sin cobertura de medicamentos'),true);
-  if(!short&&drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
-  const moop=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
-  let rows=lrow(L('Monthly premium','Prima mensual'),prem);
-  if(short){
-    if(isMA) rows+=moop;
-    return rows+lrow(L('Drug deductible','Deducible de medicamentos'),ded);
+  let rows='';
+  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))
+                +lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
+  if(drug&&p.ded>0&&p.noded&&p.noded.length){
+    const n=p.noded.map(String);
+    rows+=lrow(L('Drug deductible exceptions','Excepciones al deducible'),
+      V(L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`)));
   }
-  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded))+moop;
-  return rows+lrow(L('Drug deductible','Deducible de medicamentos'),ded);
+  return `<div class="ls cost hdr"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.cost}</s`+`vg>${L('Costs','Costos')}</div></div>`
+    +keyStrip(p)+(rows?`<div class="ls nohead cost undr">${rows}</div>`:'');
 }
 // Everything below Costos on the plan screen. T-076: every group renders OPEN, so "see plan details"
 // shows the plan rather than the card again; the bars stay, so a visitor can still close one.
@@ -1733,13 +1749,15 @@ function planDetail(id){
   const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
   let body,gap=false;
   if(p._medigap){
-    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    body=lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')
-      +`<div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
+    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
+    // T-091: a Medigap plan screen opens like its card too -- the same two tiles under COSTOS.
+    body=`<div class="ls cost hdr"><div class="lh"><svg class="hi" viewBox="0 0 24 24">${PIC.cost}</s`+`vg>${L('Costs','Costos')}</div></div>`
+      +`<div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>`
+      +`<div class="ls undr"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>`;
   } else {
     const d=detailGroups(p); gap=d.gap;
-    body=lsec('cost',L('Costs','Costos'),costRows(p,false),'cost')+d.html;
+    body=costBlock(p)+d.html;
   }
   wb().innerHTML=`<button class="btn-back" onclick="backToPlans()">${t('back')}</button>
     <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,false)}
