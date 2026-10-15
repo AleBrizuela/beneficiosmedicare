@@ -635,13 +635,31 @@ if (THEMES[_theme] && _theme !== 'default') {
   document.head.appendChild(styleEl);
 }
 
+// ── telling the page how tall we are ──
+// The host iframe cannot scroll; it only grows when this posts a height. Measured on MC staging
+// 2026-10-14: the widget posted widget-view, widget-step, widget-nav, widget-cbar and widget-ga and
+// never ONE widget-resize, so the frame sat at its 500px floor and MC's plan finder was a blank box.
+// BM never showed it because its iframe is same-origin and gets the height another way.
+// So: keep the observer, but never depend on it alone. Height is reported from four independent
+// places, and a 400ms poll underneath them all. It posts only when the number actually changed, so
+// the traffic is a handful of messages per screen. A lead form that renders blank is the worst bug
+// this site can have; it is worth one cheap interval.
 if(window.self!==window.top){
   document.body.classList.add('in-iframe');
-  const _ro=new ResizeObserver(()=>{
-    const h=document.querySelector('.widget-wrap').offsetHeight;
-    window.parent.postMessage({type:'widget-resize',height:h},'*');
-  });
-  document.addEventListener('DOMContentLoaded',()=>_ro.observe(document.querySelector('.widget-wrap')));
+  let _lastH=0;
+  const _postH=()=>{
+    const w=document.querySelector('.widget-wrap'); if(!w) return;
+    const h=Math.max(w.offsetHeight||0,document.documentElement.scrollHeight||0,document.body.scrollHeight||0);
+    if(h>0&&Math.abs(h-_lastH)>2){ _lastH=h; window.parent.postMessage({type:'widget-resize',height:h},'*'); }
+  };
+  window.wPostHeight=_postH;
+  try{ new ResizeObserver(_postH).observe(document.body); }catch(e){}
+  try{ new ResizeObserver(_postH).observe(document.querySelector('.widget-wrap')); }catch(e){}
+  document.addEventListener('DOMContentLoaded',_postH);
+  window.addEventListener('load',_postH);
+  window.addEventListener('resize',_postH);
+  setInterval(_postH,400);
+  _postH();
 }
 
 const _cb={};
@@ -983,6 +1001,7 @@ function navBack(){
 }
 if(window.self===window.top) window.addEventListener('popstate',function(){ navBack(); });
 function go(fn){hist.push(fn);_plansView=false;_onResults=false;fn();viewMsg();cbarReport();navPush(fn);
+  if(window.wPostHeight){window.wPostHeight();setTimeout(window.wPostHeight,60);setTimeout(window.wPostHeight,400);}
   if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
 function back(){if(hist.length>1){hist.pop();_plansView=false;_onResults=false;hist[hist.length-1]();viewMsg();cbarReport();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
