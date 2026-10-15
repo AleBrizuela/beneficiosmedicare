@@ -103,8 +103,9 @@ body.host-next #wb .btn-p{display:none!important}
 .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .btn-s{width:100%;padding:14px;background:transparent;color:var(--sage);border:1.5px solid #dadce0;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-s:hover{background:var(--lt-mint)}
-.btn-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gray);font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:6px 0;min-height:36px}
-.btn-back:hover{color:var(--dark)}
+.btn-back{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:2px solid var(--cbar-brand);border-radius:12px;color:var(--cbar-brand);font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:10px;padding:8px 12px;min-height:48px}
+.btn-back:hover{background:#f2faf9}
+.bkrow{margin:2px 0 0}
 .btn-ghost{background:none;border:none;color:#1a73e8;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:none;min-height:44px}
 .btn-remind{width:100%;padding:14px;background:var(--lt-blue);color:var(--blue);border:2px solid var(--lt-blue);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-remind:hover{border-color:var(--blue)}
@@ -400,32 +401,51 @@ body.in-iframe.has-bar .widget-body{padding-bottom:96px}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:800;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
 body.host-cbar .cbar{display:none!important}
-.cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left}
-.cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
-/* T-085: hyphens:auto split ordinary words across lines (Hospitaliza-cion, medica-mentos, Advan-tage) for a
-   reader in reading glasses. manual keeps overflow-wrap, so a word still breaks when it genuinely cannot fit,
-   but no longer when it would have fitted on the next line: 13 broken words at 375 down to 2, no sideways scroll. */
-.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:manual}
-.cmp td.lab{text-align:left;color:#66727c;font-size:12px;padding-left:10px;width:31%}
-.cmp thead th{background:#fff;font-size:12px;line-height:1.25;color:#1e2a32;font-weight:700;box-shadow:inset 0 4px 0 var(--cc,#c9d1d8);border-left:3px solid #fff;border-right:3px solid #fff;padding-top:10px}
-.cmp thead th.l0{box-shadow:none;text-align:left;padding-left:10px;font-size:12px;color:#66727c;font-weight:600;width:31%}
-.cmp thead th .eb{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:#66727c;margin-bottom:3px}
-.cmp tr.grp td{background:#f3f5f7;text-align:left;font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:#1e2a32;padding:7px 10px}
-.cmp td.v{font-weight:700;color:#1e2a32}
-.cmp td.v.zero{color:var(--sage-dark)}
-.cmp td.v.off{color:#56616a;font-weight:600;font-style:italic}
-.cmp td.big{font-size:16px;font-weight:800}
-.cmp .tog{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:10px 12px;font-size:13px;font-weight:600;color:var(--sage-dark);border-bottom:1px solid #e5e9ec;cursor:pointer;min-height:44px}
-.cmp .tog input{accent-color:var(--sage);width:18px;height:18px;margin:0}
+/* ── T-085 round 2 (AB 2026-10-15, "these are old people") ──────────────────────────────────────
+   Pixel spec: 2026-10-15_1430_comparar-diferencias-v5 + flujo-completo-v11 screen 6.
+   The label is a full-width line and the three values are the line under it, in equal thirds, at
+   16px bold. The old layout gave the label 31% and each figure about 70px at 375, which is where
+   the mid-word breaks and the 12px type came from. Group bars, the three header cells and the two
+   controls above the table all line up on the same grid. */
+.cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left;background:#fff}
+.cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13.5px}
+.cmptop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:2px 0 10px}
+.cmptop .btn-back{margin-bottom:0}
+.cmp-foot{padding:12px}
+.cmp-note{font-size:12px;color:#66727c;margin:0 12px 10px;line-height:1.4}
+.tog{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#1e2a32;border:1.5px solid #e3e7ea;border-radius:12px;padding:8px 10px;min-height:48px;background:#fff;cursor:pointer}
+.tog.on{border:2px solid var(--cbar-brand);background:#f2faf9;color:var(--cbar-brand)}
+.tog input{accent-color:var(--cbar-brand);width:20px;height:20px;margin:0}
+.diffline{font-size:14px;color:#5b6670;margin:0 4px 8px;line-height:1.4}
+.diffline[hidden]{display:none}
+/* hyphens:manual — an ordinary word is never split across lines for a reader in reading glasses */
+.cmp th,.cmp td{overflow-wrap:break-word;hyphens:manual}
+.cmp thead th{position:sticky;top:0;z-index:2;width:33.33%;vertical-align:top;text-align:left;background:#fff;padding:8px 6px;border-bottom:2px solid #e5e9ec}
+.cmp thead th .eb{display:block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#4a5560;border-top:4px solid var(--cc,#c9d1d8);padding-top:5px;overflow-wrap:anywhere}
+.cmp thead th .nm2{display:block;min-height:2.6em;line-height:1.3;font-size:13px;font-weight:800;color:#1e2a32;margin-top:2px}
+.cmp thead th .pid{display:block;min-height:2.4em;font-size:11px;font-weight:600;line-height:1.2;color:#66727c;margin-top:3px}
+.cmp thead th .st2{display:block;font-size:12.5px;font-weight:800;color:#3b4650;margin-top:3px}
+.cmp tr.grp td{background:#f3f5f7;text-align:left;font-weight:800;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:#1e2a32;padding:8px 10px;border-bottom:1px solid #e5e9ec}
+.cmp tr.grp td span{display:flex;align-items:center}
+.cmp .gic{width:17px;height:17px;margin-right:7px;flex:0 0 auto}
+.cmp .ric{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
+.cmp .gic,.cmp .ric{fill:none;stroke:var(--cbar-brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cmp tr.lr td{text-align:left;font-size:14px;font-weight:700;color:#3a4650;padding:9px 8px 1px;border:0}
+.cmp tr.vr td{text-align:center;font-size:16px;font-weight:800;color:#1e2a32;padding:1px 6px 10px;border-bottom:1px solid #eef1f3;vertical-align:top}
+.cmp tr.vr td.zero{color:var(--sage-dark)}
+.cmp tr.vr td.off{color:#56616a;font-weight:600;font-style:italic;font-size:14px}
+.cmp tr.vr td.na{color:#56616a;font-weight:600;font-size:13px}
 .cmp.diff tr.same{display:none}
 .cmp tr.hid{display:none}
 .cmp tr.grp.tg td{cursor:pointer;color:var(--sage-dark)}
-.cmp tr.grp.tg td span{display:flex;justify-content:space-between;align-items:center;min-height:30px}
-.cmp tr.grp.tg td span::after{content:"";width:8px;height:8px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(-135deg);margin:4px 4px 0 8px}
-.cmp tr.grp.tg.shut td span::after{transform:rotate(45deg);margin:-4px 4px 0 8px}
-.cmp-foot{padding:12px}
-.cmp-note{font-size:12px;color:#66727c;margin:0 12px 10px;line-height:1.4}
-@media(max-width:400px){.cmp th,.cmp td{padding:7px 3px;font-size:12px}.cmp td.lab,.cmp thead th.l0{width:27%;padding-left:8px;font-size:11.5px}.cmp td.big{font-size:14px}.cmp thead th{font-size:11.5px}}
+.cmp tr.grp.tg td span::after{content:"";width:8px;height:8px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(-135deg);margin:4px 4px 0 auto}
+.cmp tr.grp.tg.shut td span::after{transform:rotate(45deg);margin:-4px 4px 0 auto}
+@media(max-width:400px){
+  .cmp tr.vr td{font-size:15px;padding:1px 4px 9px}
+  .cmp tr.lr td{font-size:13.5px;padding:8px 6px 1px}
+  .cmp thead th{padding:8px 4px}
+  .cmp thead th .nm2{font-size:12.5px}
+}
 .lead-title{font-size:20px;font-weight:700;color:#1e2a32;margin:4px 0 4px;text-align:left}
 .lead-sub{font-size:15px;color:#4a5560;margin:0 0 14px;text-align:left}
 .contact-line{text-align:center;font-size:14px;color:#3c4043;margin:12px 0 0;line-height:1.45}
@@ -951,7 +971,7 @@ async function loadPlansForZip(zip){
 const T={
   title:{en:'Your Guide',es:'Su Gu\u00EDa'},
   sub:{en:'Beneficios Medicare',es:'Beneficios Medicare'},
-  back:{en:'\u2190 Back',es:'\u2190 Atr\u00E1s'},
+  back:{en:'\u2039 Back',es:'\u2039 Volver'},
   next:{en:'Continue',es:'Continuar'},
   disc:{
     en:'This website is not part of the federal government or the Medicare program. For official information visit <a href="https://www.medicare.gov" target="_blank">Medicare.gov</a> or call 1-800-Medicare.',
@@ -982,7 +1002,9 @@ function back(){if(hist.length>1){hist.pop();_plansView=false;_planScreen=false;
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
-function bk(){return hist.length<=1?'':`<button class="btn-back" onclick="back()">${t('back')}</button>`}
+/* T-085 round 2 (3): Back is a real button on every screen that has one -- outlined teal, 48px,
+   top-left -- not a line of grey text a thumb has to find. */
+function bk(lab,fn){return hist.length<=1?'':`<button class="btn-back" onclick="${fn||'back()'}">${lab||t('back')}</button>`}
 function bm(txt,cls=''){return `<div class="bot-msg ${cls}">${txt}</div>`}
 function oc(icon,icls,title,desc,btxt,bcls,onclick){
   return `<div class="opt-card" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${onclick}}" onclick="${onclick}"><div class="ic ${icls}">${icon}</div><div class="tx"><h4>${title}</h4><p>${desc}</p></div>${btxt?`<span class="bg ${bcls}">${btxt}</span>`:''}</div>`}
@@ -1772,7 +1794,7 @@ function planDetail(id){
     const d=detailGroups(p); gap=d.gap;
     body=costBlock(p)+d.html;
   }
-  wb().innerHTML=`<button class="btn-back" onclick="backToPlans()">${t('back')}</button>
+  wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to plans','\u2039 Volver a los planes'),'backToPlans()')}</div>
     <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,true,true)}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${body}
@@ -2359,15 +2381,15 @@ function flowCompare(){
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
-  const R=[], grp=g=>R.push({g});
-  const row=(lab,cells,big)=>R.push({lab,cells,big});
+  const R=[], grp=(g,icon)=>R.push({g,icon});
+  const row=(lab,cells,big,icon)=>R.push({lab,cells,big,icon});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
   // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
   // (tap the grey bar). A V-object cell keeps its own "No incluido" / "Sin información" state.
   const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
-  const shut=g=>R.push({g,shut:true});
-  grp(L('Costs','Costos'));
+  const shut=(g,icon)=>R.push({g,shut:true,icon});
+  grp(L('Costs','Costos'),'cost');
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
   if(plans.some(ma)){
     row(L('Part B premium reduction','Reducción de la prima de la Parte B'),plans.map(p=>ma(p)?cv(gbV(p.gb)):dash));
@@ -2376,15 +2398,15 @@ function flowCompare(){
   row(L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>ma(p)?txt(usd(p.moop)):dash),true);
   row(L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?txt(usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),true);
   if(plans.some(ma)){
-    grp(L('Visits','Consultas'));
+    grp(L('Visits','Consultas'),'visits');
     [['pcp',L('Primary doctor','Médico primario')],['spec',L('Specialist','Especialista')],['er',L('Emergency room','Emergencias')],['urg',L('Urgent care','Urgencias')]]
       .forEach(([k,l])=>row(l,plans.map(p=>ma(p)?txt(money(p[k])):dash)));
-    grp(L('Extra benefits','Beneficios extra'));
-    row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash));
-    row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash));
-    row(L('Hearing aids','Audífonos'),plans.map(p=>ma(p)?off(hearingB(p,true)):dash));
-    row('OTC',plans.map(p=>ma(p)?off(otcB(p,true)):dash));
-    row(L('Fitness','Ejercicio'),plans.map(p=>ma(p)?off(fitB(p)):dash));
+    grp(L('Extra benefits','Beneficios extra'),'star');
+    row('Dental',plans.map(p=>ma(p)?off(dentalB(p,true)):dash),false,'dental');
+    row(L('Eyewear','Anteojos'),plans.map(p=>ma(p)?off(visionB(p,true)):dash),false,'vision');
+    row(L('Hearing aids','Audífonos'),plans.map(p=>ma(p)?off(hearingB(p,true)):dash),false,'hearing');
+    row('OTC',plans.map(p=>ma(p)?off(otcB(p,true)):dash),false,'otc');
+    row(L('Fitness','Ejercicio'),plans.map(p=>ma(p)?off(fitB(p)):dash),false,'fit');
     // Group list from benefitGroups(), so the table and the card can never list different benefits. Stays use the
     // short hospital text; "Fuera de la red" only when one of the plans has out-of-network coverage.
     const gs=plans.map(p=>ma(p)?benefitGroups(p):null), ref=gs.find(Boolean);
@@ -2394,7 +2416,7 @@ function flowCompare(){
       const has=gs.map(g=>g&&g.find(x=>x.k===k));
       const base=has.find(Boolean); if(!base) return;
       const labs=[]; has.forEach(g=>g&&g.rows.forEach(r=>{if(labs.indexOf(r[0])<0)labs.push(r[0]);}));
-      shut(base.t);
+      shut(base.t,base.icon);
       labs.forEach(lab=>{
         row(lab,plans.map((p,j)=>{
           if(!ma(p)) return dash;
@@ -2408,7 +2430,7 @@ function flowCompare(){
     });
   }
   if(plans.some(p=>p.drug==='Included'&&p.tiers&&p.tiers.length)){
-    shut(L('Drugs (1 month, standard pharmacy)','Medicamentos (1 mes, farmacia estándar)'));
+    shut(L('Drugs (1 month, standard pharmacy)','Medicamentos (1 mes, farmacia estándar)'),'drug');
     const ids=[...new Set(plans.flatMap(p=>(p.tiers||[]).map(t=>t.t)))].sort((a,b)=>a-b);
     ids.forEach(n=>{
       const named=plans.map(p=>(p.tiers||[]).find(t=>t.t===n)).find(Boolean);
@@ -2417,25 +2439,39 @@ function flowCompare(){
       row(lab,plans.map(p=>{const t=(p.tiers||[]).find(x=>x.t===n);if(!t||t.v==null)return dash;return {t:money(t.v)+(same?'':' <span style="font-weight:600;color:#66727c">('+tierName(t)+')</span>'),off:false};}));
     });
   }
+  /* T-085 round 2 (AB 2026-10-15, "these are old people"): the label gets its own full-width line
+     and the three values the line under it, in equal thirds. The old 31% label column left each
+     figure about 70px wide at 375, which is where the mid-word breaks and the 12px type came from.
+     Two <tr>s per row, carrying the SAME classes, so "Mostrar diferencias" and the group toggles
+     hide or show a label and its values together and can never separate them. */
   let gi=-1, closed=false;
   const body=R.map(r=>{
-    if(r.g){gi++;closed=!!r.shut;return r.shut?`<tr class="grp tg${closed?' shut':''}" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length+1}"><span>${r.g}</span></td></tr>`
-                                       :`<tr class="grp" data-gi="${gi}"><td colspan="${plans.length+1}">${r.g}</td></tr>`;}
+    if(r.g){gi++;closed=!!r.shut;
+      const gic=r.icon?`<svg class="gic" viewBox="0 0 24 24">${PIC[r.icon]}</s`+`vg>`:'';
+      return r.shut?`<tr class="grp tg shut" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length}"><span>${gic}${r.g}</span></td></tr>`
+                   :`<tr class="grp" data-gi="${gi}" data-gi2="${gi}"><td colspan="${plans.length}"><span class="gi2">${gic}${r.g}</span></td></tr>`;}
     const same=r.cells.every(c=>c.t===r.cells[0].t);
-    return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
+    const cls=`g${gi}${same?' same':''}${closed?' hid':''}`;
+    const ric=r.icon?`<svg class="ric" viewBox="0 0 24 24">${PIC[r.icon]}</s`+`vg>`:'';
+    return `<tr class="r lr ${cls}"><td class="lab" colspan="${plans.length}">${ric}${r.lab}</td></tr>`+
+      `<tr class="r vr ${cls}">${r.cells.map(c=>`<td class="v${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span>${esc(cmpName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
+     three, and the name block reserves two lines so the type · ID line and the stars line up too. */
+  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${esc(cmpName(p))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   _act=can?{id:'compare',label:L('Help me choose between these plans','Ayúdeme a elegir estos planes'),wins:true}:null;
-  wb().innerHTML=`${bk()}
+  wb().innerHTML=`
+    <div class="cmptop">${bk()}<label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
+    <p class="diffline" id="diffline" hidden>${L('Only what changes between the 3. What is the same is hidden.','Solo lo que cambia entre los 3. Lo igual está escondido.')}</p>
     ${unlicensedNote()}
-    <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
+    <div class="cmp" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
-    ${bs(L('Back to plans','Volver a planes'),'back()')}
+    ${bs(L('\u2039 Back to the plans','\u2039 Volver a los planes'),'back()')}
     ${fineBlock(cmpNotes(plans),true)}
     ${cbarHTML()}`;
   updBar();
@@ -2477,6 +2513,8 @@ function cmpDiff(cb){
              rows.forEach(r=>r.classList.toggle('hid',shut));delete g.dataset.was;}
     }
   });
+  const dl=document.getElementById('diffline'); if(dl) dl.hidden=!on;
+  const lb=cb.closest('.tog'); if(lb) lb.classList.toggle('on',on);
   wEvt('compare_diff_toggle',{on});
 }
 function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
