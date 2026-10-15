@@ -1749,16 +1749,24 @@ function planFine(p){
 function provNoteHTML(){const t=provenanceNote();return t?`<p>${esc(t)}</p>`:'';}
 let _lastPlanId='';
 function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>planDetail(id));}
-// Back from a plan screen returns to the list AND to the card the visitor opened, not to the top.
-// Back from a plan screen returns to the list, at the top of it.
-// NOT the card the visitor opened: the host embeds this widget with scrolling="no" and the PAGE is what
-// scrolls, so scrollIntoView in here moves nothing (measured: the card stayed at 801px of an 812 viewport).
-// Landing on the card needs the host to scroll to an offset, which means a new postMessage type AND the
-// origin allow-list on both sites in the same commit. Until then the top of the list is the predictable
-// place; the alternative was landing wherever the plan screen happened to leave the page.
+// Back from a plan screen returns to the list AND to the card the visitor opened, not to the top (T-075).
+// This widget cannot do it alone: the host embeds it with scrolling="no" and the PAGE is what scrolls, so
+// scrollIntoView in here moves nothing (T-073 measured the card stuck at 801px of an 812 viewport at 60, 80,
+// 260 and 600ms). So we hand the host the card's offset and let it scroll, via 'widget-scrollto'.
+// The height goes WITH the offset on purpose. At this moment the frame is still the short plan screen's
+// height -- the ResizeObserver's 'widget-resize' has not been delivered, and the host animates height over
+// 0.3s when it is -- so the page is not yet tall enough to scroll that far. One message carrying both lets
+// the host grow the frame and scroll in the same breath, and no ordering between the two can race.
 function backToPlans(){
   back();
-  if(window.self!==window.top) window.parent.postMessage({type:'widget-scrolltop'},'*');
+  if(window.self===window.top) return;
+  const wrap=document.querySelector('.widget-wrap');
+  const card=_lastPlanId?document.querySelector('.pc[data-pid="'+(window.CSS&&CSS.escape?CSS.escape(_lastPlanId):_lastPlanId)+'"]'):null;
+  if(!wrap||!card){ window.parent.postMessage({type:'widget-scrolltop'},'*'); return; }  // card gone: top of the list, as before
+  // Both rects are read in the iframe's own viewport, which never scrolls, so this is the card's offset
+  // from the top of the widget however the host page happens to be scrolled.
+  const top=Math.max(0,Math.round(card.getBoundingClientRect().top-wrap.getBoundingClientRect().top));
+  window.parent.postMessage({type:'widget-scrollto',top:top,height:Math.round(wrap.offsetHeight)},'*');
 }
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
