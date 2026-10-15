@@ -501,7 +501,7 @@ body.host-cbar .cbar{display:none!important}
 .sug .ci2 span{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
 .sug .ci2 svg{width:17px;height:17px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sug .conf a{color:var(--cbar-brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
-.sgc{display:inline-block;margin-top:5px;background:var(--cbar-brand);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px}
+.sgc{display:block;width:fit-content;margin:5px auto 0;background:var(--cbar-brand);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px}
 .cmp.s1 thead th:nth-child(1),.cmp.s1 tr.vr td:nth-child(1),
 .cmp.s2 thead th:nth-child(2),.cmp.s2 tr.vr td:nth-child(2),
 .cmp.s3 thead th:nth-child(3),.cmp.s3 tr.vr td:nth-child(3){background:#F3FAF9}
@@ -672,6 +672,7 @@ body.host-cbar .cbar{display:none!important}
 .rh .zl .zc::before{content:"·";color:#5b6670;margin-right:6px;font-weight:400;text-decoration:none;display:inline-block}
 .rh .zl .zf{width:auto;margin-top:0;gap:6px;align-items:center}
 .rh .zl.edit .zf{display:inline-flex}
+.rh .zl.edit .zcty{display:none}
 /* 16px, not the mockup's 14px: below 16px an iPhone zooms the whole page in when the field is tapped. */
 .rh .zl .zf input{flex:0 0 auto;width:86px;font-size:16px;padding:4px 8px;border-radius:7px;border:1px solid #cfd6dc;outline:none}
 .rh .zl .zf input:focus{border-color:var(--sage);box-shadow:0 0 0 2px var(--lt-mint)}
@@ -2189,7 +2190,7 @@ function setType(v){
   wEvt('filter_pill',{pill:v});
   // "$0 prima" toggles (one tap on, one tap off). The others pick the type, as before.
   if(v==='zero') _zeroOnly=!_zeroOnly; else _typeFilter=v;
-  _shown=PAGE;selPlans=[];flowResults();
+  _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
 }
 // T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
 // filters ONCE per ZIP, the first time the plans are shown. After that the visitor's own pills and
@@ -2252,7 +2253,15 @@ function sortModes(){
   if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
   return m;
 }
-function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;flowResults();}
+/* T-096 round 4 c (AB: "can the order drawer HIDE after selected"): one tap applies the choice AND
+   closes the drawer, and the list goes back to the top so the new first plan is what they see. */
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;_foOpen=false;flowResults();toTop();}
+function toTop(){
+  try{
+    if(window.self!==window.top){window.parent.postMessage({type:'widget-scrolltop'},'*');return;}
+    const h=document.querySelector('.rh'); if(h) h.scrollIntoView({block:'start'});
+  }catch(e){}
+}
 // Unknown values (null) always sort last; ties fall back to plan name so the order is stable.
 function _asc(x,y){const a=(x===null||x===undefined)?Infinity:x, b=(y===null||y===undefined)?Infinity:y; return a===b?0:(a<b?-1:1);}
 // T-088 helpers. "Seguir con mis médicos": plan type is the only network fact in the CMS file, and
@@ -2307,7 +2316,7 @@ function resultsHead(list){
       <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">\u00b7 ${cty}</span>`:''}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">\u270E ${L('Change','Cambiar')}</button>
       <form class="zf" onsubmit="event.preventDefault();zipChange()">
-        <input id="zin" type="tel" inputmode="numeric" maxlength="5" placeholder="${esc(D.zip||'')}" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
+        <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
         <button type="submit">${L('See','Ver')}</button>
       </form></div>
     <p class="zerr" id="zerr"></p>
@@ -2335,7 +2344,14 @@ function chipRow(){
   return `<div class="chips">`+f.map(([k,lb])=>
       `<button class="chip" onclick="clearFilter('${k}')" aria-label="${L('Remove filter','Quitar filtro')}: ${esc(lb)}">${esc(lb)}<i aria-hidden="true">\u2715</i></button>`
     ).join('')+
-    `<button class="fomore" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Filters &amp; sort','Filtros y orden')} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
+    `<button class="fomore" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${foLabel()} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
+}
+/* Once an order has been chosen it is named on the button, so the drawer does not have to be
+   reopened to remember what is on. Until then it says what the control is for. */
+function foLabel(){
+  if(_sortMode==='premium') return L('Filters &amp; sort','Filtros y orden');
+  const m=sortModes().find(x=>x.id===_sortMode);
+  return m?esc(L('Sort: '+m.sen,'Orden: '+m.ses)):L('Filters &amp; sort','Filtros y orden');
 }
 function foPanel(){
   const ms=sortModes();
@@ -2349,7 +2365,7 @@ function toggleFO(){
   _foOpen=!_foOpen;
   wEvt('filters_sort_panel',{on:_foOpen});
   const p=document.getElementById('fopan');
-  if(p){p.hidden=!_foOpen;const b=document.querySelector('.fomore');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Filters &amp; sort','Filtros y orden')+' '+(_foOpen?'\u25B4':'\u25BE');}}
+  if(p){p.hidden=!_foOpen;const b=document.querySelector('.fomore');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=foLabel()+' '+(_foOpen?'\u25B4':'\u25BE');}}
 }
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
@@ -2623,14 +2639,32 @@ function sugWhy(p,plans){
 /* T-096 round 4 e (AB 23:40: "para 0 de prima, o Paga?" -- "Para $0 de prima:" read as an
    instruction, not as a reminder of what they said). The line now names their answer back to them
    as a sentence, then gives the reason in a second one. With no answer, the reason stands alone. */
+/* T-096 round 4 e2 (AB 23:50, "TOO long" — this replaces the two-sentence version): ONE short
+   line, their answer folded into it rather than announced first. Each priority has its own shape,
+   and the figure that carries it comes from the table underneath. */
 function sugLine(p,plans){
-  const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
-  const why=sugWhy(p,plans);
-  const reason=why.length?L(`This one has ${andList(why)}.`,`Este tiene ${andList(why)}.`):'';
-  // AB's own sentence for "Sin preferencia", word for word.
-  if(!sh) return L('This one has the best rating and the lowest cost of the ones you picked.',
-                   'Este tiene la mejor calificación y el costo más bajo de los que eligió.');
-  return L(`What matters most to you: ${sh}. `,`Lo más importante para usted: ${sh}. `)+reason;
+  const st=p.rating==null?'':String(p.rating);
+  const moop=p.moop==null?'':usd(p.moop);
+  const ded=_dd(p)===Infinity?'':usd(p.ded);
+  const dent=_dentAmt(p)==null?'':usd(_dentAmt(p));
+  const ppo=/PPO/.test(String(p.type||''));
+  switch(D.priority){
+    case 'cost':
+      return p.premium===0&&moop
+        ? L(`No premium and the lowest out-of-pocket max: ${moop}.`,`Sin prima y el máximo de bolsillo más bajo: ${moop}.`)
+        : (moop?L(`The lowest out-of-pocket max: ${moop}.`,`El máximo de bolsillo más bajo: ${moop}.`):'');
+    case 'drugs':
+      return ded?L(`The lowest drug deductible: ${ded}.`,`El deducible de medicamentos más bajo: ${ded}.`):'';
+    case 'doctors':
+      return ppo ? L('PPO: more freedom to choose a doctor.','PPO: más libertad para elegir médico.')
+                 : (st?L(`The best rating: ${st} of 5.`,`La mejor calificación: ${st} de 5.`):'');
+    case 'medicaid':
+      return L(`For ${mcd()}, with the best rating.`,`Para ${mcd()}, con la mejor calificación.`);
+    case 'benefits':
+      return dent?L(`The widest dental: up to ${dent}.`,`El dental más amplio: hasta ${dent}.`):'';
+    default:
+      return L('The best rating and the lowest cost.','La mejor calificación y el costo más bajo.');
+  }
 }
 function sugCard(p,plans){
   const line=sugLine(p,plans);
@@ -2877,7 +2911,11 @@ function flowCompare(){
   /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
      three, and the name block reserves two lines so the type · ID line and the stars line up too. */
   const sug=suggestPlan(plans), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
-  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${sug&&p.id===sug.id?`<span class="sgc">${L('Suggested','Sugerido')}</span>`:''}</th>`).join('')}</tr>`;
+  // T-096 round 4 i: "HMO" on all three columns tells nobody anything. The type shows only when
+  // the plans being compared actually differ on it.
+  const types=[...new Set(plans.map(p=>String(p.type||'')))];
+  const showType=types.length>1;
+  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${showType?esc(p.type)+' · ':''}${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${sug&&p.id===sug.id?`<span class="sgc">${L('Suggested','Sugerido')}</span>`:''}</th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
