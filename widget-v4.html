@@ -390,6 +390,12 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
    sticky has nothing to stick to) and this copy hides itself on host-cbar. Never one of each. ── */
 .cbar{position:sticky;bottom:12px;margin-top:12px;background:#fff;color:var(--cbar-ink);border:2px solid var(--cbar-brand);border-radius:14px;padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(16,24,40,.16);z-index:5}
 .cbar.on{display:flex}
+/* T-084 round 2: the same element, one button wide, when the bar carries a screen's main action */
+.cbar.solid{padding:0;border:0;box-shadow:none;background:none}
+.cbar.solid .n{display:none}
+.cbar.solid button{flex:1 1 auto;width:100%;border-radius:12px;min-height:52px;padding:0 14px}
+/* inside the iframe the PAGE draws a fixed bar over this content, so the content ends above it */
+body.in-iframe.has-bar .widget-body{padding-bottom:96px}
 .cbar .n{font-size:14px;font-weight:700;color:var(--cbar-ink)}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:800;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
@@ -971,8 +977,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-function go(fn){hist.push(fn);_plansView=false;_planScreen=false;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
-function back(){if(hist.length>1){hist.pop();_plansView=false;_planScreen=false;hist[hist.length-1]();viewMsg();cbarReport();}}
+function go(fn){hist.push(fn);_plansView=false;_planScreen=false;_act=null;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function back(){if(hist.length>1){hist.pop();_plansView=false;_planScreen=false;_act=null;hist[hist.length-1]();viewMsg();cbarReport();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
@@ -1752,6 +1758,8 @@ function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
   const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
+  // with nothing ticked, THIS plan is the main action of this screen
+  _act=can?{id:'plan:'+p.id,label:L('Help me choose this plan','Ayúdeme a elegir este plan')}:null;
   let body,gap=false;
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
@@ -2178,7 +2186,8 @@ function showMore(){
 }
 // T-084: the bar shows from ONE ticked plan, and Comparar works from one -- it opens that plan
 // next to the next two in the list, exactly as the "Comparar estos 3 planes" button already does.
-function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="goCompare()">${L('Compare','Comparar')}</button></div>`;}
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="cbarTap()">${L('Compare','Comparar')}</button></div>`;}
+function cbarTap(){const st=barState();if(st.mode==='action')barAct();else goCompare();}
 function goCompare(){
   if(!selPlans.length) return;
   const picked=selPlans.length;
@@ -2198,22 +2207,49 @@ let _planScreen=false;
 // What the host page needs to draw the same bar fixed to the bottom of the SCREEN. The label and
 // the button's word travel with it, so the host never needs its own copy of either language.
 let _cbarLast='';
-function cbarReport(){
-  if(window.self===window.top) return;
+/* T-084 round 2 + the T-096 fixed-bar rule (AB 2026-10-15: "always want the ideal next action to be
+   OBVIOUS and EASY"). Every screen has ONE main action and it is visible without scrolling at
+   390x660 and at 320x548. Which bar, per screen:
+     results, nothing ticked  -> none here; the page's own Llamar / WhatsApp bar has the bottom
+     results / plan, 1-3 ticked -> the white "N planes elegidos · Comparar" bar
+     plan screen, nothing ticked -> the solid "Ayúdeme a elegir este plan"
+     compare screen             -> the solid "Ayúdeme a elegir estos planes", ticks or no ticks
+     question, form, gracias    -> none (the options, Enviar, and the phone number are the action)
+   Never two at once: this returns exactly one state, and the page hides its contact bar for as long
+   as anything is here. Inside the iframe the page draws it, because the frame grows to its content
+   and has no scrollport of its own to stick to; on desktop the widget draws its own. */
+let _act=null;   // {id,label} — set by the screen that has a main action
+function barState(){
   const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
-  const st={type:'widget-cbar',on:k>0&&_planScreen,n:k,
+  // on the comparison the main action is the point of the screen, so it wins over the compare bar
+  if(_act&&(_act.wins||k===0)) return {mode:'action',on:true,label:'',compare:_act.label,canCompare:true,action:_act.id};
+  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,
     label:k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`),
     compare:L('Compare','Comparar'),canCompare:k>=1&&total>=2};
+  return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
+}
+function barAct(){
+  if(!_act) return;
+  wEvt('bar_action',{action:_act.id});
+  if(_act.id==='compare') helpCompare(); else if(_act.id) pickPlan(_act.id.replace(/^plan:/,''));
+}
+function cbarReport(){
+  if(window.self===window.top) return;
+  const st=Object.assign({type:'widget-cbar'},barState());
   const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
   window.parent.postMessage(st,'*');
 }
 function updBar(msg){
   cbarReport();
+  const st=barState();
+  // nothing on screen may sit under the bar: the content gets the bar's height as padding
+  document.body.classList.toggle('has-bar',st.on||!!msg);
   const b=document.getElementById('cbar'); if(!b) return;
-  const k=selPlans.length;
-  b.classList.toggle('on',k>0||!!msg);
-  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`));
-  document.getElementById('cbarGo').disabled=k<1;
+  b.classList.toggle('on',st.on||!!msg);
+  b.classList.toggle('solid',st.mode==='action'&&!msg);
+  document.getElementById('cbarN').textContent=msg||st.label||'';
+  const g=document.getElementById('cbarGo');
+  g.textContent=st.compare; g.disabled=!st.canCompare&&!msg;
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2391,6 +2427,7 @@ function flowCompare(){
   const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span>${esc(cmpName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
+  _act=can?{id:'compare',label:L('Help me choose between these plans','Ayúdeme a elegir estos planes'),wins:true}:null;
   wb().innerHTML=`${bk()}
     ${unlicensedNote()}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
@@ -2399,7 +2436,9 @@ function flowCompare(){
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
     </div>
     ${bs(L('Back to plans','Volver a planes'),'back()')}
-    ${fineBlock(cmpNotes(plans),true)}`;
+    ${fineBlock(cmpNotes(plans),true)}
+    ${cbarHTML()}`;
+  updBar();
 }
 // T-086: the three notes that used to sit between the table and the buttons. Every word is unchanged
 // and every one of them is signed: the D-SNP line by PROTECT 2026-10-14 (T-052 review #3), the
@@ -2773,7 +2812,8 @@ go(startZip);
     /* T-084: the page draws the compare bar (phones), so this copy stands down; and its button
        presses ours, so there is one behaviour and not two. */
     if(e.data.type==='host-cbar'){document.body.classList.toggle('host-cbar',!!e.data.on);return;}
-    if(e.data.type==='widget-compare'){goCompare();return;}
+    if(e.data.type==='widget-compare'){var st=(typeof barState==='function')?barState():null;
+      if(st&&st.mode==='action'){barAct();}else{goCompare();}return;}
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
