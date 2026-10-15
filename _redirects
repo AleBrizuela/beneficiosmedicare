@@ -1,7 +1,7 @@
 # T-078: the page a shared comparison opens. The ZIP and the plan IDs are IN the path, so the
 # link is readable and nothing is stored on a server; a 200 rewrite keeps that URL in the address
 # bar and serves one file. Status 200, never 404: Cloudflare Pages silently drops 404 rules.
-/opciones/*              /opciones.html   200
+/opciones/*              /opciones-compartidas.html   200
 
 # 301 redirects from deprecated blog slugs to canonical merged versions
 /blog/cumplir-65-anos-medicare-california.html /blog/inscripcion-inicial-cumplir-65 301
