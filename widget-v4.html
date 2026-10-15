@@ -319,7 +319,10 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
 .cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left}
 .cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
-.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:auto}
+/* T-085: hyphens:auto split ordinary words across lines (Hospitaliza-cion, medica-mentos, Advan-tage) for a
+   reader in reading glasses. manual keeps overflow-wrap, so a word still breaks when it genuinely cannot fit,
+   but no longer when it would have fitted on the next line: 13 broken words at 375 down to 2, no sideways scroll. */
+.cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:manual}
 .cmp td.lab{text-align:left;color:#66727c;font-size:12px;padding-left:10px;width:31%}
 .cmp thead th{background:#fff;font-size:12px;line-height:1.25;color:#1e2a32;font-weight:700;box-shadow:inset 0 4px 0 var(--cc,#c9d1d8);border-left:3px solid #fff;border-right:3px solid #fff;padding-top:10px}
 .cmp thead th.l0{box-shadow:none;text-align:left;padding-left:10px;font-size:12px;color:#66727c;font-weight:600;width:31%}
