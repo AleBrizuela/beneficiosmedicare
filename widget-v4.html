@@ -1891,7 +1891,7 @@ function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    return `<div class="pc" style="--cc:var(--teal)"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
+    return `<div class="pc" style="--cc:var(--teal)"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(dispName(p))}</p>
       ${planTags(p)}
       <div class="pc-idline">${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
@@ -1935,7 +1935,7 @@ function planCard(p,selectable){
   }
   else more+=tiersHTML(p);
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
-      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
+      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}${netLineHTML(p)}
       <div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
@@ -1964,6 +1964,18 @@ function keyStrip(p,isMA,drug){
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
+// AB 2026-10-14: "can you remove all (HMO)s in data since we are leaving the PILL". Done at render,
+// not in the data: the CMS name is what identifies the plan, so it stays untouched in the files, in
+// planLeadTag, in D.selectedPlan and in everything that reaches the leads sheet and the agent's email.
+// Only the label a visitor reads loses the parenthetical, and only when it repeats the plan's own
+// type -- a parenthetical that says anything else is left alone.
+function dispName(p){
+  const n=String(p.name||''), m=n.match(/^(.*?)\s*\(([^()]+)\)\s*$/);
+  if(!m) return n;
+  const inside=m[2].trim().toUpperCase();
+  const types=[baseType(p),p.type,p.cat].filter(Boolean).map(x=>String(x).trim().toUpperCase());
+  return types.indexOf(inside)>=0 ? m[1].trim() : n;
+}
 function planLeadTag(p){return `${p.name} [${p.id}] represented: ${p._medigap?'n/a (Medigap)':(p.rep?'yes':'no')}`;}
 function pickPlan(id){
   const p=PLANS.find(x=>x.id===id); if(!p) return;
@@ -2411,7 +2423,7 @@ function flowCompare(){
   const sameBlock=sameLabels.length?`<div class="cmp-same"><h5>${L('The same in all '+plans.length,'Igual en los '+plans.length)}</h5><p>${esc(sameLabels.join(' · '))}</p></div>`:'';
   // T-055 (2): the full official carrier and plan name. Names alone are not unique, so the type and
   // the Medicare ID sit under every column, as on the card.
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(p.name)}<span class="pid">${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(baseType(p))} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   const total=orderedPlans().filter(p=>!p._medigap).length;
@@ -2423,7 +2435,7 @@ function flowCompare(){
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp lite" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(p.name)} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
+      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
       <div class="cmp-foot"><button class="showall" id="cmp-all" type="button" onclick="cmpAll()">${L('See all benefits','Ver todos los beneficios')}</button>
         ${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
