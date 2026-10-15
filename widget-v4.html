@@ -2628,11 +2628,12 @@ const SHI={
   whatsapp:'<svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.1 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.3.4-.3.3c-.1.1-.2.3-.1.5.1.2.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg>',
   sms:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2.5-3A8 8 0 1 1 21 12z"/></svg>',
   email:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
-  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>'};
-const SHLAB={whatsapp:['WhatsApp','WhatsApp'],sms:['Text','Texto'],email:['Email','Email'],copy:['Copy link','Copiar enlace']};
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"/><path d="M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z"/><path d="M9 14h6M9 17h4"/></svg>'};
+const SHLAB={whatsapp:['WhatsApp','WhatsApp'],sms:['Text','Texto'],email:['Email','Email'],copy:['Copy link','Copiar enlace'],pdf:['PDF','PDF']};
 // Order by the language of the page: the first spot is the one people tap (AB 2026-10-14, Spanish
 // speakers use WhatsApp more than text). PROVE reorders it after a month of share_send.
-function shareOrder(){return lang==='es'?['whatsapp','sms','email','copy']:['sms','email','whatsapp','copy'];}
+function shareOrder(){return lang==='es'?['whatsapp','sms','email','copy','pdf']:['sms','email','whatsapp','copy','pdf'];}
 function shareBtnHTML(placement){
   return `<button class="btn-share" data-cta="widget" onclick="openShare('${placement}')">
     <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M12 16V3"/><path d="m7 8 5-5 5 5"/></svg>${L('Share','Compartir')}</button>`;
@@ -2670,6 +2671,7 @@ function shOk(msg){const o=document.getElementById('shok'); if(o) o.textContent=
 function doShare(ch){
   const note=shareNote();
   wEvt('share_send',{channel:ch,has_note:note?'yes':'no',plans:comparedPlans().length,share_id:D.shareId||''});
+  if(ch==='pdf'){ makeSharePDF(); return; }
   const url=shareURL(ch==='more'?'more':ch);
   const subj=L('Medicare plans ','Planes de Medicare ')+planYear()+(D.zip?' · ZIP '+D.zip:'');
   // The number rides in the message text, where WhatsApp, iMessage and SMS make it tappable.
@@ -2689,6 +2691,171 @@ function doShare(ch){
 // page each carry the same sentence the footers carry, word for word (T-018 counts).
 function notAllPlansHTML(){
   return `<p class="cmp-fine">${L('We do not offer every plan available in your area. Currently we represent 7 organizations which offer 255 products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.','No ofrecemos todos los planes disponibles en su área. Actualmente representamos 7 organizaciones que ofrecen 255 productos en su área. Comuníquese con Medicare.gov o llame al 1-800-MEDICARE para obtener información sobre todas sus opciones.')}</p>`;
+}
+
+
+// ═══════════════════════════════════════
+//  PDF  (a real file, built here, no library, no network)  (T-078)
+// ═══════════════════════════════════════
+// AB 2026-10-14: a real one-page PDF, not the print dialog and not an image, so WhatsApp sends it
+// as a document and Files / Print can take it. Letter landscape, 792x612pt. When it does not fit,
+// rows are cut (the template's rule), never the type size.
+const ADV={name:'Alejandra Brizuela',lic:'4507923',tel:'+13105979142',telShown:'(310) 597-9142',
+  photo:'images/alejandra-headshot.webp'};
+function advEmail(){return leadSite()==='medicare-california'?'Alejandra@Medicare-California.com':'Alejandra@BeneficiosMedicare.com';}
+function advBrand(){return leadSite()==='medicare-california'?'Medicare California':'Beneficios Medicare';}
+function dashId(id){const m=String(id||'').split('_');return m[0]+(m[1]?'-'+m[1]:'')+(m[2]&&m[2]!=='0'?'-'+m[2]:'');}
+// Helvetica advance widths, so text can be measured and fitted without a canvas.
+const HW=(function(){const w={},a='!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+  v=[278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+  for(let i=0;i<a.length;i++)w[a[i]]=v[i]; w[' ']=278; return w;})();
+function tw(s,size,bold){let t=0;s=String(s);for(let i=0;i<s.length;i++)t+=(HW[s[i]]||556);return t*size/1000*(bold?1.06:1);}
+function fit(s,maxW,size,bold){s=String(s==null?'':s);if(tw(s,size,bold)<=maxW)return s;
+  while(s.length>1&&tw(s+'…',size,bold)>maxW)s=s.slice(0,-1);return s+'…';}
+// cp1252: every character Spanish and English need. Anything else becomes a question mark rather
+// than a wrong glyph.
+function win1252(s){const M={'‘':145,'’':146,'“':147,'”':148,'–':150,'—':151,'•':149,'…':133,'€':128,'−':45,' ':32,'➜':62,'→':62,'★':42};
+  let o='';for(const c of String(s)){const n=c.codePointAt(0);
+    if(M[c]!==undefined)o+=String.fromCharCode(M[c]);
+    else if(n<256)o+=c; else o+='?';}
+  return o;}
+function pesc(s){return win1252(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');}
+function hx(c){const n=parseInt(String(c).slice(1),16);return [((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255].map(x=>x.toFixed(3)).join(' ');}
+function PDFPage(W,H){
+  const ops=[]; const Y=y=>(H-y).toFixed(2);
+  return {
+    rect:(x,y,w,h,col)=>ops.push(`${hx(col)} rg ${x.toFixed(2)} ${(H-y-h).toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re f`),
+    line:(x1,y1,x2,y2,col,lw)=>ops.push(`${hx(col)} RG ${(lw||.6).toFixed(2)} w ${x1.toFixed(2)} ${Y(y1)} m ${x2.toFixed(2)} ${Y(y2)} l S`),
+    text:(x,y,s,size,bold,col,align,boxW)=>{let xx=x;
+      if(align==='r') xx=x-tw(s,size,bold);
+      else if(align==='c') xx=x+((boxW||0)-tw(s,size,bold))/2;
+      ops.push(`BT ${hx(col||'#000000')} rg /${bold?'FB':'FR'} ${size} Tf ${xx.toFixed(2)} ${Y(y)} Td (${pesc(s)}) Tj ET`);},
+    build:()=>ops.join('\n')
+  };
+}
+function pdfBlob(W,H,content){
+  const objs=[];
+  objs[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+  objs[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /FR 5 0 R /FB 6 0 R >> >> /Contents 4 0 R >>`;
+  objs[4]=`<< /Length ${content.length} >>\nstream\n${content}\nendstream`;
+  objs[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[6]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  let out='%PDF-1.4\n', off=[];
+  for(let i=1;i<objs.length;i++){off[i]=out.length;out+=`${i} 0 obj\n${objs[i]}\nendobj\n`;}
+  const xref=out.length;
+  out+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objs.length;i++) out+=String(off[i]).padStart(10,'0')+' 00000 n \n';
+  out+=`trailer\n<< /Size ${objs.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new Blob([Uint8Array.from(out,c=>c.charCodeAt(0)&255)],{type:'application/pdf'});
+}
+function pdfRows(plans){
+  const r=[];
+  const txt=v=>v==null?noInfo():(v.t!==undefined?String(v.t).replace(/<[^>]+>/g,''):String(v));
+  r.push([L('Monthly premium','Prima mensual'),plans.map(p=>premUsd(p.premium)==null?noInfo():premUsd(p.premium))]);
+  r.push([L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>p.moop==null?noInfo():usd(p.moop))]);
+  r.push([L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?(p.ded==null?noInfo():usd(p.ded)):L('No drug coverage','Sin medicamentos'))]);
+  r.push([L('Primary doctor','Médico primario'),plans.map(p=>money(p.pcp)||noInfo())]);
+  r.push([L('Specialist','Especialista'),plans.map(p=>money(p.spec)||noInfo())]);
+  r.push([L('Emergency room','Emergencias'),plans.map(p=>money(p.er)||noInfo())]);
+  r.push(['Dental',plans.map(p=>txt(dentalB(p,true)))]);
+  r.push([L('Eyewear','Anteojos'),plans.map(p=>txt(visionB(p,true)))]);
+  r.push([L('Hearing aids','Audífonos'),plans.map(p=>txt(hearingB(p,true)))]);
+  r.push(['OTC',plans.map(p=>txt(otcB(p,true)))]);
+  r.push([L('Your doctors and hospital','Sus médicos y hospital'),plans.map(()=>L('We check them for you','Lo revisamos por usted'))]);
+  if(plans.some(p=>typeof p.rating==='number'&&p.rating>0))
+    r.push([L('Overall star rating','Estrellas (general)'),plans.map(p=>
+      (typeof p.rating==='number'&&p.rating>0)?String(p.rating).replace(/\.0$/,'')+' / 5'
+        :L('Not rated yet','Sin calificación todavía'))]);
+  return r;
+}
+function makeSharePDF(){
+  const plans=comparedPlans(); if(!plans.length) return;
+  wEvt('pdf_open',{from:'share'});
+  const W=792,H=612,M=34,g=PDFPage(W,H);
+  const NAVY='#1E3A5F', TEAL='#00796B', GREY='#5F6B75', LINE='#D8DEE4', GOLD='#B7791F', DARK='#1C2B3A';
+  const note=shareNote();
+  const today=new Date().toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'});
+  // The CMS source line the build writes is in English; on a Spanish sheet we print its date.
+  const sm=/(\d{2})\/(\d{2})\/(\d{4})/.exec((_planMeta&&_planMeta.source)||'');
+  const dstamp=sm?new Date(sm[3]+'-'+sm[1]+'-'+sm[2]+'T12:00:00').toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'}):'';
+  // band: the advisor sits top right, as on the client sheet
+  g.rect(0,0,W,68,NAVY);
+  g.text(M,27,L('Your '+planYear()+' Medicare options','Sus opciones de Medicare '+planYear())+(D.zip?' · ZIP '+D.zip:'')+(D.county?' · '+D.county:''),17,true,'#FFFFFF');
+  if(dstamp) g.text(M,46,L('CMS plan data of ','Datos de CMS del ')+dstamp,8.5,false,'#C9D6E4');
+  g.text(W-M,25,advBrand(),12,true,'#FFFFFF','r');
+  g.text(W-M,40,ADV.name+'  ·  '+L('Lic. #','Lic. #')+ADV.lic,9,true,'#FFFFFF','r');
+  g.text(W-M,54,ADV.telShown+'  ·  '+advEmail(),8.5,false,'#C9D6E4','r');
+  let y=84;
+  const labW=168, colW=(W-2*M-labW)/plans.length, rows=pdfRows(plans);
+  const headH=40;
+  plans.forEach((p,i)=>{
+    const x=M+labW+i*colW;
+    g.rect(x,y,colW-6,4,carrierColor(p));
+    g.text(x,y+16,fit(p.carrier,colW-12,8,true),8,true,GREY);
+    g.text(x,y+28,fit(p.name,colW-12,10,true),10,true,DARK);
+    g.text(x,y+38,fit(baseType(p)+' · '+dashId(p.id),colW-12,8,false),8,false,GREY);
+  });
+  let ry=y+headH+10;
+  const rowH=19, bottomReserve=150;
+  rows.forEach(([lab,cells])=>{
+    if(ry>H-bottomReserve) return;                       // cut rows, never the type size
+    g.line(M,ry-12,W-M,ry-12,LINE,.5);
+    g.text(M,ry,fit(lab,labW-10,9,false),9,false,GREY);
+    cells.forEach((c,i)=>g.text(M+labW+i*colW,ry,fit(String(c),colW-12,10,true),10,true,
+      String(c)==='$0'?TEAL:DARK));
+    ry+=rowH;
+  });
+  g.line(M,ry-12,W-M,ry-12,LINE,.5);
+  // the ask follows the table, with the one gold thing on the page
+  let by=Math.min(ry+26,H-128);
+  g.text(M,by,L('Which one is right for you?','¿Cuál le conviene?'),13,true,DARK);
+  g.text(M,by+16,L('I tell you, based on your doctors. Ask for your personal comparison >','Se lo digo según sus médicos. Pida su comparación personal >'),10,false,GREY);
+  const chip=L('Open enrollment ends December 7','La inscripción termina el 7 de diciembre');
+  const cw=tw(chip,9,true)+16;
+  g.rect(W-M-cw,by-11,cw,19,'#FDF3E0');
+  g.text(W-M-cw+8,by+2,chip,9,true,GOLD);
+  if(note){ g.text(M,by+34,fit(L('Note: ','Nota: ')+note,W-2*M,9.5,false),9.5,false,DARK); }
+  // the rows that are the same in every plan, said once
+  const pdfSame=[];
+  rows.forEach(([lab,cells])=>{ if(cells.length>1&&cells.every(c=>String(c)===String(cells[0]))) pdfSame.push(lab); });
+  if(pdfSame.length) g.text(M,by+66,fit(L('The same in all '+plans.length+': ','Igual en los '+plans.length+': ')+pdfSame.join(' · '),W-2*M,8.5,false),8.5,false,GREY);
+  // three steps
+  const st=[[L('Step 1','Paso 1'),L('You tell me your doctors.','Usted me dice sus médicos.')],
+            [L('Step 2','Paso 2'),L('I check them against each plan.','Yo los reviso en cada plan.')],
+            [L('Step 3','Paso 3'),L('We decide together.','Decidimos juntas.')]];
+  const sw=(W-2*M-20)/3, sy=Math.min(by+84,H-86);
+  st.forEach(([h,t],i)=>{const x=M+i*(sw+10);
+    g.rect(x,sy,sw,30,'#F3F5F7');
+    g.text(x+9,sy+13,h,8,true,TEAL); g.text(x+9,sy+25,fit(t,sw-18,9,false),9,false,DARK);});
+  g.text(M,by+50,fit(L('This comparison: ','Esta comparación: ')+shareURL('pdf').split('#')[0].split('&utm_')[0],W-2*M,8,false),8,false,TEAL);
+  // fine print: the three lines PROTECT requires wherever plan facts and stars travel
+  const fp1=L('We do not offer every plan available in your area. Currently we represent 7 organizations which offer 255 products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.',
+              'No ofrecemos todos los planes disponibles en su área. Actualmente representamos 7 organizaciones que ofrecen 255 productos en su área. Comuníquese con Medicare.gov o llame al 1-800-MEDICARE para obtener información sobre todas sus opciones.');
+  const fp2=L('Not connected with or endorsed by the federal government or the Medicare program. A fixed picture of the plan data on '+today+'; plan details can change. Every year, Medicare evaluates plans based on a 5-star rating system.',
+              'No está relacionado ni respaldado por el gobierno federal ni por el programa Medicare. Es una foto fija de los datos del '+today+'; los detalles del plan pueden cambiar. Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas.');
+  let fy=H-56;
+  [fp1,fp2].forEach(t=>{
+    let line='',out=[];
+    t.split(' ').forEach(w=>{const n=line?line+' '+w:w; if(tw(n,7,false)>W-2*M){out.push(line);line=w;}else line=n;});
+    if(line)out.push(line);
+    out.slice(0,2).forEach(l=>{g.text(M,fy,l,7,false,GREY);fy+=9;});
+  });
+  // AB 2026-10-14 ("include NAME and ZIP code"): a file name she can search for later.
+  const who=String(D.fullName||'').replace(/^QA · /,'').trim().replace(/[\\/:*?"<>|]/g,'');
+  const name=(who?who+' - ':'')+(D.zip?'ZIP '+D.zip+' - ':'')
+    +L('Medicare plans '+planYear(),'Planes Medicare '+planYear())+' - '+new Date().toISOString().slice(0,10)+'.pdf';
+  const blob=pdfBlob(W,H,g.build());
+  const file=(window.File&&navigator.canShare)?new File([blob],name,{type:'application/pdf'}):null;
+  if(file&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:name}).then(()=>shOk(L('PDF shared.','PDF compartido.'))).catch(()=>pdfDownload(blob,name));
+  } else pdfDownload(blob,name);
+}
+function pdfDownload(blob,name){
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+  shOk(L('PDF saved.','PDF guardado.'));
 }
 
 </script>
