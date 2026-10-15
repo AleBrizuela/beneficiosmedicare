@@ -1083,31 +1083,6 @@ function timeAwayStr(months){
 
 
 // ═══════════════════════════════════════
-//  STEP: DOCTOR
-// ═══════════════════════════════════════
-function doctorAsk(nextYes,nextNo){
-  prog(35);
-  _cb.docY=nextYes; _cb.docN=nextNo;
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do you have a doctor you want to keep?':'\u00BFTiene un doctor que quiere mantener?')}
-    <div class="opt-grid">
-      ${oc(I.doctor,'bl',lang==='en'?'Yes':'S\u00ED',lang==='en'?'I want to keep my doctor.':'Quiero mantener mi doctor.','','',`D.hasDoc='yes';go(_cb.docY)`)}
-      ${oc(I.search,'gr',lang==='en'?'No / Not sure':'No / No estoy seguro',lang==='en'?'I am flexible.':'Soy flexible.','','',`D.hasDoc='no';go(_cb.docN)`)}
-    </div>`;
-}
-
-function doctorName(nextFn){
-  prog(40);
-  _cb.docName=nextFn;
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?"What is your doctor's last name?":'\u00BFCu\u00E1l es el apellido de su doctor?')}
-    ${inp('docName',lang==='en'?"Doctor's last name":'Apellido del doctor',lang==='en'?'e.g. Garcia':'ej. Garcia')}
-    ${bp(t('next'),'go(_cb.docName)')}
-    ${skip(lang==='en'?"I don't remember right now":'No recuerdo ahora',"D.docName='(will provide later)';go(_cb.docName)")}`;
-}
-
-
-// ═══════════════════════════════════════
 //  STEP: HEALTH CONDITIONS (Option B)
 // ═══════════════════════════════════════
 function healthStep(nextFn){
@@ -1141,7 +1116,6 @@ function toggleCond(id){
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
 const PRI_OPTIONS=[
-  {id:'doctor',icon:I.doctor,icls:'gr',en:'Keep my doctor',es:'Mantener mi doctor',enD:'My current doctor accepts the plan.',esD:'Que mi doctor acepte el plan.'},
   {id:'drugs',icon:I.pill,icls:'mi',en:'Drug coverage',es:'Cobertura de medicinas',enD:'My medications are covered.',esD:'Que mis medicinas est\u00E9n cubiertas.'},
   {id:'benefits',icon:I.star,icls:'sg',en:'Most benefits',es:'M\u00E1s beneficios',enD:'Dental, vision and hearing coverage.',esD:'Cobertura dental, visi\u00F3n y audici\u00F3n.'},
   {id:'cost',icon:I.cost,icls:'bl',en:'Lowest premium',es:'Pagar menor Prima Mensual',enD:'I want the most affordable plan.',esD:'Quiero el plan m\u00E1s econ\u00F3mico.'},
@@ -1191,18 +1165,19 @@ function ft_eligibility(){
   const age=getAge();
   const ew=getEnrollmentWindow();
   if(age===null){
-    // No DOB provided (skipped), go straight to doctor
-    go(ft_docAsk);
+    // No DOB provided (skipped), go straight to the health step
+    go(ft_health);
     return;
   }
   if(age>=65){
     /* T-031 (AB 2026-10-03): this screen is for people who just turned 65. From 65 years and 7 months on, skip it and
-       go straight to the doctor question: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year. */
-    if(monthsPast65()>6){ go(ft_docAsk); return; }
+       go straight to the health step: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year.
+       T-071 (AB 2026-10-14): the two doctor screens were removed; what used to be the doctor question is now ft_health. */
+    if(monthsPast65()>6){ go(ft_health); return; }
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
       ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
-    setTimeout(()=>go(ft_docAsk),1500);
+    setTimeout(()=>go(ft_health),1500);
   } else if(ew){
     const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
     const now=new Date();
@@ -1214,23 +1189,21 @@ function ft_eligibility(){
         ${leadOK()?'':'<!-- no reminder sign-up: state not licensed -->'}<button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px;${leadOK()?'':'display:none'}">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
-          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_docAsk)};_cb.u65dis()')}
-          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_docAsk)};_cb.u65esrd()')}
-          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_docAsk)};_cb.u65als()')}
+          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_health)};_cb.u65dis()')}
+          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_health)};_cb.u65esrd()')}
+          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_health)};_cb.u65als()')}
         </div>
         ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Su ventana de inscripci\u00F3n abre ${opensStr}!`,'hl')}
         ${ic(lang==='en'?'Good timing':'Buen momento', lang==='en'?'Now is a great time to start comparing plans.':'Ahora es un gran momento para empezar a comparar planes.')}`;
-      setTimeout(()=>go(ft_docAsk),1200);
+      setTimeout(()=>go(ft_health),1200);
     }
   } else {
-    go(ft_docAsk);
+    go(ft_health);
   }
 }
-function ft_docAsk(){doctorAsk(ft_docName,ft_health)}
-function ft_docName(){doctorName(ft_health)}
 function ft_health(){healthStep(_activeExps.length>0?ft_experiment:ft_priority)}
 function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
