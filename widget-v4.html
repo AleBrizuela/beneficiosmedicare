@@ -259,6 +259,16 @@ body.host-next #wb .btn-p{display:none!important}
 .tg-plain{background:#E2E7EC;color:#4A5568}
 .pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
 .pc-idline .pid{font-weight:700;color:#4A5568}
+/* T-073: the card ends in ONE outline button; the plan opens on its own screen. */
+.pc-det{display:block;width:100%;background:#fff;border:1.5px solid var(--sage);color:var(--sage-dark);
+  border-radius:10px;padding:13px;font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;
+  text-align:center;cursor:pointer;min-height:50px;margin:12px 0 0}
+.pd-head{margin:0 0 14px}
+.pd-cta{display:block;width:100%;background:var(--sage);color:#fff;border:0;border-radius:10px;padding:15px;
+  font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;text-align:center;cursor:pointer;
+  min-height:52px;margin:18px 0 0}
+.pd-fine{margin-top:18px;border-top:1px solid #e5e9ec;padding-top:12px}
+.pd-fine p{font-size:11.5px;line-height:1.5;color:#66727c;margin:0 2px 7px}
 .pc-chips .c{font-size:12.5px;font-weight:600;background:#f3f5f7;color:#1e2a32;border:1px solid #e5e9ec;padding:4px 9px;border-radius:999px}
 .pc-chips .c b{color:var(--sage)}
 .pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
@@ -1717,64 +1727,115 @@ function cmpBox(p){
 const TOG=()=>[L('See all benefits','Ver todos los beneficios'),L('See less','Ver menos')];
 const TOGD=()=>[L('See drug costs by tier','Ver medicamentos por nivel'),L('See less','Ver menos')];
 function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'});const s=el.querySelector('summary');if(s)s.textContent=(pdp?TOGD():TOG())[el.open?1:0];}
-function planCard(p,selectable){
-  // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
-  if(p._medigap){
-    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(dispName(p))}</p>
+// ── T-073 (AB 2026-10-14): the card is short — who it is, what it costs, one button.
+// Everything else moved to the plan's own screen, so the list is scannable and each plan
+// gets exactly one ask instead of seventy cards each carrying their own.
+function planHead(p,selectable){
+  return `<div class="pc-head${selectable?'':' pd-head'}">
+      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}
-      <div class="pc-meta">${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
-      ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
-      <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
-      <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
-      ${leadOK()&&!(D.state&&!_rep)?'':`<div class="pc-foot"><p class="plan-flag">${L('Information only','Solo información')}</p></div>`}</div>`;
-  }
+      ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
+      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
+      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}</div>`;
+}
+function detBtn(p){
+  return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
+}
+// Every cost row CMS gives us. The short card shows three of these; the plan screen shows all.
+function costRows(p,short){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
   const prem=p.premium==null?null:V(premUsd(p.premium)+L('/mo','/mes'));
   const ded=drug?(p.ded==null?null:V(usd(p.ded))):V('—',L('No drug coverage','Sin cobertura de medicamentos'),true);
-  // T-052: drug deductible says which tiers skip it, on the card (it was only in the drug fine print).
   if(drug&&ded&&p.ded>0&&p.noded&&p.noded.length){const n=p.noded.map(String);ded.sub=L(`Tier${n.length>1?'s':''} ${andList(n)}: no deductible`,`${n.length>1?'Niveles':'Nivel'} ${andList(n)} sin deducible`);}
+  const moop=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
   let rows=lrow(L('Monthly premium','Prima mensual'),prem);
-  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded));
-  if(isMA) rows+=lrow(L('Max out-of-pocket (in-network)','Máximo de bolsillo (en la red)'),p.moop==null?null:V(usd(p.moop)));
-  rows+=lrow(L('Drug deductible','Deducible de medicamentos'),ded);
-  let body=lsec('cost',L('Costs','Costos'),rows,'cost'), more='', gap=false;
+  if(short){
+    if(isMA) rows+=moop;
+    return rows+lrow(L('Drug deductible','Deducible de medicamentos'),ded);
+  }
+  if(isMA) rows+=lrow(L('Part B premium reduction','Reducción de la prima de la Parte B'),gbV(p.gb))+lrow(L('Medical deductible','Deducible médico'),mdedV(p.mded))+moop;
+  return rows+lrow(L('Drug deductible','Deducible de medicamentos'),ded);
+}
+// Everything below Costos on the plan screen, every group CLOSED to its title (T-073 (2)).
+function detailGroups(p){
+  const isMA=p.cat!=='PDP';
+  let out='', gap=false;
   if(isMA){
     const vis=[vz(p.pcp),vz(p.spec),vz(p.er),vz(p.urg)];
     if(allNull(vis)) gap=true;
-    else body+=lsec('visits',L('Visits','Consultas'),
+    else out+=grpHTML('visits','visits',L('Visits','Consultas'),
       lrow(L('Primary doctor','Médico primario'),vis[0])+lrow(L('Specialist','Especialista'),vis[1])+
-      lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]));
+      lrow(L('Emergency room','Emergencias'),vis[2])+lrow(L('Urgent care','Urgencias'),vis[3]),4);
     const ext=[dentalL(p),visionL(p),hearingL(p),otcL(p),fitL(p)];
     if(allNull(ext)) gap=true;
-    else body+=lsec('star',L('Extra benefits','Beneficios extra'),
+    else out+=grpHTML('extra','star',L('Extra benefits','Beneficios extra'),
       lrow('Dental',ext[0],'dental')+lrow(L('Eyewear','Anteojos'),ext[1],'vision')+lrow(L('Hearing aids','Audífonos'),ext[2],'hearing')+
-      lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+lrow(L('Fitness','Ejercicio'),ext[4],'fit'));
+      lrow(L('Over-the-counter items (OTC)','Productos sin receta (OTC)'),ext[3],'otc')+lrow(L('Fitness','Ejercicio'),ext[4],'fit'),5);
     const amb=p.amb||{};
     if(allNull([hospL(p.hosp),vz(p.asc),vz(p.ohosp),vz(amb.ground),vz(amb.air),tripsL(p.trans)])) gap=true;
-    // T-052: every group closed to its title until tapped. A group with no value at all in the CMS file is left out.
     benefitGroups(p).forEach(g=>{
       if(allNull(g.rows.map(r=>r[1]))) return;
-      more+=grpHTML(g.k,g.icon,g.t,g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),g.rows.length);
+      out+=grpHTML(g.k,g.icon,g.t,g.rows.map(r=>lrow(r[0],r[1])).join('')+(g.note?`<p class="disc">${g.note}</p>`:''),g.rows.length);
     });
   }
   if(p.drug==='Included'&&!(p.tiers&&p.tiers.length)&&p.dbt!=='1') gap=true;
   else if(isMA){
     const t=p.tiers||[];
-    more+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
+    out+=grpHTML('drug','drug',L('Drugs','Medicamentos'),tiersBody(p),t.length?t.length+(p.ins?1:0)+(t.some(x=>x.m3!=null)?1:0):0);
   }
-  else more+=tiersHTML(p);
-  const tg=isMA?TOG():TOGD();
-  return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
-      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
-      ${planTags(p)}
-      <div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>
-      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
-      ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
-      ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
-    ${body}
-    ${more.trim()?`<details ontoggle="togSum(this,${isMA?0:1})"><summary>${tg[0]}</summary>${more}</details>`:''}
-    ${(pa=>pa?`<div class="pc-foot">${pa}</div>`:'')(planAction(p))}</div>`;
+  else out+=tiersHTML(p);
+  return {html:out,gap};
+}
+// All the fine print, at the very bottom of the plan screen and nowhere above it (T-073 (2)).
+function planFine(p){
+  const net=p._medigap?'':L("The exact network rules are in each plan's Evidence of Coverage.",
+    'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.');
+  return `<div class="pd-fine">${net?`<p>${net}</p>`:''}${starDiscHTML()}${provNoteHTML()}</div>`;
+}
+function provNoteHTML(){const t=provenanceNote();return t?`<p>${esc(t)}</p>`:'';}
+let _lastPlanId='';
+function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>planDetail(id));}
+// Back from a plan screen returns to the list AND to the card the visitor opened, not to the top.
+function backToPlans(){
+  back();
+  setTimeout(()=>{
+    const el=document.querySelector('.pc[data-pid="'+(window.CSS&&CSS.escape?CSS.escape(_lastPlanId):_lastPlanId)+'"]');
+    if(el&&el.scrollIntoView) el.scrollIntoView({block:'center'});
+  },60);
+}
+function planDetail(id){
+  const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
+  const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
+  let body,gap=false;
+  if(p._medigap){
+    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
+    body=lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')
+      +`<div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
+      <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>`;
+  } else {
+    const d=detailGroups(p); gap=d.gap;
+    body=lsec('cost',L('Costs','Costos'),costRows(p,false),'cost')+d.html;
+  }
+  wb().innerHTML=`<button class="btn-back" onclick="backToPlans()">${t('back')}</button>
+    <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,false)}
+      ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
+      ${body}
+      ${can?`<button class="pd-cta" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose this plan','Ayúdeme a elegir este plan')}</button>`
+           :(p.sanction?`<p class="plan-flag warn">${L('CMS sanction, see','Sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`
+                       :`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}
+      ${planFine(p)}</div>`;
+}
+function planCard(p,selectable){
+  // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
+  if(p._medigap){
+    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
+    return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
+      ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
+      ${detBtn(p)}</div>`;
+  }
+  return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
+    ${lsec('cost',L('Costs','Costos'),costRows(p,true),'cost')}
+    ${detBtn(p)}</div>`;
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
