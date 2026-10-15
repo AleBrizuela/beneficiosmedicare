@@ -2572,6 +2572,49 @@ function sugCard(p,plans){
    on beneficiosmedicare, /options/... on medicare-california, always the SAME domain the visitor is
    on, never across (CLAUDE.md). The plan IDs in the path are what the shared page draws, so a link
    can never show plans other than the ones that were on screen. */
+/* The shared page's whole data path. It reuses loadPlansForZip (the ZIP index, the state's plan
+   file, the carrier file) exactly as the widget does, then hands back only what a sheet prints. */
+async function plansForShare(zip,ids,priority){
+  try{
+    if(!/^\d{5}$/.test(String(zip||''))) return {err:'bad zip'};
+    D.priority=priority||'';
+    D.zip=String(zip); await loadPlansForZip(D.zip);
+    if(D._zipValid===false||!PLANS.length) return {err:'no plans'};
+    const want=(ids||[]).map(String);
+    const out=want.map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(Boolean).filter(p=>!p._medigap).slice(0,3);
+    if(!out.length) return {err:'no match'};
+    // T-078 round 8: the same suggestion the comparison showed, from the answer carried in the link.
+    const sug=suggestPlan(out);
+    const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
+    return {county:D.county||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
+      sug:sug?{id:planIdRaw(sug),name:dispName(sug),
+               why:sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':'',
+               lead:sh?L(`For ${sh}:`,`Para ${sh}:`):''}:null,
+      plans:out.map(sharePlanRow)};
+  }catch(e){ return {err:String(e&&e.message||e)}; }
+}
+// Everything the sheet prints, already in the words the comparison uses.
+function sharePlanRow(p){
+  const amb=p.amb||{};
+  const V2=v=>v==null?null:(v.t!==undefined?{t:v.t,off:!!v.off}:{t:String(v),off:false});
+  const tiers=(p.tiers||[]).filter(t=>t.t<=3).sort((a,b)=>a.t-b.t).map(t=>t.v==null?'—':money(t.v));
+  return {
+    id:planIdRaw(p), carrier:carrierShort(p.carrier), carrierFull:p.carrier, color:carrierColor(p),
+    name:dispName(p), type:p.type||'', stars:p.rating==null?null:p.rating, dual:isDual(p),
+    rows:{
+      premium:V2(p.premium==null?null:premUsd(p.premium)),   // the row label already says a month
+      giveback:V2(gbV(p.gb)), moop:V2(p.moop==null?null:usd(p.moop)), mded:V2(mdedV(p.mded)),
+      pcp:V2(vz(p.pcp)), spec:V2(vz(p.spec)),
+      hosp:V2(hospL(p.hosp)), er:V2(vz(p.er)), urg:V2(vz(p.urg)),
+      amb:V2(vz(amb.ground)), wwe:V2(sx(p.wwe)),
+      ded:V2(p.drug==='Included'?(p.ded==null?null:usd(p.ded)):{t:L('No drug coverage','Sin medicamentos'),off:true}),
+      tiers:tiers.length?V2(tiers.join(' · ')):null,
+      dental:V2(dentalB(p,true)), vision:V2(visionB(p,true)), hearing:V2(hearingB(p,true)),
+      otc:V2(otcB(p,true)), trans:V2(tripsL(p.trans))
+    },
+    why:null
+  };
+}
 function planIdRaw(p){const m=String(p.id||'').split('_');return m[0]+(m[1]?'-'+m[1]:'')+(m[2]&&m[2]!=='0'?'-'+m[2]:'');}
 const SHARE_OK=/^https:\/\/((www\.)?(beneficiosmedicare|medicare-california)\.com|([a-z0-9-]+\.)?(beneficiosmedicare|medicare-california)\.pages\.dev)$/;
 function shareOrigin(){
@@ -3094,7 +3137,14 @@ function learnContact(){prog(15);wEvt('form_open',{source:'question'});wb().inne
 // ═══════════════════════════════════════
 //  INIT - Start with ZIP (no home screen!)
 // ═══════════════════════════════════════
-go(startZip);
+/* ── T-078: the widget as the one source of plan data ─────────────────────────────────────────
+   The shared page draws the same figures as the comparison the link came from. Rather than copy
+   the CMS mapping into a second file and let the two drift, the shared page loads this one with
+   ?data=1 in a hidden frame and asks it for the plans by ID. Nothing renders, nothing is reported
+   to GA4, no lead form exists in that mode — it is this file's data layer and nothing else.
+   It answers only the origins already allowed to embed it, both sites and their previews. */
+const _dataOnly=_params.get('data')==='1';
+if(!_dataOnly) go(startZip);
 
 /* T-031: the host page's bottom bar shows one big "Continuar" from question 2 on. The widget tells the page
    which screen it is on (depth 1 = first question) and whether that screen has a next button, and presses
@@ -3124,7 +3174,9 @@ go(startZip);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
   window.addEventListener('message',function(e){
-    if(!HOSTS.test(e.origin)||!e.data) return;
+    /* Our own origin is trusted by definition: the shared page on this site loads this file as
+       its data layer and is served from the same place. Everything else must be on the list. */
+    if((!HOSTS.test(e.origin)&&e.origin!==location.origin)||!e.data) return;
     if(e.data.type==='host-next'){document.body.classList.toggle('host-next',!!e.data.on);return;}
     /* T-084: the page draws the compare bar (phones), so this copy stands down; and its button
        presses ours, so there is one behaviour and not two. */
@@ -3133,6 +3185,16 @@ go(startZip);
       if(st&&(st.mode==='action'||st.mode==='duo')){barAct();}else{goCompare();}return;}
     /* T-078: the page's outline button is Compartir */
     if(e.data.type==='widget-share'){ if(typeof openShare==='function') openShare(); return; }
+    /* T-078: "give me these plans for this ZIP", answered with the same objects the comparison
+       draws from. The reply goes back to the exact window that asked, at its own origin. */
+    if(e.data.type==='widget-plans'){
+      var src=e.source, org=e.origin, q=e.data;
+      Promise.resolve(plansForShare(q.zip,q.ids,q.r)).then(function(r){
+        try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
+          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null},org); }catch(x){}
+      });
+      return;
+    }
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
