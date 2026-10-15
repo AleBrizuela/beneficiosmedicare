@@ -416,6 +416,31 @@ body.in-iframe.has-bar .widget-body{padding-bottom:96px}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
 body.host-cbar .cbar{display:none!important}
+/* ── T-078 (AB 2026-10-15, round 8 final): the share sheet ─────────────────────────────────────
+   Pixel spec: TODO-en-uno-v9 section 3. Five channels, no note box and no name field — people write
+   their own message in WhatsApp. The icons are the shapes a 70-year-old already recognises on their
+   home screen, at the size their thumb expects. */
+.shbg{position:fixed;inset:0;background:rgba(0,20,40,.45);z-index:60}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
+.sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
+.chg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.chb{display:flex;align-items:center;gap:10px;border:1.5px solid #e3e7ea;border-radius:12px;padding:9px 10px;font:inherit;font-size:16px;font-weight:600;color:#1e2a32;min-height:52px;background:#fff;cursor:pointer;text-align:left}
+.chb:last-child:nth-child(odd){grid-column:1/-1;justify-content:center}
+.ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.ci svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ci.wa{background:#25D366}
+.ci.sms{background:linear-gradient(180deg,#5BF675,#0CBD2A)}
+.ci.mail{background:linear-gradient(180deg,#3B9BFF,#1A73E8)}
+.ci.link{background:#8E8E93}
+.ci.pdf{background:#E5252A}
+.shok{margin:10px 0 0;font-size:15px;font-weight:600;color:var(--cbar-brand);text-align:center;min-height:22px}
+/* the widget's own bar, when a screen has two actions (Compartir + Ayúdeme) */
+.cbar.duo{padding:0;border:0;box-shadow:none;background:none;gap:10px;justify-content:stretch}
+.cbar.duo .n{display:none}
+.cbar.duo .sec{flex:0 0 38%;display:flex;align-items:center;justify-content:center;gap:6px;border:2px solid var(--cbar-brand);color:var(--cbar-brand);background:#fff;border-radius:12px;min-height:52px;font:inherit;font-size:16.5px;font-weight:600;cursor:pointer}
+.cbar.duo .sec svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cbar.duo button{flex:1 1 auto;border-radius:12px;min-height:52px;font-size:16.5px}
 /* ── T-096 round 3c (AB 2026-10-15): NUESTRA SUGERENCIA ─────────────────────────────────────────
    Pixel spec: flujo-completo-v14 screen 6. One of the three compared plans is pointed at, with the
    reason in one line, chosen by a fixed rule from the answer the visitor gave — never a score, never
@@ -2316,7 +2341,8 @@ function showMore(){
 }
 // T-084: the bar shows from ONE ticked plan, and Comparar works from one -- it opens that plan
 // next to the next two in the list, exactly as the "Comparar estos 3 planes" button already does.
-function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="cbarTap()">${L('Compare','Comparar')}</button></div>`;}
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button class="sec" id="cbarSec" onclick="barSec()" hidden><svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/></s`+`vg><span id="cbarSecT"></span></button><button id="cbarGo" onclick="cbarTap()">${L('Compare','Comparar')}</button></div>`;}
+function barSec(){ if(_act&&_act.sec) openShare(); }
 function cbarTap(){const st=barState();if(st.mode==='action')barAct();else goCompare();}
 function goCompare(){
   if(!selPlans.length) return;
@@ -2353,7 +2379,8 @@ let _act=null;   // {id,label} — set by the screen that has a main action
 function barState(){
   const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
   // on the comparison the main action is the point of the screen, so it wins over the compare bar
-  if(_act&&(_act.wins||k===0)) return {mode:'action',on:true,label:'',compare:_act.label,canCompare:true,action:_act.id};
+  if(_act&&(_act.wins||k===0)) return {mode:_act.sec?'duo':'action',on:true,label:'',compare:_act.label,
+    secondary:_act.sec||'',canCompare:true,action:_act.id};
   if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,
     label:k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`),
     compare:L('Compare','Comparar'),canCompare:k>=1&&total>=2};
@@ -2378,9 +2405,12 @@ function updBar(msg){
   const b=document.getElementById('cbar'); if(!b) return;
   b.classList.toggle('on',st.on||!!msg);
   b.classList.toggle('solid',st.mode==='action'&&!msg);
+  b.classList.toggle('duo',st.mode==='duo'&&!msg);
   document.getElementById('cbarN').textContent=msg||st.label||'';
+  const sec=document.getElementById('cbarSec'), secT=document.getElementById('cbarSecT');
+  if(sec){ sec.hidden=!(st.mode==='duo'&&st.secondary&&!msg); if(secT) secT.textContent=st.secondary||''; }
   const g=document.getElementById('cbarGo');
-  g.textContent=st.compare; g.disabled=!st.canCompare&&!msg;
+  g.textContent=st.compare; g.hidden=st.mode==='duo'&&!st.compare; g.disabled=!st.canCompare&&!msg;
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2537,6 +2567,90 @@ function sugCard(p,plans){
       <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} <a href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'suggestion'})">${TEL}</a></span></div>
   </div>`;
 }
+/* ── T-078: sharing the comparison ─────────────────────────────────────────────────────────────
+   The link is readable and carries no server state: /opciones/90230/H0504-056/H5496-012/H0523-085
+   on beneficiosmedicare, /options/... on medicare-california, always the SAME domain the visitor is
+   on, never across (CLAUDE.md). The plan IDs in the path are what the shared page draws, so a link
+   can never show plans other than the ones that were on screen. */
+function planIdRaw(p){const m=String(p.id||'').split('_');return m[0]+(m[1]?'-'+m[1]:'')+(m[2]&&m[2]!=='0'?'-'+m[2]:'');}
+const SHARE_OK=/^https:\/\/((www\.)?(beneficiosmedicare|medicare-california)\.com|([a-z0-9-]+\.)?(beneficiosmedicare|medicare-california)\.pages\.dev)$/;
+function shareOrigin(){
+  try{
+    const r=(window.self!==window.top)?document.referrer:location.href;
+    const o=new URL(r).origin;
+    if(SHARE_OK.test(o)) return o;
+  }catch(e){}
+  return leadSite()==='medicare-california'?'https://medicare-california.com':'https://beneficiosmedicare.com';
+}
+function shareURL(){
+  const plans=sharePlans(); if(!plans.length) return '';
+  const word=leadSite()==='medicare-california'?'options':'opciones';
+  const q=[]; if(lang==='en') q.push('lang=en'); if(D.priority) q.push('r='+encodeURIComponent(D.priority));
+  return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
+}
+function sharePlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
+function shareMsg(){
+  const n=sharePlans().length, z=esc(D.zip||''), TEL='(310) 597‑9142';
+  return L(`${n} Medicare options for 2027, ZIP ${z}. Questions: ${TEL}`,
+           `${n} opciones de Medicare 2027 para el ZIP ${z}. Preguntas: ${TEL}`)+'\n\n'+shareURL();
+}
+const SHARE_ICONS={
+  wa:'<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.6 20.4l4.2-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="#fff" stroke-width="1.7"/><path fill="#fff" stroke="none" d="M9.3 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.8c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3-.1.5.6 1 1.4 1.9 2.5 2.4.2.1.4.1.5 0l.7-.8c.1-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.4 0 .5-.2 1.2-.8 1.6-.6.4-1.5.5-3.2-.2-1.9-.8-3.2-2.7-3.4-3-.2-.3-.9-1.3-.9-2.4 0-1.1.5-1.6.7-1.9z"/>',
+  sms:'<path fill="#fff" stroke="none" d="M12 4.6c-4.7 0-8.4 3-8.4 6.7 0 2.2 1.3 4.1 3.3 5.3-.2 1.2-.8 2.3-1.7 3.1 1.8 0 3.4-.7 4.6-1.7.7.1 1.4.2 2.2.2 4.7 0 8.4-3 8.4-6.7S16.7 4.6 12 4.6z"/>',
+  mail:'<rect x="3.5" y="6" width="17" height="12" rx="2" fill="#fff" stroke="none"/><path d="M4.5 7.5l7.5 5.5 7.5-5.5" fill="none" stroke="#1A73E8" stroke-width="1.6"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  pdf:'<path d="M6.5 3h8l4 4v14h-12z" fill="#fff" stroke="none"/><text x="12.5" y="17" font-size="5.6" font-weight="800" text-anchor="middle" fill="#E5252A" stroke="none">PDF</text>'
+};
+function shareChannels(){
+  const wa={k:'whatsapp',ic:'wa',lb:'WhatsApp'};
+  const sm={k:'sms',ic:'sms',lb:L('Text','Texto')};
+  // ES puts WhatsApp first because that is what our people use; EN puts Text first (AB).
+  return (lang==='en'?[sm,wa]:[wa,sm]).concat([
+    {k:'email',ic:'mail',lb:'Email'},
+    {k:'copy', ic:'link',lb:L('Copy link','Copiar enlace')},
+    {k:'pdf',  ic:'pdf', lb:'PDF'}]);
+}
+function openShare(){
+  if(!sharePlans().length) return;
+  wEvt('share_open',{plans:sharePlans().length});
+  const btns=shareChannels().map(c=>
+    `<button class="chb" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`).join('');
+  const el=document.createElement('div');
+  el.id='shwrap';
+  el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
+    <div class="sheet" role="dialog" aria-label="${L('Share options','Compartir opciones')}">
+      <div class="grab"></div><p class="sh">${L('Share options','Compartir opciones')}</p>
+      <div class="chg">${btns}</div><p class="shok" id="shok"></p></div>`;
+  document.body.appendChild(el);
+}
+function closeShare(){const el=document.getElementById('shwrap'); if(el) el.remove();}
+function shareSend(k){
+  const url=shareURL(), msg=shareMsg();
+  wEvt('share_send',{channel:k,plans:sharePlans().length});
+  if(k==='copy'){
+    const ok=()=>{const e=document.getElementById('shok'); if(e) e.textContent=L('Link copied','Enlace copiado');};
+    try{ navigator.clipboard.writeText(url).then(ok,()=>fallbackCopy(url,ok)); }catch(e){ fallbackCopy(url,ok); }
+    return;
+  }
+  if(k==='pdf'){ wEvt('pdf_open',{plans:sharePlans().length}); openTop(url+(url.indexOf('?')<0?'?':'&')+'print=1'); closeShare(); return; }
+  const t=encodeURIComponent(msg);
+  const href=k==='whatsapp'?`https://wa.me/?text=${t}`
+            :k==='sms'?`sms:?&body=${t}`
+            :`mailto:?subject=${encodeURIComponent(L('Medicare options for 2027','Opciones de Medicare 2027'))}&body=${t}`;
+  openTop(href); closeShare();
+}
+// Inside the iframe, window.open can be blocked and a sms:/mailto: has to leave from the PAGE, not
+// from the frame; the page already listens for us, and target=_top is the fallback.
+function openTop(href){
+  try{ if(window.self!==window.top){ window.parent.postMessage({type:'widget-open',href:href},'*'); return; } }catch(e){}
+  const a=document.createElement('a'); a.href=href; a.target='_blank'; a.rel='noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function fallbackCopy(txt,ok){
+  const ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly','');
+  ta.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); ok(); }catch(e){} ta.remove();
+}
 function flowCompare(){
   prog(88); _plansView=true;
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
@@ -2625,7 +2739,8 @@ function flowCompare(){
   const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${sug&&p.id===sug.id?`<span class="sgc">${L('Suggested','Sugerido')}</span>`:''}</th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
-  _act=can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
+  // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
+  _act={id:can?'compare':'',label:can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
   wb().innerHTML=`
     <div class="cmptop">${bk()}<label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
     <p class="diffline" id="diffline" hidden>${L('Only what changes between the 3. What is the same is hidden.','Solo lo que cambia entre los 3. Lo igual está escondido.')}</p>
@@ -3015,7 +3130,9 @@ go(startZip);
        presses ours, so there is one behaviour and not two. */
     if(e.data.type==='host-cbar'){document.body.classList.toggle('host-cbar',!!e.data.on);return;}
     if(e.data.type==='widget-compare'){var st=(typeof barState==='function')?barState():null;
-      if(st&&st.mode==='action'){barAct();}else{goCompare();}return;}
+      if(st&&(st.mode==='action'||st.mode==='duo')){barAct();}else{goCompare();}return;}
+    /* T-078: the page's outline button is Compartir */
+    if(e.data.type==='widget-share'){ if(typeof openShare==='function') openShare(); return; }
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
