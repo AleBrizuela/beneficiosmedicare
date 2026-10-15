@@ -1175,6 +1175,21 @@ function priorityStep(nextFn){
     <p class="q3h">${L('Choose one. You can change it later.','Elija una. Despu\u00E9s puede cambiarlo.')}</p>
     ${cards}
     <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>`;
+  // The ZIP's state arrives with the plan file, which can land after this screen has drawn. Until
+  // it does, mcd() says "Medicaid"; a California visitor must read "Medi-Cal", which is the word the
+  // ticket spells out. So the one option that carries the name is refreshed when the state lands.
+  if(!D.state) fixMcdLabel(0);
+}
+function fixMcdLabel(n){
+  const el=document.getElementById('pri-medicaid'); if(!el) return;
+  if(D.state){
+    const o=PRI_OPTIONS.find(x=>x.id==='medicaid'); if(!o) return;
+    const d=o[lang+'D'];
+    el.querySelector('.q3tx b').innerHTML=o[lang]();
+    el.querySelector('.q3tx span').innerHTML=typeof d==='function'?d():d;
+    return;
+  }
+  if(n<30) setTimeout(()=>fixMcdLabel(n+1),200);
 }
 let _priTimer=null;
 function pickPri(id){
