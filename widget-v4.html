@@ -997,8 +997,42 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-function go(fn){hist.push(fn);_plansView=false;_planScreen=false;_act=null;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
-function back(){if(hist.length>1){hist.pop();_plansView=false;_planScreen=false;_act=null;hist[hist.length-1]();viewMsg();cbarReport();}}
+/* ── T-093 (AB 2026-10-15): "why does the browser back button never work?" ──────────────────────
+   Because the finder never told the browser it had moved. Every screen past the first now adds one
+   history entry, so Back walks the finder one screen at a time and only leaves the page from the
+   first screen. The widget's own "‹ Volver" goes through the same door -- it asks the browser to go
+   back and lets popstate do the rendering -- so the two can never disagree and a tap on Volver
+   cannot leave a stale entry behind that swallows the next Back press.
+   This works inside the iframe as well: an entry an iframe pushes joins the page's own session
+   history, which is what the browser's Back button walks, and pushState with no URL argument
+   changes no address. Where pushState is refused (a sandboxed frame), _hPush stays 0 and Back
+   behaves exactly as it did before this ticket. */
+let _hPush=0, _popping=false, _afterBack=null, _onDetail=false;
+function go(fn){
+  hist.push(fn);_plansView=false;_planScreen=false;_act=null;_onDetail=false;fn();viewMsg();cbarReport();
+  // the first screen gets no entry of its own: Back from there leaves the page, as it should
+  if(hist.length>1){ try{ history.pushState({bmw:hist.length},''); _hPush++; }catch(e){} }
+  if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*');
+}
+function back(){
+  if(hist.length<=1) return;
+  // not already inside a pop, and we have an entry to give back: let the browser drive
+  if(!_popping&&_hPush>0){ history.back(); return; }
+  _doBack();
+}
+function _doBack(){
+  // T-075 + T-093: leaving a plan screen lands on the card it was opened from, whether the visitor
+  // tapped "‹ Volver a los planes" or pressed the browser's own Back button.
+  if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
+  _onDetail=false;
+  hist.pop();_plansView=false;_planScreen=false;_act=null;hist[hist.length-1]();viewMsg();cbarReport();
+  if(_afterBack){const f=_afterBack;_afterBack=null;try{f();}catch(e){}}
+}
+window.addEventListener('popstate',function(){
+  if(_hPush>0) _hPush--;
+  if(hist.length<=1){_afterBack=null;return;}   // nothing of ours left: the browser leaves the page
+  _popping=true; try{ _doBack(); } finally { _popping=false; }
+});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
@@ -1044,8 +1078,8 @@ function zipStep(flowName, msg, fieldId, nextFn, cls=''){
   const _zipEl=document.getElementById(fieldId);
   if(_zipEl){
     _zipEl.focus({preventScroll:true});
-    // If ZIP was pre-filled via URL param, auto-advance
-    if(_zipEl.value.length===5){
+    // If ZIP was pre-filled via URL param, auto-advance -- but only on the way in (T-093)
+    if(_zipAuto&&_zipEl.value.length===5){
       D.zip=_zipEl.value;
       loadPlansForZip(_zipEl.value);
       setTimeout(()=>go(_cb.zip),400);
@@ -1151,7 +1185,15 @@ function pickPri(id){
    under-65 eligibility question, "ya es elegible", "su ventana abre ..." and the reminder sign-up
    -- went with it: every one of them only existed to react to an age we no longer have. We ask on
    the call instead. */
-function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';go(ft_next());return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_next())}
+/* A ZIP arriving in the URL (the home page sends one) skips this screen ONCE, on the way in.
+   T-093: after that it must not, or Back from the question lands here and is thrown straight
+   forward again -- which is exactly why the ZIP screen used to be unreachable by Back. */
+let _zipAuto=true;
+function startZip(){
+  if(_zipAuto&&D.zip&&/^\d{5}$/.test(D.zip)){_zipAuto=false;D.flow='explore';go(ft_next());return;}
+  zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_next());
+  _zipAuto=false;
+}
 /* T-077 (AB 2026-10-15): the health-conditions screen is out, same reason as the doctor screens in
    T-071 - we asked and nothing on the results used the answer. These three return the step that used
    to follow it, so every route that reached *_health now lands there instead. They return the
@@ -1766,7 +1808,10 @@ function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>pl
 // 0.3s when it is -- so the page is not yet tall enough to scroll that far. One message carrying both lets
 // the host grow the frame and scroll in the same breath, and no ordering between the two can race.
 function backToPlans(){
+  _afterBack=_scrollToCard;
   back();
+}
+function _scrollToCard(){
   if(window.self===window.top) return;
   const wrap=document.querySelector('.widget-wrap');
   const card=_lastPlanId?document.querySelector('.pc[data-pid="'+(window.CSS&&CSS.escape?CSS.escape(_lastPlanId):_lastPlanId)+'"]'):null;
@@ -1779,6 +1824,7 @@ function backToPlans(){
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
+  _onDetail=true;     // T-093: the browser's Back from here lands on the card, like "‹ Volver"
   const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
   // with nothing ticked, THIS plan is the main action of this screen
   _act=can?{id:'plan:'+p.id,label:L('Help me choose this plan','Ayúdeme a elegir este plan')}:null;
