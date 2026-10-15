@@ -219,15 +219,34 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-low{margin-top:6px;padding:7px 10px;border-radius:8px;background:#fdecea;color:#a50e0e;font-size:12px;line-height:1.45}
 .pc-cmp{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sage-dark);border:1px solid #e5e9ec;border-radius:999px;padding:0 10px 0 8px;white-space:nowrap;min-height:36px;background:#fff;cursor:pointer;flex:0 0 auto}
 .pc-cmp input{accent-color:var(--sage);width:18px;height:18px;margin:0;cursor:pointer}
-.pc-keys{display:grid;grid-template-columns:repeat(3,1fr);background:#f3f5f7}
+/* T-079: the three cost numbers as one band of tiles under the card header.
+   A FIGURE NEVER BREAKS ACROSS LINES: .v is nowrap, and below 360px (iPhone SE) the value and
+   label step down so "$10,100" still fits one tile. Only word values wrap, at spaces. */
+.pc-keys{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;background:#f3f5f7;border-bottom:1px solid #e5e9ec}
 .pc-keys.k2{grid-template-columns:repeat(2,1fr)}
-.pc-key{padding:12px 6px;text-align:center;border-right:1px solid #e5e9ec;min-width:0}
+/* subgrid so the three labels start on ONE line even when a value wraps to two ("Sin información",
+   a long carrier name). Where subgrid is not supported the tile is a plain 1-column grid and the
+   band falls back to today's top-aligned behaviour -- nothing moves sideways either way. */
+.pc-key{display:grid;grid-template-rows:subgrid;grid-row:span 2;align-content:start;
+  padding:11px 6px 12px;text-align:center;border-right:1px solid #e5e9ec;min-width:0}
 .pc-key:last-child{border-right:0}
-.pc-key .v{font-size:21px;font-weight:800;line-height:1.1;color:#1e2a32;overflow-wrap:anywhere}
+.pc-key .v{align-self:center;font-size:21px;font-weight:800;line-height:1.15;color:#1e2a32;white-space:nowrap}
 .pc-key .v small{font-size:12px;font-weight:600;color:#66727c}
-.pc-key .v.na{font-size:14px;font-weight:600;color:#56616a}
-.pc-key .l{font-size:11.5px;color:#66727c;margin-top:4px;line-height:1.25}
+/* a real answer that is a word, not a figure ("Ninguno", a carrier name): still dark and bold */
+.pc-key .v.word{font-size:15px;font-weight:700;line-height:1.25;white-space:normal;overflow-wrap:break-word;hyphens:none}
+/* CMS published no value: grey and smaller, so it never reads as a number */
+.pc-key .v.na{font-size:13.5px;font-weight:600;color:#56616a;line-height:1.25;white-space:normal;overflow-wrap:break-word;hyphens:none}
+.pc-keys.k2 .v{font-size:16px}
+.pc-keys.k2 .v.word{font-size:13.5px;font-weight:600}
+.pc-key .l{font-size:11.5px;color:#66727c;margin-top:4px;line-height:1.25;hyphens:none;text-wrap:balance}
 .pc-key.zero .v,.pc-visit .v.zero,.pc .zero,.cmp .zero{color:var(--sage-dark)}
+@media(max-width:359px){
+  .pc-key{padding:10px 3px 11px}
+  .pc-key .v{font-size:18px}
+  .pc-keys.k2 .v{font-size:15px}
+  .pc-key .v.word{font-size:14px}
+  .pc-key .l{font-size:11px}
+}
 .pc-sec{padding:14px 14px 4px}
 .pc-sec h5{font-size:13px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;margin:0 0 8px;color:#1e2a32}
 .pc-sec h5 span{text-transform:none;letter-spacing:0;font-weight:600;color:#66727c}
@@ -1800,16 +1819,42 @@ function planDetail(id){
                        :`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}
       ${planFine(p)}</div>`;
 }
+// ── T-079 (AB 2026-10-15): "the better TOP view for the COSTOS information". The three numbers
+// that decide whether a plan is worth opening sit side by side in one band instead of stacked as
+// three labelled rows: same CMS fields, same figures, a third of the height. keyStrip() is the
+// parked build's (cd832f6), adapted to T-073's short card and made to hold at 320px.
+// The period moves from the value into the label ("$0" + "Prima mensual", not "$0/mes"), and the
+// max-out-of-pocket label drops "(en la red)"; the full wording stays on the plan screen.
+// Max out-of-pocket uses NON-BREAKING hyphens (\u2011) in English so it can only break at the
+// space -- "Max out-" / "of-pocket" would break a word, which this project does not do.
+function kTile(v,l,o){
+  o=o||'';
+  return `<div class="pc-key${o==='zero'?' zero':''}"><div class="v${o==='na'||o==='word'?' '+o:''}">${v}</div><div class="l">${l}</div></div>`;
+}
+// A figure, or "Sin información" when CMS published none for this plan. Never blank.
+function kNum(v,l){return v==null?kTile(noInfo(),l,'na'):kTile(v,l,v==='$0'?'zero':'');}
+function keyStrip(p){
+  const isMA=p.cat!=='PDP', drug=p.drug==='Included';
+  return `<div class="pc-keys">`+
+    kNum(p.premium==null?null:premUsd(p.premium),L('Monthly premium','Prima mensual'))+
+    // a drug-only plan has no medical out-of-pocket maximum: CMS publishes none, so neither do we
+    (isMA?kNum(p.moop==null?null:usd(p.moop),L('Max out\u2011of\u2011pocket','Máximo de bolsillo'))
+         :kTile('—',L('Max out\u2011of\u2011pocket','Máximo de bolsillo'),'word'))+
+    (drug?kNum(p.ded==null?null:usd(p.ded),L('Drug deductible','Deducible medicamentos'))
+         :kTile(L('None','Ninguno'),L('Drug deductible','Deducible medicamentos'),'word'))+
+  `</div>`;
+}
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
+  // Two tiles, not three: a supplement has no out-of-pocket maximum and no drug deductible.
   if(p._medigap){
-    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
+    const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
     return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
-      ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost',true)}
+      <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,L('Premium range','Rango de prima'))}${kTile(esc(p.carrier),L('Lowest price from','Precio más bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
   }
   return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
-    ${lsec('cost',L('Costs','Costos'),costRows(p,true),'cost',true)}
+    ${keyStrip(p)}
     ${detBtn(p)}</div>`;
 }
 
