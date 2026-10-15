@@ -24,6 +24,9 @@
   --lt-mint: #E0F2F1; --lt-gray: #F3F5F7;
   --gray: #5A6577; --dark: #1C2B3A; --white: #FFFFFF;
   --sage: #00897B; --sage-dark: #00796B; --slate: #3D5A80;
+  /* T-084: the compare bar's own pair, so it is #007B7B / navy on beneficiosmedicare and the
+     California blue on medicare-california, without inheriting --sage's retired teal. */
+  --cbar-brand: #007B7B; --cbar-ink: #002147;
   --radius: 12px;
   --shadow: 0 4px 24px rgba(30,58,95,0.10);
   --shadow-lg: 0 8px 40px rgba(30,58,95,0.14);
@@ -334,11 +337,21 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmpall svg{width:18px;height:18px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round}
 .showmore{display:block;width:100%;text-align:center;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:12px;font-weight:700;color:#1e2a32;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:6px}
 .showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
-.cbar{position:sticky;bottom:12px;margin-top:12px;background:#1e2a32;color:#fff;border-radius:14px;padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:5}
+/* ── T-084: the compare bar is white and on brand. It was #1e2a32, which reads as black and is
+   not in either palette. Its colours come from --cbar-brand / --cbar-ink, not from
+   var(--sage) / var(--navy), which in THIS file still resolve to the retired Material teal
+   #00897B and to #1E3A5F. That pair is themed, so the bar matches whichever site asked for the
+   widget -- #007B7B / #002147 on beneficiosmedicare, the California blue on medicare-california
+   -- which is also what the host's own copy of the bar uses.
+   Inside a home page the HOST draws it instead (only the host can fix anything to the bottom of
+   the SCREEN: this iframe has no scrollport, it grows to fit and the PAGE scrolls, so position:
+   sticky has nothing to stick to) and this copy hides itself on host-cbar. Never one of each. ── */
+.cbar{position:sticky;bottom:12px;margin-top:12px;background:#fff;color:var(--cbar-ink);border:2px solid var(--cbar-brand);border-radius:14px;padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(16,24,40,.16);z-index:5}
 .cbar.on{display:flex}
-.cbar .n{font-size:14px;font-weight:600}
-.cbar button{background:var(--sage);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer;min-height:40px;flex:0 0 auto}
+.cbar .n{font-size:14px;font-weight:700;color:var(--cbar-ink)}
+.cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:800;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
+body.host-cbar .cbar{display:none!important}
 .cmp{border:1px solid #e5e9ec;border-radius:16px;overflow:hidden;margin-bottom:12px;text-align:left}
 .cmp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
 .cmp th,.cmp td{padding:8px 5px;border-bottom:1px solid #e5e9ec;text-align:center;vertical-align:top;overflow-wrap:break-word;hyphens:auto}
@@ -595,6 +608,8 @@ const THEMES = {
     '--green':     '#0068B0',
     '--blue':      '#3D9BE9',
     '--lt-blue':   '#E8F2FC',
+    '--cbar-brand':'#0080D4',
+    '--cbar-ink':  '#0B2D4F',
   }
 };
 const _theme = _params.get('theme') || 'default';
@@ -917,8 +932,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ── NAV ──
-function go(fn){hist.push(fn);_plansView=false;fn();viewMsg();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
-function back(){if(hist.length>1){hist.pop();_plansView=false;hist[hist.length-1]();viewMsg();}}
+function go(fn){hist.push(fn);_plansView=false;_planScreen=false;fn();viewMsg();cbarReport();if(window.self!==window.top)window.parent.postMessage({type:'widget-scrolltop'},'*')}
+function back(){if(hist.length>1){hist.pop();_plansView=false;_planScreen=false;hist[hist.length-1]();viewMsg();cbarReport();}}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const btn=document.querySelector('.btn-p:not(:disabled)');if(btn&&!e.target.matches('textarea')){e.preventDefault();btn.click();}}});
 function prog(p){document.getElementById('progress').style.width=p+'%'}
 const wb=()=>document.getElementById('wb');
@@ -1799,6 +1814,7 @@ function backToPlans(){
 }
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
+  _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
   const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
   let body,gap=false;
   if(p._medigap){
@@ -2082,13 +2098,44 @@ function showMore(){
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
   if(m) m.innerHTML=moreBtn(list.length);
 }
-function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="go(flowCompare)">${L('Compare','Comparar')}</button></div>`;}
+// T-084: the bar shows from ONE ticked plan, and Comparar works from one -- it opens that plan
+// next to the next two in the list, exactly as the "Comparar estos 3 planes" button already does.
+function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button id="cbarGo" onclick="goCompare()">${L('Compare','Comparar')}</button></div>`;}
+function goCompare(){
+  if(!selPlans.length) return;
+  const picked=selPlans.length;
+  if(selPlans.length===1){
+    const rest=orderedPlans().filter(p=>!p._medigap&&p.id!==selPlans[0]).slice(0,2).map(p=>p.id);
+    selPlans=selPlans.concat(rest);
+  }
+  if(selPlans.length<2) return;   // a county with a single plan: nothing to compare it against
+  // nothing reported opening the comparison before T-084, so "Comparar taps up" had nothing to read
+  wEvt('compare_open',{plans:selPlans.length,picked:picked});
+  go(flowCompare);
+}
+// Which screens the bar belongs on: the plan list and a single plan's own screen. Not the
+// questions, not the comparison it opens, and never the lead form, where a bar fixed to the
+// bottom of the screen would sit over Enviar and its consent line.
+let _planScreen=false;
+// What the host page needs to draw the same bar fixed to the bottom of the SCREEN. The label and
+// the button's word travel with it, so the host never needs its own copy of either language.
+let _cbarLast='';
+function cbarReport(){
+  if(window.self===window.top) return;
+  const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
+  const st={type:'widget-cbar',on:k>0&&_planScreen,n:k,
+    label:k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`),
+    compare:L('Compare','Comparar'),canCompare:k>=1&&total>=2};
+  const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
+  window.parent.postMessage(st,'*');
+}
 function updBar(msg){
+  cbarReport();
   const b=document.getElementById('cbar'); if(!b) return;
   const k=selPlans.length;
   b.classList.toggle('on',k>0||!!msg);
-  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected · choose up to 3','1 plan elegido · elija hasta 3'):L(`${k} plans selected`,`${k} planes elegidos`));
-  document.getElementById('cbarGo').disabled=k<2;
+  document.getElementById('cbarN').textContent=msg||(k===1?L('1 plan selected','1 plan elegido'):L(`${k} plans selected`,`${k} planes elegidos`));
+  document.getElementById('cbarGo').disabled=k<1;
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2153,6 +2200,7 @@ async function flowResults(){
     ${teamCard()}
     ${cbarHTML()}
     ${provenanceHTML()}`;
+  _planScreen=true;
   updBar();
   viewMsg();
   if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
@@ -2623,6 +2671,10 @@ go(startZip);
   window.addEventListener('message',function(e){
     if(!HOSTS.test(e.origin)||!e.data) return;
     if(e.data.type==='host-next'){document.body.classList.toggle('host-next',!!e.data.on);return;}
+    /* T-084: the page draws the compare bar (phones), so this copy stands down; and its button
+       presses ours, so there is one behaviour and not two. */
+    if(e.data.type==='host-cbar'){document.body.classList.toggle('host-cbar',!!e.data.on);return;}
+    if(e.data.type==='widget-compare'){goCompare();return;}
     if(e.data.type!=='widget-next') return;
     var b=primary(); if(b&&!b.disabled) b.click();
   });
