@@ -260,9 +260,11 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
 .pc-chips .c.off b{color:#a3adb5}
 .pc details{border-top:1px solid #e5e9ec;margin-top:10px}
-.pc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:14.5px;font-weight:700;color:var(--sage-dark);display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px}
+.pc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:15px;font-weight:600;color:#36505c;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px}
+.pc details.pc-all>summary{background:#fff}
+.pc details.pc-all[open]>summary{border-bottom:1px solid #e5e9ec}
 .pc summary::-webkit-details-marker{display:none}
-.pc summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid var(--sage-dark);border-bottom:2px solid var(--sage-dark);transform:rotate(45deg);margin-top:-4px}
+.pc summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid #8a97a1;border-bottom:2px solid #8a97a1;transform:rotate(45deg);margin-top:-4px}
 .pc details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .pc-ben{list-style:none;margin:0;padding:0}
 .pc-ben li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid #e5e9ec}
@@ -454,6 +456,7 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .pc .nod{font-size:14px;color:#56616a;margin:4px 0 8px;line-height:1.4}
 .pc details{margin-top:6px}
 .pc summary{justify-content:center}
+  .pc details.pc-all>summary{justify-content:space-between}
 /* T-052: "Ver todos los beneficios" groups, each closed to its title until tapped */
 .pc details.grp{margin:0;border-top:1px solid #e5e9ec}
 .pc details.grp>summary{justify-content:space-between;font-size:15px;font-weight:700;color:#1e2a32;padding:12px 14px;min-height:48px}
@@ -1942,8 +1945,8 @@ function planCard(p,selectable){
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
     ${keyStrip(p,isMA,drug)}
-    <details class="pc-all" ontoggle="togAll(this)"><summary>${PCALL()[0]}</summary>${body}${more}</details>
-    <div class="pc-foot">${planAction(p)}</div></div>`;
+    <details class="pc-all" ontoggle="togAll(this)"><summary>${PCALL()[0]}</summary>${body}${more}
+      <div class="pc-foot">${planAction(p)}</div></details></div>`;
 }
 // AB 2026-10-14: "i am still NOT seeing the SUMMARY CARDS with KEY info at top". The three numbers
 // that decide whether a plan is worth opening at all; everything else is one tap away and unchanged
