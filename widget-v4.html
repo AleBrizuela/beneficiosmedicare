@@ -1633,8 +1633,13 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
 // ── T-073 (AB 2026-10-14): the card is short — who it is, what it costs, one button.
 // Everything else moved to the plan's own screen, so the list is scannable and each plan
 // gets exactly one ask instead of seventy cards each carrying their own.
-function planHead(p,selectable){
-  return `<div class="pc-head${selectable?'':' pd-head'}">
+/* T-089 (AB 2026-10-15): the Comparar box is on the plan screen too, in the same place in the same
+   header, so a plan can be added to the comparison where it is being read instead of going back to
+   find its card. One list, selPlans, so a tick here is a tick on the card and the other way round,
+   and the same "up to 3" message appears on either screen. `detail` keeps the plan screen's own
+   header spacing; it no longer doubles as "this header has no checkbox". */
+function planHead(p,selectable,detail){
+  return `<div class="pc-head${detail?' pd-head':''}">
       <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(p.carrier)}</p>`}<p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
@@ -1760,13 +1765,15 @@ function planDetail(id){
     body=costBlock(p)+d.html;
   }
   wb().innerHTML=`<button class="btn-back" onclick="backToPlans()">${t('back')}</button>
-    <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,false)}
+    <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,true,true)}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${body}
       ${can?`<button class="pd-cta" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose this plan','Ayúdeme a elegir este plan')}</button>`
            :(p.sanction?`<p class="plan-flag warn">${L('CMS sanction, see','Sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`
                        :`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}
-      ${planFine(p)}</div>`;
+      ${planFine(p)}</div>
+    ${cbarHTML()}`;
+  updBar();
 }
 // ── T-079 (AB 2026-10-15): "the better TOP view for the COSTOS information". The three numbers
 // that decide whether a plan is worth opening sit side by side in one band instead of stacked as
