@@ -416,6 +416,26 @@ body.in-iframe.has-bar .widget-body{padding-bottom:96px}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
 body.host-cbar .cbar{display:none!important}
+/* ── T-096 round 3c (AB 2026-10-15): NUESTRA SUGERENCIA ─────────────────────────────────────────
+   Pixel spec: flujo-completo-v14 screen 6. One of the three compared plans is pointed at, with the
+   reason in one line, chosen by a fixed rule from the answer the visitor gave — never a score, never
+   "el mejor". The point of the card is the line under it: the two things CMS cannot tell us, their
+   doctors and their medicines, are the reason to call. */
+.sug{background:#E0F2F1;border-radius:12px;padding:12px 14px;margin:0 0 10px;text-align:left}
+.sug .ey{font-size:12px;letter-spacing:.12em;font-weight:700;color:var(--cbar-brand);text-transform:uppercase;margin:0}
+.sug .sp{font-size:18px;font-weight:700;color:var(--cbar-ink);margin:3px 0;display:flex;align-items:center;gap:8px}
+.sug .sp i{width:5px;height:20px;border-radius:3px;background:var(--sc,#2e8b57);display:inline-block;flex:0 0 auto}
+.sug .why{font-size:15px;font-weight:400;color:#1A202C;line-height:1.42;margin:0}
+.sug .conf{display:flex;gap:10px;align-items:flex-start;border-top:1px solid #B2DFDB;margin-top:10px;padding-top:10px;font-size:15px;font-weight:400;color:var(--cbar-ink);line-height:1.42}
+.sug .ci2{display:flex;gap:4px;flex:0 0 auto}
+.sug .ci2 span{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.sug .ci2 svg{width:17px;height:17px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sug .conf a{color:var(--cbar-brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.sgc{display:inline-block;margin-top:5px;background:var(--cbar-brand);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px}
+.cmp.s1 thead th:nth-child(1),.cmp.s1 tr.vr td:nth-child(1),
+.cmp.s2 thead th:nth-child(2),.cmp.s2 tr.vr td:nth-child(2),
+.cmp.s3 thead th:nth-child(3),.cmp.s3 tr.vr td:nth-child(3){background:#F3FAF9}
+.cmp.diff .sug{display:none}
 /* ── T-085 round 2 (AB 2026-10-15, "these are old people") ──────────────────────────────────────
    Pixel spec: 2026-10-15_1430_comparar-diferencias-v5 + flujo-completo-v11 screen 6.
    The label is a full-width line and the three values are the line under it, in equal thirds, at
@@ -2463,6 +2483,60 @@ function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 
 // ── COMPARE (b9): up to 3 plans, same group order as the card, label column + plan columns,
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
+/* ── T-096 round 3c: which of the compared plans we point at, and why ──────────────────────────
+   Deterministic, from the one answer the visitor gave, and only ever among the two or three plans
+   already on this screen. It is not a score and not a ranking of the county: the same three plans
+   with the same answer always produce the same line, and the line only repeats figures that are in
+   the table underneath it. PROTECT 2026-10-02 drew the boundary this stays inside: no plan is
+   called best or recommended, and the reason to call is the part CMS cannot answer.
+   AB 2026-10-15 wrote the rule itself; it is transcribed here, not invented. */
+const SUG_SHORT={cost:()=>L('$0 premium','$0 de prima'),doctors:()=>L('keeping your doctors','seguir con sus médicos'),
+  drugs:()=>L('your medicines','sus medicamentos'),benefits:()=>L('dental, vision and hearing','dental, vista y audición'),
+  medicaid:()=>mcd()};
+const _st=p=>p.rating==null?-1:p.rating;
+const _mo=p=>p.moop==null?Infinity:p.moop;
+const _dd=p=>(p.drug!=='Included'||p.ded==null)?Infinity:p.ded;
+const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
+function suggestPlan(plans){
+  if(plans.length<2) return null;
+  const by=(...fs)=>[...plans].sort((a,b)=>{for(const f of fs){const d=f(a)-f(b);if(d)return d;}return 0;})[0];
+  const pr=D.priority||'';
+  if(pr==='drugs')        return by(_dd,p=>-_st(p),_mo);
+  if(pr==='benefits')     return by(p=>-_dent(p),p=>-_st(p),_mo);
+  if(pr==='doctors')      return by(_NETRANK,p=>-_st(p),_mo);
+  if(pr==='medicaid')     return by(p=>isDual(p)?0:1,p=>-_st(p),_mo);
+  return by(p=>-_st(p),p=>_mo(p)+_dd(p));      // $0 de prima, and Sin preferencia
+}
+// Up to three things this plan does that NO other plan on the screen matches. Every one of them is
+// a figure the visitor can find in the table below; if there are none, the card says nothing extra.
+function sugWhy(p,plans){
+  const others=plans.filter(x=>x.id!==p.id), out=[];
+  const beatsLow=(f)=>others.every(o=>f(o)>f(p));
+  const beatsHigh=(f)=>others.every(o=>f(o)<f(p));
+  if(p.premium===0&&others.some(o=>o.premium>0)) out.push(L('a $0 monthly premium','prima mensual de $0'));
+  if(_dd(p)===0&&others.some(o=>_dd(o)>0)) out.push(L('a $0 drug deductible','$0 de deducible de medicamentos'));
+  else if(beatsLow(_dd)&&_dd(p)!==Infinity) out.push(L(`the lowest drug deductible (${usd(p.ded)})`,`el deducible de medicamentos más bajo (${usd(p.ded)})`));
+  if(p.gb&&others.every(o=>!o.gb||o.gb<p.gb)) out.push(L(`${usd(p.gb)} a month back on Part B`,`${usd(p.gb)} al mes de vuelta en la Parte B`));
+  if(beatsLow(_mo)&&_mo(p)!==Infinity) out.push(L(`the lowest out-of-pocket maximum (${usd(p.moop)})`,`el máximo de bolsillo más bajo (${usd(p.moop)})`));
+  if(beatsHigh(_dent)&&_dentAmt(p)!=null) out.push(L(`dental up to ${usd(_dentAmt(p))}`,`dental hasta ${usd(_dentAmt(p))}`));
+  if(beatsHigh(_st)&&p.rating!=null) out.push(L(`${p.rating} of 5 stars from CMS`,`${p.rating} de 5 estrellas de CMS`));
+  if(/PPO/.test(String(p.type||''))&&others.every(o=>!/PPO/.test(String(o.type||'')))) out.push(L('more freedom to choose a doctor','más libertad para elegir médico'));
+  return out.slice(0,3);
+}
+function sugCard(p,plans){
+  const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
+  const why=sugWhy(p,plans);
+  const lead=sh?L(`For ${sh}:`,`Para ${sh}:`):L('Among these plans:','Entre estos planes:');
+  const line=why.length?`${lead} ${andList(why)}.`:'';
+  const TEL='(310) 597\u20119142';
+  return `<div class="sug" style="--sc:${carrierColor(p)}">
+    <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
+    <p class="sp"><i></i>${esc(cmpName(p))}</p>
+    ${line?`<p class="why">${line}</p>`:''}
+    <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
+      <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} <a href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'suggestion'})">${TEL}</a></span></div>
+  </div>`;
+}
 function flowCompare(){
   prog(88); _plansView=true;
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
@@ -2547,7 +2621,8 @@ function flowCompare(){
   }).join('');
   /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
      three, and the name block reserves two lines so the type · ID line and the stars line up too. */
-  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span></th>`).join('')}</tr>`;
+  const sug=suggestPlan(plans), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
+  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${esc(p.type)} · ${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${sug&&p.id===sug.id?`<span class="sgc">${L('Suggested','Sugerido')}</span>`:''}</th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   _act=can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
@@ -2555,7 +2630,8 @@ function flowCompare(){
     <div class="cmptop">${bk()}<label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
     <p class="diffline" id="diffline" hidden>${L('Only what changes between the 3. What is the same is hidden.','Solo lo que cambia entre los 3. Lo igual está escondido.')}</p>
     ${unlicensedNote()}
-    <div class="cmp" id="cmp">
+    <div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
+      ${sug?sugCard(sug,plans):''}
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`}
     </div>
