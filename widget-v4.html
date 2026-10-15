@@ -464,7 +464,12 @@ body.host-cbar .cbar{display:none!important}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
 .sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
-.chg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.chg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+/* round 10: the first channel is the whole width, in its own colour, with a bigger label */
+.chb.lead{width:100%;justify-content:center;gap:12px;min-height:60px;font-size:18px;color:#fff;border:0;margin-top:6px}
+.chb.lead .ci{background:rgba(255,255,255,.22)}
+.chb.lead.wa{background:#25D366}
+.chb.lead.sms{background:linear-gradient(180deg,#5BF675,#0CBD2A)}
 .chb{display:flex;align-items:center;gap:10px;border:1.5px solid #e3e7ea;border-radius:12px;padding:9px 10px;font:inherit;font-size:16px;font-weight:600;color:#1e2a32;min-height:52px;background:#fff;cursor:pointer;text-align:left}
 .chb:last-child:nth-child(odd){grid-column:1/-1;justify-content:center}
 .ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
@@ -2723,10 +2728,13 @@ const SHARE_ICONS={
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   pdf:'<path d="M6.5 3h8l4 4v14h-12z" fill="#fff" stroke="none"/><text x="12.5" y="17" font-size="5.6" font-weight="800" text-anchor="middle" fill="#E5252A" stroke="none">PDF</text>'
 };
+/* T-078 round 10 (AB 2026-10-15 23:50): the one people actually use is a full-width tile in its
+   own colour, and the other four sit under it two by two. Spanish leads with WhatsApp, English with
+   the texting app, because that is what each audience reaches for. "Copiar enlace" stays in
+   Spanish — it is the wording the iPhone and WhatsApp themselves use, so it matches their phone. */
 function shareChannels(){
   const wa={k:'whatsapp',ic:'wa',lb:'WhatsApp'};
   const sm={k:'sms',ic:'sms',lb:L('Text','Texto')};
-  // ES puts WhatsApp first because that is what our people use; EN puts Text first (AB).
   return (lang==='en'?[sm,wa]:[wa,sm]).concat([
     {k:'email',ic:'mail',lb:'Email'},
     {k:'copy', ic:'link',lb:L('Copy link','Copiar enlace')},
@@ -2735,14 +2743,15 @@ function shareChannels(){
 function openShare(){
   if(!sharePlans().length) return;
   wEvt('share_open',{plans:sharePlans().length});
-  const btns=shareChannels().map(c=>
-    `<button class="chb" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`).join('');
+  const ch=shareChannels();
+  const btn=(c,first)=>`<button class="chb${first?' lead '+c.ic:''}" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
+  const btns=btn(ch[0],true)+`<div class="chg">`+ch.slice(1).map(c=>btn(c,false)).join('')+`</div>`;
   const el=document.createElement('div');
   el.id='shwrap';
   el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
     <div class="sheet" role="dialog" aria-label="${L('Share options','Compartir opciones')}">
       <div class="grab"></div><p class="sh">${L('Share options','Compartir opciones')}</p>
-      <div class="chg">${btns}</div><p class="shok" id="shok"></p></div>`;
+      ${btns}<p class="shok" id="shok"></p></div>`;
   document.body.appendChild(el);
 }
 function closeShare(){const el=document.getElementById('shwrap'); if(el) el.remove();}
