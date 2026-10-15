@@ -2722,25 +2722,36 @@ function win1252(s){const M={'‘':145,'’':146,'“':147,'”':148,'–':150,'
 function pesc(s){return win1252(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');}
 function hx(c){const n=parseInt(String(c).slice(1),16);return [((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255].map(x=>x.toFixed(3)).join(' ');}
 function PDFPage(W,H){
-  const ops=[]; const Y=y=>(H-y).toFixed(2);
+  const ops=[], lk=[]; const Y=y=>(H-y).toFixed(2);
   return {
     rect:(x,y,w,h,col)=>ops.push(`${hx(col)} rg ${x.toFixed(2)} ${(H-y-h).toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re f`),
+    frame:(x,y,w,h,col,lw)=>ops.push(`${hx(col)} RG ${(lw||1).toFixed(2)} w ${x.toFixed(2)} ${(H-y-h).toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re S`),
     line:(x1,y1,x2,y2,col,lw)=>ops.push(`${hx(col)} RG ${(lw||.6).toFixed(2)} w ${x1.toFixed(2)} ${Y(y1)} m ${x2.toFixed(2)} ${Y(y2)} l S`),
     text:(x,y,s,size,bold,col,align,boxW)=>{let xx=x;
       if(align==='r') xx=x-tw(s,size,bold);
       else if(align==='c') xx=x+((boxW||0)-tw(s,size,bold))/2;
       ops.push(`BT ${hx(col||'#000000')} rg /${bold?'FB':'FR'} ${size} Tf ${xx.toFixed(2)} ${Y(y)} Td (${pesc(s)}) Tj ET`);},
+    // AB's own template PDF is tappable; so is this one. Phone, text, WhatsApp, email and the site.
+    // WinAnsiEncoding has no star glyph, so the star is drawn, not typed.
+    star:(cx,cy,r,col)=>{const pt=[];
+      for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5, rr=i%2?r*0.42:r;
+        pt.push([(cx+rr*Math.cos(a)).toFixed(2),(H-(cy+rr*Math.sin(a))).toFixed(2)]);}
+      ops.push(`${hx(col)} rg ${pt[0][0]} ${pt[0][1]} m `+pt.slice(1).map(q=>q[0]+' '+q[1]+' l').join(' ')+' h f');},
+    link:(x,y,w,h,url)=>lk.push({x:x,y:H-y-h,w:w,h:h,url:url}),
+    links:()=>lk,
     build:()=>ops.join('\n')
   };
 }
-function pdfBlob(W,H,content){
+function pdfBlob(W,H,content,links){
   const objs=[];
   objs[1]='<< /Type /Catalog /Pages 2 0 R >>';
   objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
-  objs[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /FR 5 0 R /FB 6 0 R >> >> /Contents 4 0 R >>`;
+  const first=7, an=(links||[]).map((_,i)=>`${first+i} 0 R`).join(' ');
+  objs[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /FR 5 0 R /FB 6 0 R >> >> /Contents 4 0 R${an?' /Annots ['+an+']':''} >>`;
   objs[4]=`<< /Length ${content.length} >>\nstream\n${content}\nendstream`;
   objs[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
   objs[6]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  (links||[]).forEach((l,i)=>{objs[first+i]=`<< /Type /Annot /Subtype /Link /Rect [${l.x.toFixed(2)} ${l.y.toFixed(2)} ${(l.x+l.w).toFixed(2)} ${(l.y+l.h).toFixed(2)}] /Border [0 0 0] /A << /S /URI /URI (${pesc(l.url)}) >> >>`;});
   let out='%PDF-1.4\n', off=[];
   for(let i=1;i<objs.length;i++){off[i]=out.length;out+=`${i} 0 obj\n${objs[i]}\nendobj\n`;}
   const xref=out.length;
@@ -2749,103 +2760,233 @@ function pdfBlob(W,H,content){
   out+=`trailer\n<< /Size ${objs.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
   return new Blob([Uint8Array.from(out,c=>c.charCodeAt(0)&255)],{type:'application/pdf'});
 }
-function pdfRows(plans){
-  const r=[];
+// ── text fitting: wrap by width, never cut a plan name, never leave a widow ──
+function wrapLines(s,maxW,size,bold){
+  const words=String(s==null?'':s).split(/\s+/).filter(Boolean); const out=[]; let line='';
+  words.forEach(w=>{const n=line?line+' '+w:w; if(tw(n,size,bold)<=maxW||!line) line=n; else {out.push(line);line=w;}});
+  if(line) out.push(line);
+  return out.length?out:[''];
+}
+// AB: "i hate widows". A last line that is one short word pulls a word down from the line above.
+function noWidow(l,size,bold){
+  if(l.length<2) return l;
+  const last=l[l.length-1];
+  if(last.indexOf(' ')<0 && tw(last,size,bold)<40){
+    const prev=l[l.length-2].split(' ');
+    if(prev.length>1){const moved=prev.pop(); l[l.length-2]=prev.join(' '); l[l.length-1]=moved+' '+last;}
+  }
+  return l;
+}
+function wrapCap(s,maxW,size,bold,maxLines){
+  const l=wrapLines(s,maxW,size,bold);
+  if(l.length<=maxLines) return noWidow(l,size,bold);
+  const keep=l.slice(0,maxLines-1);
+  keep.push(fit(l.slice(maxLines-1).join(' '),maxW,size,bold));
+  return keep;
+}
+// The two numbers that differ most across the compared plans, in dollars. A fact, never a
+// recommendation: PROTECT's rule is that nothing on this sheet may read as "best" or "suggested",
+// which is why the template's "Sugerido para usted" strip is NOT reproduced here (T-056 round 6).
+function pdfInsight(plans){
+  const out=[];
+  [[L('Premium a year','Prima al año'),p=>p.premium==null?null:Math.round(p.premium*12)],
+   [L('Yearly max out-of-pocket','Máximo de gastos al año'),p=>p.moop],
+   [L('Drug deductible','Deducible de medicinas'),p=>p.drug==='Included'?p.ded:null]].forEach(([lab,f])=>{
+    const vs=plans.map(f).filter(v=>typeof v==='number');
+    if(vs.length<2) return;
+    const lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
+    if(hi>lo) out.push({lab:lab,d:hi-lo,t:lab+' '+usd(lo)+L(' to ',' a ')+usd(hi)});
+  });
+  out.sort((a,b)=>b.d-a.d);
+  return out.slice(0,2).map(o=>o.t).join('   ·   ');
+}
+// The rows, in the template's groups. "keep" rows stay in the table even when every plan matches.
+function pdfSheet(plans){
+  const R=[], grp=t=>R.push({g:t});
+  const row=(lab,cells,opt)=>R.push(Object.assign({lab:lab,cells:cells},opt||{}));
   const txt=v=>v==null?noInfo():(v.t!==undefined?String(v.t).replace(/<[^>]+>/g,''):String(v));
-  r.push([L('Monthly premium','Prima mensual'),plans.map(p=>premUsd(p.premium)==null?noInfo():premUsd(p.premium))]);
-  r.push([L('Max out-of-pocket','Máximo de bolsillo'),plans.map(p=>p.moop==null?noInfo():usd(p.moop))]);
-  r.push([L('Drug deductible','Deducible de medicamentos'),plans.map(p=>p.drug==='Included'?(p.ded==null?noInfo():usd(p.ded)):L('No drug coverage','Sin medicamentos'))]);
-  r.push([L('Primary doctor','Médico primario'),plans.map(p=>money(p.pcp)||noInfo())]);
-  r.push([L('Specialist','Especialista'),plans.map(p=>money(p.spec)||noInfo())]);
-  r.push([L('Emergency room','Emergencias'),plans.map(p=>money(p.er)||noInfo())]);
-  r.push(['Dental',plans.map(p=>txt(dentalB(p,true)))]);
-  r.push([L('Eyewear','Anteojos'),plans.map(p=>txt(visionB(p,true)))]);
-  r.push([L('Hearing aids','Audífonos'),plans.map(p=>txt(hearingB(p,true)))]);
-  r.push(['OTC',plans.map(p=>txt(otcB(p,true)))]);
-  r.push([L('Your doctors and hospital','Sus médicos y hospital'),plans.map(()=>L('We check them for you','Lo revisamos por usted'))]);
-  if(plans.some(p=>typeof p.rating==='number'&&p.rating>0))
-    r.push([L('Overall star rating','Estrellas (general)'),plans.map(p=>
-      (typeof p.rating==='number'&&p.rating>0)?String(p.rating).replace(/\.0$/,'')+' / 5'
-        :L('Not rated yet','Sin calificación todavía'))]);
-  return r;
+  const ma=p=>p.cat!=='PDP';
+  if(plans.some(p=>p.rating!=null||p.ratingNA))
+    row(L('Star rating '+planYear(),'Estrellas Medicare '+planYear()),
+      plans.map(p=>(typeof p.rating==='number'&&p.rating>0)
+        ? String(p.rating).replace(/\.0$/,'')+L(' of 5',' de 5')
+        : L('Not rated yet','Aún sin calificación')),{keep:true,stars:true});
+  grp(L('COSTS','COSTOS'));
+  row(L('Monthly premium','Prima mensual'),plans.map(p=>premUsd(p.premium)==null?noInfo():premUsd(p.premium)),{keep:true,big:true});
+  if(plans.some(ma)) row(L('Part B giveback (if any)','Devolución Parte B (si hay)'),plans.map(p=>ma(p)?txt(gbV(p.gb)):'–'));
+  row(L('Yearly max out-of-pocket','Máximo de gastos al año'),plans.map(p=>p.moop==null?noInfo():usd(p.moop)),{keep:true,big:true});
+  row(L('Doctor / specialist','Médico / especialista'),plans.map(p=>(money(p.pcp)||noInfo())+' / '+(money(p.spec)||noInfo())));
+  row(L('Hospital stay','Hospital'),plans.map(p=>{const t=hospText(p.hosp,true);return t==null?noInfo():String(t).replace(/<[^>]+>/g,'');}));
+  row(L('Emergency room','Sala de emergencias'),plans.map(p=>money(p.er)||noInfo()));
+  grp(L('YOUR DOCTOR AND HOSPITAL','SU MÉDICO Y HOSPITAL'));
+  // said ONCE, across all the columns, not repeated per plan (T-056 round 6 point 4)
+  R.push({full:L('We check your doctors and your hospital against each plan, one by one.',
+                 'Revisamos sus médicos y su hospital en cada plan, uno por uno.')});
+  grp(L('DRUGS (PART D)','MEDICINAS (PARTE D)'));
+  row(L('Covers drugs?','¿Cubre medicinas?'),plans.map(p=>p.drug==='Included'?L('Yes','Sí'):L('No','No')));
+  row(L('Drug deductible','Deducible de medicinas'),plans.map(p=>p.drug==='Included'?(p.ded==null?noInfo():usd(p.ded)):L('No drug coverage','Sin medicamentos')));
+  grp('EXTRAS');
+  row('Dental',plans.map(p=>txt(dentalB(p,true))));
+  row(L('Hearing aids','Audífonos'),plans.map(p=>txt(hearingB(p,true))));
+  row(L('Eyewear','Anteojos'),plans.map(p=>txt(visionB(p,true))));
+  row('OTC',plans.map(p=>txt(otcB(p,true))));
+  return R;
 }
 function makeSharePDF(){
   const plans=comparedPlans(); if(!plans.length) return;
   wEvt('pdf_open',{from:'share'});
-  const W=792,H=612,M=34,g=PDFPage(W,H);
-  const NAVY='#1E3A5F', TEAL='#00796B', GREY='#5F6B75', LINE='#D8DEE4', GOLD='#B7791F', DARK='#1C2B3A';
+  const mc=leadSite()==='medicare-california';
+  const W=792,H=612,M=28,g=PDFPage(W,H);
+  const BAND=mc?'#0071BC':'#005C5C', ACC=mc?'#0080D4':'#007B7B',
+        INK='#1E2A3B', GREY='#6B7684', SOFT='#8A94A1', LINE='#E1E6EC', BAR='#EEF3F9',
+        BORD='#C9D1DA', GOLD='#FFD54F', NAVY='#0B1F44', OK='#1F7A3A';
   const note=shareNote();
-  const today=new Date().toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'});
-  // The CMS source line the build writes is in English; on a Spanish sheet we print its date.
+  const today=new Date();
+  const fdate=d=>d.toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'});
+  // One date story (T-056 round 6 point 7): the CMS file date and the print date, said the same
+  // way in the band and in the fine print.
   const sm=/(\d{2})\/(\d{2})\/(\d{4})/.exec((_planMeta&&_planMeta.source)||'');
-  const dstamp=sm?new Date(sm[3]+'-'+sm[1]+'-'+sm[2]+'T12:00:00').toLocaleDateString(lang==='en'?'en-US':'es-US',{year:'numeric',month:'long',day:'numeric'}):'';
-  // band: the advisor sits top right, as on the client sheet
-  g.rect(0,0,W,68,NAVY);
-  g.text(M,27,L('Your '+planYear()+' Medicare options','Sus opciones de Medicare '+planYear())+(D.zip?' · ZIP '+D.zip:'')+(D.county?' · '+D.county:''),17,true,'#FFFFFF');
-  if(dstamp) g.text(M,46,L('CMS plan data of ','Datos de CMS del ')+dstamp,8.5,false,'#C9D6E4');
-  g.text(W-M,25,advBrand(),12,true,'#FFFFFF','r');
-  g.text(W-M,40,ADV.name+'  ·  '+L('Lic. #','Lic. #')+ADV.lic,9,true,'#FFFFFF','r');
-  g.text(W-M,54,ADV.telShown+'  ·  '+advEmail(),8.5,false,'#C9D6E4','r');
-  let y=84;
-  const labW=168, colW=(W-2*M-labW)/plans.length, rows=pdfRows(plans);
-  const headH=40;
+  const cmsDate=sm?fdate(new Date(sm[3]+'-'+sm[1]+'-'+sm[2]+'T12:00:00')):'';
+  const printed=fdate(today);
+
+  // ── header card: logo | advisor | phone, as on the client sheet ──────────────
+  let y=M;
+  g.rect(M,y,W-2*M,54,'#FFFFFF'); g.frame(M,y,W-2*M,54,BORD,1);
+  g.rect(M+16,y+15,24,24,ACC);                       // the brand mark
+  g.line(M+22,y+27,M+26,y+32,'#FFFFFF',2.4); g.line(M+26,y+32,M+34,y+21,'#FFFFFF',2.4);
+  const wm1=mc?'Medicare':'Beneficios', wm2=mc?'California':'Medicare';
+  g.text(M+50,y+33,wm1,19,true,INK);
+  g.text(M+50+tw(wm1,19,true),y+33,wm2,19,true,ACC);
+  g.text(M+50+tw(wm1,19,true)+tw(wm2,19,true),y+33,'.com',19,false,INK);
+  g.line(W/2-78,y+10,W/2-78,y+44,'#D5DCE4',1);
+  const cx=W/2+40;
+  g.text(cx,y+19,L('YOUR ADVISOR  ·  LIC. #','SU ASESORA  ·  LIC. #')+ADV.lic,8.5,true,SOFT,'c',0);
+  g.text(cx,y+34,ADV.name,16,true,NAVY,'c',0);
+  g.text(cx,y+46,advEmail(),10,false,'#1F5FAF','c',0);
+  g.link(cx-tw(advEmail(),10,false)/2,y+37,tw(advEmail(),10,false),12,'mailto:'+advEmail().toLowerCase());
+  g.line(W-M-186,y+10,W-M-186,y+44,'#D5DCE4',1);
+  const px=W-M-93;
+  g.text(px,y+22,L('CALL, TEXT OR WHATSAPP','LLAMADA, TEXTO O WHATSAPP'),8.5,true,SOFT,'c',0);
+  g.text(px,y+42,ADV.telShown,19,true,NAVY,'c',0);
+  g.link(px-tw(ADV.telShown,19,true)/2,y+28,tw(ADV.telShown,19,true),17,'tel:'+ADV.tel);
+
+  // ── band ─────────────────────────────────────────────────────────────────────
+  y+=62;
+  g.rect(M,y,W-2*M,26,BAND);
+  const dline=(cmsDate?L('Medicare data: ','Datos de Medicare: ')+cmsDate+'  ·  ':'')+L('printed: ','impreso: ')+printed;
+  const dW=tw(dline,8,false);
+  const btitle=L('Your '+planYear()+' Medicare options','Sus opciones de Medicare '+planYear())
+    +(D.zip?'  ·  ZIP '+D.zip:'')+(D.county?', '+D.county:'');
+  let bs=15; while(bs>11.5&&tw(btitle,bs,true)>W-2*M-dW-40) bs-=0.5;   // shrink, never cut
+  g.text(M+13,y+18,fit(btitle,W-2*M-dW-40,bs,true),bs,true,'#FFFFFF');
+  g.text(W-M-13,y+17,dline,8,false,'#DCE7F3','r');
+
+  // ── what changes most + the one gold thing on the page ───────────────────────
+  y+=32;
+  const ins=pdfInsight(plans);
+  g.rect(M,y,W-2*M,20,BAR);
+  if(ins) g.text(M+13,y+14,fit(L('What changes most: ','Lo que más cambia: ')+ins,W-2*M-230,10,false),10,false,INK);
+  const chip=L('Choose by Dec 7  ·  starts Jan 1','Elija antes del 7 de dic.  ·  inicia el 1 de enero');
+  const cw=tw(chip,9.5,true)+18;
+  g.rect(W-M-cw-4,y+2,cw,16,GOLD);
+  g.text(W-M-cw-4+9,y+13,chip,9.5,true,NAVY);
+
+  // ── column heads: carrier big in its colour, full plan name, type · ID ───────
+  y+=30;
+  const labW=168, colW=(W-2*M-labW)/plans.length;
+  g.text(M+labW+(W-2*M-labW)/2,y+8,L('OPTIONS '+planYear(),'OPCIONES '+planYear()),8.5,true,SOFT,'c',0);
+  g.line(M+labW,y+13,W-M,y+13,ACC,1.5);
+  const headTop=y+17, headH=62;
   plans.forEach((p,i)=>{
-    const x=M+labW+i*colW;
-    g.rect(x,y,colW-6,4,carrierColor(p));
-    g.text(x,y+16,fit(p.carrier,colW-12,8,true),8,true,GREY);
-    g.text(x,y+28,fit(p.name,colW-12,10,true),10,true,DARK);
-    g.text(x,y+38,fit(baseType(p)+' · '+dashId(p.id),colW-12,8,false),8,false,GREY);
+    const x=M+labW+i*colW, cc=carrierColor(p), iw=colW-8;
+    g.rect(x+3,headTop,iw,4,cc);
+    g.rect(x+3,headTop+4,iw,headH-4,'#FBFCFD');
+    // the carrier shrinks to fit before it is allowed to wrap, and is never cut
+    let cs=13; while(cs>9.5&&tw(p.carrier,cs,true)>iw-10) cs-=0.5;
+    const cl=wrapCap(p.carrier,iw-10,cs,true,2);
+    cl.forEach((l,k)=>g.text(x+3+iw/2,headTop+20+k*(cs+2),l,cs,true,cc,'c',0));
+    const ny=headTop+20+cl.length*(cs+2)+2;
+    wrapCap(dispName(p),iw-10,9.5,false,2).forEach((l,k)=>g.text(x+3+iw/2,ny+k*10.5,l,9.5,false,'#3A4554','c',0));
+    g.text(x+3+iw/2,headTop+headH-4,baseType(p)+'  ·  '+dashId(p.id),9,false,SOFT,'c',0);
   });
-  let ry=y+headH+10;
-  const rowH=19, bottomReserve=150;
-  rows.forEach(([lab,cells])=>{
-    if(ry>H-bottomReserve) return;                       // cut rows, never the type size
-    g.line(M,ry-12,W-M,ry-12,LINE,.5);
-    g.text(M,ry,fit(lab,labW-10,9,false),9,false,GREY);
-    cells.forEach((c,i)=>g.text(M+labW+i*colW,ry,fit(String(c),colW-12,10,true),10,true,
-      String(c)==='$0'?TEAL:DARK));
+
+  // ── rows: equal-everywhere rows leave the table and are listed once below ────
+  const all=pdfSheet(plans), same=[], keep=[];
+  all.forEach(r=>{
+    if(r.g||r.full){keep.push(r);return;}
+    const eq=r.cells.length>1&&r.cells.every(c=>String(c)===String(r.cells[0]));
+    if(eq&&!r.keep){same.push(r.lab);return;}
+    keep.push(r);
+  });
+  const rows=keep.filter((r,i)=>!(r.g&&(i===keep.length-1||keep[i+1].g)));   // no empty group bar
+
+  // Fill the page: the table stretches to the steps strip instead of leaving it blank.
+  const tableTop=headTop+headH+6;
+  const sameH=same.length?16:0, noteH=note?18:0;
+  const bottom=H-104-sameH-noteH;                       // steps strip + fine print live below
+  const nGrp=rows.filter(r=>r.g).length, nFull=rows.filter(r=>r.full).length;
+  const nRow=rows.length-nGrp-nFull;
+  const rowH=Math.max(15,Math.min(26,(bottom-tableTop-nGrp*15-nFull*18)/Math.max(nRow,1)));
+  let ry=tableTop;
+  rows.forEach(r=>{
+    if(r.g){ g.rect(M,ry,W-2*M,13,BAR); g.text(M+10,ry+9.5,r.g,8.5,true,BAND); ry+=15; return; }
+    if(r.full){ g.text(M+labW+(W-2*M-labW)/2,ry+12,fit(r.full,W-2*M-labW-10,10,true),10,true,OK,'c',0); ry+=18; return; }
+    const base=ry+rowH*0.68;
+    g.text(M+10,base,fit(r.lab,labW-14,r.big?10:9.5,r.big),r.big?10:9.5,r.big,INK);
+    r.cells.forEach((c,i)=>{
+      const x=M+labW+i*colW, str=String(c), size=r.big?13:11;
+      const col=str==='$0'?OK:INK;
+      if(r.stars&&/^[0-9]/.test(str)){
+        const w=tw(str,size,true)+13;
+        g.star(x+colW/2-w/2+5,base-3.5,5,'#E8A33D');
+        g.text(x+colW/2-w/2+13,base,str,size,true,col);
+        return;
+      }
+      const l=wrapCap(str,colW-10,size,true,2);
+      if(l.length===1) g.text(x+colW/2,base,l[0],size,true,col,'c',0);
+      else l.forEach((t,k)=>g.text(x+colW/2,base-4+k*(size-1),t,size-1.5,true,col,'c',0));
+    });
+    g.line(M,ry+rowH,W-M,ry+rowH,LINE,.5);
     ry+=rowH;
   });
-  g.line(M,ry-12,W-M,ry-12,LINE,.5);
-  // the ask follows the table, with the one gold thing on the page
-  let by=Math.min(ry+26,H-128);
-  g.text(M,by,L('Which one is right for you?','¿Cuál le conviene?'),13,true,DARK);
-  g.text(M,by+16,L('I tell you, based on your doctors. Ask for your personal comparison >','Se lo digo según sus médicos. Pida su comparación personal >'),10,false,GREY);
-  const chip=L('Open enrollment ends December 7','La inscripción termina el 7 de diciembre');
-  const cw=tw(chip,9,true)+16;
-  g.rect(W-M-cw,by-11,cw,19,'#FDF3E0');
-  g.text(W-M-cw+8,by+2,chip,9,true,GOLD);
-  if(note){ g.text(M,by+34,fit(L('Note: ','Nota: ')+note,W-2*M,9.5,false),9.5,false,DARK); }
-  // the rows that are the same in every plan, said once
-  const pdfSame=[];
-  rows.forEach(([lab,cells])=>{ if(cells.length>1&&cells.every(c=>String(c)===String(cells[0]))) pdfSame.push(lab); });
-  if(pdfSame.length) g.text(M,by+66,fit(L('The same in all '+plans.length+': ','Igual en los '+plans.length+': ')+pdfSame.join(' · '),W-2*M,8.5,false),8.5,false,GREY);
-  // three steps
-  const st=[[L('Step 1','Paso 1'),L('You tell me your doctors.','Usted me dice sus médicos.')],
-            [L('Step 2','Paso 2'),L('I check them against each plan.','Yo los reviso en cada plan.')],
-            [L('Step 3','Paso 3'),L('We decide together.','Decidimos juntas.')]];
-  const sw=(W-2*M-20)/3, sy=Math.min(by+84,H-86);
-  st.forEach(([h,t],i)=>{const x=M+i*(sw+10);
-    g.rect(x,sy,sw,30,'#F3F5F7');
-    g.text(x+9,sy+13,h,8,true,TEAL); g.text(x+9,sy+25,fit(t,sw-18,9,false),9,false,DARK);});
-  g.text(M,by+50,fit(L('This comparison: ','Esta comparación: ')+shareURL('pdf').split('#')[0].split('&utm_')[0],W-2*M,8,false),8,false,TEAL);
-  // fine print: the three lines PROTECT requires wherever plan facts and stars travel
-  const fp1=L('We do not offer every plan available in your area. Currently we represent 7 organizations which offer 255 products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.',
-              'No ofrecemos todos los planes disponibles en su área. Actualmente representamos 7 organizaciones que ofrecen 255 productos en su área. Comuníquese con Medicare.gov o llame al 1-800-MEDICARE para obtener información sobre todas sus opciones.');
-  const fp2=L('Not connected with or endorsed by the federal government or the Medicare program. A fixed picture of the plan data on '+today+'; plan details can change. Every year, Medicare evaluates plans based on a 5-star rating system.',
-              'No está relacionado ni respaldado por el gobierno federal ni por el programa Medicare. Es una foto fija de los datos del '+today+'; los detalles del plan pueden cambiar. Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas.');
-  let fy=H-56;
-  [fp1,fp2].forEach(t=>{
-    let line='',out=[];
-    t.split(' ').forEach(w=>{const n=line?line+' '+w:w; if(tw(n,7,false)>W-2*M){out.push(line);line=w;}else line=n;});
-    if(line)out.push(line);
-    out.slice(0,2).forEach(l=>{g.text(M,fy,l,7,false,GREY);fy+=9;});
-  });
+  if(same.length){ g.text(M+10,ry+11,fit(L('The same in all '+plans.length+': ','Igual en los '+plans.length+': ')+same.join('  ·  '),W-2*M-20,9,false),9,false,GREY); ry+=sameH; }
+  if(note){ g.text(M+10,ry+12,fit(L('Their note: ','Su nota: ')+note,W-2*M-20,9.5,false),9.5,false,INK); ry+=noteH; }
+
+  // ── the three steps, as on the client sheet ─────────────────────────────────
+  const st=[L('We review your doctors and drugs together.','Revisamos juntos sus médicos y sus medicinas.'),
+            L('Changes from Oct 15 to Dec 7, 2026.','Cambios del 15 de oct. al 7 de dic. de 2026.'),
+            L('Your new plan starts Jan 1, 2027.','Su plan nuevo empieza el 1 de enero de 2027.')];
+  const sw=(W-2*M-16)/3, sy=H-100;
+  st.forEach((t,i)=>{const x=M+i*(sw+8), nx=x+10+tw(String(i+1)+'. ',10,true);
+    g.rect(x,sy,sw,26,'#F4F6F9');
+    g.text(x+10,sy+15,String(i+1)+'.',10,true,ACC);
+    wrapCap(t,sw-(nx-x)-10,9.5,false,2).forEach((l,k)=>g.text(nx,sy+15+k*10,l,9.5,false,INK));});
+  // No raw link on the sheet: the short line, tappable (T-056 round 6 point 6, round 9b b).
+  const site=mc?'medicare-california.com':'beneficiosmedicare.com';
+  const sl=L("Today's numbers: ",'Números de hoy: ')+site;
+  g.text(M,H-66,sl,9,false,ACC);
+  g.link(M,H-74,tw(sl,9,false),11,'https://'+site);
+  const wa=L('WhatsApp: ','WhatsApp: ')+ADV.telShown;
+  g.text(W-M,H-66,wa,9,false,ACC,'r');
+  g.link(W-M-tw(wa,9,false),H-74,tw(wa,9,false),11,'https://wa.me/13105979142');
+
+  // ── fine print: the three lines PROTECT requires, the lead in bold ──────────
+  const lead=L('We do not offer every plan available in your area.','No ofrecemos todos los planes disponibles en su área.');
+  const rest=L('Currently we represent 7 organizations which offer 255 products in your area. Please contact Medicare.gov or 1-800-MEDICARE (1-800-633-4227) to get information on all of your options. Every year, Medicare evaluates plans based on a 5-star rating system. Not connected with or endorsed by the United States government or the federal Medicare program. A fixed picture of the CMS data printed on '+printed+'; plan details can change. © 2026 Susana Marcos LLC, doing business as '+advBrand()+'.',
+               'Actualmente representamos 7 organizaciones que ofrecen 255 productos en su área. Comuníquese con Medicare.gov o llame al 1-800-MEDICARE (1-800-633-4227) para obtener información sobre todas sus opciones. Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas. No estamos conectados ni respaldados por el gobierno de EE.UU. ni por el programa federal de Medicare. Es una foto fija de los datos de CMS impresa el '+printed+'; los detalles del plan pueden cambiar. © 2026 Susana Marcos LLC, que opera como '+advBrand()+'.');
+  // the bold lead sits on line 1 and the sentence continues after it, with a real gap
+  const leadW=tw(lead,7.5,true)+4;
+  const first=wrapLines(rest,W-2*M-leadW,7.5,false)[0]||'';
+  const after=rest.slice(first.length).trim();
+  let fy=H-50;
+  g.text(M,fy,lead,7.5,true,INK); g.text(M+leadW,fy,first,7.5,false,GREY); fy+=9.5;
+  wrapLines(after,W-2*M,7.5,false).slice(0,3).forEach(l=>{g.text(M,fy,l,7.5,false,GREY);fy+=9.5;});
+
   // AB 2026-10-14 ("include NAME and ZIP code"): a file name she can search for later.
   const who=String(D.fullName||'').replace(/^QA · /,'').trim().replace(/[\\/:*?"<>|]/g,'');
   const name=(who?who+' - ':'')+(D.zip?'ZIP '+D.zip+' - ':'')
-    +L('Medicare plans '+planYear(),'Planes Medicare '+planYear())+' - '+new Date().toISOString().slice(0,10)+'.pdf';
-  const blob=pdfBlob(W,H,g.build());
+    +L('Medicare plans '+planYear(),'Planes Medicare '+planYear())+' - '+today.toISOString().slice(0,10)+'.pdf';
+  const blob=pdfBlob(W,H,g.build(),g.links());
   const file=(window.File&&navigator.canShare)?new File([blob],name,{type:'application/pdf'}):null;
   if(file&&navigator.canShare({files:[file]})){
     navigator.share({files:[file],title:name}).then(()=>shOk(L('PDF shared.','PDF compartido.'))).catch(()=>pdfDownload(blob,name));
