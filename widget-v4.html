@@ -557,6 +557,12 @@ body.host-cbar .cbar{display:none!important}
 .fv2-search input::placeholder{color:#8a97a3}
 .fv2-skip{display:block;width:100%;text-align:center;background:none;border:0;color:var(--sage-dark);
   font:700 16px/1 inherit;text-decoration:underline;text-underline-offset:3px;padding:14px 0;margin-top:6px;cursor:pointer;min-height:48px}
+/* the way out, as big as the way in */
+.fv2-out{display:block;width:100%;background:#fff;border:1.5px solid #cfd8de;border-radius:12px;
+  padding:14px 16px;margin-top:10px;font:700 17px/1.3 inherit;color:#002147;text-align:center;cursor:pointer;min-height:56px}
+.fv2-out:hover,.fv2-out:focus-visible{border-color:var(--brand-teal,#007B7B);background:#f6fbfb}
+.mp-none{padding:12px 2px 2px}
+.mp-none p{margin:0 0 4px;font-size:15px;line-height:1.45;color:#5f6b75}
 /* the rule behind the two options: factual, on screen, changeable (PROTECT 2026-10-14, item 4) */
 .fv2-rule{background:#f3f5f7;border-radius:12px;padding:11px 13px;margin:0 0 12px;font-size:14.5px;line-height:1.45;color:#5f6b75}
 .fv2-rule button{background:none;border:0;color:var(--sage-dark);font:800 14.5px/1 inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
@@ -2631,7 +2637,10 @@ function mpSearch(q){
   q=String(q||'').trim();
   if(q.length<2){box.innerHTML='';_mpHits=[];return;}
   _mpHits=xwPlans().filter(p=>matchPlan(p,q)).slice(0,12);
-  if(!_mpHits.length){box.innerHTML=`<p class="mp-none">${L('No plan found. Check the ID on your card, or skip this step.','No encontramos ese plan. Revise el ID de su tarjeta, o salte este paso.')}</p>`;return;}
+  if(!_mpHits.length){
+    box.innerHTML=`<div class="mp-none"><p>${L('We cannot find that plan. Check the ID on your card.','No encontramos ese plan. Revise el ID de su tarjeta.')}</p>`
+      +`<button type="button" class="fv2-out" onclick="mpSkip()">${L('Continue without my plan','Seguir sin mi plan')}</button></div>`;
+    return;}
   box.innerHTML=_mpHits.map((p,i)=>`<button type="button" class="mp-opt" role="option" onclick="mpPick(${i},'${q.length&&foldId(q).length>=4?'id':'typed'}')"><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.t)} · ${esc(dashId(p.id))}</span></button>`).join('');
 }
 function dashId(id){const m=String(id||'').split('_');return m[0]+(m[1]?'-'+m[1]:'')+(m[2]&&m[2]!=='0'?'-'+m[2]:'');}
@@ -2722,7 +2731,7 @@ function fv2_plan(){
       <div id="mppick"></div>
       <button type="button" class="fv2-opt" onclick="fv2NoPlan('new')">${L('I am new to Medicare','Soy nuevo en Medicare')}<span class="ch">&rsaquo;</span></button>
       <button type="button" class="fv2-opt" onclick="fv2NoPlan('orig')">${L('I have Original Medicare or '+mcd(),'Tengo Medicare Original o '+mcd())}<span class="ch">&rsaquo;</span></button>
-      <button type="button" class="fv2-skip" onclick="mpSkip()">${L('I am not sure / prefer not to say','No sé / prefiero no decir')}</button>
+      <button type="button" class="fv2-out" onclick="mpSkip()">${L('I am not sure / cannot find it','No sé / no lo encuentro')}</button>
       ${fv2Help()}`;
     const f=document.getElementById('mpq');
     if(f){f.addEventListener('input',()=>mpSearch(f.value));f.addEventListener('focus',()=>mpSearch(f.value));}
@@ -2749,7 +2758,7 @@ function fv2_doctor(){
     <div class="input-group"><label for="fv2doc">${L('Doctor or clinic','Médico o clínica')}</label>
       <input class="input-field fv2-field" type="text" id="fv2doc" autocomplete="off" placeholder="${L('e.g. Dr. Lopez','Ej: Dra. López')}" value="${esc(docKeep())}"></div>
     ${bp(L('See my plans','Ver mis planes'),'fv2DocNext()')}
-    <button type="button" class="fv2-skip" onclick="fv2DocSkip()">${L('I do not have one / skip','No tengo / saltar')}</button>
+    <button type="button" class="fv2-out" onclick="fv2DocSkip()">${L('I do not have one / rather not say','No tengo / prefiero no decir')}</button>
     ${fv2Help(L('We only use it to check the network for you.','Solo lo usamos para confirmarle la red.'))}`;
 }
 // The name stays in this tab until they send a form; it is never put in a GA4 event (PROTECT item 8).
