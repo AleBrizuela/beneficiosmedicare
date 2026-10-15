@@ -1809,10 +1809,12 @@ function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>pl
 // Back from a plan screen returns to the list AND to the card the visitor opened, not to the top.
 function backToPlans(){
   back();
-  setTimeout(()=>{
+  // The list re-renders and the iframe then resizes, which moves everything. One early scroll lands
+  // the card at the bottom edge, so re-centre it a few times while the height settles.
+  [80,260,600].forEach(ms=>setTimeout(()=>{
     const el=document.querySelector('.pc[data-pid="'+(window.CSS&&CSS.escape?CSS.escape(_lastPlanId):_lastPlanId)+'"]');
     if(el&&el.scrollIntoView) el.scrollIntoView({block:'center'});
-  },60);
+  },ms));
 }
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
