@@ -251,6 +251,14 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-visit .v{font-size:17px;font-weight:800;color:#1e2a32;overflow-wrap:anywhere}
 .pc-visit .v.na{font-size:13px;font-weight:600;color:#56616a}
 .pc-chips{display:flex;flex-wrap:wrap;gap:6px}
+/* T-074 plan-type pills + the official plan ID line. Tag palette AB 2026-10-14. */
+.pc-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.tg{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.35;white-space:nowrap}
+.tg-net{border:1.5px solid #002147;color:#002147;background:#fff;padding:2px 8px}
+.tg-who{background:var(--sage-dark);color:#fff}
+.tg-plain{background:#E2E7EC;color:#4A5568}
+.pc-idline{margin-top:6px;font-size:12.5px;color:#66727c}
+.pc-idline .pid{font-weight:700;color:#4A5568}
 .pc-chips .c{font-size:12.5px;font-weight:600;background:#f3f5f7;color:#1e2a32;border:1px solid #e5e9ec;padding:4px 9px;border-radius:999px}
 .pc-chips .c b{color:var(--sage)}
 .pc-chips .c.off{background:#fff;color:#56616a;border:1px dashed #aab4bc}
@@ -1713,8 +1721,9 @@ function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax))+L('/mo','/mes');
-    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(p.name)}</p>
-      <div class="pc-meta">${L('Supplement','Suplemento')} · ${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
+    return `<div class="pc" style="--cc:#00897B"><div class="pc-head"><p class="pc-eb">Medigap</p><p class="pc-name">${esc(dispName(p))}</p>
+      ${planTags(p)}
+      <div class="pc-meta">${L(p._carrierCount+' carriers available',p._carrierCount+' aseguradoras disponibles')}</div></div>
       ${lsec('cost',L('Costs','Costos'),lrow(L('Premium range','Rango de prima'),V(rng))+lrow(L('Lowest price from','Precio más bajo de'),V(esc(p.carrier))),'cost')}
       <div class="ls"><p class="pc-fine">${L('Covers gaps in Original Medicare. Drug coverage needs a separate Part D plan.','Cubre costos que Medicare Original no cubre. Para medicamentos necesita un plan de la Parte D aparte.')}</p>
       <p class="pc-fine">${L('Medigap prices: Medicare.gov, March 2026. Not 2027 prices.','Precios Medigap: Medicare.gov, marzo de 2026. No son precios de 2027.')}</p></div>
@@ -1757,8 +1766,9 @@ function planCard(p,selectable){
   else more+=tiersHTML(p);
   const tg=isMA?TOG():TOGD();
   return `<div class="pc" style="--cc:${carrierColor(p)}"><div class="pc-head">
-      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(p.name)}</p></div>${selectable?cmpBox(p):''}</div>
-      <div class="pc-meta">${esc(p.type)} · <span class="pid">${planId(p)}</span> <span class="pc-chip">${L(planYear()+' plan','Plan '+planYear())}</span></div>
+      <div class="pc-top"><div><p class="pc-eb">${esc(p.carrier)}</p><p class="pc-name">${esc(dispName(p))}</p></div>${selectable?cmpBox(p):''}</div>
+      ${planTags(p)}
+      <div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
       ${isDual(p)?`<p class="dualnote">${dualNote()}</p>`:''}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}</div>
@@ -1768,6 +1778,43 @@ function planCard(p,selectable){
 }
 
 // ---- lead context: which plans the visitor saw, and whether we represent each (T-017 b8, e) ----
+// ── T-074 (AB 2026-10-14): the card header says what kind of plan it is in a pill, and prints the
+// official plan ID on its own line. The "Plan 2027" chip is gone: the year is already in the results
+// header, the compare header and the CMS source line, and it said nothing a visitor could act on.
+// baseType strips the SNP suffix CMS writes into the type ("HMO C-SNP" -> "HMO").
+function baseType(p){return String(p.type||'').replace(/\s*[CDI]-SNP\s*/g,'').trim();}
+function snpWho(p){
+  if(!isSNP(p)) return null;
+  if(p.snp==='Dual-Eligible') return L('With '+mcd(),'Con '+mcd());
+  if(p.snp==='Institutional') return L('Care facility','Centro de cuidado');
+  if(p.snp) return L('Chronic condition','Condición crónica');
+  return null;
+}
+// Grey pill: a plan that is not Medicare Advantage with drugs says so in one word.
+function plainTag(p){
+  if(p._medigap) return L('Supplement','Suplemento');
+  if(isPDP(p)) return L('Drugs only','Solo medicamentos');
+  if(p.cat!=='PDP'&&p.drug!=='Included') return L('No drug coverage','Sin medicamentos');
+  return null;
+}
+function planTags(p){
+  const out=[];
+  if(!p._medigap&&!isPDP(p)) out.push(`<span class="tg tg-net">${esc(baseType(p))}</span>`);
+  const who=snpWho(p); if(who) out.push(`<span class="tg tg-who">${esc(who)}</span>`);
+  const pl=plainTag(p); if(pl) out.push(`<span class="tg tg-plain">${esc(pl)}</span>`);
+  return out.length?`<div class="pc-tags">${out.join('')}</div>`:'';
+}
+// Strip a trailing parenthetical when EVERY word in it is already said by the pills.
+// "Blue Shield Value Advantage Plan (HMO)" -> "...Plan"  ·  "X (HMO D-SNP)" -> "X"
+// A parenthetical with anything else stays. DISPLAY ONLY: p.name is what goes to the sheet,
+// the lead payload, D.selectedPlan and the agent email.
+const _TYPEWORDS=['HMO','PPO','POS','HMO-POS','PFFS','MSA','SNP','C-SNP','D-SNP','I-SNP','LOCAL','REGIONAL'];
+function dispName(p){
+  const n=String(p.name||''), m=n.match(/^(.*?)\s*\(([^()]+)\)\s*$/);
+  if(!m) return n;
+  const words=m[2].trim().toUpperCase().split(/[\s/]+/).filter(Boolean);
+  return words.length&&words.every(w=>_TYPEWORDS.indexOf(w)>=0) ? m[1].trim() : n;
+}
 function planLeadTag(p){return `${p.name} [${p.id}] represented: ${p._medigap?'n/a (Medigap)':(p.rep?'yes':'no')}`;}
 function pickPlan(id){
   const p=PLANS.find(x=>x.id===id); if(!p) return;
@@ -2135,7 +2182,7 @@ function flowCompare(){
     const same=r.cells.every(c=>c.t===r.cells[0].t);
     return `<tr class="r g${gi}${same?' same':''}${closed?' hid':''}"><td class="lab">${r.lab}</td>${r.cells.map(c=>`<td class="v${r.big?' big':''}${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${c.t}</td>`).join('')}</tr>`;
   }).join('');
-  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(shortPlan(p.name))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
+  const head=`<tr><th class="l0">${L('Plans '+planYear(),'Planes '+planYear())}</th>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(p.carrier)}</span>${esc(dispName(p))}<span class="pid">${esc(p.type)} · ${planId(p)}</span></th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
   wb().innerHTML=`${bk()}
@@ -2143,7 +2190,7 @@ function flowCompare(){
     ${plans.some(isDual)?`<p class="dualnote cmpdual">${L('Plans for Medicare and '+mcd()+' (D-SNP): ','Planes para Medicare y '+mcd()+' (D-SNP): ')}${dualNote()}</p>`:''}
     <div class="cmp" id="cmp"><label class="tog"><input type="checkbox" onchange="document.getElementById('cmp').classList.toggle('diff',this.checked)"> ${L('Show only differences','Mostrar solo diferencias')}</label>
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(shortPlan(p.name))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
+      ${SHOW_SSBCI&&plans.some(p=>p.ssbci)?plans.filter(p=>p.ssbci).map(p=>`<p class="cmp-note">${esc(dispName(p))} (${planId(p)}): ${ssbciNote(p)}</p>`).join(''):''}
       ${plans.some(p=>(p.tiers||[]).some(t=>t.p!=null))?`<p class="cmp-note">${L('Some plans cost less at a preferred pharmacy; open each plan to see both prices.','Algunos planes cuestan menos en una farmacia preferida; abra cada plan para ver los dos precios.')}</p>`:''}
       <div class="cmp-foot">${can?`<button class="pc-btn" onclick="helpCompare()">${L('Help me choose between these plans','Ayúdeme a elegir entre estos planes')}</button>`
         :(sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`)}</div>
@@ -2397,7 +2444,7 @@ function cfContact(secondary){
 function cfRow(l,v,none){return `<div class="cf-row"><span class="l">${l}</span><span class="v${none?' none':''}">${v}</span></div>`;}
 function seenPlanNames(){
   const ids=String(D.selectedPlanId||'').split(';').filter(Boolean);
-  return ids.map(id=>{const p=PLANS.find(x=>x.id===id);return p?esc(shortPlan(p.name))+' ('+planId(p)+')':'';}).filter(Boolean).join(', ');
+  return ids.map(id=>{const p=PLANS.find(x=>x.id===id);return p?esc(dispName(p))+' ('+planId(p)+')':'';}).filter(Boolean).join(', ');
 }
 function flowSuccess(){
   prog(100); _plansView=true;
