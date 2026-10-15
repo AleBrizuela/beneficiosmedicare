@@ -135,28 +135,44 @@ body.host-next #wb .btn-p{display:none!important}
    colours are fixed and identical on both sites (the ticket), so they are literals, not vars;
    everything the visitor taps uses --cbar-brand, which is #007B7B on beneficiosmedicare and the
    California blue on medicare-california. */
+/* ── T-096 round 4 a2 (AB 2026-10-15 23:00, "below the fold") ──────────────────────────────────
+   Every value here is the mock's own (2026-10-15_2300_lo-mas-importante-v2, NUEVO column). The
+   screen to clear is 375x548 — an iPhone SE with Safari's bars — and the rule is that all five
+   options AND "Sin preferencia" are reachable without scrolling. The question itself was not
+   allowed to shrink to get there (AB), so the room came out of the rows: one line of explanation
+   each, a 44px tile instead of 50, and 7px between rows. */
+body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
 .q3top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 2px}
-.q3zip{color:#5b6670;font-weight:600;font-size:14px;white-space:nowrap}
-.q3q{font-size:24px;line-height:1.25;font-weight:700;color:var(--cbar-ink);margin:0 0 4px;text-wrap:pretty}
-.q3h{font-size:16px;color:#5b6670;margin:0 0 10px;text-wrap:pretty}
-.q3opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;border:1.5px solid #e3e7ea;border-radius:12px;padding:9px 12px;min-height:62px;margin-bottom:9px;background:#fff;position:relative;cursor:pointer}
-.q3opt.on{border:2px solid var(--cbar-brand);background:#f2faf9;padding:8.5px 11.5px}
-.q3ic{width:42px;height:42px;border-radius:50%;flex:0 0 42px;display:flex;align-items:center;justify-content:center}
-.q3ic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-/* T-096 round 3 (AB 2026-10-15): ONE family. Five circles of five colours read as five unrelated
-   things; one mint circle with a teal line icon reads as five of the same kind, and the one you
-   chose is the one that fills in. */
-.q3ic{background:#E0F2F1}
-.q3ic svg{stroke:#007B7B}
-.q3opt.on .q3ic{background:var(--cbar-brand)}
-.q3opt.on .q3ic svg{stroke:#fff}
+.q3zip{color:#4A5568;font-weight:600;font-size:14px;white-space:nowrap}
+.q3q{font-size:23px;line-height:1.22;font-weight:700;color:#002147;margin:0 0 3px;text-wrap:balance}
+.q3h{font-size:15.5px;color:#4A5568;margin:0 0 8px;text-wrap:pretty}
+.q3opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;border:1.5px solid #D4DEE8;border-radius:14px;padding:7px 12px 7px 8px;min-height:56px;margin-bottom:6px;background:#fff;position:relative;cursor:pointer}
+.q3opt.on{border:2px solid var(--cbar-brand);background:#f2faf9;padding:6.5px 11.5px 6.5px 7.5px}
+.q3ic{width:44px;height:44px;flex:0 0 44px;border-radius:12px;background:var(--b);display:flex;align-items:center;justify-content:center}
+.q3ic svg{width:28px;height:28px;fill:none;stroke:var(--d);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.q3ic svg .f{fill:var(--t)}
 .q3tx{padding-right:26px;min-width:0}
-.q3tx b{display:block;font-size:18px;line-height:1.2;font-weight:600;color:#1e2a32}
-.q3tx span{display:block;font-size:14.5px;color:#5b6670;line-height:1.3;margin-top:2px}
-.q3tx em{font-style:normal;font-weight:600;color:#1e2a32}
-.q3ck{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--cbar-brand);color:#fff;font-weight:900;font-size:14px;display:none;align-items:center;justify-content:center}
+.q3tx b{display:block;font-size:17px;font-weight:600;color:#1A202C;line-height:1.25}
+.q3tx span{display:block;font-size:14px;color:#4A5568;line-height:1.3}
+.q3tx em{font-style:normal;font-weight:600;color:#1A202C}
+.q3ck{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--cbar-brand);color:#fff;font-weight:700;font-size:13px;display:none;align-items:center;justify-content:center}
 .q3opt.on .q3ck{display:flex}
-.q3skip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;padding:10px 0 0;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px}
+.q3skip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;margin:8px 0 0;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px}
+/* iPhone SE, 320 wide: four of the five explanations wrapped to a second line and pushed "Sin
+   preferencia" 25px below the screen. They are one line again here -- the words are not cut, the
+   type is, and only on the narrowest phone. */
+@media(max-width:359px){
+  .q3q{font-size:21px}
+  .q3h{font-size:15px}
+  .q3opt{gap:9px;padding:6px 8px 6px 7px;min-height:52px;margin-bottom:5px}
+  .q3ic{width:40px;height:40px;flex:0 0 40px}
+  .q3ic svg{width:25px;height:25px}
+  .q3tx{padding-right:16px}
+  .q3tx b{font-size:16px}
+  /* greedy wrapping here, not balanced: balance splits a line that would have fitted */
+  .q3tx span{font-size:12.8px;text-wrap:wrap}
+  .q3ck{width:18px;height:18px;right:5px;font-size:11px}
+}
 /* Results top (T-088 round 3 + "less is more"): title, ZIP line, ONE chip row. The sort row and
    the "lo más importante" line are gone; "Filtros y orden" opens both in one panel. */
 .rh .hl{font-size:22px;font-weight:700;color:var(--cbar-ink);margin:0 0 2px;line-height:1.2;text-wrap:pretty}
@@ -1070,6 +1086,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    behaves exactly as it did before this ticket. */
 let _hPush=0, _popping=false, _afterBack=null, _onDetail=false;
 function go(fn){
+  document.body.classList.remove('q3');
   hist.push(fn);_plansView=false;_planScreen=false;_act=null;_onDetail=false;fn();viewMsg();cbarReport();
   // the first screen gets no entry of its own: Back from there leaves the page, as it should
   if(hist.length>1){ try{ history.pushState({bmw:hist.length},''); _hPush++; }catch(e){} }
@@ -1082,6 +1099,7 @@ function back(){
   _doBack();
 }
 function _doBack(){
+  document.body.classList.remove('q3');
   // T-075 + T-093: leaving a plan screen lands on the card it was opened from, whether the visitor
   // tapped "‹ Volver a los planes" or pressed the browser's own Back button.
   if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
@@ -1188,24 +1206,44 @@ function onZipInput(el, fieldId){
 // switch that filter on, visibly and undoably. None of it is a recommendation: the list stays the
 // county's whole list, in an order the visitor asked for. The Medi-Cal label follows the state
 // (mcd() reads "Medi-Cal" in California, "Medicaid" everywhere else).
+/* ── T-096 round 4 (AB 2026-10-15 22:30-23:20) ─────────────────────────────────────────────────
+   Order: what cannot be given up first, what is merely preferred after. Doctors, medicines and the
+   Medicaid card are things a person either has or needs; a $0 premium and extra benefits are
+   preferences. AB can flip it; this is DECIDE's recommendation and her 23:00 note.
+   One line of explanation each, so all five and "Sin preferencia" fit a 375x548 screen — an iPhone
+   SE with Safari's bars — without scrolling. "Solo" hides plans; "Primero" only reorders.
+   Icons are design B (AB 22:50, "B recomendada"): a soft tile in the family's own light tone, the
+   glyph drawn in the dark tone with its shapes filled in the mid tone. Five families, not five
+   shouts, and no purple. Paths and the three colours per family are the mock's own.
+   Spec: 2026-10-15_2230_iconos-pregunta-v1 column B + 2026-10-15_2300_lo-mas-importante-v2. */
 const PRI_OPTIONS=[
-  // Order, wording and colours are AB's, word for word (T-088 round 3). A description that starts
-  // with "Solo" HIDES plans; one that starts with "Primero" hides nothing and only reorders. The
-  // last two words of each are joined with a non-breaking space so no line ends on one word, and
-  // Medi-Cal carries a non-breaking hyphen so it never splits.
-  {id:'cost',    ic:'cost', en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
-   enD:'<em>Only</em> plans with no monthly&nbsp;premium.',            esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
-  {id:'doctors', ic:'visits', en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
-   enD:'<em>First</em>, the ones with more freedom to choose a&nbsp;doctor.', esD:'<em>Primero</em> los de m\u00E1s libertad para elegir&nbsp;m\u00E9dico.'},
-  {id:'drugs',   ic:'drug', en:()=>'My medicines',     es:()=>'Mis medicamentos',
-   enD:'<em>Only</em> plans that include drug&nbsp;coverage.',         esD:'<em>Solo</em> planes con&nbsp;medicamentos.'},
-  {id:'benefits',ic:'dental', en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
-   enD:'<em>First</em>, the ones that cover all&nbsp;three.',          esD:'<em>Primero</em> los que cubren los&nbsp;tres.'},
-  {id:'medicaid',ic:'shield', en:()=>'I have '+nbMcd(),   es:()=>'Tengo '+nbMcd(),
-   enD:()=>'<em>Only</em> plans for Medicare and&nbsp;'+nbMcd()+'.',   esD:()=>'<em>Solo</em> planes para Medicare y&nbsp;'+nbMcd()+'.'}
+  {id:'doctors', ic:'doctor', d:'#1F4E89', t:'#BCD0EA', b:'#E9F0F9',
+   en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
+   enD:'<em>First</em>, the ones with more&nbsp;freedom.', esD:'<em>Primero</em> los que dan m\u00E1s&nbsp;libertad.'},
+  {id:'drugs',   ic:'bottle', d:'#007B7B', t:'#A6DCD8', b:'#E2F3F2',
+   en:()=>'My medicines',     es:()=>'Mis medicamentos',
+   enD:'<em>Only</em> plans with drug&nbsp;coverage.',     esD:'<em>Solo</em> planes con&nbsp;medicamentos.'},
+  {id:'medicaid',ic:'shieldb',d:'#A8473B', t:'#F0C3BA', b:'#FBEDEA',
+   en:()=>'I have '+mcd(),    es:()=>'Tengo '+mcd(),
+   enD:()=>'<em>Only</em> plans for&nbsp;'+mcdBoth()+'.',  esD:()=>'<em>Solo</em> planes para&nbsp;'+mcdBoth()+'.'},
+  {id:'cost',    ic:'coin',   d:'#1F7A5A', t:'#A7DCC4', b:'#E6F4EE',
+   en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
+   enD:'<em>Only</em> plans with no monthly&nbsp;premium.',esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
+  {id:'benefits',ic:'toothb', d:'#9A6410', t:'#F3D58E', b:'#FCF4E1',
+   en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
+   enD:'<em>First</em>, the ones that cover all&nbsp;three.', esD:'<em>Primero</em> los que cubren los&nbsp;tres.'}
 ];
-function nbMcd(){return mcd().replace('-','\u2011');}
-function priIcon(o){return `<span class="q3ic"><svg viewBox="0 0 24 24">${PIC[o.ic]}</s`+`vg></span>`;}
+// Design B's own glyphs: the filled shapes carry class "f" and take the family's mid tone.
+const PRI_GLYPH={
+  doctor:'<circle class="f" cx="12" cy="7.5" r="3.6"/><path class="f" d="M4.5 20.5c0-4.2 3.4-6.8 7.5-6.8s7.5 2.6 7.5 6.8z"/><path d="M12 15.6v3.6M10.2 17.4h3.6"/>',
+  bottle:'<rect class="f" x="6" y="8.5" width="12" height="12.5" rx="2"/><rect x="5" y="3.5" width="14" height="5" rx="1.3"/><path d="M12 11.8v5.4M9.3 14.5h5.4"/>',
+  shieldb:'<path class="f" d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  coin:'<circle class="f" cx="12" cy="12" r="9"/><path d="M14.8 9.4c-.5-.9-1.5-1.4-2.8-1.4-1.7 0-2.8.8-2.8 2 0 2.7 5.6 1.5 5.6 4.1 0 1.2-1.1 2-2.8 2-1.3 0-2.4-.6-2.8-1.5M12 6.3v1.7M12 16v1.7"/>',
+  toothb:'<path class="f" d="M7.2 3.5c-2.4 0-3.9 1.9-3.9 4.3 0 2.9 1.4 4.3 1.9 6.7.5 2.9 1 6.2 2.4 6.2s1.4-3.3 2.3-4.7c.5-.8 1.5-.8 2 0 .9 1.4.9 4.7 2.3 4.7s1.9-3.3 2.4-6.2c.5-2.4 1.9-3.8 1.9-6.7 0-2.4-1.5-4.3-3.9-4.3-1.4 0-2.2.8-2.8.8s-1.4-.8-2.8-.8z"/>'
+};
+function priIcon(o){
+  return `<span class="q3ic" style="--d:${o.d};--t:${o.t};--b:${o.b}"><svg viewBox="0 0 24 24">${PRI_GLYPH[o.ic]}</s`+`vg></span>`;
+}
 /* T-088 round 3 (AB 2026-10-15, "perhaps we should not allow multiple"): one answer, not several.
    Tapping an option is the whole interaction -- it marks teal for 0.4s so the visitor sees what they
    picked, then the plans open. No "Ver mis planes" button to find, no checkbox to understand. The
@@ -1220,6 +1258,7 @@ function priorityStep(nextFn){
     return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
       priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
   }).join('');
+  document.body.classList.add('q3');
   wb().innerHTML=`<div class="q3top">${bk()}<span class="q3zip">ZIP ${esc(D.zip||'')}</span></div>
     <p class="q3q">${L('What matters most to&nbsp;you?','\u00BFQu\u00E9 es lo m\u00E1s importante para&nbsp;usted?')}</p>
     <p class="q3h">${L('Choose one. You can change it later.','Elija una. Despu\u00E9s puede cambiarlo.')}</p>
@@ -2098,7 +2137,20 @@ function inTodos(p){return !p._medigap&&!isPDP(p)&&!isSNP(p);}
 // T-028 (AB 2026-10-03): special-needs plans split in two. Dual plans (D-SNP, for people with Medicare
 // AND Medi-Cal / Medicaid) get their own pill; chronic-condition and institutional plans stay together.
 function isDual(p){return isSNP(p)&&p.snp==='Dual-Eligible';}
-function mcd(){return D.state==='CA'?'Medi-Cal':'Medicaid';}
+/* T-096 round 4 a3 (AB 2026-10-15 23:15, "buena idea usar el nombre del estado"): a senior knows
+   the name on their card, not the federal one. Four states run Medicaid under a name of their own
+   and California's is universally known; everywhere else the word IS Medicaid, and a managed-care
+   brand like STAR+PLUS is not what anyone calls the card, so those states stay plain.
+   mcd() is the one place this is decided, and every screen reads it. */
+const MCD_NAMES={CA:'Medi\u2011Cal', AZ:'AHCCCS', KS:'KanCare', MO:'MO\u00a0HealthNet', OK:'SoonerCare'};
+function mcd(){return MCD_NAMES[D.state]||'Medicaid';}
+/* On the question only, the four lesser-known names say what they are once: "KanCare (Medicaid)".
+   California does not need it; a Medicaid state would be saying the same word twice. */
+function mcdBoth(){
+  const s=D.state;
+  if(!MCD_NAMES[s]||s==='CA') return mcd();
+  return mcd()+' (Medicaid)';
+}
 function saidMedicaid(){return D.priority==='medicaid'||(Array.isArray(D.priorities)&&D.priorities.indexOf('medicaid')>=0);}
 const PILLS=[
   {id:'all',  en:'All',                  es:'Todos',                  f:inTodos},
