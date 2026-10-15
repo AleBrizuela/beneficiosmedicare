@@ -10,10 +10,6 @@
 
 /data/*
   Cache-Control: public, max-age=86400
-  # T-078: medicare-california.com/plans/shared reads the same CMS plan files rather than
-  # keeping a 44 MB copy of them. The files are already public (Pages serves whatever is in
-  # the repo); this only lets a browser on the other domain read them too.
-  Access-Control-Allow-Origin: *
 
 /experiments/*
   Cache-Control: no-cache, must-revalidate
