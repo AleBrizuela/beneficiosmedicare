@@ -114,20 +114,6 @@ body.host-next #wb .btn-p{display:none!important}
 .info-card p{font-size:14px;color:#3c4043;line-height:1.55}
 .info-card.bl{background:#f8f9fa}.info-card.bl h4{color:#202124}
 
-/* ── CONDITION CHIPS (Option B) ── */
-.cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.cond-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border:1.5px solid #dadce0;border-radius:var(--radius);cursor:pointer;transition:all .15s;background:var(--white);text-align:center;min-height:70px}
-.cond-chip:hover{border-color:var(--sage);background:#f8faf9}
-.cond-chip:active{transform:scale(.97)}
-.cond-chip.sel{border-color:var(--sage);background:var(--sage);color:white}
-.cond-chip .cond-icon{font-size:24px;line-height:0}
-.cond-chip .cond-label{font-size:13px;font-weight:500;line-height:1.3}
-.cond-chip.sel .cond-label{color:white}
-.cond-chip.sel .cond-icon svg{filter:brightness(0) invert(1)}
-.health-textarea{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--dark);resize:vertical;min-height:70px;transition:border-color .2s}
-.health-textarea:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(0,137,123,.15)}
-.health-textarea::placeholder{color:#A0AEC0}
-
 /* ── RANK BADGES (priority step) ── */
 .opt-card{position:relative}
 .rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,137,123,.3);animation:popIn .25s ease}
@@ -374,9 +360,6 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
   .plan-row{font-size:14px;padding:7px 0}
   .plan-card h4{font-size:15px}
   .plan-cta{padding:14px;font-size:15px;min-height:50px}
-  .cond-chip{padding:16px 8px;min-height:76px}
-  .cond-chip .cond-icon{font-size:26px}
-  .cond-chip .cond-label{font-size:14px}
 }
 /* T-027 (AB 2026-10-03) */
 .pc-foot{text-align:center}
@@ -599,12 +582,9 @@ if (THEMES[_theme] && _theme !== 'default') {
   styleEl.textContent = `
     .opt-card:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
     .input-field:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
-    .health-textarea:focus { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(0,128,212,.12) !important; }
     .btn-p:hover { box-shadow: 0 4px 16px rgba(0,128,212,.3) !important; }
     .plan-card.rec { background: #f0f7fd !important; }
     .opt-card.ranked { background: #f0f7fd !important; }
-    .cond-chip:hover { border-color: var(--sage) !important; background: #f0f7fd !important; }
-    .cond-chip.sel { background: var(--sage) !important; border-color: var(--sage) !important; }
     .rank-badge { box-shadow: 0 2px 6px rgba(0,128,212,.3) !important; }
     .plan-cta:hover { background: var(--sage) !important; }
     .plan-cta.filled:hover { background: var(--sage-dark) !important; }
@@ -671,18 +651,6 @@ const I={
   shield:_s('<path d="M12 2l8 4v5c0 5.5-3.4 10.3-8 12-4.6-1.7-8-6.5-8-12V6l8-4z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/><polyline points="9,12 11,14 15,10" fill="none" stroke="#1D4ED8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'),
   droplet:_s('<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/><path d="M8 13h8" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/><path d="M9 16h6" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/>'),
 };
-
-// ── HEALTH CONDITIONS ──
-const CONDITIONS = [
-  {id:'heart',      icon:I.heart,   en:'Heart / Blood Pressure', es:'Coraz\u00F3n / Presi\u00F3n'},
-  {id:'cholesterol',icon:I.droplet,  en:'Cholesterol',            es:'Colesterol'},
-  {id:'diabetes',   icon:I.pill,    en:'Diabetes',               es:'Diabetes'},
-  {id:'bones',      icon:I.bone,    en:'Bones / Joints',         es:'Huesos / Articulaciones'},
-  {id:'vision',     icon:I.eye,     en:'Vision / Eyes',          es:'Visi\u00F3n / Ojos'},
-  {id:'breathing',  icon:I.lungs,   en:'Breathing / Lungs',      es:'Respiraci\u00F3n / Pulmones'},
-  {id:'mental',     icon:I.brain,   en:'Memory / Mental Health',  es:'Memoria / Salud Mental'},
-  {id:'kidney',     icon:I.kidney,  en:'Kidney / Renal',         es:'Ri\u00F1ones'}
-];
 
 // ── PLAN DATA ENGINE ──
 // CMS data is loaded dynamically per state. PLANS starts empty; populated after ZIP lookup.
@@ -1015,7 +983,7 @@ function onZipInput(el, fieldId){
 //  STEP: DOB (single screen)
 // ═══════════════════════════════════════
 function dobStep(nextFn){
-  prog(15);
+  prog(30);
   _cb.dob=nextFn;
   const existing = (D.dob_month&&D.dob_day&&D.dob_year) ? `${D.dob_month}/${D.dob_day}/${D.dob_year}` : '';
   wb().innerHTML=`${bk()}
@@ -1104,36 +1072,6 @@ function timeAwayStr(months){
 
 
 // ═══════════════════════════════════════
-//  STEP: HEALTH CONDITIONS (Option B)
-// ═══════════════════════════════════════
-function healthStep(nextFn){
-  prog(55);
-  _cb.health=nextFn;
-  let chips='';
-  CONDITIONS.forEach(c=>{
-    const sel=selConds.includes(c.id)?'sel':'';
-    chips+=`<div class="cond-chip ${sel}" data-cid="${c.id}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCond('${c.id}')}" onclick="toggleCond('${c.id}')"><span class="cond-icon">${c.icon}</span><span class="cond-label">${c[lang]}</span></div>`;
-  });
-  wb().innerHTML=`${bk()}
-    ${bm(lang==='en'?'Do any of these apply to you?':'\u00BFQu\u00E9 condiciones de salud tiene?')}
-    <p style="font-size:12px;color:#888;margin-bottom:12px">${lang==='en'?'Select all that apply. This helps us find the right plan.':'Seleccione todo lo que aplique. Esto nos ayuda a encontrar el plan correcto.'}</p>
-    <div class="cond-grid">${chips}</div>
-    <div class="input-group" style="margin-top:4px">
-      <label>${lang==='en'?'Anything else you\'d like us to know? (optional)':'\u00BFAlgo m\u00E1s que quiera contarnos? (opcional)'}</label>
-      <textarea class="health-textarea" id="healthNotes" maxlength="500" placeholder="${lang==='en'?'e.g. I take a few medications but don\'t remember the names, I need dental work, my knees hurt...':'ej. Tomo unas medicinas pero no recuerdo los nombres, necesito trabajo dental, me duelen las rodillas...'}" oninput="D.healthNotes=this.value">${D.healthNotes||''}</textarea>
-    </div>
-    ${bp(t('next'),'D.conditions=[...selConds];go(_cb.health)')}
-    ${skip(lang==='en'?'Skip this step':'Saltar este paso','D.conditions=[];D.healthNotes=\'\';go(_cb.health)')}`;
-}
-
-function toggleCond(id){
-  const i=selConds.indexOf(id);
-  if(i>=0)selConds.splice(i,1);else selConds.push(id);
-  document.querySelectorAll('.cond-chip').forEach(c=>c.classList.toggle('sel',selConds.includes(c.dataset.cid)));
-}
-
-
-// ═══════════════════════════════════════
 //  STEP: PRIORITY
 // ═══════════════════════════════════════
 const PRI_OPTIONS=[
@@ -1143,7 +1081,7 @@ const PRI_OPTIONS=[
   {id:'medicaid',icon:I.shield,icls:'bl',en:'I have Medicaid / Medi-Cal',es:'Tengo Medicaid / Medi-Cal',enD:'Dual eligibility (D-SNP) plans.',esD:'Planes de elegibilidad dual (D-SNP).'}
 ];
 function priorityStep(nextFn){
-  prog(68);
+  prog(60);
   _cb.priority=nextFn;
   priRank=[];
   const cards=PRI_OPTIONS.map(o=>`<div class="opt-card" id="pri-${o.id}" onclick="togglePri('${o.id}')"><div class="ic ${o.icls}">${o.icon}</div><div class="tx"><h4>${o[lang]}</h4><p>${o[lang+'D']}</p></div></div>`).join('');
@@ -1182,23 +1120,24 @@ function savePriority(){
 function startZip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='explore';ft_dob();return;}zipStep('explore',lang==='en'?"Let\u2019s find your options.":'Encontremos sus opciones.','zip',ft_dob)}
 function ft_dob(){dobStep(ft_eligibility)}
 function ft_eligibility(){
-  prog(25);
+  prog(45);
   const age=getAge();
   const ew=getEnrollmentWindow();
   if(age===null){
-    // No DOB provided (skipped), go straight to the health step
-    go(ft_health);
+    // No DOB provided (skipped), go straight to what matters most
+    go(ft_next());
     return;
   }
   if(age>=65){
     /* T-031 (AB 2026-10-03): this screen is for people who just turned 65. From 65 years and 7 months on, skip it and
-       go straight to the health step: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year.
-       T-071 (AB 2026-10-14): the two doctor screens were removed; what used to be the doctor question is now ft_health. */
-    if(monthsPast65()>6){ go(ft_health); return; }
+       go straight to the next question: "Puede inscribirse o cambiar planes ahora" is not true for them most of the year.
+       T-071 took out the two doctor screens, T-077 the health-conditions screen; ft_next() is now
+       "¿Qué le importa más?". */
+    if(monthsPast65()>6){ go(ft_next()); return; }
     wb().innerHTML=`${bk()}
       ${bm(lang==='en'?`You are <strong>${age}</strong> and already eligible for Medicare!`:`Tiene <strong>${age} a\u00F1os</strong> y ya es elegible para Medicare!`,'hl')}
       ${ic(lang==='en'?'Great news':'Buenas noticias', lang==='en'?'You can enroll or change plans now. Let me find options available to you.':'Puede inscribirse o cambiar planes ahora. Perm\u00EDtanos encontrar opciones disponibles.')}`;
-    setTimeout(()=>go(ft_health),1500);
+    setTimeout(()=>go(ft_next()),1500);
   } else if(ew){
     const opensStr=`<strong>${monthName(ew.month)} ${ew.year}</strong>`;
     const now=new Date();
@@ -1210,22 +1149,26 @@ function ft_eligibility(){
         ${leadOK()?'':'<!-- no reminder sign-up: state not licensed -->'}<button class="btn-remind" onclick="go(snoozeStep)" style="margin-bottom:16px;${leadOK()?'':'display:none'}">${lang==='en'?'\u23F0 Remind me when it is time':'\u23F0 Recu\u00E9rdeme cuando sea el momento'}</button>
         ${bm(lang==='en'?'Or, you might qualify now through a special condition:':'O podr\u00EDa calificar ahora por una condici\u00F3n especial:')}
         <div class="opt-grid">
-          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_health)};_cb.u65dis()')}
-          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_health)};_cb.u65esrd()')}
-          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_health)};_cb.u65als()')}
+          ${oc(I.disability,'bl',lang==='en'?'Disability (SSDI 24+ months)':'Discapacidad (SSDI 24+ meses)',lang==='en'?'Receiving Social Security disability benefits':'Recibiendo beneficios de discapacidad del Seguro Social','','','_cb.u65dis=()=>{D.under65=\'disability\';go(ft_next())};_cb.u65dis()')}
+          ${oc(I.kidney,'gr',lang==='en'?'End-Stage Renal Disease':'Enfermedad Renal Terminal',lang==='en'?'Kidney failure requiring dialysis or transplant':'Insuficiencia renal que requiere di\u00E1lisis o trasplante','','','_cb.u65esrd=()=>{D.under65=\'esrd\';go(ft_next())};_cb.u65esrd()')}
+          ${oc(I.brain,'mi',lang==='en'?'ALS (Lou Gehrig\u2019s)':'ELA (Esclerosis Lateral Amiotr\u00F3fica)',lang==='en'?'Diagnosed with amyotrophic lateral sclerosis':'Diagnosticado con esclerosis lateral amiotr\u00F3fica','','','_cb.u65als=()=>{D.under65=\'als\';go(ft_next())};_cb.u65als()')}
         </div>
         ${bs(lang==='en'?'Learn about Medicare':'Aprender sobre Medicare','go(learnHome)')}`;
     } else {
       wb().innerHTML=`${bk()}
         ${bm(lang==='en'?`Your enrollment window opens ${opensStr}!`:`Su ventana de inscripci\u00F3n abre ${opensStr}!`,'hl')}
         ${ic(lang==='en'?'Good timing':'Buen momento', lang==='en'?'Now is a great time to start comparing plans.':'Ahora es un gran momento para empezar a comparar planes.')}`;
-      setTimeout(()=>go(ft_health),1200);
+      setTimeout(()=>go(ft_next()),1200);
     }
   } else {
-    go(ft_health);
+    go(ft_next());
   }
 }
-function ft_health(){healthStep(_activeExps.length>0?ft_experiment:ft_priority)}
+/* T-077 (AB 2026-10-15): the health-conditions screen is out, same reason as the doctor screens in
+   T-071 - we asked and nothing on the results used the answer. These three return the step that used
+   to follow it, so every route that reached *_health now lands there instead. They return the
+   function and do not call go() themselves, so the history stack holds the real step and Back works. */
+function ft_next(){return _activeExps.length>0?ft_experiment:ft_priority}
 function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
 
@@ -1245,7 +1188,7 @@ function mv_zipFrom(){
   document.getElementById('zipFrom')?.focus();
 }
 function mv_zipTo(){
-  prog(12);
+  prog(15);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'And where are you moving to?':'Y a d\u00F3nde se muda?')}
     <div class="input-group zip-group"><label>${lang==='en'?'Moving TO (zip code)':'Mud\u00E1ndose A (c\u00F3digo postal)'}</label>
@@ -1257,17 +1200,17 @@ function mv_zipTo(){
 }
 function mv_dob(){dobStep(mv_plan)}
 function mv_plan(){
-  prog(35);
+  prog(45);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'What kind of Medicare plan do you have now?':'\u00BFQu\u00E9 tipo de plan de Medicare tiene ahora?')}
     <div class="opt-grid">
-      ${oc(I.clipboard,'bl',lang==='en'?'One plan that covers everything':'Un plan que cubre todo',lang==='en'?'Sometimes called Medicare Advantage or Part C':'A veces llamado Medicare Advantage o Parte C','','',"D.curPlan='advantage';go(mv_health)")}
-      ${oc(I.clipboard,'gr',lang==='en'?'Separate plans I picked myself':'Planes separados que yo eleg\u00ED',lang==='en'?'Original Medicare + a supplement':'Medicare Original + un suplemento','','',"D.curPlan='medigap';go(mv_health)")}
-      ${oc(I.clipboard,'mi',lang==='en'?'Just basic Medicare':'Solo Medicare b\u00E1sico',lang==='en'?'Parts A and B only, nothing extra':'Solo Partes A y B, nada extra','','',"D.curPlan='original';go(mv_health)")}
-      ${oc(I.shrug,'sg',lang==='en'?"I'm not sure":'No estoy seguro',lang==='en'?"No worries, we'll figure it out together":'No se preocupe, lo resolveremos juntos','','',"D.curPlan='unknown';go(mv_health)")}
+      ${oc(I.clipboard,'bl',lang==='en'?'One plan that covers everything':'Un plan que cubre todo',lang==='en'?'Sometimes called Medicare Advantage or Part C':'A veces llamado Medicare Advantage o Parte C','','',"D.curPlan='advantage';go(mv_next())")}
+      ${oc(I.clipboard,'gr',lang==='en'?'Separate plans I picked myself':'Planes separados que yo eleg\u00ED',lang==='en'?'Original Medicare + a supplement':'Medicare Original + un suplemento','','',"D.curPlan='medigap';go(mv_next())")}
+      ${oc(I.clipboard,'mi',lang==='en'?'Just basic Medicare':'Solo Medicare b\u00E1sico',lang==='en'?'Parts A and B only, nothing extra':'Solo Partes A y B, nada extra','','',"D.curPlan='original';go(mv_next())")}
+      ${oc(I.shrug,'sg',lang==='en'?"I'm not sure":'No estoy seguro',lang==='en'?"No worries, we'll figure it out together":'No se preocupe, lo resolveremos juntos','','',"D.curPlan='unknown';go(mv_next())")}
     </div>`;
 }
-function mv_health(){healthStep(_activeExps.length>0?mv_experiment:mv_priority)}
+function mv_next(){return _activeExps.length>0?mv_experiment:mv_priority}
 function mv_experiment(){expOrNext(mv_priority)}
 function mv_priority(){priorityStep(flowResults)}
 
@@ -1278,17 +1221,17 @@ function mv_priority(){priorityStep(flowResults)}
 function bb_zip(){if(D.zip&&/^\d{5}$/.test(D.zip)){D.flow='better';bb_dob();return;}zipStep('better',lang==='en'?'Many people qualify for $0 premium plans with dental, vision, and hearing.':'Muchas personas califican para planes $0 prima con dental, visi\u00F3n y audici\u00F3n.','zip',bb_dob,'hl')}
 function bb_dob(){dobStep(bb_benefits)}
 function bb_benefits(){
-  prog(35);
+  prog(55);
   wb().innerHTML=`${bk()}
     ${bm(lang==='en'?'What benefits matter most?':'\u00BFQu\u00E9 beneficios le importan m\u00E1s?')}
     <div class="opt-grid">
-      ${oc(I.tooth,'bl',lang==='en'?'Dental & Vision':'Dental y Visi\u00F3n','','','',"D.priority='dental';go(bb_health)")}
-      ${oc(I.pill,'gr',lang==='en'?'Drug Savings':'Ahorros en Medicinas','','','',"D.priority='drugs';go(bb_health)")}
-      ${oc(I.fitness,'mi',lang==='en'?'Fitness & Wellness':'Fitness y Bienestar','','','',"D.priority='wellness';go(bb_health)")}
-      ${oc(I.star,'sg',lang==='en'?'All of the above':'Todo lo anterior','','','',"D.priority='all';go(bb_health)")}
+      ${oc(I.tooth,'bl',lang==='en'?'Dental & Vision':'Dental y Visi\u00F3n','','','',"D.priority='dental';go(bb_next())")}
+      ${oc(I.pill,'gr',lang==='en'?'Drug Savings':'Ahorros en Medicinas','','','',"D.priority='drugs';go(bb_next())")}
+      ${oc(I.fitness,'mi',lang==='en'?'Fitness & Wellness':'Fitness y Bienestar','','','',"D.priority='wellness';go(bb_next())")}
+      ${oc(I.star,'sg',lang==='en'?'All of the above':'Todo lo anterior','','','',"D.priority='all';go(bb_next())")}
     </div>`;
 }
-function bb_health(){healthStep(_activeExps.length>0?bb_experiment:flowResults)}
+function bb_next(){return _activeExps.length>0?bb_experiment:flowResults}
 function bb_experiment(){expOrNext(flowResults)}
 
 
@@ -1296,7 +1239,7 @@ function bb_experiment(){expOrNext(flowResults)}
 //  SNOOZE / REMIND ME
 // ═══════════════════════════════════════
 function snoozeStep(){
-  prog(35); wEvt('form_open',{source:'reminder'});
+  prog(50); wEvt('form_open',{source:'reminder'});
   const ew=getEnrollmentWindow();
   const opensStr=ew?`${monthName(ew.month)} ${ew.year}`:'';
   wb().innerHTML=`${bk()}
@@ -2471,7 +2414,8 @@ function submitLead(type){
   }
   D.fullName=name;D.phone=phone;D.email=email;
   if(question) D.question=question;
-  D.lang=lang;D.conditions=[...selConds];
+  // T-077: no health screen, so these are the empty values the old "Skip this step" button sent.
+  D.lang=lang;D.conditions=[...selConds];D.healthNotes='';
   D.timestamp=new Date().toISOString();
   D.leadType=type;
   if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
