@@ -280,7 +280,7 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-key .v.na{font-size:13.5px;font-weight:600;color:#56616a;line-height:1.25;white-space:normal;overflow-wrap:break-word;hyphens:none}
 .pc-keys.k2 .v{font-size:16px}
 .pc-keys.k2 .v.word{font-size:13.5px;font-weight:600}
-.pc-key .l{font-size:11.5px;color:#66727c;margin-top:4px;line-height:1.25;hyphens:none;text-wrap:balance}
+.pc-key .l{font-size:11.5px;color:#66727c;margin-top:4px;line-height:1.25;hyphens:none;overflow-wrap:break-word}
 .pc-key.zero .v,.pc-visit .v.zero,.pc .zero,.cmp .zero{color:var(--sage-dark)}
 @media(max-width:359px){
   .pc-key{padding:10px 3px 11px}
@@ -1758,6 +1758,11 @@ function planDetail(id){
 // max-out-of-pocket label drops "(en la red)"; the full wording stays on the plan screen.
 // Max out-of-pocket uses NON-BREAKING hyphens (\u2011) in English so it can only break at the
 // space -- "Max out-" / "of-pocket" would break a word, which this project does not do.
+/* T-079 round 2 (AB 2026-10-15, "OCD"): every label under a number is exactly TWO lines, with the
+   break written in, so the three tiles line up at 320, 375, 390 and on desktop instead of one tile
+   dropping a line and pushing its neighbours' baselines apart. The Medigap pair gets the same
+   treatment for the same reason. text-wrap and balancing are off here: the break is ours. */
+function KL(en1,en2,es1,es2){return lang==='en'?`${en1}<br>${en2}`:`${es1}<br>${es2}`;}
 function kTile(v,l,o){
   o=o||'';
   return `<div class="pc-key${o==='zero'?' zero':''}"><div class="v${o==='na'||o==='word'?' '+o:''}">${v}</div><div class="l">${l}</div></div>`;
@@ -1767,12 +1772,12 @@ function kNum(v,l){return v==null?kTile(noInfo(),l,'na'):kTile(v,l,v==='$0'?'zer
 function keyStrip(p){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
   return `<div class="pc-keys">`+
-    kNum(p.premium==null?null:premUsd(p.premium),L('Monthly premium','Prima mensual'))+
+    kNum(p.premium==null?null:premUsd(p.premium),KL('Monthly','premium','Prima','mensual'))+
     // a drug-only plan has no medical out-of-pocket maximum: CMS publishes none, so neither do we
-    (isMA?kNum(p.moop==null?null:usd(p.moop),L('Max out\u2011of\u2011pocket','Máximo de bolsillo'))
-         :kTile('—',L('Max out\u2011of\u2011pocket','Máximo de bolsillo'),'word'))+
-    (drug?kNum(p.ded==null?null:usd(p.ded),L('Drug deductible','Deducible medicamentos'))
-         :kTile(L('None','Ninguno'),L('Drug deductible','Deducible medicamentos'),'word'))+
+    (isMA?kNum(p.moop==null?null:usd(p.moop),KL('Max out\u2011of\u2011','pocket','Máximo de','bolsillo'))
+         :kTile('—',KL('Max out\u2011of\u2011','pocket','Máximo de','bolsillo'),'word'))+
+    (drug?kNum(p.ded==null?null:usd(p.ded),KL('Drug','deductible','Deducible','medicamentos'))
+         :kTile(L('None','Ninguno'),KL('Drug','deductible','Deducible','medicamentos'),'word'))+
   `</div>`;
 }
 function planCard(p,selectable){
@@ -1781,7 +1786,7 @@ function planCard(p,selectable){
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L(' to ',' a ')+usd(Math.round(p._pmax));
     return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
-      <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,L('Premium range','Rango de prima'))}${kTile(esc(p.carrier),L('Lowest price from','Precio más bajo de'),'word')}</div>
+      <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(p.carrier),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
   }
   return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
