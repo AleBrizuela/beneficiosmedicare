@@ -2293,9 +2293,11 @@ function sortPlans(plans, mode){
 // ── RESULTS ──
 /* T-096 round 4 b (AB 2026-10-15 23:10, "7 or 10? what is the magic number" -> 10): the first
    screen is not three plans any more. Ten, and if the filtered list holds thirteen or fewer there is
-   no "Ver más" at all -- showing 11 and hiding 1 is a button for nothing. After that, ten per tap
-   until every plan is on screen, and the last tap says how many are left. */
-const PAGE=10, PAGE_ALL=12;
+   no "Ver más" at all -- showing 10 and hiding 3 is a button for nothing. After that, ten per tap
+   until every plan is on screen, and the last tap says how many are left. AB raised the cutoff from
+   twelve to thirteen the same evening; the number lives here only, so the comment above and the two
+   tests in listHTML all follow it. */
+const PAGE=10, PAGE_ALL=13;
 let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 // Results top, T-088 round 3 + "less is more" (AB 2026-10-15). Pixel spec: flujo-completo-v11
