@@ -482,17 +482,21 @@ body.host-cbar .cbar{display:none!important}
    their own message in WhatsApp. The icons are the shapes a 70-year-old already recognises on their
    home screen, at the size their thumb expects. */
 .shbg{position:fixed;inset:0;background:rgba(0,20,40,.45);z-index:60}
+/* T-098: inside the host page's iframe "fixed" means the whole frame, so the sheet opened a
+   thousand pixels below the fold. With the page's viewport reported to us, both the dimming
+   and the sheet are placed absolutely over the part of the frame that is actually on screen. */
+#shwrap.vp .shbg{position:absolute;inset:auto 0 auto 0}
+#shwrap.vp .sheet{position:absolute;bottom:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
 .sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
-.chg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.chg{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
 /* round 10: the first channel is the whole width, in its own colour, with a bigger label */
-.chb.lead{width:100%;justify-content:center;gap:12px;min-height:60px;font-size:18px;color:#fff;border:0;margin-top:6px}
-.chb.lead .ci{background:rgba(255,255,255,.22)}
-.chb.lead.wa{background:#25D366}
-.chb.lead.sms{background:linear-gradient(180deg,#5BF675,#0CBD2A)}
-.chb{display:flex;align-items:center;gap:10px;border:1.5px solid #e3e7ea;border-radius:12px;padding:9px 10px;font:inherit;font-size:16px;font-weight:600;color:#1e2a32;min-height:52px;background:#fff;cursor:pointer;text-align:left}
-.chb:last-child:nth-child(odd){grid-column:1/-1;justify-content:center}
+/* T-098 item 11 (AB): the same size, every one of them. The first spot is still the one
+   each audience reaches for -- WhatsApp in Spanish, the texting app in English -- but it is
+   the order that says so now, not a button twice the size of the rest. */
+.chb{display:flex;align-items:center;gap:12px;border:1.5px solid #e3e7ea;border-radius:12px;padding:0 14px;font:inherit;font-size:17px;font-weight:600;color:#1e2a32;height:56px;background:#fff;cursor:pointer;text-align:left;width:100%}
+.chb:active{background:#f4f7f8}
 .ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
 .ci svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ci.wa{background:#25D366}
@@ -2934,7 +2938,7 @@ const SHARE_ICONS={
   sms:'<path fill="#fff" stroke="none" d="M12 4.6c-4.7 0-8.4 3-8.4 6.7 0 2.2 1.3 4.1 3.3 5.3-.2 1.2-.8 2.3-1.7 3.1 1.8 0 3.4-.7 4.6-1.7.7.1 1.4.2 2.2.2 4.7 0 8.4-3 8.4-6.7S16.7 4.6 12 4.6z"/>',
   mail:'<rect x="3.5" y="6" width="17" height="12" rx="2" fill="#fff" stroke="none"/><path d="M4.5 7.5l7.5 5.5 7.5-5.5" fill="none" stroke="#1A73E8" stroke-width="1.6"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
-  pdf:'<path d="M6.5 3h8l4 4v14h-12z" fill="#fff" stroke="none"/><text x="12.5" y="17" font-size="5.6" font-weight="800" text-anchor="middle" fill="#E5252A" stroke="none">PDF</text>'
+  pdf:'<path d="M7 3h7l4 4v14H7z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 13h5M10 16.5h3.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>'
 };
 /* T-078 round 10 (AB 2026-10-15 23:50): the one people actually use is a full-width tile in its
    own colour, and the other four sit under it two by two. Spanish leads with WhatsApp, English with
@@ -2951,18 +2955,44 @@ function shareChannels(){
 function openShare(){
   if(!sharePlans().length) return;
   wEvt('share_open',{plans:sharePlans().length});
-  const ch=shareChannels();
-  const btn=(c,first)=>`<button class="chb${first?' lead '+c.ic:''}" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
-  const btns=btn(ch[0],true)+`<div class="chg">`+ch.slice(1).map(c=>btn(c,false)).join('')+`</div>`;
+  const btn=c=>`<button class="chb" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
+  const btns=`<div class="chg">`+shareChannels().map(btn).join('')+`</div>`;
   const el=document.createElement('div');
   el.id='shwrap';
   el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
     <div class="sheet" role="dialog" aria-label="${L('Share options','Compartir opciones')}">
       <div class="grab"></div><p class="sh">${L('Share options','Compartir opciones')}</p>
       ${btns}<p class="shok" id="shok"></p></div>`;
+  // framed: keep it out of sight for the one tick it takes the page to answer, rather than
+  // letting it paint a thousand pixels down and jump
+  if(window.self!==window.top){ el.classList.add('vp'); el.style.visibility='hidden'; }
   document.body.appendChild(el);
+  askViewport();
 }
-function closeShare(){const el=document.getElementById('shwrap'); if(el) el.remove();}
+function closeShare(){
+  const el=document.getElementById('shwrap'); if(el) el.remove();
+  try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
+}
+/* T-098. In the host page's iframe the sheet cannot find the screen on its own: there is no
+   scrollport in here, so position:fixed resolves against the whole frame. The page reports
+   where the screen is and we place the sheet against that; on desktop, where the widget is
+   not framed, plain fixed is right and none of this runs. */
+let _hostVP=null;
+function askViewport(){
+  if(window.self===window.top) return;
+  try{ window.parent.postMessage({type:'widget-want-viewport',on:true},'*'); }catch(e){}
+  placeSheet();
+}
+function placeSheet(){
+  const el=document.getElementById('shwrap'); if(!el) return;
+  if(window.self===window.top){ el.classList.remove('vp'); el.style.visibility=''; return; }
+  if(!_hostVP) return;                    // still waiting for the page; stay hidden
+  const sheet=el.querySelector('.sheet'), bg=el.querySelector('.shbg');
+  el.classList.add('vp');
+  bg.style.top=_hostVP.top+'px'; bg.style.height=_hostVP.height+'px';
+  sheet.style.top=Math.max(_hostVP.top,_hostVP.top+_hostVP.height-sheet.offsetHeight)+'px';
+  el.style.visibility='';
+}
 function shareSend(k){
   const url=shareURL(), msg=shareMsg();
   wEvt('share_send',{channel:k,plans:sharePlans().length});
@@ -3497,6 +3527,10 @@ if(!_dataOnly) go(startZip);
       if(st&&(st.mode==='action'||st.mode==='duo')){barAct();}else{goCompare();}return;}
     /* T-078: the page's outline button is Compartir */
     if(e.data.type==='widget-share'){ if(typeof openShare==='function') openShare(); return; }
+    /* T-098: where the screen is, reported by the page as it scrolls, so the share sheet can
+       sit at the bottom of it instead of at the bottom of a 2,000px frame. */
+    if(e.data.type==='host-viewport'){ _hostVP=e.data;
+      if(typeof placeSheet==='function') placeSheet(); return; }
     /* T-078: "give me these plans for this ZIP", answered with the same objects the comparison
        draws from. The reply goes back to the exact window that asked, at its own origin. */
     if(e.data.type==='widget-plans'){
