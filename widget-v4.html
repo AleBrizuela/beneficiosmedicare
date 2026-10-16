@@ -108,7 +108,7 @@ body.host-next #wb .btn-p{display:none!important}
    costs nothing where a block already fits on one line. The forced two-line cost labels under the
    card numbers are NOT covered by it on purpose: their break is written in (T-079 round 2) and the
    second line is meant to be one word. */
-.q3q,.q3h,.q3tx b,.q3tx span,.q3skip,.rh .hl,.rh .zl,.chip,.fomore,.fopt,.btn-back,.btn-p,.btn-s,.pc-det,.pd-cta,.cbar button,
+.q3q,.q3h,.q3tx b,.q3tx span,.q3skip,.rh .hl,.rh .zl,.fc,.ord,.ordp .orow,.btn-back,.btn-p,.btn-s,.pc-det,.pd-cta,.cbar button,
 .pc-eb,.pc-name,.cmp thead th .nm2,.cmp tr.lr td,.cmp tr.vr td,.cmp tr.grp td,.lr .ll,.lr .lv,.bot-msg,.diffline{text-wrap:balance}
 .fine p,.pc-fine,.disc,.psrc,.dualnote{text-wrap:pretty}
 /* the two-line cost labels keep their own written-in break (T-079 round 2) */
@@ -176,19 +176,29 @@ body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
 /* Results top (T-088 round 3 + "less is more"): title, ZIP line, ONE chip row. The sort row and
    the "lo más importante" line are gone; "Filtros y orden" opens both in one panel. */
 .rh .hl{font-size:22px;font-weight:700;color:var(--cbar-ink);margin:0 0 2px;line-height:1.2;text-wrap:pretty}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 2px}
-.chip{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14.5px;font-weight:600;background:var(--cbar-brand);color:#fff;border:0;border-radius:999px;padding:7px 12px;min-height:40px;cursor:pointer}
-.chip i{font-style:normal;background:rgba(255,255,255,.25);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:12px}
-.fomore{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14.5px;font-weight:600;color:var(--cbar-brand);background:#fff;border:1.5px solid #e3e7ea;border-radius:999px;padding:7px 12px;min-height:40px;cursor:pointer}
-.fopan{border:1.5px solid #e3e7ea;border-radius:12px;padding:10px 12px 4px;margin:8px 0 2px;background:#fff}
-.fopan[hidden]{display:none}
-.fosec{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5b6670;margin:0 0 8px}
-.fopan .pills{padding-bottom:12px}
-.folist{display:flex;flex-direction:column;gap:2px;padding-bottom:8px}
-.fopt{display:flex;align-items:center;gap:8px;width:100%;text-align:left;font:inherit;font-size:15px;font-weight:400;color:#1e2a32;background:none;border:0;border-radius:8px;padding:9px 6px;min-height:44px;cursor:pointer}
-.fopt .ck{width:16px;color:var(--cbar-brand);font-weight:900;visibility:hidden}
-.fopt.on .ck{visibility:visible}
-.fopt.on{color:var(--cbar-brand)}
+/* T-096 round 5 b/c (AB 2026-10-16 00:50, spec 2026-10-16_0030_filtros-y-orden-v3.html). The three
+   "Solo" answers from the question screen are always on screen as chips carrying their own count, so
+   what is filtering the list is visible and one tap undoes it, with nothing to open first. The order
+   and the type filters -- the ones almost nobody touches -- sit behind one link at the end of the row.
+   Measurements are the mock's: chip 14px/600 in a 1.5px #D4DEE8 pill, 6px 9px, 40px tall. */
+.fx{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 2px}
+.fc{display:inline-flex;align-items:center;gap:5px;font:inherit;border:1.5px solid #D4DEE8;border-radius:999px;padding:6px 9px;font-size:14px;white-space:nowrap;font-weight:600;color:#1A202C;background:#fff;min-height:40px;cursor:pointer}
+.fc i{font-style:normal;font-weight:400;color:#4A5568;font-size:13.5px}
+.fc.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
+.fc.on i{color:#E0F2F1}
+.fc.on:before{content:"\2713";font-weight:700}
+.ord{margin-left:auto;font:inherit;background:none;border:0;color:var(--cbar-brand);font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer;min-height:40px;padding:0 2px}
+.ordp{margin:10px 0 2px;border:1.5px solid #D4DEE8;border-radius:12px;background:#fff;padding:6px 0}
+.ordp[hidden]{display:none}
+.ordp .t{font-size:12px;letter-spacing:.12em;font-weight:700;color:#4A5568;padding:6px 14px 2px;margin:0}
+.ordp .orow{display:block;width:100%;text-align:left;font:inherit;margin:0;padding:11px 14px;font-size:16px;color:#1A202C;background:none;border:0;cursor:pointer;min-height:44px}
+.ordp .orow.on{color:var(--cbar-brand);font-weight:600}
+.ordp .orow.on:before{content:"\2713  "}
+.mf{display:flex;flex-wrap:wrap;gap:6px;padding:6px 14px 10px}
+.mf button{font:inherit;border:1.5px solid #D4DEE8;border-radius:999px;padding:5px 10px;font-size:14px;font-weight:600;background:#fff;color:#1A202C;cursor:pointer}
+.mf button.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
+.mf i{font-style:normal;font-weight:400;color:#4A5568}
+.mf button.on i{color:#E0F2F1}
 .opt-card{position:relative}
 .rank-badge{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--sage);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,137,123,.3);animation:popIn .25s ease}
 .opt-card.ranked{border-color:var(--sage);background:var(--lt-mint)}
@@ -342,9 +352,14 @@ body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
 /* T-076 (AB 2026-10-15): the button sits INSIDE the card's own 14px row padding. At full width its
    border ran along the card's border -- doubled at the bottom, and clipped at the corners by the
    card's 16px radius + overflow:hidden. 28px = the 14px the cost rows already use on each side. */
-.pc-det{display:block;width:calc(100% - 28px);background:#fff;border:1.5px solid var(--sage);color:var(--sage-dark);
-  border-radius:10px;padding:12px;font-family:inherit;font-size:17px;font-weight:700;line-height:1.2;
-  text-align:center;cursor:pointer;min-height:48px;margin:4px 14px 14px}
+/* T-096 round 5 d: the big outlined button is gone. The card ends in a thin strip holding the same
+   words as a link, and the WHOLE card opens the plan, so a plan and a half more fits on a screen
+   without taking the action away. Measurements from the mock's `.cc .det`. */
+.pc-det{display:flex;justify-content:flex-end;align-items:center;width:auto;background:none;border:0;
+  border-top:1px solid #EEF1F3;border-radius:0;margin:0;padding:10px 14px;min-height:44px}
+.pc-detl{font:inherit;font-size:16px;font-weight:600;color:var(--cbar-brand);background:none;border:0;
+  padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.pc.tap{cursor:pointer}
 /* T-073: a three-row cost block on the short card needs no "COSTOS" bar above it. */
 .ls.nohead{padding-top:2px}
 .ls.nohead .lr{padding-top:9px;padding-bottom:9px}
@@ -505,7 +520,10 @@ body.host-cbar .cbar{display:none!important}
 .cmp.s1 thead th:nth-child(1),.cmp.s1 tr.vr td:nth-child(1),
 .cmp.s2 thead th:nth-child(2),.cmp.s2 tr.vr td:nth-child(2),
 .cmp.s3 thead th:nth-child(3),.cmp.s3 tr.vr td:nth-child(3){background:#F3FAF9}
-.cmp.diff .sug{display:none}
+/* The suggestion card, the Sugerido chip and the tinted column all STAY when Mostrar diferencias is
+   on (AB 2026-10-15). Differences are what the plans do not share; the suggestion is which one to
+   pick, and that is the question the toggle is meant to help answer, not a row to hide. There used
+   to be a `.cmp.diff .sug{display:none}` here -- do not put it back. */
 /* ── T-085 round 2 (AB 2026-10-15, "these are old people") ──────────────────────────────────────
    Pixel spec: 2026-10-15_1430_comparar-diferencias-v5 + flujo-completo-v11 screen 6.
    The label is a full-width line and the three values are the line under it, in equal thirds, at
@@ -2010,18 +2028,25 @@ function planHead(p,selectable,detail){
       </div>`;
 }
 function detBtn(p){
-  return `<button class="pc-det" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button>`;
+  return `<div class="pc-det"><button class="pc-detl" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button></div>`;
+}
+/* T-096 round 5 d: the whole card opens the plan. The Comparar box keeps its own tap -- it is a
+   label around a checkbox, and a tap there must tick it, not navigate -- and so does the link in
+   the strip, which already opens the plan itself. */
+function cardTap(e,id){
+  if(e.target.closest('.pc-cmp,a,input,button')) return;
+  openPlan(id);
 }
 function planCard(p,selectable){
   // Medigap / Supplement: prices are Medicare.gov's March 2026 figures, labelled as such, never presented as 2027.
   // Two tiles, not three: a supplement has no out-of-pocket maximum and no drug deductible.
   if(p._medigap){
     const rng=usd(Math.round(p._pmin))+L('\u00a0to\u00a0','\u00a0a\u00a0')+usd(Math.round(p._pmax));
-    return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:#00897B">${planHead(p,selectable)}
+    return `<div class="pc tap" data-pid="${esc(p.id)}" style="--cc:#00897B" onclick="cardTap(event,'${esc(p.id)}')">${planHead(p,selectable)}
       <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(carrierName(p.carrier)),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
   }
-  return `<div class="pc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}">${planHead(p,selectable)}
+  return `<div class="pc tap" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')">${planHead(p,selectable)}
     ${keyStrip(p)}
     ${detBtn(p)}</div>`;
 }
@@ -2169,7 +2194,7 @@ const PILLS=[
   {id:'zero', en:'$0 premium',           es:'$0 prima',               f:p=>inTodos(p)&&p.premium===0},
   {id:'dsnp', en:()=>'With '+mcd(),       es:()=>'Con '+mcd(),         f:isDual},
   {id:'snp',  en:'Other special needs',  es:'Otras necesidades especiales', f:p=>isSNP(p)&&!isDual(p)},
-  {id:'pdp',  en:'Drug plans (Part D)',  es:'Medicamentos (Parte D)', f:isPDP, opt:true},
+  {id:'pdp',  en:'Drug plans only (Part D)', es:'Solo medicamentos (Parte D)', f:isPDP, opt:true},
   {id:'supp', en:'Medigap',              es:'Medigap',                f:p=>!!p._medigap, opt:true},
 ];
 // T-088: two filters that sit ON TOP of the type pill, so "Tengo Medi-Cal" and "Pagar $0 de prima"
@@ -2190,6 +2215,10 @@ function setType(v){
   wEvt('filter_pill',{pill:v});
   // "$0 prima" toggles (one tap on, one tap off). The others pick the type, as before.
   if(v==='zero') _zeroOnly=!_zeroOnly; else _typeFilter=v;
+  // A type the chips would empty (Medigap or Parte D while "$0 de prima" is on) drops the chip
+  // rather than showing "0 planes": the panel said how many there are, so that is what appears.
+  if(!filterByType(PLANS).length&&_zeroOnly){_zeroOnly=false;}
+  if(!filterByType(PLANS).length&&_drugOnly){_drugOnly=false;}
   _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
 }
 // T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
@@ -2214,25 +2243,9 @@ function applyPriority(){
   wEvt('priority_sort',{priority:pr[0]||'',sort:_sortMode,
     filters:[(_zeroOnly?'zero':''),(_drugOnly?'drug':''),(_typeFilter==='dsnp'?'dsnp':'')].filter(Boolean).join('+')||'none'});
 }
-function clearFilter(k){
-  wEvt('filter_pill',{pill:'clear_'+k});
-  if(k==='zero') _zeroOnly=false; else if(k==='drug') _drugOnly=false; else _typeFilter='all';
-  _shown=PAGE;selPlans=[];flowResults();
-}
-function pillsHTML(){
-  return `<div class="pills" role="group" aria-label="${L('Plan type','Tipo de plan')}">`+PILLS.map(x=>{
-    // Which pills the row holds is still decided by the county's own plans, so the row never
-    // changes shape when a filter goes on. T-088: the NUMBER is what tapping it would show, i.e.
-    // counted with the other filter applied. With no filter on, both are the same number as before.
-    if(x.id!=='all'&&!PLANS.filter(x.f).length) return '';
-    const n=x.id==='zero'
-      ? PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&p.premium===0).length
-      : PLANS.filter(p=>typeSet(x.id,p)&&extrasOK(p)).length;
-    const on=x.id==='zero'?_zeroOnly:(_typeFilter===x.id&&!(x.id==='all'&&_zeroOnly));
-    const lb=typeof x[lang]==='function'?x[lang]():x[lang];
-    return `<button class="pill${on?' on':''}" aria-pressed="${on}" onclick="setType('${x.id}')">${lb} <span>${n}</span></button>`;
-  }).join('')+`</div>`;
-}
+/* The "Todos / HMO / PPO / ..." pill row and the chip that cleared one filter both went with round
+   5: the three chips and the Orden y más filtros panel do the same job in fewer taps. PILLS itself
+   stays -- it is the filter PREDICATES, which the chips, the panel and filterByType all read. */
 
 // ── SORT (b14 "Orden B") ── neutral, visitor-chosen orders. Default: lowest monthly premium, then
 // lowest max out-of-pocket (b10). Never favours plans we represent.
@@ -2327,47 +2340,72 @@ function resultsHead(list){
     ${foPanel()}
   </div>`;
 }
-// Every filter that is on, as a chip that takes it off in one tap, then the one control that opens
-// the rest. A chip is only ever a filter the visitor can see the effect of; the sort never gets one,
-// because an order hides nothing.
-function activeFilters(){
-  const f=[];
-  if(_zeroOnly) f.push(['zero',L('$0 premium','$0 de prima')]);
-  if(_drugOnly) f.push(['drug',L('With drug coverage','Con medicamentos')]);
-  if(_typeFilter!=='all'){
-    const pl=PILLS.find(x=>x.id===_typeFilter);
-    if(pl) f.push(['type',typeof pl[lang]==='function'?pl[lang]():pl[lang]]);
-  }
-  return f;
-}
+/* T-096 round 5 b (AB 2026-10-16 00:50). The three "Solo" answers from the question screen are
+   chips that are ALWAYS on screen, each carrying the count it would leave. Before this they only
+   appeared once something was filtering, so a visitor who wanted "$0 de prima" had to open a drawer
+   to find it, and the drawer was also where the order lived. Now the three things people actually
+   filter by are one tap away and the rest is behind the link at the end of the row.
+   The count follows the old pill convention: what tapping it would show, i.e. counted with the
+   OTHER filters already applied, so the number on the chip is the number the title will show. */
 let _foOpen=false;
+function chipDefs(){
+  return [
+    {k:'zero', lb:L('$0 premium','$0 de prima'), on:_zeroOnly,
+     any:PLANS.some(p=>inTodos(p)&&p.premium===0),
+     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&p.premium===0).length},
+    {k:'drug', lb:L('With drug coverage','Con medicamentos'), on:_drugOnly,
+     any:PLANS.some(hasDrug),
+     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&hasDrug(p)).length},
+    {k:'dsnp', lb:L('With ','Con ')+mcd(), on:_typeFilter==='dsnp',
+     any:PLANS.some(isDual),
+     n:PLANS.filter(p=>isDual(p)&&extrasOK(p)).length}
+  ];
+}
 function chipRow(){
-  const f=activeFilters();
-  return `<div class="chips">`+f.map(([k,lb])=>
-      `<button class="chip" onclick="clearFilter('${k}')" aria-label="${L('Remove filter','Quitar filtro')}: ${esc(lb)}">${esc(lb)}<i aria-hidden="true">\u2715</i></button>`
+  const cs=chipDefs().filter(c=>c.any);
+  return `<div class="fx">`+cs.map(c=>
+      `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${c.lb} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+
-    `<button class="fomore" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${foLabel()} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
+    `<button class="ord" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort &amp; more filters','Orden y m\u00E1s filtros')} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
 }
-/* Once an order has been chosen it is named on the button, so the drawer does not have to be
-   reopened to remember what is on. Until then it says what the control is for. */
-function foLabel(){
-  if(_sortMode==='premium') return L('Filters &amp; sort','Filtros y orden');
-  const m=sortModes().find(x=>x.id===_sortMode);
-  return m?esc(L('Sort: '+m.sen,'Orden: '+m.ses)):L('Filters &amp; sort','Filtros y orden');
+/* One tap toggles. "Con <Medi-Cal>" is the dsnp TYPE, which is single-select, so turning it off
+   goes back to Todos -- the same thing the old pill did, reached in one tap instead of three. */
+function chipTap(k){
+  const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:_typeFilter==='dsnp';
+  wEvt('filter_chip',{chip:k,on:!was});
+  if(k==='zero') _zeroOnly=!_zeroOnly;
+  else if(k==='drug') _drugOnly=!_drugOnly;
+  else _typeFilter=was?'all':'dsnp';
+  _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
 }
+/* T-096 round 5 c: one panel, the order first because it is what people change, then the five type
+   filters. A tap applies AND closes (round 4 c), so the list is never hidden behind an open panel.
+   Tapping the type that is already on returns to Todos, which is also what "all three chips off"
+   means. The order of the five is the mock's, not PILLS'. */
+const MORE_IDS=['ppo','hmo','snp','supp','pdp'];
 function foPanel(){
   const ms=sortModes();
-  return `<div class="fopan" id="fopan"${_foOpen?'':' hidden'}>
-    <p class="fosec">${L('Filters','Filtros')}</p>${pillsHTML()}
-    <p class="fosec">${L('Sort','Orden')}</p>
-    <div class="folist" role="group">${ms.map(m=>`<button class="fopt${m.id===_sortMode?' on':''}" aria-pressed="${m.id===_sortMode}" onclick="setSort('${m.id}')"><span class="ck">\u2713</span>${m[lang]}</button>`).join('')}</div>
+  return `<div class="ordp" id="fopan"${_foOpen?'':' hidden'}>
+    <p class="t">${L('SORT','ORDEN')}</p>
+    ${ms.map(m=>`<button class="orow${m.id===_sortMode?' on':''}" aria-pressed="${m.id===_sortMode}" onclick="setSort('${m.id}')">${m[lang]}</button>`).join('')}
+    <p class="t">${L('MORE FILTERS','M\u00C1S FILTROS')}</p>
+    <div class="mf">${MORE_IDS.map(id=>{
+      const x=PILLS.find(q=>q.id===id); if(!x||!PLANS.filter(x.f).length) return '';
+      // The mock counts these WITHOUT the chips applied (it shows "$0 de prima 6" on and
+      // "HMO 64" under it), and that is the right call: counted the other way, Medigap and Parte D
+      // read "0" whenever a chip is on, which offers a filter that leads nowhere. setType drops a
+      // chip that would empty the list, so the number stays the number you get.
+      const n=PLANS.filter(p=>typeSet(id,p)).length, on=_typeFilter===id;
+      const lb=typeof x[lang]==='function'?x[lang]():x[lang];
+      return `<button class="${on?'on':''}" aria-pressed="${on}" onclick="setType('${on?'all':id}')">${lb} <i>${n}</i></button>`;
+    }).join('')}</div>
   </div>`;
 }
 function toggleFO(){
   _foOpen=!_foOpen;
   wEvt('filters_sort_panel',{on:_foOpen});
   const p=document.getElementById('fopan');
-  if(p){p.hidden=!_foOpen;const b=document.querySelector('.fomore');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=foLabel()+' '+(_foOpen?'\u25B4':'\u25BE');}}
+  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ord');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort &amp; more filters','Orden y m\u00E1s filtros')+' '+(_foOpen?'\u25B4':'\u25BE');}}
 }
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
