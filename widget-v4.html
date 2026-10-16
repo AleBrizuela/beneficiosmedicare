@@ -7,7 +7,7 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   /* T-050 tester mode: ?qa=1 marks this browser as ours until ?qa=0; our visits go to GA4 as traffic_type=internal (filtered out). */
-  (function(){var t=false;try{var q=/[?&]qa=([01])(?=&|#|$)/.exec(location.search);if(q){if(q[1]==='1')localStorage.setItem('bm_tester','1');else localStorage.removeItem('bm_tester');}t=localStorage.getItem('bm_tester')==='1';}catch(e){t=/[?&]qa=1(?=&|#|$)/.test(location.search);}window.bmTester=t;window.bmInternal=t||/\.pages\.dev$/i.test(location.hostname);if(window.bmInternal)gtag('set',{traffic_type:'internal'});if(t&&window.self===window.top)document.addEventListener('DOMContentLoaded',function(){var d=document.createElement('div');d.id='bm-test-dot';d.textContent='TEST';d.setAttribute('aria-hidden','true');d.style.cssText='position:fixed;left:6px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:2147483647;padding:2px 6px;border-radius:9px;background:#6B7280;color:#fff;font:700 9px/1.4 system-ui,sans-serif;letter-spacing:.06em;opacity:.8;pointer-events:none';document.body.appendChild(d);});})();
+  (function(){var t=false;try{var q=/[?&]qa=([01])(?=&|#|$)/.exec(location.search);if(q){if(q[1]==='1')localStorage.setItem('bm_tester','1');else localStorage.removeItem('bm_tester');}t=localStorage.getItem('bm_tester')==='1';}catch(e){t=/[?&]qa=1(?=&|#|$)/.test(location.search);}window.bmTester=t;window.bmInternal=t||/\.pages\.dev$/i.test(location.hostname);if(window.bmInternal)gtag('set',{traffic_type:'internal'});})();
   gtag('js', new Date());
   gtag('config', 'G-VG5N9NKWPF');
 </script>
@@ -187,10 +187,10 @@ body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
 .fc.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
 .fc.on i{color:#E0F2F1}
 .fc.on:before{content:"\2713";font-weight:700}
-.ord{margin-left:auto;font:inherit;background:none;border:0;color:var(--cbar-brand);font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer;min-height:40px;padding:0 2px}
+.fxo{display:flex;margin:2px 0 0}
+.ord{font:inherit;background:none;border:0;color:var(--cbar-brand);font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer;min-height:40px;padding:0 2px}
 .ordp{margin:10px 0 2px;border:1.5px solid #D4DEE8;border-radius:12px;background:#fff;padding:6px 0}
 .ordp[hidden]{display:none}
-.ordp .t{font-size:12px;letter-spacing:.12em;font-weight:700;color:#4A5568;padding:6px 14px 2px;margin:0}
 .ordp .orow{display:block;width:100%;text-align:left;font:inherit;margin:0;padding:11px 14px;font-size:16px;color:#1A202C;background:none;border:0;cursor:pointer;min-height:44px}
 .ordp .orow.on{color:var(--cbar-brand);font-weight:600}
 .ordp .orow.on:before{content:"\2713  "}
@@ -453,6 +453,12 @@ body:not(.in-iframe).has-bar .widget-body{padding-bottom:104px}
 .cbar .n{font-size:15px;font-weight:400;color:#4A5568}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
 .cbar button:disabled{opacity:.45;cursor:not-allowed}
+/* T-098 item 7: outline at 1-2 ticked, solid at 3, one pulse on the way in. */
+.cbar:not(.solid):not(.duo) button{background:#fff;color:var(--cbar-brand);border:2px solid var(--cbar-brand)}
+.cbar.ready:not(.solid):not(.duo) button{background:var(--cbar-brand);color:#fff}
+@keyframes cbarpulse{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+.cbar button.pulse{animation:cbarpulse 400ms ease-out 1}
+@media (prefers-reduced-motion:reduce){.cbar button.pulse{animation:none}}
 body.host-cbar .cbar{display:none!important}
 /* ── T-096 round 4 d (AB 2026-10-15 23:30, with a screenshot of the staging compare) ───────────
    "cuando alguien dice muéstreme plan details, show THIS level of info. No more." The plan screen
@@ -839,20 +845,132 @@ if(window.self!==window.top){
 const _cb={};
 
 // ── CARRIER BRAND COLORS ──
+/* T-098 item 14 (AB 2026-10-15). Every carrier that appears in the nine states the agency is
+   licensed in (AZ CA FL IA IL KS MO OK TX) has a colour of its own: before this, 119 carriers
+   shared 25 entries and the rest fell back to grey, so most plan cards, compare columns, shared
+   sheets and PDFs were colourless. Devoted Health is #F26522 (AB). Real brand marks where we know
+   them; a distinct, dark-enough hue otherwise. The list AB reviews:
+   SHIP/now/2026-10-15_T-098-fix_carrier-colors.md. Regenerate from data/cms_<ST>.js. */
 const CARRIER_COLORS = {
-  'SCAN Health Plan':'#0057A6','Alignment Health Plan':'#F37021','Alignment Health':'#F37021',
-  'UnitedHealthcare':'#002677','Humana':'#49A942',
-  'Blue Shield of California':'#0073CF','Blue Shield of CA':'#0073CF',
-  'Aetna Medicare':'#7D3F98','Aetna':'#7D3F98',
-  'Anthem Blue Cross':'#0055A5','Anthem Blue Cross Partnership Plan':'#0055A5','Anthem':'#0055A5',
-  'Kaiser Permanente':'#B11226',
-  'Wellcare':'#00529B','Centene':'#E31837',
-  'L.A. Care Health Plan':'#009CDE','Molina Healthcare of California':'#E31837',
-  'Clever Care Health Plan':'#FF6B35','Central Health Medicare Plan':'#2E86AB',
-  'UCLA Health Medicare Advantage Plan':'#2774AE','Astiva Health':'#00A5CF',
-  'AHF':'#E3000B','Elite Health Plan, Inc.':'#1B4F72',
-  'Imperial Health Plan of California, Inc.':'#2E8B57','Champion Heath Plan':'#FF8C00',
-  'VillageHealth':'#4B8B3B','Align Senior Care':'#5B8A72'
+  "Humana":'#49A942',
+  "UnitedHealthcare":'#002677',
+  "Aetna Medicare":'#7D3F98',
+  "Wellcare":'#00529B',
+  "Devoted Health":'#F26522',
+  "Blue Cross and Blue Shield of IL, NM, OK, TX":'#0066A4',
+  "Wellpoint":'#004B87',
+  "HealthSpring":'#0E6E8C',
+  "Blue Cross and Blue Shield of Texas":'#0066A4',
+  "Baylor Scott & White Health Plan":'#004B87',
+  "Provider Partners Health Plans":'#1E7A4C',
+  "MediGold":'#B8860B',
+  "Alignment Health Plan":'#F37021',
+  "CarePlus Health Plans, Inc.":'#00833E',
+  "Anthem HealthKeepers":'#0055A5',
+  "Freedom Health, Inc.":'#B01C2E',
+  "Blue Cross and Blue Shield of Kansas":'#0066A4',
+  "GlobalHealth":'#0F766E',
+  "CommunityCare Senior Health Plan (HMO)":'#2F7D5E',
+  "Wellmark Advantage Health Plan":'#3D5A80',
+  "Texas Independence Health Plan":'#4A6FA5',
+  "Iowa Health Advantage":'#1F6F8B',
+  "Florida Blue":'#0066A4',
+  "Imperial Health Plan of California, Inc.":'#2E8B57',
+  "Molina Healthcare of Illinois":'#E31837',
+  "SCAN Health Plan":'#0057A6',
+  "Simply Healthcare Plans, Inc.":'#CE1141',
+  "Essence Healthcare":'#6A1B9A',
+  "Optimum HealthCare, Inc.":'#1F6FB2',
+  "Blue Cross and Blue Shield of NM, TX":'#0066A4',
+  "Gold Kidney Health Plan":'#237A7A',
+  "Prominence Health Plan":'#A0522D',
+  "Central Health Medicare Plan":'#2E86AB',
+  "Healthy Blue":'#7A4E2A',
+  "Aetna Medicare FIDE":'#7D3F98',
+  "Kaiser Permanente":'#B11226',
+  "Kansas Health Advantage":'#8B3A62',
+  "Blue Cross and Blue Shield of IL, NM":'#0066A4',
+  "CHRISTUS Health Advantage":'#146B5C',
+  "Molina Healthcare of Texas, Inc.":'#E31837',
+  "Passport Advantage":'#1B5E7E',
+  "Ultimate Health Plans":'#7B3F61',
+  "ProCare Advantage":'#8E44AD',
+  "American Health Advantage of Missouri":'#1E7A4C',
+  "Florida Complete Care":'#5A4FCF',
+  "Champion Heath Plan":'#FF8C00',
+  "Zing Health":'#6B4C9A',
+  "NHC Advantage":'#6E4B3A',
+  "Florida Blue HMO":'#0066A4',
+  "Anthem Blue Cross":'#0055A5',
+  "American Health Advantage of Texas":'#2C5F9E',
+  "Align Senior Care":'#5B8A72',
+  "Blue Cross and Blue Shield of OK, TX":'#0066A4',
+  "Solis Health Plans":'#C2561D',
+  "Health First Health Plans, Inc.":'#C8102E',
+  "Clear Spring Health":'#9C4722',
+  "Capital Health Plan":'#13617B',
+  "Anthem Blue Cross Partnership Plan":'#0055A5',
+  "KelseyCare Advantage":'#2D6A4F',
+  "American Health Advantage of Oklahoma":'#B8336A',
+  "Blue Cross and Blue Shield of Oklahoma":'#0066A4',
+  "Blue Shield of California":'#0073CF',
+  "Longevity Health Plan":'#7D5A3C',
+  "Anthem Blue Cross Life and Health Insurance Company":'#0055A5',
+  "Doctors HealthCare Plans, Inc.":'#27668C',
+  "Astiva Health":'#00A5CF',
+  "Mercy Care Advantage":'#3A6B35',
+  "Banner Medicare Advantage":'#4A6FA5',
+  "Clever Care Health Plan":'#FF6B35',
+  "Community Health Choice":'#6B4C9A',
+  "Anthem Blue Cross and Blue Shield":'#0055A5',
+  "Quartz Medicare Advantage (HMO)":'#B8336A',
+  "Cox HealthPlans":'#A33A3A',
+  "HealthSun Health Plans, Inc.":'#3E6B2F',
+  "Memorial Hermann Health Plan":'#A14A76',
+  "Great Plains Medicare Advantage":'#9B2D5E',
+  "eternalHealth":'#2F7D5E',
+  "American Health Advantage of Florida":'#A0522D',
+  "SECUR Health Plan":'#2C5F9E',
+  "Clover Health":'#53A318',
+  "BayCare Health Plans":'#7B3F61',
+  "Medica":'#004C97',
+  "Molina Healthcare of California":'#E31837',
+  "Verda Health Plan of Texas":'#9C4722',
+  "Community First":'#3D5A80',
+  "Align powered by Sanford Health Plan":'#1B5E7E',
+  "Blue Cross Blue Shield of Arizona Health Choice":'#0066A4',
+  "Blue Cross and Blue Shield of Illinois":'#0066A4',
+  "CCHP (Chinese Community Health Plan)":'#C0392B',
+  "El Paso Health Medicare Advantage":'#8A5A2B',
+  "Elite Health Plan, Inc.":'#1B4F72',
+  "Blue Cross Blue Shield of Arizona (AZ Blue)":'#0066A4',
+  "Central California Alliance for Health":'#1D7874',
+  "Longevity Health":'#4C5B8A',
+  "Aspire Health":'#C2561D',
+  "Health Plan of San Joaquin / Mountain Valley Health Plan Advantage D-SNP (HMO)":'#2E6E9E',
+  "Leon Health, Inc.":'#B5651D',
+  "Sharp Health Plan":'#C8102E',
+  "AmeriHealth Caritas VIP Care (HMO-D-SNP)":'#8E44AD',
+  "Molina Healthcare of Arizona":'#E31837',
+  "VillageHealth":'#4B8B3B',
+  "CenCal CareConnect":'#1D7874',
+  "Community Health Group":'#15607A',
+  "IEHP DualChoice":'#005288',
+  "UCLA Health Medicare Advantage Plan":'#2774AE',
+  "Verda Health Plan of Arizona":'#146B5C',
+  "AHF":'#E3000B',
+  "Alameda Alliance for Health":'#1D7874',
+  "CalOptima Health OneCare":'#1A4C8B',
+  "Community Health Plan of Imperial Valley":'#2E8B57',
+  "Contra Costa Health Care Plus (HMO D-SNP)":'#2E6E9E',
+  "Gold Coast Health Plan":'#B8860B',
+  "HEALTH PLAN OF SAN MATEO":'#146B8C',
+  "Kern Family Health Care Medicare (D-SNP)":'#2E6E9E',
+  "L.A. Care Health Plan":'#009CDE',
+  "MedicareBlue Rx":'#15616D',
+  "Providence Medicare Advantage Plans":'#9E1B32',
+  "San Francisco Health Plan":'#0B6E99',
+  "Santa Clara Family Health Plan":'#1B6CA8'
 };
 
 // ── SVG ICON LIBRARY (dual-tone filled) ──
@@ -1867,7 +1985,8 @@ function planAction(p){
   // reached from Comparar and the bottom bar. The two notices above are notices, not CTAs, and stay.
   return '';
 }
-function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#c9d1d8';}
+// A carrier outside the nine states still gets a colour, never the old grey.
+function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#3D5A80';}
 function cmpBox(p){
   if(p._medigap) return '';
   const on=selPlans.includes(p.id);
@@ -1973,8 +2092,8 @@ function planDetail(id){
   } else {
     body=detailLevel(p)+dCallRow();
   }
-  wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to plans','\u2039 Volver a los planes'),'backToPlans()')}</div>
-    <div class="pc" style="--cc:${p._medigap?'#00897B':carrierColor(p)}">${planHead(p,true,true)}
+  wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to the list','\u2039 Volver a la lista'),'backToPlans()')}</div>
+    <div class="pc" style="--cc:${p._medigap?'var(--cbar-brand)':carrierColor(p)}">${planHead(p,true,true)}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${body}
       ${can?`<button class="pd-cta" onclick="pickPlan('${esc(p.id)}')">${L('Help me choose','Ayúdeme a elegir')}</button>`
@@ -2028,7 +2147,7 @@ function planHead(p,selectable,detail){
       </div>`;
 }
 function detBtn(p){
-  return `<div class="pc-det"><button class="pc-detl" onclick="openPlan('${esc(p.id)}')">${L('See plan details','Ver detalles del plan')} ›</button></div>`;
+  return `<div class="pc-det"><button class="pc-detl" onclick="openPlan('${esc(p.id)}')">${L('See details','Ver detalles')} ›</button></div>`;
 }
 /* T-096 round 5 d: the whole card opens the plan. The Comparar box keeps its own tap -- it is a
    label around a checkbox, and a tap there must tick it, not navigate -- and so does the link in
@@ -2349,6 +2468,15 @@ function resultsHead(list){
    OTHER filters already applied, so the number on the chip is the number the title will show. */
 let _foOpen=false;
 function chipDefs(){
+  // The two that sit ON TOP of the type (both can be on at once), then the types. The type counts
+  // follow the old panel's convention -- counted WITHOUT the other chips -- so a type never reads
+  // "0" and offers a filter that leads nowhere; chipTap drops a chip that would empty the list.
+  const ty=id=>{
+    const x=PILLS.find(q=>q.id===id);
+    return {k:id, lb:(typeof x[lang]==='function'?x[lang]():x[lang]),
+            on:_typeFilter===id, type:true,
+            any:PLANS.filter(x.f).length>0, n:PLANS.filter(p=>typeSet(id,p)).length};
+  };
   return [
     {k:'zero', lb:L('$0 premium','$0 de prima'), on:_zeroOnly,
      any:PLANS.some(p=>inTodos(p)&&p.premium===0),
@@ -2356,56 +2484,49 @@ function chipDefs(){
     {k:'drug', lb:L('With drug coverage','Con medicamentos'), on:_drugOnly,
      any:PLANS.some(hasDrug),
      n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&hasDrug(p)).length},
-    {k:'dsnp', lb:L('With ','Con ')+mcd(), on:_typeFilter==='dsnp',
+    {k:'dsnp', lb:L('With ','Con ')+mcd(), on:_typeFilter==='dsnp', type:true,
      any:PLANS.some(isDual),
-     n:PLANS.filter(p=>isDual(p)&&extrasOK(p)).length}
+     n:PLANS.filter(p=>isDual(p)&&extrasOK(p)).length},
+    ty('ppo'), ty('hmo'), ty('snp'), ty('supp'), ty('pdp')
   ];
 }
 function chipRow(){
   const cs=chipDefs().filter(c=>c.any);
   return `<div class="fx">`+cs.map(c=>
       `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${c.lb} <i aria-hidden="true">${c.n}</i></button>`
-    ).join('')+
-    `<button class="ord" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort &amp; more filters','Orden y m\u00E1s filtros')} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
+    ).join('')+`</div>`+
+    `<div class="fxo"><button class="ord" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
 }
 /* One tap toggles. "Con <Medi-Cal>" is the dsnp TYPE, which is single-select, so turning it off
    goes back to Todos -- the same thing the old pill did, reached in one tap instead of three. */
 function chipTap(k){
-  const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:_typeFilter==='dsnp';
+  const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:_typeFilter===k;
   wEvt('filter_chip',{chip:k,on:!was});
   if(k==='zero') _zeroOnly=!_zeroOnly;
   else if(k==='drug') _drugOnly=!_drugOnly;
-  else _typeFilter=was?'all':'dsnp';
+  // the types are single-select: tapping the one that is on goes back to every plan
+  else _typeFilter=was?'all':k;
+  // a type the toggles would empty (Medigap or Parte D while "$0 de prima" is on) drops the
+  // toggle rather than showing "0 planes" -- the chip said how many there are, so that is what appears
+  if(!filterByType(PLANS).length&&_zeroOnly) _zeroOnly=false;
+  if(!filterByType(PLANS).length&&_drugOnly) _drugOnly=false;
   _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
 }
 /* T-096 round 5 c: one panel, the order first because it is what people change, then the five type
    filters. A tap applies AND closes (round 4 c), so the list is never hidden behind an open panel.
    Tapping the type that is already on returns to Todos, which is also what "all three chips off"
    means. The order of the five is the mock's, not PILLS'. */
-const MORE_IDS=['ppo','hmo','snp','supp','pdp'];
 function foPanel(){
   const ms=sortModes();
   return `<div class="ordp" id="fopan"${_foOpen?'':' hidden'}>
-    <p class="t">${L('SORT','ORDEN')}</p>
     ${ms.map(m=>`<button class="orow${m.id===_sortMode?' on':''}" aria-pressed="${m.id===_sortMode}" onclick="setSort('${m.id}')">${m[lang]}</button>`).join('')}
-    <p class="t">${L('MORE FILTERS','M\u00C1S FILTROS')}</p>
-    <div class="mf">${MORE_IDS.map(id=>{
-      const x=PILLS.find(q=>q.id===id); if(!x||!PLANS.filter(x.f).length) return '';
-      // The mock counts these WITHOUT the chips applied (it shows "$0 de prima 6" on and
-      // "HMO 64" under it), and that is the right call: counted the other way, Medigap and Parte D
-      // read "0" whenever a chip is on, which offers a filter that leads nowhere. setType drops a
-      // chip that would empty the list, so the number stays the number you get.
-      const n=PLANS.filter(p=>typeSet(id,p)).length, on=_typeFilter===id;
-      const lb=typeof x[lang]==='function'?x[lang]():x[lang];
-      return `<button class="${on?'on':''}" aria-pressed="${on}" onclick="setType('${on?'all':id}')">${lb} <i>${n}</i></button>`;
-    }).join('')}</div>
   </div>`;
 }
 function toggleFO(){
   _foOpen=!_foOpen;
   wEvt('filters_sort_panel',{on:_foOpen});
   const p=document.getElementById('fopan');
-  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ord');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort &amp; more filters','Orden y m\u00E1s filtros')+' '+(_foOpen?'\u25B4':'\u25BE');}}
+  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ord');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort','Orden')+' '+(_foOpen?'\u25B4':'\u25BE');}}
 }
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
@@ -2506,8 +2627,10 @@ function barState(){
     secondary:_act.sec||'',canCompare:true,action:_act.id};
   // T-096 round 4 f (AB: "Compare (2)"): the count rides in the button, so the bar is one thing to
   // read and one thing to tap instead of a label and a button competing.
-  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,label:'',
-    compare:L(`Compare (${k})`,`Comparar (${k})`),canCompare:k>=1&&total>=2};
+  // T-098 item 7 (AB 2026-10-15 01:55): at three the button stops counting and starts asking.
+  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
+    compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare (${k})`,`Comparar (${k})`),
+    canCompare:k>=1&&total>=2};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
 }
 function barAct(){
@@ -2530,11 +2653,15 @@ function updBar(msg){
   b.classList.toggle('on',st.on||!!msg);
   b.classList.toggle('solid',st.mode==='action'&&!msg);
   b.classList.toggle('duo',st.mode==='duo'&&!msg);
+  const wasReady=b.classList.contains('ready');
+  b.classList.toggle('ready',!!st.ready&&!msg);
   document.getElementById('cbarN').textContent=msg||st.label||'';
   const sec=document.getElementById('cbarSec'), secT=document.getElementById('cbarSecT');
   if(sec){ sec.hidden=!(st.mode==='duo'&&st.secondary&&!msg); if(secT) secT.textContent=st.secondary||''; }
   const g=document.getElementById('cbarGo');
   g.textContent=st.compare; g.hidden=st.mode==='duo'&&!st.compare; g.disabled=!st.canCompare&&!msg;
+  if(st.ready&&!msg&&!wasReady){ g.classList.remove('pulse'); void g.offsetWidth; g.classList.add('pulse'); }
+  if(!st.ready||msg) g.classList.remove('pulse');
 }
 let _barT=0;
 function toggleCmp(el){
@@ -2962,14 +3089,14 @@ function flowCompare(){
   _act={id:can?'compare':'',label:can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
   wb().innerHTML=`
     <div class="cmptop">${bk()}<label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
-    <p class="diffline" id="diffline" hidden>${L('Only what changes between the 3. What is the same is hidden.','Solo lo que cambia entre los 3. Lo igual está escondido.')}</p>
+    <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>
     ${unlicensedNote()}
     <div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
       ${sug?sugCard(sug,plans):''}
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`}
     </div>
-    ${bs(L('\u2039 Back to the plans','\u2039 Volver a los planes'),'back()')}
+    ${bs(L('\u2039 Back to the list','\u2039 Volver a la lista'),'back()')}
     ${fineBlock(cmpNotes(plans),true)}
     ${cbarHTML()}`;
   updBar();
