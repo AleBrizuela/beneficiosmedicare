@@ -115,7 +115,10 @@ body.host-next #wb .btn-p{display:none!important}
 .pc-key .l,.pc-key .l *{text-wrap:wrap}
 .btn-back{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:2px solid var(--cbar-brand);border-radius:12px;color:var(--cbar-brand);font-size:15.5px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px;padding:8px 12px;min-height:48px}
 .btn-back:hover{background:#f2faf9}
-.bkrow{margin:2px 0 0}
+.bkrow{margin:2px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bkrow .btn-back{margin-bottom:0}
+/* T-107 (3-REVISED): the agent's photo, right end of the Volver row, no extra height. */
+.volver-ph{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;flex:0 0 40px}
 .btn-ghost{background:none;border:none;color:#1a73e8;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:none;min-height:44px}
 .btn-remind{width:100%;padding:14px;background:var(--lt-blue);color:var(--blue);border:2px solid var(--lt-blue);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-remind:hover{border-color:var(--blue)}
@@ -570,13 +573,17 @@ body.host-cbar .cbar{display:none!important}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
 .sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
-.chg{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
-/* round 10: the first channel is the whole width, in its own colour, with a bigger label */
-/* T-098 item 11 (AB): the same size, every one of them. The first spot is still the one
-   each audience reaches for -- WhatsApp in Spanish, the texting app in English -- but it is
-   the order that says so now, not a button twice the size of the rest. */
-.chb{display:flex;align-items:center;gap:12px;border:1.5px solid #e3e7ea;border-radius:12px;padding:0 14px;font:inherit;font-size:17px;font-weight:600;color:#1e2a32;height:56px;background:#fff;cursor:pointer;text-align:left;width:100%}
-.chb:active{background:#f4f7f8}
+/* T-107 (2): row 1 is three large tiles (icon over word); row 2 is two quieter outlined buttons.
+   The sheet now sizes to this content -- no fixed row count, no dead band under the last row. */
+.chgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.cht{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1.5px solid #e3e7ea;border-radius:14px;padding:12px 4px;font:inherit;font-size:13.5px;font-weight:600;color:#1e2a32;min-height:76px;background:#fff;cursor:pointer}
+.cht:active{background:#f4f7f8}
+.chtl{line-height:1.15}
+.chq2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.chq{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #e3e7ea;border-radius:12px;padding:0 10px;font:inherit;font-size:14.5px;font-weight:600;color:#4a5560;height:48px;background:#fff;cursor:pointer}
+.chq:active{background:#f4f7f8}
+.chq .ci{width:22px;height:22px;flex:0 0 22px}
+.chq .ci svg{width:14px;height:14px}
 .ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
 .ci svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ci.wa{background:#25D366}
@@ -627,6 +634,11 @@ body.host-cbar .cbar{display:none!important}
 .cmp thead tr.st2 th.none{font-weight:400;color:#7a8794}
 .sug .ci2 span{width:34px;height:34px}
 .sug .ci2 svg{width:18px;height:18px}
+/* T-107 (1): the agent's photo, same float-left column the stethoscope icon used. */
+.sug .ci2.ph{width:48px;height:48px}
+.sug .ci2.ph img{width:48px;height:48px;border-radius:50%;object-fit:cover;display:block}
+@media(max-width:359px){.sug .ci2.ph{width:38px;height:38px}.sug .ci2.ph img{width:38px;height:38px}}
+@media(max-width:319px){.sug .ci2.ph{width:34px;height:34px}.sug .ci2.ph img{width:34px;height:34px}}
 .sug .conf{font-size:15.5px;line-height:1.4}
 .cmptog{margin:0 0 10px}
 @media(max-width:359px){.sug .ci2 span{width:26px;height:26px}.sug .ci2 svg{width:15px;height:15px}}
@@ -1321,33 +1333,58 @@ function agentLicLine(a){return a.lic?'Lic. #'+a.lic:'';}
    (HMO)"). A name that is ALL capitals is set in proper case ONCE, as the plan file loads (cmsToWidget, and
    loadCms2026 for the 2026 names the Mi plan de hoy search shows), so every surface that prints p.name --
    list, plan screen, Comparar, the cards, the shared page and its PDF, the lead's plan text -- reads the
-   same. A name with any lower-case letter is the carrier's own casing and is left exactly as it is. The
+   same. A name with any lower-case letter keeps every one of ITS OWN words that already has a lower-case
+   letter exactly as the carrier wrote it; only a word that is ITSELF fully upper case gets touched. The
    plan ID is a different field and is never touched.
-     kept upper: plan types, Medicare acronyms, roman numerals, a state code after the plan number
-                 ("034 IA"), and a word with no vowel (QMB, PHP), which is an acronym
+   Found 2026-10-18 (AB: "BRIDGE 003" still in caps): the first version of this only ran at all when the
+   WHOLE name was upper case, so a name like "Alignment Health BRIDGE 003 (HMO)" -- normal case except one
+   word CMS happened to write in caps -- was skipped entirely. 5,575 plans across the 2027 files have this
+   shape. Re-checked every all-caps word that turns up this way across all states (not just CA) before
+   widening the rule, specifically to avoid wrongly title-casing a real acronym (UHC, VIP, USAA, state
+   postal codes...) that just isn't on the original list.
+     kept upper: plan types, Medicare acronyms, roman numerals, any 2-letter token, any token with a digit
+                 in it (a plan-code fragment like "DE-MA01" or "CA-1AP", never a real word), and a word
+                 with no vowel (QMB, PHP) -- all acronyms or codes, never run through title-case
      kept lower: of, and, de, y (never the first word)
      brand casing: the carriers' own, matched without regard to case */
-const PN_UP=new Set(['HMO','PPO','POS','SNP','D-SNP','C-SNP','I-SNP','PDP','MA','MAPD','HMO-POS','PFFS','MSA','QMB','AARP','SCAN']);
+const PN_UP=new Set(['HMO','PPO','POS','SNP','D-SNP','C-SNP','I-SNP','PDP','MA','MAPD','HMO-POS','PFFS','MSA','QMB','AARP','SCAN',
+  'UHC','USAA','UPMC','ATRIO','VIVA','HAP','HMSA','COPD','FIDE','HIDE','OTC','SCO','ISNP','CCA','NFLOC','MMM','BCN','BSW','VIP',
+  'MAP','UCLA','IEHP','SECUR','FMOL','MAHP','AHN']);
 const PN_LOW=new Set(['of','and','de','y']);
 const PN_BRAND={'UNITEDHEALTHCARE':'UnitedHealthcare','AARP':'AARP','SCAN':'SCAN','ANTHEM':'Anthem','AETNA':'Aetna','HUMANA':'Humana',
   'WELLCARE':'Wellcare','UHC':'UHC','KAISER':'Kaiser','PERMANENTE':'Permanente','BLUE':'Blue','SHIELD':'Shield','MOLINA':'Molina','MEDI-CAL':'Medi-Cal'};
 const PN_ROMAN=new Set(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']);
 const PN_STATES=new Set('AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA PR RI SC SD TN TX UT VT VA WA WV WI WY'.split(' '));
+// A single word/segment, never containing a hyphen: upper case only when it reads as a real word
+// (has a vowel, more than 2 letters, no digit, not on any exemption list).
+function pnFixWord(U,prev,first){
+  if(PN_BRAND[U]) return PN_BRAND[U];
+  if(PN_UP.has(U)||PN_ROMAN.has(U)||PN_STATES.has(U)) return U;
+  const letters=U.replace(/[^A-Za-z]/g,'');
+  if(!letters) return U;
+  if(/\d/.test(U)) return U;             // a plan-code fragment (has a digit), never a real word
+  if(letters.length<=2) return U;        // a 2-letter (or shorter) segment is a code or initials, not a word
+  if(!first&&PN_LOW.has(U.toLowerCase())) return U.toLowerCase();
+  if(!/[AEIOUY]/.test(letters)) return U;
+  return U.charAt(0)+U.slice(1).toLowerCase();
+}
 function properName(s){
   s=String(s==null?'':s);
-  if(!/[A-Z]/.test(s)||s!==s.toUpperCase()) return s;
+  if(!/[A-Z]/.test(s)) return s;
   let prev='', first=true;
   return s.split(/(\s+|[()\/,])/).map(tok=>{
     if(!tok||/^\s+$/.test(tok)||/^[()\/,]$/.test(tok)) return tok;
-    const U=tok, letters=U.replace(/[^A-Z]/g,'');
+    // a token that already carries a lower-case letter is the carrier's own casing -- never touched,
+    // whatever the rest of the name looks like ("UnitedHealthcare" inside an otherwise upper name)
+    if(tok!==tok.toUpperCase()){ prev=tok; first=false; return tok; }
+    const U=tok;
+    // the WHOLE token first (catches multi-part exemptions like "D-SNP", "HMO-POS"); only if that
+    // doesn't match does a hyphenated token ("SNP-DE", "VA-YL") get fixed segment by segment, so two
+    // codes joined by a hyphen never get torn apart into "Snp-De" or "Va-Yl"
     let o;
-    if(!letters) o=U;
-    else if(PN_BRAND[U]) o=PN_BRAND[U];
-    else if(PN_UP.has(U)||PN_ROMAN.has(U)) o=U;
-    else if(PN_STATES.has(U)&&/^\d+$/.test(prev)) o=U;
-    else if(!first&&PN_LOW.has(U.toLowerCase())) o=U.toLowerCase();
-    else if(letters.length>=2&&!/[AEIOUY]/.test(letters)) o=U;
-    else o=U.split('-').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join('-');
+    if(PN_BRAND[U]||PN_UP.has(U)||PN_ROMAN.has(U)||PN_STATES.has(U)) o=U;
+    else if(U.indexOf('-')<0) o=pnFixWord(U,prev,first);
+    else o=U.split('-').map((seg,i)=>pnFixWord(seg,i===0?prev:'',first&&i===0)).join('-');
     prev=U; first=false;
     return o;
   }).join('');
@@ -2435,7 +2472,7 @@ function planDetail(id){
   // T-103 (7): "Ver todos los cambios" -- when this is the plan the visitor has today (Mi plan de hoy),
   // the 2026|2027 verdict + table sits right under the header, Costos only (see mp26v27Block's note).
   const mpBlock=(_mpCtx&&_mpCtx.cur27&&_mpCtx.cur27.id===p.id&&_mpCtx.cur26)?mp26v27Block(_mpCtx.cur26,_mpCtx.cur27):'';
-  wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to the list','\u2039 Volver a la lista'),'backToPlans()')}</div>
+  wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to the list','\u2039 Volver a la lista'),'backToPlans()')}${agentRow()}</div>
     <div class="pc" style="--cc:${p._medigap?'var(--cbar-brand)':carrierColor(p)}">${planHead(p,true,true)}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${mpBlock}
@@ -3806,25 +3843,33 @@ function sugLine(p,plans){
 /* T-105 (4) (AB 2026-10-18 13:05): ONE icon, the stethoscope, the text wrapping around it. The agent's
    first name never splits and the number never sits alone on a line (it shares a no-wrap span with the
    word before it, since its 44px tap area makes it an inline-block); the number is agentTel's form. */
-function confIcon(){return `<span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span></span>`;}
+function confPhoto(a){return `<span class="ci2 ph"><img src="${esc(a.photo)}" alt="" width="48" height="48"></span>`;}
+/* T-107 (3-REVISED) (AB 2026-10-18 16:15): the agent's round 40px photo at the right end of the
+   Volver row -- no extra row, no added height. Built for the two screens where Volver sits alone
+   with nothing else on that row (Compare, a plan's own detail screen): the mock's own 320px
+   fallback (photo drops to a slim row under the title when it would crowd the title) is NOT built
+   here -- these two rows have no title to crowd, so the fallback doesn't apply to them. The list
+   and Mi-plan-de-hoy screens, where Volver shares its row with a title, are NOT touched this pass:
+   flagged rather than rushed, since that's exactly the crowded case the mock itself calls out as
+   needing the fallback, and getting it wrong is a 375px-vs-320px regression risk on a live site. */
+function agentRow(){const a=agent();return `<img class="volver-ph" src="${esc(a.photo)}" alt="${esc(a.name)}" width="40" height="40">`;}
 function agentFirst(a){return String(a.name).split(' ')[0];}
 function askLine(){
   const a=agent();   // T-102: same per-state agent as the suggestion card, not a hardcoded number
   return `<div class="sug ask" data-agent="${a.key}">
-    <div class="conf">${confIcon()}
-      <span>${L('Which one is right for you? Tell me your doctors and','\u00BFCu\u00E1l le conviene? D\u00EDgame sus m\u00E9dicos y')} <span class="nw">${L('medications.','medicamentos.')} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'compare_ask'})">${agentTel(a)}</a></span></span></div>
+    <div class="conf">${confPhoto(a)}
+      <span>${L('Which one is right for you? Tell me your doctors and medications.','\u00BFCu\u00E1l le conviene? D\u00EDgame sus m\u00E9dicos y medicamentos.')} <span class="nw"><a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'compare_ask'})">${agentTel(a)}</a></span></span></div>
   </div>`;
 }
 function sugCard(p,plans){
   const line=(_cmpFrom==='myplan'&&_mpCtx)?nbLast(mpLineFor(p)):sugLine(p,plans);   // T-099: section 5 row 1
   const a=agent();   // T-102: the agent for this ZIP's state confirms it, on her own number
-  const who=`<span class="nw">${esc(agentFirst(a))}</span>`;
   return `<div class="sug" style="--sc:${carrierColor(p)}" data-agent="${a.key}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
     <p class="sp"><i></i><span>${nbLast(esc(dispName(p)))}</span></p>
     ${line?`<p class="why">${line}</p>`:''}
-    <div class="conf">${confIcon()}
-      <span>${L(`Your doctors and medicines? ${who} will`,`¿Sus médicos y medicamentos? ${who} lo`)} <span class="nw">${L('confirm:','confirma:')} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></span></div>
+    <div class="conf">${confPhoto(a)}
+      <span>${L('Your doctors and medicines?','¿Sus médicos y medicamentos?')} <span class="nw">${L(`${esc(agentFirst(a))} will confirm:`,`${esc(agentFirst(a))} lo confirma:`)} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></span></div>
   </div>`;
 }
 /* ── T-078: sharing the comparison ─────────────────────────────────────────────────────────────
@@ -3976,16 +4021,23 @@ function shareChannels(){
     {k:'copy', ic:'link',lb:L('Copy link','Copiar enlace')},
     {k:'pdf',  ic:'pdf', lb:'PDF'}]);
 }
+/* T-107 (2) (AB 2026-10-18): the sheet was five full-width 56px rows on a tall sheet with a dead
+   white band under the last row ("looks old"). Now it sizes to its own content: row 1 is three
+   large tiles side by side (the channels people actually tap -- WhatsApp, text, email), row 2 is
+   two quieter outlined buttons (copy link, PDF). Same channels, same shareSend(), same tracking;
+   only the layout changed. Mock: compartido-menos-es-mas, ronda-del-domingo-v2, section 4. */
 function openShare(){
   if(!sharePlans().length) return;
   wEvt('share_open',{plans:sharePlans().length});
-  const btn=c=>`<button class="chb" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
-  const btns=`<div class="chg">`+shareChannels().map(btn).join('')+`</div>`;
+  const tile=c=>`<button class="cht" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span><span class="chtl">${c.lb}</span></button>`;
+  const quiet=c=>`<button class="chq" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
+  const chans=shareChannels(), tiles=chans.slice(0,3), quiets=chans.slice(3);
+  const btns=`<div class="chgrid">`+tiles.map(tile).join('')+`</div><div class="chq2">`+quiets.map(quiet).join('')+`</div>`;
   const el=document.createElement('div');
   el.id='shwrap';
   el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
-    <div class="sheet" role="dialog" aria-label="${L('Share options','Compartir opciones')}">
-      <div class="grab"></div><p class="sh">${L('Share options','Compartir opciones')}</p>
+    <div class="sheet" role="dialog" aria-label="${L('Share','Compartir')}">
+      <div class="grab"></div><p class="sh">${L('Share','Compartir')}</p>
       ${btns}<p class="shok" id="shok"></p></div>`;
   // framed: keep it out of sight for the one tick it takes the page to answer, rather than
   // letting it paint a thousand pixels down and jump
@@ -4202,7 +4254,7 @@ function cmpParts(plans,ro){
   const foot=can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`;
   // T-105 (8): Volver alone on top (Comparar only); the suggestion box; "Mostrar diferencias" and its line
   // directly above the columns.
-  const top=`${ro?'':`<div class="cmptop">${bk()}</div>`}
+  const top=`${ro?'':`<div class="cmptop">${bk()}${agentRow()}</div>`}
     ${unlicensedNote()}
     ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
     <div class="cmptog"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>

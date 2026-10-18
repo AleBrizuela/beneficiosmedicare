@@ -276,11 +276,11 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
 
     document.getElementById('out').innerHTML =
       '<div class="sheet">' +
-        '<div class="card" data-agent="' + esc(A.key) + '">' +
+        /* T-107 (3-REPLACES T-105's top card): plans first -- the top keeps only the brand logo and
+           the band; the agent moves to the ONE card at the bottom, above the fine print. The link
+           preview already shows the agent's face before the page even opens. */
+        '<div class="card logo-only">' +
           '<div class="logo"><a href="' + siteURL + '" target="_blank" rel="noopener" aria-label="BeneficiosMedicare.com">' + LOGO + '</a></div>' +
-          '<div class="agent"><img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="88" height="88">' +
-            '<div><div class="eyebrow">' + esc(adv) + '</div><div class="nm">' + esc(A.name) + '</div>' +
-            '<div class="role">' + esc(T.role) + '</div></div></div>' +
         '</div>' +
         '<div class="band"><h1><span class="nw">' + n + ' ' + esc(T.opts) + '</span> <span class="z nw">· ZIP ' + esc(ZIP) + '</span></h1>' +
           '<div class="chiprow"><span class="chip">' + T.before + '</span></div></div>' +
