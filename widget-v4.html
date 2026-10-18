@@ -166,8 +166,12 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .q3skip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;margin:8px 0 0;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px}
 /* iPhone SE, 320 wide: four of the five explanations wrapped to a second line and pushed "Sin
    preferencia" 25px below the screen. They are one line again here -- the words are not cut, the
-   type is, and only on the narrowest phone. */
-@media(max-width:359px){
+   type is, and only on the narrowest phone.
+   T-100: the breakpoint is the frame's width, not the phone's. The longest explanation ("Only plans
+   with no monthly premium.", 249px at 14px) needs a 384px frame at full size; medicare-california's
+   frame is 366 on a 390 phone, so below 384 both sites take the compact type and every row stays one
+   line, 60px, which is what keeps all seven above the fold at 390x660. */
+@media(max-width:383px){
   /* T-100: rows keep the spec's 60px and 8px gap here too; only the type and the side room shrink */
   .q3opt{gap:9px;padding:8px 8px 8px 7px;min-height:60px;margin-bottom:8px}
   .q3opt.on{padding:7.5px 7.5px 7.5px 6.5px}
