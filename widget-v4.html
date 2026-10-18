@@ -612,6 +612,23 @@ body.host-cbar .cbar{display:none!important}
 /* a 320 phone: the frame is 284px, so Comparar gives back some of its side padding as well */
 @media(max-width:319px){body.in-iframe.cmpv .widget-body{padding-left:6px;padding-right:6px}.sug{padding-left:8px;padding-right:8px}.sug .ci2 span{width:20px;height:20px}.sug .ci2 svg{width:12px;height:12px}.sug .ci2{margin-right:6px}}
 .sgc{display:block;width:fit-content;margin:5px auto 0;background:var(--cbar-brand);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px}
+/* ── T-105 (AB 2026-10-18 13:05, mock compartido-menos-es-mas-v1, approved). Comparar and the shared page are
+   the same markup (cmpParts), so these rules are both. (3) no "Sugerido" pill: the suggestion box above already
+   says which one. "SU PLAN HOY" is the one pill, LEFT-aligned with the plan name, when the comparison started
+   from Mi plan de hoy. (4) ONE icon in the suggestion box, the text wrapping around it. (5) "Sin calificación"
+   reads as no data, not as a result: grey, regular weight. (8) "Mostrar diferencias" sits under the
+   suggestion box, directly above the columns. */
+.hoyc{display:inline-block;max-width:100%;margin-top:6px;background:var(--cbar-ink);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.3;border-radius:14px;padding:3px 9px;text-align:left}
+.cmp thead th .st2.none{font-weight:400;color:#7a8794}
+.sug .ci2 span{width:34px;height:34px}
+.sug .ci2 svg{width:18px;height:18px}
+.sug .conf{font-size:15.5px;line-height:1.4}
+.cmptog{margin:0 0 10px}
+@media(max-width:359px){.sug .ci2 span{width:26px;height:26px}.sug .ci2 svg{width:15px;height:15px}}
+@media(max-width:400px){.hoyc{font-size:10.5px;letter-spacing:.02em;padding:3px 7px}}
+@media(max-width:340px){.hoyc{font-size:10px;letter-spacing:0;padding:2px 6px}}
+/* T-105 (2): a phone or link in Comparar keeps a 44px tap area without moving the text around it */
+.sug .conf a,.plan-flag a,.info-card a{display:inline-block;padding:12px 2px;margin:-12px -2px}
 .cmp.s1 thead th:nth-child(1),.cmp.s1 tr.vr td:nth-child(1),
 .cmp.s2 thead th:nth-child(2),.cmp.s2 tr.vr td:nth-child(2),
 .cmp.s3 thead th:nth-child(3),.cmp.s3 tr.vr td:nth-child(3){background:#F3FAF9}
@@ -1925,8 +1942,16 @@ function rLow(p){
 function srcText(src){
   return lang==='en'?src:String(src).replace(/data last updated/gi,'datos actualizados el').replace(/released/gi,'publicado el');
 }
-function provenanceNote(){
+/* T-105 (6) (AB 2026-10-18 13:05): Comparar and the shared page may say the source in one line,
+   "Fuente: CMS 2027. Los costos pueden variar; los documentos de su plan son la palabra final.", but ONLY
+   once PROTECT has approved that exact wording. Until then this stays false and every surface keeps the
+   full line below, word for word. Flip it to true (one line, nothing else) when PROTECT signs. It changes
+   only the comparison's fine print (fineBlock's third argument); the plan screen keeps the full line. */
+const SRC_ONE_LINE_PROTECT_OK=false;
+function provenanceNote(short){
   if(!_planMeta||!_planMeta.year) return '';
+  if(short&&SRC_ONE_LINE_PROTECT_OK) return L(`Source: CMS ${_planMeta.year}. Costs may vary; your plan documents have the final word.`,
+    `Fuente: CMS ${_planMeta.year}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
   const y=_planMeta.year, src=srcText(_planMeta.source||'CMS');
   return L(`Plan year ${y} costs and benefits. Source: ${src}. Costs may vary; your plan documents are the final word.`,
            `Costos y beneficios del año del plan ${y}. Fuente: ${src}. Los costos pueden variar; los documentos de su plan son la palabra final.`);
@@ -2293,15 +2318,15 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
 // ── T-073 (AB 2026-10-14): the card is short — who it is, what it costs, one button.
 // Everything else moved to the plan's own screen, so the list is scannable and each plan
 // gets exactly one ask instead of seventy cards each carrying their own.
-function fineBlock(notes,net){
+function fineBlock(notes,net,short){
   const nl=net?L("The exact network rules are in each plan's Evidence of Coverage.",
     'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.'):'';
   const inner=(notes||[]).filter(Boolean).map(x=>`<p>${nbLast(x)}</p>`).join('')
-    +(nl?`<p>${nbLast(nl)}</p>`:'')+starDiscHTML()+provNoteHTML();
+    +(nl?`<p>${nbLast(nl)}</p>`:'')+starDiscHTML()+provNoteHTML(short);
   return inner?`<div class="pd-fine">${inner}</div>`:'';
 }
 function planFine(p){return fineBlock([],!p._medigap);}
-function provNoteHTML(){const t=provenanceNote();return t?`<p class="psrc">${esc(t)}</p>`:'';}
+function provNoteHTML(short){const t=provenanceNote(short);return t?`<p class="psrc">${esc(t)}</p>`:'';}
 let _lastPlanId='';
 function openPlan(id){_lastPlanId=id;wEvt('details_open',{plan_id:id});go(()=>planDetail(id));}
 // Back from a plan screen returns to the list AND to the card the visitor opened, not to the top (T-075).
@@ -3677,22 +3702,28 @@ function sugLine(p,plans){
 }
 // T-101 (6): what stands where the suggestion card was, for a visitor who answered "Sin preferencia".
 // One line and the phone, in the suggestion card's own pattern (the same two icons, the same link).
+/* T-105 (4) (AB 2026-10-18 13:05): ONE icon, the stethoscope, the text wrapping around it. The agent's
+   first name never splits and the number never sits alone on a line (it shares a no-wrap span with the
+   word before it, since its 44px tap area makes it an inline-block); the number is agentTel's form. */
+function confIcon(){return `<span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span></span>`;}
+function agentFirst(a){return String(a.name).split(' ')[0];}
 function askLine(){
   const a=agent();   // T-102: same per-state agent as the suggestion card, not a hardcoded number
   return `<div class="sug ask" data-agent="${a.key}">
-    <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
-      <span>${L('Which one is right for you? Tell me your doctors and medications.','\u00BFCu\u00E1l le conviene? D\u00EDgame sus m\u00E9dicos y medicamentos.')} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'compare_ask'})">${agentTel(a)}</a></span></div>
+    <div class="conf">${confIcon()}
+      <span>${L('Which one is right for you? Tell me your doctors and','\u00BFCu\u00E1l le conviene? D\u00EDgame sus m\u00E9dicos y')} <span class="nw">${L('medications.','medicamentos.')} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'compare_ask'})">${agentTel(a)}</a></span></span></div>
   </div>`;
 }
 function sugCard(p,plans){
   const line=(_cmpFrom==='myplan'&&_mpCtx)?nbLast(mpLineFor(p)):sugLine(p,plans);   // T-099: section 5 row 1
   const a=agent();   // T-102: the agent for this ZIP's state confirms it, on her own number
+  const who=`<span class="nw">${esc(agentFirst(a))}</span>`;
   return `<div class="sug" style="--sc:${carrierColor(p)}" data-agent="${a.key}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
     <p class="sp"><i></i><span>${nbLast(esc(dispName(p)))}</span></p>
     ${line?`<p class="why">${line}</p>`:''}
-    <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
-      <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} ${esc(a.name)}, <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></div>
+    <div class="conf">${confIcon()}
+      <span>${L(`Your doctors and medicines? ${who} will`,`¿Sus médicos y medicamentos? ${who} lo`)} <span class="nw">${L('confirm:','confirma:')} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></span></div>
   </div>`;
 }
 /* ── T-078: sharing the comparison ─────────────────────────────────────────────────────────────
@@ -3723,6 +3754,29 @@ async function plansForShare(zip,ids,priority){
                lead:sh?L(`For ${sh}:`,`Para ${sh}:`):''}:null,
       plans:out.map(sharePlanRow)};
   }catch(e){ return {err:String(e&&e.message||e)}; }
+}
+/* T-105 (1) (AB 2026-10-18): the shared page draws the widget's OWN comparison. It asks this file (loaded
+   with ?data=1 in a hidden frame) for the plans in the link and gets back the markup cmpParts() makes for
+   Comparar, read-only, with the stylesheet that styles it and the two toggles' own code (cmpDiff, cmpGrp),
+   so "Mostrar diferencias" and the closed groups work exactly as here. Nothing is a second copy.
+   hoy = the plan ID of the sender's current plan, when the comparison started from Mi plan de hoy: the
+   2027 plan only, never anything about the person (T-105 (5)). The suggestion then follows the same rule
+   as the widget (their plan first, with the line the widget shows under it). */
+async function shareRender(q){
+  const base=await plansForShare(q.zip,q.ids,q.r);
+  if(base.err) return base;
+  const plans=(q.ids||[]).map(String).map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(p=>p&&!p._medigap).slice(0,3);
+  if(plans.length<2) return {err:'need two plans'};
+  selPlans=plans.map(p=>p.id); _pin=''; _cmpFrom=''; _mpCtx=null;
+  const hoy=q.hoy?plans.find(p=>planIdRaw(p)===String(q.hoy)):null;
+  if(hoy){ _mpCtx={cur27:hoy,sim:null,diff:null,avail:[],ended:false}; _cmpFrom='myplan'; }
+  const c=cmpParts(plans,true);
+  const vars=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
+  return Object.assign(base,{
+    html:{top:c.top,table:c.table,fine:c.fine},
+    css:[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n')+(vars?`:host{${vars}}`:''),
+    fns:{cmpDiff:cmpDiff.toString(),cmpGrp:cmpGrp.toString()},
+    names:plans.map(p=>dispName(p)), hoy:hoy?planIdRaw(hoy):''});
 }
 // Everything the sheet prints, already in the words the comparison uses.
 function sharePlanRow(p){
@@ -3768,6 +3822,9 @@ function shareURL(){
   const mc=leadSite()==='medicare-california';
   const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
   if(D.priority) q.push('r='+encodeURIComponent(D.priority));
+  // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them
+  const hoy=(_cmpFrom==='myplan'&&_mpCtx&&_mpCtx.cur27)?plans.find(p=>p.id===_mpCtx.cur27.id):null;
+  if(hoy) q.push('hoy='+encodeURIComponent(planIdRaw(hoy)));
   if(SHARE_READABLE_PATH){
     const word=mc?'options':'opciones';
     return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
@@ -3780,9 +3837,24 @@ function shareURL(){
 function sharePlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
 function shareMsg(){
   // T-102: the questions go to the agent for this ZIP's state, by name, on her own number.
-  const n=sharePlans().length, z=esc(D.zip||''), a=agent(), who=a.name+', '+agentTel(a);
-  return L(`${n} Medicare options for 2027, ZIP ${z}. Questions: ${who}`,
-           `${n} opciones de Medicare 2027 para el ZIP ${z}. Preguntas: ${who}`)+'\n\n'+shareURL();
+  // T-105 (AB 2026-10-18 12:55): the link first, then the agent's signature block (shareSig).
+  const n=sharePlans().length, z=String(D.zip||'').replace(/\D/g,''), a=agent();
+  return L(`${n} Medicare options for 2027, ZIP ${z}:`,`${n} opciones de Medicare 2027 para el ZIP ${z}:`)+'\n'+shareURL()+'\n\n'+shareSig(a);
+}
+/* T-105 (AB 2026-10-18 12:55): the signature on every text the share sheet sends (WhatsApp, Texto, Email),
+   both agents, ES + EN, in this order and these words. No "con licencia" / "licensed", no bare website
+   line (the email's domain already says it). The number shows as (913) 488-5341 with a non-breaking
+   space after the bracket so it never splits; no non-breaking hyphen here, so the phone's own number
+   detection still sees it. The email stays plain text in a message; the phone's apps link it. */
+function shareWaText(a){return L(`Hi ${agentFirst(a)}, I saw my comparison`,`Hola ${agentFirst(a)}, vi mi comparación`);}
+function shareWaURL(a){return 'https://wa.me/'+a.digits+'?text='+encodeURIComponent(shareWaText(a));}
+function shareSig(a){
+  return L(`Questions? ${a.name}, Medicare agent`,`¿Preguntas? ${a.name}, agente de Medicare`)+'\n'+
+    L('Call or text: ','Llamada o texto: ')+String(a.tel).replace(') ',')\u00A0')+'\n'+
+    'WhatsApp: '+shareWaURL(a)+
+    // T-098: a medicare-california page never shows a BeneficiosMedicare address. Both agents' addresses are
+    // BM ones, so a text sent from MC carries no Email line until MC's own pass (after AB's "BM good").
+    (leadSite()==='medicare-california'?'':'\nEmail: '+a.email);
 }
 const SHARE_ICONS={
   wa:'<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.6 20.4l4.2-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="#fff" stroke-width="1.7"/><path fill="#fff" stroke="none" d="M9.3 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.8c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3-.1.5.6 1 1.4 1.9 2.5 2.4.2.1.4.1.5 0l.7-.8c.1-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.4 0 .5-.2 1.2-.8 1.6-.6.4-1.5.5-3.2-.2-1.9-.8-3.2-2.7-3.4-3-.2-.3-.9-1.3-.9-2.4 0-1.1.5-1.6.7-1.9z"/>',
@@ -3897,6 +3969,24 @@ function flowCompare(){
   prog(88); _plansView=true; document.body.classList.add('cmpv');   // T-104 (5): Comparar's own narrow-phone spacing (CSS)
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
   if(plans.length<2){back();return;}
+  const c=cmpParts(plans,false);
+  // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
+  _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
+  wb().innerHTML=`
+    ${c.top}
+    ${c.table}
+    ${bs(L('\u2039 Back to the list','\u2039 Volver a la lista'),'back()')}
+    ${c.fine}
+    ${cbarHTML()}`;
+  updBar();
+}
+/* ── T-105 (AB 2026-10-18): ONE comparison, drawn by ONE function ───────────────────────────────────────
+   Comparar and the shared page (opciones-compartidas, and its PDF) are the same markup, from here: same
+   columns, groups open and closed the same way, same figures, carrier colours, the suggestion, "Mostrar
+   diferencias" and its line, the notes. ro = read-only, for the shared page: no Volver and no bars;
+   everything that is information stays. The shared page puts the parts where it needs them (top + table,
+   then its agent box, then the fine print last, T-086). Mock: compartido-menos-es-mas-v1 (13:05). */
+function cmpParts(plans,ro){
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
   const off=b=>b==null?{t:noInfo(),na:true}:b;
   const ma=p=>p.cat!=='PDP';
@@ -3985,24 +4075,26 @@ function flowCompare(){
   // the plans being compared actually differ on it.
   const types=[...new Set(plans.map(p=>String(p.type||'')))];
   const showType=types.length>1;
-  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${showType?esc(p.type)+' · ':''}${planId(p)}</span><span class="st2">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${sug&&p.id===sug.id?`<span class="sgc">${L('Suggested','Sugerido')}</span>`:''}</th>`).join('')}</tr>`;
+  // T-105 (1)(3)(5): when the comparison started from "Revisar mi plan de hoy", their current plan's column
+  // says so, in the one pill left (no "Sugerido": the box above names the suggestion). Only the plan: no name
+  // or number of the person, here or in a shared link.
+  const hoyId=(_cmpFrom==='myplan'&&_mpCtx&&_mpCtx.cur27)?_mpCtx.cur27.id:'';
+  const head=`<tr>${plans.map(p=>`<th style="--cc:${carrierColor(p)}"><span class="eb">${esc(carrierShort(p.carrier))}</span><span class="nm2">${nbLast(esc(cmpName(p)))}</span><span class="pid">${showType?esc(p.type)+' · ':''}${planId(p)}</span><span class="st2${p.rating==null?' none':''}">${p.rating==null?L('No rating','Sin calificación'):L(`★ ${p.rating} of 5`,`★ ${p.rating} de 5`)}</span>${p.id===hoyId?`<span class="hoyc">${nbLast(L('YOUR PLAN TODAY','SU PLAN HOY'))}</span>`:''}</th>`).join('')}</tr>`;
   const can=leadOK()&&!(D.state&&!_rep)&&plans.every(p=>p.agent);
   const sanct=plans.some(p=>p.sanction);
-  // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
-  _act={id:can?'compare':'',label:can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
-  wb().innerHTML=`
-    <div class="cmptop">${bk()}<label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
-    <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>
+  const foot=can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`;
+  // T-105 (8): Volver alone on top (Comparar only); the suggestion box; "Mostrar diferencias" and its line
+  // directly above the columns.
+  const top=`${ro?'':`<div class="cmptop">${bk()}</div>`}
     ${unlicensedNote()}
-    <div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
-      ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
+    ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
+    <div class="cmptog"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>
+    <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>`;
+  const table=`<div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
-      ${can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`}
-    </div>
-    ${bs(L('\u2039 Back to the list','\u2039 Volver a la lista'),'back()')}
-    ${fineBlock(cmpNotes(plans),true)}
-    ${cbarHTML()}`;
-  updBar();
+      ${foot}
+    </div>`;
+  return {top,table,fine:fineBlock(cmpNotes(plans),true,true),can};
 }
 // T-086: the three notes that used to sit between the table and the buttons. Every word is unchanged
 // and every one of them is signed: the D-SNP line by PROTECT 2026-10-14 (T-052 review #3), the
@@ -4025,7 +4117,10 @@ function cmpNotes(plans){
 // every group that holds a difference and drops the groups that hold none, so it is one tap; OFF puts the
 // groups back exactly as the visitor had them when they ticked it.
 function cmpDiff(cb){
-  const c=document.getElementById('cmp'); if(!c) return;
+  // T-105: works on whatever document holds the toggle -- this widget, or the shared page's copy of the
+  // comparison (a shadow root), which runs this same function
+  const R=(cb.getRootNode&&cb.getRootNode())||document;
+  const c=R.getElementById('cmp'); if(!c) return;
   const on=!!cb.checked;
   c.classList.toggle('diff',on);
   c.querySelectorAll('tr.grp').forEach(g=>{
@@ -4041,11 +4136,11 @@ function cmpDiff(cb){
              rows.forEach(r=>r.classList.toggle('hid',shut));delete g.dataset.was;}
     }
   });
-  const dl=document.getElementById('diffline'); if(dl) dl.hidden=!on;
+  const dl=R.getElementById('diffline'); if(dl) dl.hidden=!on;
   const lb=cb.closest('.tog'); if(lb) lb.classList.toggle('on',on);
   wEvt('compare_diff_toggle',{on});
 }
-function cmpGrp(el,i){const o=el.classList.toggle('shut');document.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
+function cmpGrp(el,i){const R=(el.getRootNode&&el.getRootNode())||document;const o=el.classList.toggle('shut');R.querySelectorAll('#cmp tr.g'+i).forEach(t=>t.classList.toggle('hid',o));if(!o)wEvt('benefit_group_open',{group:'compare_'+i});}
 // Column header name: drop the plan-type parenthetical and filler words so 3 columns fit at 375px.
 // The full name is on every card; this is a label, not the plan's legal name.
 // T-052 plan ID (AB 2026-10-14): names alone are not unique (about 8% of plans share their exact official name with
@@ -4426,9 +4521,12 @@ if(!_dataOnly) go(startZip);
        draws from. The reply goes back to the exact window that asked, at its own origin. */
     if(e.data.type==='widget-plans'){
       var src=e.source, org=e.origin, q=e.data;
-      Promise.resolve(plansForShare(q.zip,q.ids,q.r)).then(function(r){
+      // T-105: render:true = the shared page wants the comparison itself (shareRender); without it, the
+      // plain rows as before (medicare-california's options-shared still asks that way until its pass)
+      Promise.resolve(q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
-          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null},org); }catch(x){}
+          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
+          html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||''},org); }catch(x){}
       });
       return;
     }
