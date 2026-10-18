@@ -484,7 +484,8 @@ body.in-iframe.has-bar .widget-body{padding-bottom:96px}
    stays there for the whole scroll, fine print included. Inside the iframe it cannot be: position
    is relative to the frame, which is as tall as its content, so the page draws it instead and the
    copy here stands down (host-cbar). */
-body:not(.in-iframe) .cbar{position:fixed;left:10px;right:10px;bottom:10px;margin:0;max-width:560px}
+/* T-103 (1): margin auto centres the fixed bar on a wide screen (it sat at the left edge, 10-570px) */
+body:not(.in-iframe) .cbar{position:fixed;left:10px;right:10px;bottom:10px;margin:0 auto;max-width:560px}
 body:not(.in-iframe).has-bar .widget-body{padding-bottom:104px}
 .cbar .n{font-size:15px;font-weight:400;color:#4A5568}
 .cbar button{background:var(--cbar-brand);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;font-size:17px;font-family:inherit;cursor:pointer;min-height:48px;flex:0 0 auto}
@@ -496,6 +497,31 @@ body:not(.in-iframe).has-bar .widget-body{padding-bottom:104px}
 .cbar button.pulse{animation:cbarpulse 400ms ease-out 1}
 @media (prefers-reduced-motion:reduce){.cbar button.pulse{animation:none}}
 body.host-cbar .cbar{display:none!important}
+/* T-103 (1) (AB 2026-10-18): with no label beside it (T-084 round 2 put the count in the button), the
+   button filled only its own width and justify-content:flex-end pinned it to the right of an empty bar,
+   122px off centre at 1280. Same rule as the host page's copy: an empty label hides, the button fills
+   the bar, so "Comparar (2)" and "Comparar ya" are centred by construction in every state. */
+.cbar .n:empty{display:none}
+.cbar .n:empty~#cbarGo{flex:1 1 auto;width:100%;min-height:52px}
+/* T-103 (3): the two option cards in two colours, seen at a glance, not only read. Each pairs with its
+   own tint and the card's left edge. Teal text is the brand's teal-dark: #007B7B on #E6F2F1 measures
+   4.45:1, under the 4.5:1 the ticket asks for; #005C5C measures 6.83:1. Blue #1D5FA8 on #E8F0FA: 5.62:1.
+   Gold stays for TERMINA only. */
+.mpchip.sim{background:#E6F2F1;color:#005C5C;box-shadow:inset 0 0 0 1px #007B7B}
+.mpchip.dif{background:#E8F0FA;color:#1D5FA8;box-shadow:inset 0 0 0 1px #1D5FA8}
+.pc.mpc.sim{border-left:5px solid #007B7B}
+.pc.mpc.dif{border-left:5px solid #1D5FA8}
+/* T-103 (4): the visitor's current plan, pinned at the top of the list. Ticked and locked: the only way
+   out is the x, so a plain tap can never drop it by accident. */
+.pc.pinned{border-left:5px solid var(--cbar-ink)}
+.pc-cmp.pinned{border:1.5px solid var(--cbar-brand);background:var(--lt-mint);color:var(--cbar-ink);padding-right:0;gap:6px;cursor:default}
+.pc-cmp.pinned .pck{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:var(--cbar-brand);color:#fff;font-size:13px;font-weight:700}
+.pc-cmp.pinned .unpin{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -2px -10px 0;background:none;border:0;font:inherit;font-size:24px;line-height:1;color:var(--cbar-ink);cursor:pointer}
+/* the chip and the Comparar box share one row, so the plan's name has the card's whole width (a name
+   that ends in its ID, "Giveback H5619-146", was being split mid-ID beside the box) */
+.pc-top.mprow{align-items:center;margin-bottom:4px}
+.pc-top.mprow .mpchip{margin-bottom:0}
+.mpchip{white-space:nowrap}
 /* ── T-096 round 4 d (AB 2026-10-15 23:30, with a screenshot of the staging compare) ───────────
    "cuando alguien dice muéstreme plan details, show THIS level of info. No more." The plan screen
    is now the comparison's own open level for one plan: three groups, the same rows in the same
@@ -1406,7 +1432,19 @@ function _doBack(){
   if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
   _onDetail=false;
   hist.pop();_plansView=false;_planScreen=false;_act=null;hist[hist.length-1]();viewMsg();cbarReport();
+  // T-103 (2): back onto the "Mi plan de hoy" cards (from Comparar, a plan screen, the list or the search)
+  // lands on the cards at the top of the widget, never on the page footer the taller screen left behind.
+  // The search and the question before it are the same flow, so Volver onto them lands at the top too.
+  if(document.getElementById('mpres')||document.getElementById('mpin')||document.querySelector('#wb .q3opt')) _afterBack=_toWidgetTop;
   if(_afterBack){const f=_afterBack;_afterBack=null;try{f();}catch(e){}}
+}
+/* T-103 (2), the T-075 method: the host scrolls (the page, not this frame, is what scrolls) and gets the
+   widget's real height in the same message, so the frame is grown before the jump and nothing clamps it.
+   Offset 0 = the top of the widget. Opened on its own, the widget scrolls its own window. */
+function _toWidgetTop(){
+  if(window.self===window.top){ try{ window.scrollTo(0,0); }catch(e){} return; }
+  const wrap=document.querySelector('.widget-wrap');
+  window.parent.postMessage({type:'widget-scrollto',top:0,height:Math.round(wrap?wrap.offsetHeight:0)},'*');
 }
 window.addEventListener('popstate',function(){
   if(_hPush>0) _hPush--;
@@ -1736,7 +1774,8 @@ function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
    words up -- gluing a two-word label would make it unbreakable and push the column sideways,
    which is worse than the widow. Markup is left alone: a string with a tag in it is skipped. */
 function nbLast(x){
-  const t=String(x==null?'':x);
+  // T-103: a plan ID inside a name ("Giveback H5619-146") never splits at its hyphen, which left "146" alone
+  const t=String(x==null?'':x).replace(/\b([A-Z]\d{4})-(\d{3})\b/g,'$1‑$2');
   if(/[<>]/.test(t)) return t;
   const w=t.trim().split(/\s+/);
   if(w.length<3) return t;
@@ -1813,7 +1852,7 @@ function provenanceNote(){
 // and the rollback must not re-open a CMS disclosure gap. The T-060 sort is NOT carried; only this.
 function starDiscHTML(){
   if(!PLANS.some(p=>!p._medigap&&p.rating!=null)) return '';
-  return `<p class="sdisc">${L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada a\u00F1o, Medicare eval\u00faa los planes seg\u00fan un sistema de calificaci\u00f3n de 5 estrellas.')}</p>`;
+  return `<p class="sdisc">${nbLast(L('Every year, Medicare evaluates plans based on a 5-star rating system.','Cada a\u00F1o, Medicare eval\u00faa los planes seg\u00fan un sistema de calificaci\u00f3n de 5 estrellas.'))}</p>`;
 }
 
 // ---- benefit text, ES + EN. CMS PBP category names, one fixed translation (T-017 b4) ----
@@ -2157,6 +2196,8 @@ function planAction(p){
 function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#3D5A80';}
 function cmpBox(p){
   if(p._medigap) return '';
+  // T-103 (4): the pinned current plan is ticked and locked; only the x takes it out
+  if(_pin&&p.id===_pin&&selPlans.includes(p.id)) return `<span class="pc-cmp pinned"><span class="pck" aria-hidden="true">✓</span>${L('Compare','Comparar')}<button class="unpin" onclick="unpin(event)" aria-label="${L('Take your current plan out of the comparison','Quitar su plan de hoy de la comparación')}">×</button></span>`;
   const on=selPlans.includes(p.id);
   return `<label class="pc-cmp"><input type="checkbox" data-pid="${esc(p.id)}" ${on?'checked':''} onchange="toggleCmp(this)"> ${L('Compare','Comparar')}</label>`;
 }
@@ -2310,7 +2351,9 @@ function keyStrip(p){
    header spacing; it no longer doubles as "this header has no checkbox". */
 function planHead(p,selectable,detail){
   return `<div class="pc-head${detail?' pd-head':''}">
-      <div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>
+      ${_pin&&p.id===_pin?`<div class="pc-top mprow"><span class="mpchip navy">${L('YOUR PLAN TODAY','SU PLAN HOY')}</span>${selectable?cmpBox(p):''}</div>
+      ${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p>`
+      :`<div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>`}
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
@@ -2335,7 +2378,7 @@ function planCard(p,selectable){
       <div class="pc-keys k2">${kTile(rng+`<small>${L('/mo','/mes')}</small>`,KL('Premium','range','Rango de','prima'))}${kTile(esc(carrierName(p.carrier)),KL('Lowest price','from','Precio más','bajo de'),'word')}</div>
       ${detBtn(p)}</div>`;
   }
-  return `<div class="pc tap" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')">${planHead(p,selectable)}
+  return `<div class="pc tap${_pin&&p.id===_pin?' pinned':''}" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')">${planHead(p,selectable)}
     ${keyStrip(p)}
     ${detBtn(p)}</div>`;
 }
@@ -2509,7 +2552,7 @@ function setType(v){
   if(!filterByType(PLANS).length&&_zeroOnly){_zeroOnly=false;}
   if(!filterByType(PLANS).length&&_drugOnly){_drugOnly=false;}
   if(!filterByType(PLANS).length&&_carrier){_carrier='';}
-  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
+  _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 // T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
 // filters ONCE per ZIP, the first time the plans are shown. After that the visitor's own pills and
@@ -2740,12 +2783,12 @@ function carrierPick(i){
   _carrier=x.c;
   wEvt('filter_use',{filter:'carrier',on:true});
   wEvt('filter_carrier',{carrier:x.lb,plans:x.n});
-  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
+  _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 function carrierClear(){
   _carrier='';
   wEvt('filter_use',{filter:'carrier',on:false});
-  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
+  _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 /* One tap toggles. "Con <Medi-Cal>" is the dsnp TYPE, which is single-select, so turning it off
    goes back to Todos -- the same thing the old pill did, reached in one tap instead of three. */
@@ -2763,7 +2806,7 @@ function chipTap(k){
   if(!filterByType(PLANS).length&&_drugOnly) _drugOnly=false;
   // a carrier with no plans of the type just chosen steps aside the same way
   if(!filterByType(PLANS).length&&_carrier) _carrier='';
-  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
+  _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 /* T-096 round 5 c: one panel, the order first because it is what people change, then the five type
    filters. A tap applies AND closes (round 4 c), so the list is never hidden behind an open panel.
@@ -2808,7 +2851,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false; _carrier=''; _carOpen=false;
+  selPlans=[]; _pin=''; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false; _carrier=''; _carOpen=false;
   delete D.plansSeen; delete D.represented;
   flowResults();
 }
@@ -2821,15 +2864,34 @@ function moreBtn(total){
     : L(`See ${k} more plans`,`Ver ${k} planes más`);
   return `<button class="showmore" onclick="showMore()">${lab}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
 }
-function listHTML(list){
+function listHTML(all){
   // Thirteen or fewer: all of them, and no button. "Comparar estos 3 planes" is gone -- comparing is
   // a tick box and the bar at the bottom now, and the old button said the same thing a third time.
+  // T-103 (4): a pinned current plan sits above the list, whatever the order and filters, and is not
+  // repeated in it.
+  const pp=pinPlan(), list=pp?all.filter(p=>p.id!==pp.id):all;
   const n=list.length<=PAGE_ALL?list.length:_shown;
-  return `${dualNoteBox(list)}<div id="plist">${list.slice(0,n).map(p=>planCard(p,true)).join('')}</div>`+
+  return `${dualNoteBox(all)}<div id="plist">${pp?planCard(pp,true):''}${list.slice(0,n).map(p=>planCard(p,true)).join('')}</div>`+
     `<div id="pmore">${list.length<=PAGE_ALL?'':moreBtn(list.length)}</div>`;
 }
+/* ── T-103 (4) (AB 2026-10-18): their current plan against ANY plans they pick ──────────────────────
+   "Comparar con otros planes" and "Ver los N planes" under the Mi plan de hoy cards open the county's
+   list with the 2027 version of the plan they have pinned at the top and ticked. They tick up to two
+   more (the usual limit of 3). The pin is locked: a plain tap opens the plan as on every card, and only
+   the x takes it out. Filters and orders keep it ticked; a new ZIP or going back to the cards ends it. */
+let _pin='';
+function pinPlan(){return _pin?(PLANS.find(p=>p.id===_pin)||null):null;}
+function listPlans(){return orderedPlans().filter(p=>p.id!==_pin);}
+function selReset(){selPlans=(_pin&&pinPlan())?[_pin]:[];}
+function unpin(e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  const was=_pin; if(!was) return;
+  selPlans=selPlans.filter(x=>x!==was); _pin='';
+  wEvt('my_plan_unpin',{});
+  hist[hist.length-1](); updBar();
+}
 function showMore(){
-  const list=orderedPlans(), from=_shown;
+  const list=listPlans(), from=_shown;
   _shown=Math.min(list.length,_shown+PAGE); wEvt('show_more',{shown:_shown,total:list.length});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
@@ -2844,7 +2906,9 @@ function cbarTap(){const st=barState();if(st.mode==='action')barAct();else goCom
 function goCompare(){
   if(!selPlans.length) return;
   // T-099: a comparison of plans the "Mi plan de hoy" cards ticked (and nothing else) started there
-  _cmpFrom=(_mpCtx&&selPlans.every(id=>_mpCtx.avail.indexOf(id)>=0))?'myplan':'';
+  // T-103 (4): so did one with their pinned current plan in it, whatever else they ticked beside it
+  const pinned=!!(_mpCtx&&_pin&&selPlans.includes(_pin));
+  _cmpFrom=(_mpCtx&&(pinned||selPlans.every(id=>_mpCtx.avail.indexOf(id)>=0)))?'myplan':'';
   const picked=selPlans.length;
   if(selPlans.length===1){
     const rest=orderedPlans().filter(p=>!p._medigap&&p.id!==selPlans[0]).slice(0,2).map(p=>p.id);
@@ -2852,7 +2916,7 @@ function goCompare(){
   }
   if(selPlans.length<2) return;   // a county with a single plan: nothing to compare it against
   // nothing reported opening the comparison before T-084, so "Comparar taps up" had nothing to read
-  wEvt('compare_open',Object.assign({plans:selPlans.length,picked:picked},_cmpFrom?{compare_from:_cmpFrom}:{}));
+  wEvt('compare_open',Object.assign({plans:selPlans.length,picked:picked},_cmpFrom?{compare_from:_cmpFrom}:{},pinned?{myplan_pick:'other'}:{}));
   go(flowCompare);
 }
 // Which screens the bar belongs on: the plan list and a single plan's own screen. Not the
@@ -2925,6 +2989,8 @@ function toggleCmp(el){
     if(i<0){
       if(selPlans.length>=3){el.checked=false;updBar(L('You can compare up to 3 plans','Puede comparar hasta 3 planes'));clearTimeout(_barT);_barT=setTimeout(()=>updBar(),2500);return;}
       selPlans.push(id);
+      // T-103 (4): a plan picked by hand to go next to the pinned current plan
+      if(_pin&&id!==_pin&&selPlans.includes(_pin)) wEvt('my_plan_other_pick',{picked:selPlans.length-1});
     }
   } else if(i>=0) selPlans.splice(i,1);
   updBar();
@@ -3097,7 +3163,7 @@ function mpSearch(q){
 }
 const MP_CARD='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M3 9.5h18M6.5 14h5"/></s'+'vg>';
 function flowMyPlan(){
-  prog(55); _plansView=false;
+  prog(55); _plansView=false; _pin='';
   wb().innerHTML=`<div class="mptop">${bk()}<p class="mpq">${L('What plan do you have today?','¿Qué plan tiene hoy?')}</p></div>
     <p class="mphint">${L('Type the plan name or the number on your plan&nbsp;card.','Escriba el nombre o el número de su tarjeta del&nbsp;plan.')}</p>
     <input id="mpin" class="mpfield" type="text" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false"
@@ -3141,8 +3207,12 @@ function mpSugHTML(list){
 function mpEnter(){const b=document.querySelector('#mpsug .mpaci');if(b)b.click();}
 // "No sé cuál es" and "Ver los N planes": today's whole list, every filter off, so the list holds exactly
 // the count the link promised.
-function mpAll(){
-  _typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=D.zip;_shown=PAGE;_foOpen=false;
+// T-103 (4): from the cards (pin=true) the 2027 version of their plan is pinned at the top and ticked.
+function mpAll(pin){
+  _typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=D.zip;_shown=PAGE;_foOpen=false;
+  _pin='';
+  const cur=pin&&_mpCtx&&_mpCtx.cur27;
+  if(cur){ _pin=cur.id; selPlans=[cur.id]; }
   go(flowResults);
 }
 function mpTodosCount(){const n=PLANS.filter(inTodos).length;return n||PLANS.filter(p=>!p._medigap).length;}
@@ -3272,7 +3342,7 @@ function mpRow(lab,a,b,fmt){
     if(b>a+0.004){cls='up';ar=` <span aria-hidden="true">▲</span><span class="mpsr">${L('(up)','(sube)')}</span>`;}
     else if(b<a-0.004){cls='down';ar=` <span aria-hidden="true">▼</span><span class="mpsr">${L('(down)','(baja)')}</span>`;}
   } else cls='na';
-  return `<tr><th>${lab}</th><td${a==null?' class="na"':''}>${fa}</td><td class="${b==null?'na':cls}">${fb}${ar}</td></tr>`;
+  return `<tr><th>${nbLast(lab)}</th><td${a==null?' class="na"':''}>${fa}</td><td class="${b==null?'na':cls}">${fb}${ar}</td></tr>`;
 }
 function mpCurCard(c){
   const p26=c.cur26, p27=c.cur27;
@@ -3296,7 +3366,7 @@ function mpCurCard(c){
   const dedRow=(d26&&d27)?mpRow(L('Drug deductible','Deducible medicamentos'),p26.deductible,p27.ded,v=>usd(v))
     :`<tr><th>${L('Drug deductible','Deducible medicamentos')}</th><td>${d26?(p26.deductible==null?noInfo():usd(p26.deductible)):L('None','Ninguno')}</td><td>${d27?(p27.ded==null?noInfo():usd(p27.ded)):L('None','Ninguno')}</td></tr>`;
   return `<div class="pc tap mpc" data-pid="${esc(p27.id)}" style="--cc:${carrierColor(p27)}" onclick="cardTap(event,'${esc(p27.id)}')"><div class="mph">
-      <div class="pc-top"><div>${chip('navy',L('YOUR PLAN TODAY','SU PLAN HOY'))}<p class="pc-name">${nbLast(esc(dispName(p27)))}</p>${was}</div>${cmpBox(p27)}</div>
+      <div class="pc-top mprow">${chip('navy',L('YOUR PLAN TODAY','SU PLAN HOY'))}${cmpBox(p27)}</div><p class="pc-name">${nbLast(esc(dispName(p27)))}</p>${was}
       <div class="mpmeta">${mpTags(p27)}<span>ID <b>${planId(p27)}</b></span><span class="rt0">${star}</span></div>${rLow(p27)}</div>
     <table class="mpdt"><thead><tr><th></th><td>2026</td><td>${planYear()}</td></tr></thead><tbody>
       ${mpRow(L('Monthly premium','Prima mensual'),p26.premium,p27.premium,premUsd)}
@@ -3306,9 +3376,10 @@ function mpCurCard(c){
     <p class="mpwhy">${nbLast(mpStayLine())}</p>
     ${detBtn(p27)}</div>`;
 }
-function mpOptCard(p,chipTxt,line){
-  return `<div class="pc tap mpc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')"><div class="mph">
-      <div class="pc-top"><div><span class="mpchip mint">${chipTxt}</span><p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${cmpBox(p)}</div>
+function mpOptCard(p,chipTxt,line,kind){
+  // T-103 (3): kind = 'sim' (teal) or 'dif' (blue): the chip, its tint and the card's left edge
+  return `<div class="pc tap mpc ${kind}" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')"><div class="mph">
+      <div class="pc-top mprow"><span class="mpchip ${kind}">${chipTxt}</span>${cmpBox(p)}</div><p class="pc-name">${nbLast(esc(dispName(p)))}</p>
       <div class="mpmeta">${mpTags(p)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p)}</b></span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}${mpInfo(p)}</div>
     ${keyStrip(p)}
@@ -3321,6 +3392,8 @@ function mpHowURL(){return lang==='en'?'https://medicare-california.com/blog/med
 function flowMyPlanResults(){
   const c=_mpCtx; if(!c){flowMyPlan();return;}
   prog(84); _plansView=true;
+  // T-103 (4): back on the cards, the list's pin is over; ticks on plans that are not on these cards go too
+  if(_pin){_pin='';selPlans=selPlans.filter(id=>c.avail.indexOf(id)>=0);}
   // the cards that can be compared enter ticked (section 3), once; after that the ticks are the visitor's
   if(c.fresh){selPlans=c.avail.slice(0,3);c.fresh=false;}
   const n=(c.sim?1:0)+(c.diff?1:0), cty=esc(D.county||''), cnt=mpTodosCount();
@@ -3335,9 +3408,10 @@ function flowMyPlanResults(){
         <button type="submit">${L('See','Ver')}</button>
       </form></div><p class="zerr" id="zerr"></p></div>
     ${mpCurCard(c)}
-    ${c.sim?mpOptCard(c.sim,L('SIMILAR TO YOURS','SIMILAR AL SUYO'),mpSimLine(c)):''}
-    ${c.diff?mpOptCard(c.diff,L('DIFFERENT FROM YOURS','DIFERENTE AL SUYO'),mpDiffLine(c)):''}
-    <button class="mpall" onclick="mpAll()">${L(`See all ${cnt} plans in ${cty}`,`Ver los ${cnt} planes de ${cty}`)} ›</button>
+    ${c.sim?mpOptCard(c.sim,L('SIMILAR TO YOURS','SIMILAR AL SUYO'),mpSimLine(c),'sim'):''}
+    ${c.diff?mpOptCard(c.diff,L('DIFFERENT FROM YOURS','DIFERENTE AL SUYO'),mpDiffLine(c),'dif'):''}
+    ${c.cur27?`<button class="mpall mpother" onclick="mpAll(true)">${L('Compare with other plans','Comparar con otros planes')} ›</button>`:''}
+    <button class="mpall" onclick="mpAll(true)">${L(`See all ${cnt} plans in ${cty}`,`Ver los ${cnt} planes de ${cty}`)} ›</button>
     <p class="mpfine">${L(`Figures from CMS for ${planYear()}. Your plan has the final word.`,`Cifras de CMS para ${planYear()}. Su plan es la palabra final.`)}</p>
     ${starDiscHTML()}</div>
     ${cbarHTML()}`;
@@ -3372,6 +3446,16 @@ async function mpZipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
+  /* T-103 (2): Volver from the new ZIP's search returns to the cards the visitor left, as they were: the
+     cards' own history entry puts back the ZIP, county, plan list and ticks it was drawn from, so it can
+     never show the old cards over the new county's data. */
+  const was=Object.assign({}, keep, {ctx:_mpCtx, my:_myPlan, sel:selPlans.slice(), seen:D.plansSeen, rep:D.represented});
+  if(hist.length) hist[hist.length-1]=function(){
+    PLANS=was.PLANS; D.zip=was.zip; D.county=was.county; D.state=was.state; D._zipValid=was.valid; _planMeta=was.meta;
+    _mpCtx=was.ctx; _myPlan=was.my; selPlans=was.sel.slice(); _priAuto=null;
+    if(was.seen!==undefined) D.plansSeen=was.seen; if(was.rep!==undefined) D.represented=was.rep;
+    flowMyPlanResults();
+  };
   selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
   delete D.plansSeen; delete D.represented; _myPlan=null; _mpCtx=null;
   go(flowMyPlan);
@@ -4098,7 +4182,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
