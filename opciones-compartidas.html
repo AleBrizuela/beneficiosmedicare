@@ -3,13 +3,14 @@
 <head>
 <!-- T-105 (2): GA4, so taps on the agent's phone, WhatsApp and email from a shared page are counted
      (placement shared_call). The page's address is sent WITHOUT its query string: the ZIP and the plan
-     IDs in a shared link never reach GA4. Tester mode (?qa=1) as on every other page. -->
+     IDs in a shared link never reach GA4 (nor the page title, which names the ZIP). Tester mode (?qa=1)
+     as on every other page. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   (function(){var t=false;try{var q=/[?&]qa=([01])(?=&|#|$)/.exec(location.search);if(q){if(q[1]==='1')localStorage.setItem('bm_tester','1');else localStorage.removeItem('bm_tester');}t=localStorage.getItem('bm_tester')==='1';}catch(e){t=/[?&]qa=1(?=&|#|$)/.test(location.search);}window.bmTester=t;window.bmInternal=t||/\.pages\.dev$/i.test(location.hostname);if(window.bmInternal)gtag('set',{traffic_type:'internal'});})();
   gtag('js', new Date());
-  gtag('config', 'G-VG5N9NKWPF', {page_location: location.origin + location.pathname});
+  gtag('config', 'G-VG5N9NKWPF', {page_location: location.origin + location.pathname, page_title: 'Opciones compartidas'});
   setTimeout(function(){
     var s=document.createElement('script');
     s.src='https://www.googletagmanager.com/gtag/js?id=G-VG5N9NKWPF';
