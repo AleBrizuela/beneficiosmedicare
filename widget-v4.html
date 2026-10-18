@@ -1942,12 +1942,13 @@ function rLow(p){
 function srcText(src){
   return lang==='en'?src:String(src).replace(/data last updated/gi,'datos actualizados el').replace(/released/gi,'publicado el');
 }
-/* T-105 (6) (AB 2026-10-18 13:05): Comparar and the shared page may say the source in one line,
-   "Fuente: CMS 2027. Los costos pueden variar; los documentos de su plan son la palabra final.", but ONLY
-   once PROTECT has approved that exact wording. Until then this stays false and every surface keeps the
-   full line below, word for word. Flip it to true (one line, nothing else) when PROTECT signs. It changes
-   only the comparison's fine print (fineBlock's third argument); the plan screen keeps the full line. */
-const SRC_ONE_LINE_PROTECT_OK=false;
+/* T-105 (6): Comparar and the shared page say the source in one line,
+   "Fuente: CMS 2027. Los costos pueden variar; los documentos de su plan son la palabra final.". The ticket
+   held this behind a flag pending a PROTECT pass; AB (DECIDE, the one human in the loop for sign-off)
+   turned it on directly, 2026-10-18 14:0x, without that pass, after SHIP flagged the gate explicitly and
+   asked twice. It changes only the comparison's fine print (fineBlock's third argument); the plan screen
+   keeps the full line below, unchanged. */
+const SRC_ONE_LINE_PROTECT_OK=true;
 function provenanceNote(short){
   if(!_planMeta||!_planMeta.year) return '';
   if(short&&SRC_ONE_LINE_PROTECT_OK) return L(`Source: CMS ${_planMeta.year}. Costs may vary; your plan documents have the final word.`,
