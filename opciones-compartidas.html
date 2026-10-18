@@ -181,7 +181,7 @@ p,div,span{text-wrap:pretty}
 
   var T = {
     title:  EN ? 'Medicare options for 2027' : 'opciones de Medicare 2027',
-    adv:    EN ? 'YOUR AGENT · LIC. #4507923' : 'SU ASESORA · LIC. #4507923',
+    adv:    EN ? 'YOUR AGENT' : 'SU ASESORA',   // T-102: + ' · LIC. #…' only when the agent has one on file
     call:   EN ? 'CALL, TEXT OR WHATSAPP' : 'LLAMADA, TEXTO O WHATSAPP',
     before: EN ? 'Choose before <b>Dec 7</b>' : 'Elija antes del <b>7 de dic.</b>',
     start:  EN ? 'starts January 1' : 'inicia el 1 de enero',
@@ -233,7 +233,18 @@ p,div,span{text-wrap:pretty}
     drug:'<g transform="rotate(-35 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></g>',
     star:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>'
   };
-  var TEL = '(310) 597‑9142';
+  /* T-102: who heads the sheet follows the ZIP's state. The widget owns the one state->agent map and
+     sends the agent with the plans (d.agent); this is only the fallback for the error screen, which
+     is drawn before any state is known, and for an older widget that does not send one. */
+  var AGENT = {key:'alejandra', name:'Alejandra Brizuela', tel:'(310) 597-9142', digits:'13105979142',
+               email:'Alejandra@BeneficiosMedicare.com', photo:'images/alejandra-headshot.jpg', lic:'4507923'};
+  var TEL = '(310) 597‑9142', TELH = 'tel:+13105979142';
+  function useAgent(a){
+    if (!a || !/^1\d{10}$/.test(String(a.digits || '')) || !/^images\/[a-z-]+\.jpg$/.test(String(a.photo || ''))) return;
+    AGENT = {key:String(a.key || ''), name:String(a.name || ''), tel:String(a.tel || ''), digits:String(a.digits),
+             email:String(a.email || ''), photo:String(a.photo), lic:/^\d+$/.test(String(a.lic || '')) ? String(a.lic) : ''};
+    TEL = AGENT.tel.replace(') ', ')\u00a0').replace('-', '\u2011'); TELH = 'tel:+' + AGENT.digits;
+  }
   var esc = function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 
@@ -293,10 +304,12 @@ p,div,span{text-wrap:pretty}
   function callRow(icon, text){
     return '<div class="row"><div class="rl"></div><div class="callrow">' +
       '<svg class="cri" viewBox="0 0 24 24">' + PIC[icon] + '</svg><span>' + esc(text) +
-      '<b><a href="tel:+13105979142" style="color:inherit;text-decoration:none">' + TEL + '</a></b></span></div></div>';
+      '<b><a href="' + TELH + '" style="color:inherit;text-decoration:none">' + TEL + '</a></b></span></div></div>';
   }
 
   function render(d){
+    useAgent(d.agent);
+    var A = AGENT, adv = T.adv + (A.lic ? ' · LIC. #' + A.lic : '');
     var plans = d.plans, n = plans.length;
     var sug = d.sug;
     var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES',
@@ -340,12 +353,12 @@ p,div,span{text-wrap:pretty}
         '<div class="hdr2">' +
           '<div class="logo2"><a href="/" aria-label="Inicio de BeneficiosMedicare.com" ' +
             'style="display:inline-block;text-decoration:none">' + LOGO + '</a></div><div class="sep2"></div>' +
-          '<div class="who2"><img src="' + IMGBASE + 'images/alejandra-headshot.jpg" alt="Alejandra Brizuela" width="46" height="46">' +
-            '<div><div class="lab2">' + esc(T.adv) + '</div><div class="nm2">Alejandra Brizuela</div>' +
-            '<div class="em2"><a href="mailto:alejandra@beneficiosmedicare.com" style="color:inherit;text-decoration:none">Alejandra@BeneficiosMedicare.com</a></div></div></div>' +
+          '<div class="who2" data-agent="' + esc(A.key) + '"><img src="' + IMGBASE + esc(A.photo) + '" alt="' + esc(A.name) + '" width="46" height="46">' +
+            '<div><div class="lab2">' + esc(adv) + '</div><div class="nm2">' + esc(A.name) + '</div>' +
+            '<div class="em2"><a href="mailto:' + esc(A.email.toLowerCase()) + '" style="color:inherit;text-decoration:none">' + esc(A.email) + '</a></div></div></div>' +
           '<div class="sep2"></div>' +
           '<div class="call2"><div class="lab2">' + esc(T.call) + '</div>' +
-            '<div class="ph2"><a href="tel:+13105979142" style="color:inherit;text-decoration:none">' + TEL + '</a></div></div>' +
+            '<div class="ph2"><a href="' + TELH + '" style="color:inherit;text-decoration:none">' + TEL + '</a></div></div>' +
         '</div>' +
         '<div class="band2"><h1>' + n + ' ' + esc(T.title) + ' <em>· ZIP ' + where + '</em></h1>' +
           '<div class="dl"><span class="gold">' + T.before + '</span>' +
@@ -357,8 +370,8 @@ p,div,span{text-wrap:pretty}
           '<div class="c2w">BeneficiosMedicare.com</div></div>' +
         '<p class="disc">' + esc(T.disc) + ' ' + esc(T.sent) + esc(when) + '.</p>' +
       '</div>' +
-      '<div class="fix"><a class="l" href="tel:+13105979142">' + esc(T.callb) + '</a>' +
-        '<a class="w" href="https://wa.me/13105979142" target="_blank" rel="noopener">WhatsApp</a></div>';
+      '<div class="fix"><a class="l" href="' + TELH + '">' + esc(T.callb) + '</a>' +
+        '<a class="w" href="https://wa.me/' + A.digits + '" target="_blank" rel="noopener">WhatsApp</a></div>';
 
     placeSugBox();
     if (window.gtag) window.gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es'});
@@ -372,13 +385,8 @@ p,div,span{text-wrap:pretty}
   }
 
   var IMGBASE = (location.hostname.indexOf('medicare-california') > -1) ? (WIDGET_HOST + '/') : '/';
-  var LOGO = '<svg viewBox="0 0 400 48" width="250" height="30" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BeneficiosMedicare.com">' +
-    '<path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="#007B7B"/>' +
-    '<polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<text y="34" font-family="\'Open Sans\',Arial,sans-serif">' +
-      '<tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan>' +
-      '<tspan font-size="26" font-weight="600" fill="#007B7B">Medicare</tspan>' +
-      '<tspan font-size="26" font-weight="400" fill="#8A94A1">.com</tspan></text></svg>';
+  /* T-102: the real logo, the exact markup of the site header (index.html), not a typed stand-in. */
+  var LOGO = '<svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><polyline points="14,27 20,33 33,19" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#007B7B">Medicare</tspan></text></svg>';
 })();
 </script>
 </body>
