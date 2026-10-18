@@ -724,6 +724,12 @@ body.host-cbar .cbar{display:none!important}
 .team2 .tb svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .team2 .alt{text-align:center;font-size:14px;margin:8px 0 0;color:#66727c}
 .team2 .alt a{color:var(--sage-dark);font-weight:600;text-decoration:none;display:inline-block;padding:8px 2px}
+/* T-102: one agent, centred; the licence line sits under the title only when one is on file */
+.people.one{grid-template-columns:auto;justify-content:center}
+.pl{font-size:11.5px;color:#66727c;white-space:nowrap}
+.agchip{display:flex;margin:2px 0 12px;padding:10px 12px;background:#F4F6F8;border-radius:10px}
+.agchip .pp img{width:48px;height:48px}
+.agchip .pn{font-size:15px}.agchip .pr,.agchip .pl{font-size:12.5px}
 .cmp td.v.na{color:#66727c;font-weight:500;font-style:italic;font-size:12px}
 @media(max-width:360px){.pn{font-size:12.5px}.pp img{width:38px;height:38px}.pp{gap:6px}.team2{padding:14px 10px}.people{gap:6px}}
 </style>
@@ -1103,6 +1109,31 @@ function isRepresented(parent,state){
   if(!_rep||!_rep.represented) return false;
   const l=_rep.represented[state]; return Array.isArray(l)&&l.indexOf(parent)>=0;
 }
+
+/* ── T-102 agent by state (AB 2026-10-17, final) ───────────────────────────────────────────────
+   ONE map, read by every place the widget shows or sends an agent: the suggestion card in Comparar,
+   the "Ayúdeme a elegir" contact step, the contact block under the list, the shared sheet and its
+   PDF (they ask this file for their data, see plansForShare), the WhatsApp/Texto/Email text the
+   share sheet builds, and the `agent` field on the lead row. The state is the one loadPlansForZip
+   already resolved from the ZIP (D.state); nothing here re-derives it.
+     Susana    = KS, MO, TX, FL
+     Alejandra = CA, AZ, IA, IL, OK, and anything else or no state yet (the default)
+   lic: the licence number shown next to the name. Alejandra's is the CA DOI number the shared sheet
+   already carried (T-078). Susana's numbers for KS/MO/TX/FL are NOT on file: until PROTECT has them
+   her surfaces show NO licence line at all -- not a placeholder, not her CA number (CA is not one
+   of her states here). Never an NPN, for either agent. */
+const AGENTS={
+  susana:   {key:'susana',   name:'Susana Marcos',      tel:'(913) 488-5341', digits:'19134885341',
+             email:'Susana@BeneficiosMedicare.com',    photo:'images/susana-headshot.jpg',    lic:''},
+  alejandra:{key:'alejandra',name:'Alejandra Brizuela', tel:'(310) 597-9142', digits:'13105979142',
+             email:'Alejandra@BeneficiosMedicare.com', photo:'images/alejandra-headshot.jpg', lic:'4507923'}
+};
+const AGENT_BY_STATE={KS:'susana',MO:'susana',TX:'susana',FL:'susana'};
+function agentFor(state){return AGENTS[AGENT_BY_STATE[String(state||'').toUpperCase()]]||AGENTS.alejandra;}
+function agent(){return agentFor(D.state);}
+// Non-breaking space and hyphen keep "(913) 488-5341" on one line wherever it wraps.
+function agentTel(a){return String(a.tel).replace(') ',') ').replace('-','‑');}
+function agentLicLine(a){return a.lic?'Lic. #'+a.lic:'';}
 
 const T052_KEYS=['gb','mded','oon','mhosp','snf','hh','phosp','rehab','mh','ther','chiro','pod','oprof','tele','wwe',
   'lab','dx','xray','img','rad','dme','pros','diab','dial','partb','acu','meals','pe','x14','ssbci','opt','ssbcic','ssbcio'];
@@ -2739,22 +2770,24 @@ async function flowResults(){
 // not work, WhatsApp Web. A page cannot tell which app a phone uses by default, so WhatsApp stays one
 // tap away as its own link. No email addresses. Only where we may take a lead (licensed state, signed
 // carrier file loaded): an information-only state gets the Medicare.gov notice instead.
+// T-102: one person now, the agent for the ZIP's state (agent()), with her own number on every link.
+function agentPerson(a,cls){
+  const lic=L('licensed agent','agente con licencia'), ll=agentLicLine(a);
+  return `<div class="pp${cls?' '+cls:''}"><img src="${a.photo}" alt="${esc(a.name)}, ${lic}" width="44" height="44"><div><div class="pn">${esc(a.name)}</div><div class="pr">${L('Licensed Medicare Agent','Agente de Medicare con licencia')}</div>${ll?`<div class="pl">${ll}</div>`:''}</div></div>`;
+}
 function teamCard(){
   if(!leadOK()||(D.state&&!_rep)) return '';
+  const a=agent();
   const msg=encodeURIComponent(L("Hi, I'd like help with the 2027 plans",'Hola, quiero ayuda con los planes 2027'));
-  const wa='https://wa.me/13105979142?text='+msg;
+  const wa=`https://wa.me/${a.digits}?text=`+msg;
   const phone=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));
-  const main=phone?`href="sms:+13105979142?&body=${msg}"`:`href="${wa}" target="_blank" rel="noopener"`;
-  const ag=L('Agent','Agente'), lic=L('licensed agent','agente con licencia');
-  return `<div class="team2">
+  const main=phone?`href="sms:+${a.digits}?&body=${msg}"`:`href="${wa}" target="_blank" rel="noopener"`;
+  return `<div class="team2" data-agent="${a.key}">
     <p class="tt">${L('Rather talk to a person?','¿Prefiere hablar con nosotras?')}</p>
-    <div class="people">
-      <div class="pp"><img src="images/susana-headshot.jpg" alt="Susana Marcos, ${lic}" width="44" height="44"><div><div class="pn">Susana Marcos</div><div class="pr">${ag}</div></div></div>
-      <div class="pp"><img src="images/alejandra-headshot.jpg" alt="Alejandra Brizuela, ${lic}" width="44" height="44"><div><div class="pn">Ale Brizuela</div><div class="pr">${ag}</div></div></div>
-    </div>
+    <div class="people one">${agentPerson(a)}</div>
     <p class="td">${L('We answer in English or Spanish.','Le respondemos en español o inglés.')}</p>
     <a class="tb" ${main}><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg>${L('Send us a message','Envíenos un mensaje')}</a>
-    <p class="alt"><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+13105979142">${L('Call','Llamar')} (310) 597-9142</a></p>
+    <p class="alt"><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+${a.digits}">${L('Call','Llamar')} ${a.tel}</a></p>
   </div>`;
 }
 // b16: tell the home page whether plans are on screen, so it can set aside the sections below the
@@ -2839,13 +2872,13 @@ function sugLine(p,plans){
 }
 function sugCard(p,plans){
   const line=sugLine(p,plans);
-  const TEL='(310) 597\u20119142';
-  return `<div class="sug" style="--sc:${carrierColor(p)}">
+  const a=agent();   // T-102: the agent for this ZIP's state confirms it, on her own number
+  return `<div class="sug" style="--sc:${carrierColor(p)}" data-agent="${a.key}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
     <p class="sp"><i></i>${esc(dispName(p))}</p>
     ${line?`<p class="why">${line}</p>`:''}
     <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
-      <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} <a href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'suggestion'})">${TEL}</a></span></div>
+      <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} ${esc(a.name)}, <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></div>
   </div>`;
 }
 /* ── T-078: sharing the comparison ─────────────────────────────────────────────────────────────
@@ -2867,7 +2900,10 @@ async function plansForShare(zip,ids,priority){
     // T-078 round 8: the same suggestion the comparison showed, from the answer carried in the link.
     const sug=suggestPlan(out);
     const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
+    // T-102: the sheet and its PDF draw their header from the same map as the widget.
+    const ag=agent();
     return {county:D.county||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
+      agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
       sug:sug?{id:planIdRaw(sug),name:dispName(sug),
                why:sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':'',
                lead:sh?L(`For ${sh}:`,`Para ${sh}:`):''}:null,
@@ -2929,9 +2965,10 @@ function shareURL(){
 }
 function sharePlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
 function shareMsg(){
-  const n=sharePlans().length, z=esc(D.zip||''), TEL='(310) 597‑9142';
-  return L(`${n} Medicare options for 2027, ZIP ${z}. Questions: ${TEL}`,
-           `${n} opciones de Medicare 2027 para el ZIP ${z}. Preguntas: ${TEL}`)+'\n\n'+shareURL();
+  // T-102: the questions go to the agent for this ZIP's state, by name, on her own number.
+  const n=sharePlans().length, z=esc(D.zip||''), a=agent(), who=a.name+', '+agentTel(a);
+  return L(`${n} Medicare options for 2027, ZIP ${z}. Questions: ${who}`,
+           `${n} opciones de Medicare 2027 para el ZIP ${z}. Preguntas: ${who}`)+'\n\n'+shareURL();
 }
 const SHARE_ICONS={
   wa:'<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.6 20.4l4.2-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="#fff" stroke-width="1.7"/><path fill="#fff" stroke="none" d="M9.3 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.8c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3-.1.5.6 1 1.4 1.9 2.5 2.4.2.1.4.1.5 0l.7-.8c.1-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.4 0 .5-.2 1.2-.8 1.6-.6.4-1.5.5-3.2-.2-1.9-.8-3.2-2.7-3.4-3-.2-.3-.9-1.3-.9-2.4 0-1.1.5-1.6.7-1.9z"/>',
@@ -3230,6 +3267,7 @@ function planEnroll(){
   prog(92); _plansView=true; wEvt('form_open',{source:'card'});
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    ${agentChip()}
     ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
@@ -3240,10 +3278,13 @@ function planEnroll(){
     <div id="leadErr"></div>`;
 }
 
+// T-102: who will call back, from the ZIP's state -- the same agent the lead row names (D.agent).
+function agentChip(){const a=agent();return `<div class="agchip" data-agent="${a.key}">${agentPerson(a)}</div>`;}
 function helpChoose(){
   prog(92); _plansView=true; wEvt('form_open',{source:'compare'});
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
+    ${agentChip()}
     ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
@@ -3385,6 +3426,7 @@ function submitLead(type){
   D.lang=lang;D.conditions=[...selConds];D.healthNotes='';
   D.timestamp=new Date().toISOString();
   D.leadType=type;
+  D.agent=agent().key;   // T-102: 'susana' | 'alejandra', from the ZIP's state; the leads script routes on it
   if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
 
   const parentHost=(window.self!==window.top)?document.referrer:'';
@@ -3537,7 +3579,7 @@ if(!_dataOnly) go(startZip);
       var src=e.source, org=e.origin, q=e.data;
       Promise.resolve(plansForShare(q.zip,q.ids,q.r)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
-          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null},org); }catch(x){}
+          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null},org); }catch(x){}
       });
       return;
     }
