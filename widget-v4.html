@@ -108,7 +108,7 @@ body.host-next #wb .btn-p{display:none!important}
    costs nothing where a block already fits on one line. The forced two-line cost labels under the
    card numbers are NOT covered by it on purpose: their break is written in (T-079 round 2) and the
    second line is meant to be one word. */
-.q3q,.q3h,.q3tx b,.q3tx span,.q3skip,.rh .hl,.rh .zl,.fc,.ord,.ordp .orow,.btn-back,.btn-p,.btn-s,.pc-det,.pd-cta,.cbar button,
+.q3q,.q3tx b,.q3tx span,.q3skip,.rh .hl,.rh .zl,.fc,.ord,.ordp .orow,.btn-back,.btn-p,.btn-s,.pc-det,.pd-cta,.cbar button,
 .pc-eb,.pc-name,.cmp thead th .nm2,.cmp tr.lr td,.cmp tr.vr td,.cmp tr.grp td,.lr .ll,.lr .lv,.bot-msg,.diffline{text-wrap:balance}
 .fine p,.pc-fine,.disc,.psrc,.dualnote{text-wrap:pretty}
 /* the two-line cost labels keep their own written-in break (T-079 round 2) */
@@ -141,13 +141,19 @@ body.host-next #wb .btn-p{display:none!important}
    options AND "Sin preferencia" are reachable without scrolling. The question itself was not
    allowed to shrink to get there (AB), so the room came out of the rows: one line of explanation
    each, a 44px tile instead of 50, and 7px between rows. */
-body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
-.q3top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 2px}
-.q3zip{color:#4A5568;font-weight:600;font-size:14px;white-space:nowrap}
-.q3q{font-size:23px;line-height:1.22;font-weight:700;color:#002147;margin:0 0 3px;text-wrap:balance}
-.q3h{font-size:15.5px;color:#4A5568;margin:0 0 8px;text-wrap:pretty}
-.q3opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;border:1.5px solid #D4DEE8;border-radius:14px;padding:7px 12px 7px 8px;min-height:56px;margin-bottom:6px;background:#fff;position:relative;cursor:pointer}
-.q3opt.on{border:2px solid var(--cbar-brand);background:#f2faf9;padding:6.5px 11.5px 6.5px 7.5px}
+/* ── T-100 (AB 2026-10-17, spec 2026-10-17_2340_lo-mas-importante-y-mi-plan-de-hoy-v9 section 2,
+   PROPUESTA): no ZIP and no help line. The question sits on ONE line to the right of "‹ Volver",
+   19.5px navy, never wrapping; six options, 60px tall and 8px apart, so all six and "Sin preferencia"
+   sit above the fold at 390x660. fitQ3() steps the type down only where 19.5px does not fit beside
+   Volver (English on a phone), and below 16px gives the question its own line under Volver. ── */
+body.q3 .widget-body{padding:10px 14px 16px}
+.q3top{display:flex;align-items:center;gap:12px;row-gap:8px;margin:2px 0 12px}
+.q3top .btn-back{margin:0;flex:0 0 auto}
+.q3q{flex:1 1 auto;min-width:0;font-size:19.5px;line-height:1.22;font-weight:700;color:#002147;margin:0;white-space:nowrap;overflow:hidden}
+.q3top.q3wrap{flex-wrap:wrap}
+.q3top.q3wrap .q3q{flex-basis:100%}
+.q3opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;border:1.5px solid #D4DEE8;border-radius:14px;padding:8px 12px 8px 10px;min-height:60px;margin-bottom:8px;background:#fff;position:relative;cursor:pointer}
+.q3opt.on{border:2px solid var(--cbar-brand);background:#f2faf9;padding:7.5px 11.5px 7.5px 9.5px}
 .q3ic{width:44px;height:44px;flex:0 0 44px;border-radius:12px;background:var(--b);display:flex;align-items:center;justify-content:center}
 .q3ic svg{width:28px;height:28px;fill:none;stroke:var(--d);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .q3ic svg .f{fill:var(--t)}
@@ -162,9 +168,9 @@ body.q3 .widget-body{padding-top:12px;padding-bottom:12px}
    preferencia" 25px below the screen. They are one line again here -- the words are not cut, the
    type is, and only on the narrowest phone. */
 @media(max-width:359px){
-  .q3q{font-size:21px}
-  .q3h{font-size:15px}
-  .q3opt{gap:9px;padding:6px 8px 6px 7px;min-height:52px;margin-bottom:5px}
+  /* T-100: rows keep the spec's 60px and 8px gap here too; only the type and the side room shrink */
+  .q3opt{gap:9px;padding:8px 8px 8px 7px;min-height:60px;margin-bottom:8px}
+  .q3opt.on{padding:7.5px 7.5px 7.5px 6.5px}
   .q3ic{width:40px;height:40px;flex:0 0 40px}
   .q3ic svg{width:25px;height:25px}
   .q3tx{padding-right:16px}
@@ -1389,6 +1395,11 @@ function onZipInput(el, fieldId){
    shouts, and no purple. Paths and the three colours per family are the mock's own.
    Spec: 2026-10-15_2230_iconos-pregunta-v1 column B + 2026-10-15_2300_lo-mas-importante-v2. */
 const PRI_OPTIONS=[
+  /* T-100 (AB 2026-10-17): first, for whoever already has a plan (in AEP, most visitors). It does not
+     set an order or a filter; it opens T-099's "¿Qué plan tiene hoy?" screen. See pickPri(). */
+  {id:'myplan',  ic:'card',   d:'#002147', t:'#B2DFDB', b:'#E6F2F1',
+   en:()=>'Check my current plan', es:()=>'Revisar mi plan de hoy',
+   enD:'My plan 2026 vs&nbsp;2027.', esD:'Mi plan 2026 vs&nbsp;2027.'},
   {id:'doctors', ic:'doctor', d:'#1F4E89', t:'#BCD0EA', b:'#E9F0F9',
    en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
    enD:'<em>First</em>, the ones with more&nbsp;freedom.', esD:'<em>Primero</em> los que dan m\u00E1s&nbsp;libertad.'},
@@ -1407,6 +1418,7 @@ const PRI_OPTIONS=[
 ];
 // Design B's own glyphs: the filled shapes carry class "f" and take the family's mid tone.
 const PRI_GLYPH={
+  card:'<rect class="f" x="3" y="5" width="18" height="13" rx="2"/><path d="M3 9.5h18M6.5 14h5"/><path d="M15 21.5l2.5-2.5-2.5-2.5M20.5 19h-5"/>',
   doctor:'<circle class="f" cx="12" cy="7.5" r="3.6"/><path class="f" d="M4.5 20.5c0-4.2 3.4-6.8 7.5-6.8s7.5 2.6 7.5 6.8z"/><path d="M12 15.6v3.6M10.2 17.4h3.6"/>',
   bottle:'<rect class="f" x="6" y="8.5" width="12" height="12.5" rx="2"/><rect x="5" y="3.5" width="14" height="5" rx="1.3"/><path d="M12 11.8v5.4M9.3 14.5h5.4"/>',
   shieldb:'<path class="f" d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
@@ -1431,11 +1443,11 @@ function priorityStep(nextFn){
       priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
   }).join('');
   document.body.classList.add('q3');
-  wb().innerHTML=`<div class="q3top">${bk()}<span class="q3zip">ZIP ${esc(D.zip||'')}</span></div>
-    <p class="q3q">${L('What matters most to&nbsp;you?','\u00BFQu\u00E9 es lo m\u00E1s importante para&nbsp;usted?')}</p>
-    <p class="q3h">${L('Choose one. You can change it later.','Elija una. Despu\u00E9s puede cambiarlo.')}</p>
+  wb().innerHTML=`<div class="q3top">${bk()}<p class="q3q">${L('What matters most to you?','\u00BFQu\u00E9 le importa m\u00E1s?')}</p></div>
     ${cards}
     <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>`;
+  fitQ3();
+  try{ document.fonts&&document.fonts.ready.then(fitQ3); }catch(e){}
   // The ZIP's state arrives with the plan file, which can land after this screen has drawn. Until
   // it does, mcd() says "Medicaid"; a California visitor must read "Medi-Cal", which is the word the
   // ticket spells out. So the one option that carries the name is refreshed when the state lands.
@@ -1452,10 +1464,39 @@ function fixMcdLabel(n){
   }
   if(n<30) setTimeout(()=>fixMcdLabel(n+1),200);
 }
+/* T-100: the question is ONE line, always. At 19.5px it fits beside Volver in Spanish down to a 375
+   phone; English is longer, so where it does not fit the type steps down half a pixel at a time, never
+   below 16px. Below that (a 320 phone) the question takes its own line under Volver at full size, and
+   only shrinks if even that line is too short. Measured, not guessed: the Open Sans webfont can land
+   after the first draw, so this runs again when fonts are ready and whenever the frame changes width. */
+function fitQ3(){
+  const top=document.querySelector('#wb .q3top'), q=top&&top.querySelector('.q3q'); if(!q) return;
+  top.classList.remove('q3wrap'); q.style.fontSize='';
+  const over=()=>q.scrollWidth>q.clientWidth+0.5;
+  let fs=parseFloat(getComputedStyle(q).fontSize);
+  while(over()&&fs>16){ fs-=0.5; q.style.fontSize=fs+'px'; }
+  if(!over()) return;
+  top.classList.add('q3wrap'); q.style.fontSize='';
+  fs=parseFloat(getComputedStyle(q).fontSize);
+  while(over()&&fs>14){ fs-=0.5; q.style.fontSize=fs+'px'; }
+}
+window.addEventListener('resize',fitQ3);
 let _priTimer=null;
 function pickPri(id){
   if(_priTimer) return;
   document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',!!id&&el.id==='pri-'+id));
+  if(id==='myplan'){
+    // Not an order or a filter, so D.priority is left as it was and the list behaves as before.
+    wEvt('priority_pick',{priority:'myplan'});
+    _priTimer=setTimeout(()=>{
+      _priTimer=null;
+      // T-099 wires the real destination (flowMyPlan, "¿Qué plan tiene hoy?"); until it exists, log and stay here.
+      if(typeof flowMyPlan==='function'){ go(flowMyPlan); return; }
+      try{ console.info('[T-100] priority_pick=myplan: flowMyPlan() is not built yet (T-099)'); }catch(e){}
+      const el=document.getElementById('pri-myplan'); if(el) el.classList.remove('on');
+    },400);
+    return;
+  }
   D.priority=id; D.priorities=id?[id]:[];
   _priAuto=null;   // a new answer sets the order and the filters once more
   wEvt('priority_pick',{priority:id||'none'});
@@ -3491,7 +3532,8 @@ if(!_dataOnly) go(startZip);
 /* T-031: the host page's bottom bar shows one big "Continuar" from question 2 on. The widget tells the page
    which screen it is on (depth 1 = first question) and whether that screen has a next button, and presses
    that button when the page asks. Never offered on a screen that sends a lead: the consent text has to sit
-   next to the button the visitor taps, and the page hides its bar there (lead:true) so it cannot cover Enviar. Requests are accepted only from the two sites' own addresses. */
+   next to the button the visitor taps, and the page hides its bar there (lead:true) so it cannot cover Enviar. Requests are accepted only from the two sites' own addresses.
+   T-100: pri:true = the "¿Qué le importa más?" screen, so the page gives it the results screen's one-line band, no AEP strip and no bottom bar. */
 (function(){
   if(window.self===window.top) return;
   var HOSTS=/^https:\/\/((www\.)?beneficiosmedicare\.com|(www\.)?medicare-california\.com|([a-z0-9-]+\.)?(beneficiosmedicare|medicare-california)\.pages\.dev)$/;
@@ -3505,7 +3547,7 @@ if(!_dataOnly) go(startZip);
   }
   function report(){
     var b=primary();
-    var st={type:'widget-step',depth:hist.length,results:!!_plansView,lead:!!document.querySelector('#wb .lead-consent'),hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
+    var st={type:'widget-step',depth:hist.length,results:!!_plansView,pri:document.body.classList.contains('q3'),lead:!!document.querySelector('#wb .lead-consent'),hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
     var k=JSON.stringify(st); if(k===last) return; last=k;
     window.parent.postMessage(st,'*');
   }
