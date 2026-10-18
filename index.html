@@ -882,7 +882,10 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
      for. Written as :empty so a label, if one ever comes back, restores the old two-part layout
      on its own. */
   html body .t31-cbar .n:empty{display:none}
-  html body .t31-cbar .n:empty + button{flex:1 1 auto;width:100%;min-height:52px}
+  /* T-103 (1): ~ not +. Once Comparar has been opened, the page inserts its Compartir button (hidden off
+     that screen) between the label and this one, the + stopped matching, and back on the list or the
+     Mi plan de hoy cards the button shrank to its text and sat 85-89px right of centre at 390. */
+  html body .t31-cbar .n:empty ~ button:not(.t31-shr){flex:1 1 auto;width:100%;min-height:52px}
   /* T-084 round 2: solid, full-width, when the bar is a screen's main action */
   html body.t31-solid .t31-cbar{border:0;background:none;box-shadow:none;padding:0}
   html body.t31-solid .t31-cbar .n{display:none}
