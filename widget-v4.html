@@ -582,6 +582,62 @@ body.host-cbar .cbar{display:none!important}
 .lead-title{font-size:20px;font-weight:700;color:#1e2a32;margin:4px 0 4px;text-align:left}
 .lead-sub{font-size:15px;color:#4a5560;margin:0 0 14px;text-align:left}
 .contact-line{text-align:center;font-size:14px;color:#3c4043;margin:12px 0 0;line-height:1.45}
+/* ── T-099 "Revisar mi plan de hoy" (AB 2026-10-17). Values are the mock's own: 2026-10-17_2340_lo-mas-
+   importante-y-mi-plan-de-hoy-v9 section 3 (.top2 .q .hint .field .ac .skip2 .hintbox .chip .meta table.dt
+   .why .all .fine). Colours are the site's: navy/teal via --cbar-ink/--cbar-brand, the mint chip
+   is --mint, the gold chip and its cream line are the AEP strip's yellow (js/date-strip.js), up/down
+   are the question screen's own red and green families. */
+.mptop{display:flex;align-items:center;gap:12px;margin:0 0 6px}
+.mptop .btn-back{margin-bottom:0;flex:0 0 auto}
+.mpq{font-size:19px;line-height:1.22;font-weight:700;color:var(--cbar-ink);margin:0;text-align:left;text-wrap:balance}
+.mphint{font-size:14.5px;color:#4A5568;margin:0 0 8px;text-align:left;text-wrap:pretty}
+.mpfield{display:block;width:100%;height:56px;border:2px solid var(--cbar-brand);border-radius:12px;padding:0 14px;font:inherit;font-size:18px;color:#1A202C;background:#fff;outline:none;-webkit-appearance:none;appearance:none}
+.mpfield:focus{box-shadow:0 0 0 3px var(--lt-mint)}
+.mpac{border:1.5px solid #D4DEE8;border-top:0;border-radius:0 0 12px 12px;margin:-6px 6px 10px;background:#fff;overflow:hidden;text-align:left}
+.mpaci{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:0;border-bottom:1px solid #E5E9EC;padding:11px 12px;font-size:15.5px;line-height:1.35;color:#1A202C;cursor:pointer;min-height:44px}
+.mpaci:last-child{border-bottom:0}
+.mpaci.on,.mpaci:hover{background:var(--lt-mint)}
+.mpaci b{font-weight:700}
+.mpaci small{color:#4A5568;font-size:13px;margin-left:6px;white-space:nowrap}
+.mpnone{margin:10px 2px 0;text-align:center}
+.mpnone p{font-size:15.5px;font-weight:600;color:#1A202C;margin:0;text-wrap:balance}
+.mpskip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;margin:4px 0 14px;min-height:44px;text-wrap:balance}
+.mpskip.mpsk2{margin:2px 0 14px}
+.mpskip[hidden]{display:none}
+.mphintbox{display:flex;gap:10px;align-items:center;background:#F0F3F6;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.4;color:#4A5568;text-align:left}
+.mphintbox svg{width:26px;height:26px;flex:0 0 26px;fill:none;stroke:var(--cbar-ink);stroke-width:1.7;stroke-linecap:round}
+.mphl{font-size:21px;font-weight:700;color:var(--cbar-ink);margin:0;line-height:1.2;text-align:left;text-wrap:balance}
+.rh.mprh{box-shadow:none;padding:0;margin:4px 0 10px;border-radius:0;background:none;z-index:auto}
+.rh.mprh .zl{margin:0;min-height:0}
+.mpc .mph{padding:10px 14px 9px;border-bottom:1px solid #E5E9EC}
+.mpc .pc-name{text-wrap:pretty}
+.mpchip{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:999px;margin-bottom:5px;line-height:1.5}
+.mpchip.navy{background:var(--cbar-ink);color:#fff}
+.mpchip.mint{background:var(--mint);color:var(--cbar-ink)}
+.mpchip.gold{background:#FFD54F;color:var(--cbar-ink)}
+.mpwas{font-size:12.5px;color:#66727c;margin:2px 0 0}
+.mpmeta{margin-top:8px;font-size:13px;color:#66727c;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mpmeta .tg-net{font-size:12px;padding:1px 9px}
+.mpmeta b{color:#4A5568}
+.mpmeta .rt0{font-size:12.5px}
+.mpc .pc-rating{margin-top:5px}
+.mpinfo{margin-top:6px;font-size:12px;color:#4A5568;background:#F0F3F6;border-radius:8px;padding:5px 9px;display:inline-block}
+table.mpdt{width:100%;border-collapse:collapse;font-size:14px;background:#f3f5f7;border-bottom:1px solid #E5E9EC}
+table.mpdt th{font-weight:400;color:#4A5568;text-align:left;padding:5px 14px;width:50%;line-height:1.25}
+table.mpdt td{text-align:center;padding:5px 6px;font-weight:700;color:#1e2a32;font-size:16px;white-space:nowrap}
+table.mpdt thead td{font-size:12px;font-weight:600;color:#66727c;padding:6px 6px 0}
+table.mpdt td.up{color:#A8473B}
+table.mpdt td.down{color:#1F7A5A}
+table.mpdt td.na{font-size:13px;font-weight:600;color:#56616a;white-space:normal}
+.mpsr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mpwhy{margin:0;padding:8px 14px;font-size:14px;color:#1A202C;line-height:1.4;background:#fff;text-align:left;text-wrap:pretty}
+.mpwhy.strong{font-weight:600;color:var(--cbar-ink);background:#FFF8E1}
+.mpc .pc-det{border-top:1px solid #E5E9EC;padding:9px 14px}
+.mpc .mpwhy+.pc-det{border-top:0}
+.mpc a.pc-detl{text-decoration:underline;text-underline-offset:3px}
+.mpall{display:block;width:100%;text-align:center;margin:4px 0 8px;color:var(--cbar-brand);font-weight:600;text-decoration:underline;text-underline-offset:3px;font-size:16px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px;text-wrap:balance}
+.mpfine{font-size:12px;color:#66727c;margin:0;text-align:center;text-wrap:pretty}
+#mpres .sdisc{text-align:center}
 
 /* ── RESPONSIVE ── */
 @media(max-width:480px){
@@ -1389,6 +1445,11 @@ function onZipInput(el, fieldId){
    shouts, and no purple. Paths and the three colours per family are the mock's own.
    Spec: 2026-10-15_2230_iconos-pregunta-v1 column B + 2026-10-15_2300_lo-mas-importante-v2. */
 const PRI_OPTIONS=[
+  /* T-100 (AB 2026-10-17): first, for whoever already has a plan (in AEP, most visitors). It does not
+     set an order or a filter; it opens T-099's "¿Qué plan tiene hoy?" screen. See pickPri(). */
+  {id:'myplan',  ic:'card',   d:'#002147', t:'#B2DFDB', b:'#E6F2F1',
+   en:()=>'Check my current plan', es:()=>'Revisar mi plan de hoy',
+   enD:'My plan 2026 vs&nbsp;2027.', esD:'Mi plan 2026 vs&nbsp;2027.'},
   {id:'doctors', ic:'doctor', d:'#1F4E89', t:'#BCD0EA', b:'#E9F0F9',
    en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
    enD:'<em>First</em>, the ones with more&nbsp;freedom.', esD:'<em>Primero</em> los que dan m\u00E1s&nbsp;libertad.'},
@@ -1407,6 +1468,7 @@ const PRI_OPTIONS=[
 ];
 // Design B's own glyphs: the filled shapes carry class "f" and take the family's mid tone.
 const PRI_GLYPH={
+  card:'<rect class="f" x="3" y="5" width="18" height="13" rx="2"/><path d="M3 9.5h18M6.5 14h5"/><path d="M15 21.5l2.5-2.5-2.5-2.5M20.5 19h-5"/>',
   doctor:'<circle class="f" cx="12" cy="7.5" r="3.6"/><path class="f" d="M4.5 20.5c0-4.2 3.4-6.8 7.5-6.8s7.5 2.6 7.5 6.8z"/><path d="M12 15.6v3.6M10.2 17.4h3.6"/>',
   bottle:'<rect class="f" x="6" y="8.5" width="12" height="12.5" rx="2"/><rect x="5" y="3.5" width="14" height="5" rx="1.3"/><path d="M12 11.8v5.4M9.3 14.5h5.4"/>',
   shieldb:'<path class="f" d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
@@ -1456,6 +1518,18 @@ let _priTimer=null;
 function pickPri(id){
   if(_priTimer) return;
   document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',!!id&&el.id==='pri-'+id));
+  if(id==='myplan'){
+    // Not an order or a filter, so D.priority is left as it was and the list behaves as before.
+    wEvt('priority_pick',{priority:'myplan'});
+    _priTimer=setTimeout(()=>{
+      _priTimer=null;
+      // T-099 wires the real destination (flowMyPlan, "¿Qué plan tiene hoy?"); until it exists, log and stay here.
+      if(typeof flowMyPlan==='function'){ go(flowMyPlan); return; }
+      try{ console.info('[T-100] priority_pick=myplan: flowMyPlan() is not built yet (T-099)'); }catch(e){}
+      const el=document.getElementById('pri-myplan'); if(el) el.classList.remove('on');
+    },400);
+    return;
+  }
   D.priority=id; D.priorities=id?[id]:[];
   _priAuto=null;   // a new answer sets the order and the filters once more
   wEvt('priority_pick',{priority:id||'none'});
@@ -2594,6 +2668,8 @@ function barSec(){ if(_act&&_act.sec) openShare(); }
 function cbarTap(){const st=barState();if(st.mode==='action')barAct();else goCompare();}
 function goCompare(){
   if(!selPlans.length) return;
+  // T-099: a comparison of plans the "Mi plan de hoy" cards ticked (and nothing else) started there
+  _cmpFrom=(_mpCtx&&selPlans.every(id=>_mpCtx.avail.indexOf(id)>=0))?'myplan':'';
   const picked=selPlans.length;
   if(selPlans.length===1){
     const rest=orderedPlans().filter(p=>!p._medigap&&p.id!==selPlans[0]).slice(0,2).map(p=>p.id);
@@ -2601,7 +2677,7 @@ function goCompare(){
   }
   if(selPlans.length<2) return;   // a county with a single plan: nothing to compare it against
   // nothing reported opening the comparison before T-084, so "Comparar taps up" had nothing to read
-  wEvt('compare_open',{plans:selPlans.length,picked:picked});
+  wEvt('compare_open',Object.assign({plans:selPlans.length,picked:picked},_cmpFrom?{compare_from:_cmpFrom}:{}));
   go(flowCompare);
 }
 // Which screens the bar belongs on: the plan list and a single plan's own screen. Not the
@@ -2765,6 +2841,351 @@ function viewMsg(){if(window.self!==window.top)window.parent.postMessage({type:'
 // Kept for the "Back to all plans" link on the success screen: the same list, more of it shown.
 function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 
+/* ══ T-099 · "Revisar mi plan de hoy" (AB 2026-10-17; RED: dollar figures + lead path) ═════════════════
+   Spec: DECIDE/now/2026-10-17_logica-y-plan-de-hoy/2026-10-17_2340_lo-mas-importante-y-mi-plan-de-hoy-v9.html
+   section 3 (frames A, A2, B, C, D), section 5 row 1, section 6. Wording in section 8 is PROTECT-pending.
+   1. "¿Qué plan tiene hoy?": one field, searched against the ZIP's county's 2026 plans (data/cms_<ST>.js,
+      the CY2026 Landscape). Name, carrier or card ID; accents, case and the hyphen ignored; 5 best.
+   2. "Su actual y 2 opciones": SU PLAN HOY comes from the CMS Plan Crosswalk 2026 -> 2027
+      (data/crosswalk_<ST>_2027.json, built by SHIP/reference/tools/build-crosswalk-2027.py). Nothing here
+      guesses a mapping: a plan the crosswalk does not place in this county gets no 2027 line at all.
+      SIMILAR / DIFERENTE follow the rule in section 3, transcribed from 2026-10-17_logic-test.py, and are
+      NEVER filtered by which carriers we represent.
+   Every figure on these cards is a field of a CMS file; a missing one reads "Sin información".
+   The plan the visitor names stays in this page's memory only (_myPlan). It leaves the browser only
+   inside a lead the visitor sends, as curPlan -- the field the leads script already prints as
+   "Plan actual" in the alert email and writes to the sheet. */
+let _cms26={}, _xw27={}, _myPlan=null, _mpQ='', _mpCtx=null, _cmpFrom='', _mpErr='';
+const _mpCP=id=>String(id||'').split('_').slice(0,2).join('_');      // contract_plan: 2027 ids carry a segment
+function mpId(id){return planIdRaw({id:id});}
+// data/cms_<ST>.js is `const CMS_STATE_DATA = {...};` -- read the object, never run it. Cloudflare answers an
+// unknown path with the home page (HTML, 200), which fails the parse and counts as "no file".
+function loadCms2026(st){
+  if(_cms26[st]) return Promise.resolve(_cms26[st]);
+  return fetch('data/cms_'+st+'.js',{cache:'no-cache'})
+    .then(r=>{if(!r.ok) throw new Error('no file');return r.text();})
+    .then(s=>{const i=s.indexOf('{'), j=s.lastIndexOf('}');const d=JSON.parse(s.slice(i,j+1));
+      if(!d||!d.plans) throw new Error('bad file'); _cms26[st]=d; return d;})
+    .catch(()=>null);
+}
+function loadXw27(st){
+  if(_xw27[st]!==undefined) return Promise.resolve(_xw27[st]);
+  return fetch('data/crosswalk_'+st+'_'+PLAN_FILE_YEAR+'.json',{cache:'no-cache'})
+    .then(r=>{const ct=(r.headers.get('content-type')||'');
+      // a state with no crosswalk file (outside the nine licensed states) is a definite "no mapping"
+      if(r.ok&&ct.indexOf('json')===-1){_xw27[st]=null;return null;}
+      if(!r.ok) throw new Error('no file'); return r.json().then(j=>{_xw27[st]=(j&&Array.isArray(j.plans))?j:null;return _xw27[st];});})
+    .catch(()=>null);   // a network failure is not cached: the next visit to this screen tries again
+}
+async function mpReady(){
+  if(D.zip&&(!PLANS.length||!D.state)) await loadPlansForZip(D.zip);
+  if(!D.state||D._zipValid===false) return false;
+  const [c]=await Promise.all([loadCms2026(D.state),loadXw27(D.state)]);
+  return !!c;
+}
+function mpPlans26(){const d=_cms26[D.state];return (d&&d.plans&&D.county&&d.plans[D.county])||[];}
+function mpNorm(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();}
+// The 5 plans of this county's 2026 list that best match what was typed. A token counts when a word of
+// the name or carrier starts with it (or, from 3 letters, contains it); the card number matches with or
+// without its hyphen. Ties: plan name. Fewer than 3 letters typed -> no list yet (null).
+function mpSearch(q){
+  const nq=mpNorm(q).replace(/[^a-z0-9\s-]/g,' ').trim(), compact=nq.replace(/[\s-]+/g,'');
+  if(compact.length<3) return null;
+  const toks=nq.split(/[\s-]+/).filter(Boolean), long=toks.filter(t=>t.length>=3).length;
+  let out=[];
+  mpPlans26().forEach(p=>{
+    const nm=mpNorm(p.name), car=mpNorm(p.carrier), hay=nm+' '+car;
+    const words=hay.replace(/[^a-z0-9]+/g,' ').trim().split(' ');
+    const idc=mpNorm(p.id).replace(/[^a-z0-9]/g,'');
+    let sc=0, mc=0, hit=0, idHit=false;
+    if((/^[a-z]\d{3}/.test(compact)&&idc.indexOf(compact)===0)||(/^\d{4,}$/.test(compact)&&idc.indexOf(compact)>=0)){sc+=100+compact.length;mc+=compact.length;idHit=true;}
+    toks.forEach(t=>{
+      let ok=false;
+      if(words.some(w=>w.indexOf(t)===0)){sc+=t.length*2;mc+=t.length;ok=true;}
+      else if(t.length>=3&&hay.indexOf(t)>=0){sc+=t.length;mc+=t.length;ok=true;}
+      if(ok&&t.length>=3) hit++;
+    });
+    if(mc<3) return;
+    if(nm.indexOf(nq)===0) sc+=6; else if(nm.indexOf(nq)>=0) sc+=3;
+    out.push({p,sc,all:idHit||hit===long,half:idHit||hit*2>=long});
+  });
+  // Plans that match every word typed, when there are any; otherwise the ones matching at least half
+  // (a word their card has that the CMS name does not). Nothing left = "No encontramos ese plan".
+  out=out.some(x=>x.all)?out.filter(x=>x.all):out.filter(x=>x.half);
+  // ties: plans anyone can join before special-needs plans, then by name
+  const snp=p=>/SNP/.test(String(p.type||''))?1:0;
+  out.sort((a,b)=>b.sc-a.sc||snp(a.p)-snp(b.p)||(a.p.name<b.p.name?-1:(a.p.name>b.p.name?1:0)));
+  return out.slice(0,5).map(x=>x.p);
+}
+const MP_CARD='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M3 9.5h18M6.5 14h5"/></s'+'vg>';
+function flowMyPlan(){
+  prog(55); _plansView=false;
+  wb().innerHTML=`<div class="mptop">${bk()}<p class="mpq">${L('What plan do you have today?','¿Qué plan tiene hoy?')}</p></div>
+    <p class="mphint">${L('Type the plan name or the number on your plan&nbsp;card.','Escriba el nombre o el número de su tarjeta del&nbsp;plan.')}</p>
+    <input id="mpin" class="mpfield" type="text" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false"
+      aria-label="${L('Your plan name or card number','Nombre del plan o número de tarjeta')}" aria-controls="mpsug" value="${esc(_mpQ)}"
+      oninput="mpType(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();mpEnter();}">
+    <div id="mpsug" aria-live="polite"></div>
+    <button class="mpskip" id="mpskip" onclick="mpAll()">${L('I don’t know, see all plans','No sé cuál es, ver todos los planes')}</button>
+    <div class="mphintbox" id="mphb">${MP_CARD}<span>${L('Your card shows the plan name and a number like H5425-006.','Su tarjeta dice el nombre del plan y un número como H5425-006.')}</span></div>`;
+  _mpErr='';
+  mpReady().then(ok=>{
+    const i=document.getElementById('mpin'); if(!i) return;
+    if(D._zipValid===false){ go(flowResults); return; }   // the results screen owns the bad-ZIP case
+    _mpErr=ok?'':'load';
+    mpType(i.value);
+  });
+}
+function mpType(v){
+  _mpQ=v;
+  const box=document.getElementById('mpsug'); if(!box) return;
+  if(_mpErr){ box.innerHTML=`<div class="mpnone"><p>${L('We could not load the plan list.','No pudimos cargar la lista de planes.')}</p></div>`; return; }
+  const list=mpSearch(v);
+  box.innerHTML=mpSugHTML(list);
+  // no match: the message carries its own link, so the one below would say the same thing twice
+  const sk=document.getElementById('mpskip'); if(sk) sk.hidden=!!(list&&!list.length);
+  // frame A2: typing a carrier is enough, and the hint says so
+  const hb=document.querySelector('#mphb span');
+  if(hb){
+    const t=mpNorm(v).trim(), first=list&&list[0];
+    const byCarrier=!!(first&&t&&!/\s/.test(t)&&mpNorm(first.carrier).split(/[^a-z0-9]+/).some(w=>w&&w.indexOf(t)===0)&&list.every(p=>mpNorm(p.carrier)===mpNorm(first.carrier)));
+    hb.textContent=byCarrier?L('The carrier’s name is enough: its plans in your county appear.','Con el nombre de la aseguradora alcanza: aparecen sus planes del condado.')
+                            :L('Your card shows the plan name and a number like H5425-006.','Su tarjeta dice el nombre del plan y un número como H5425-006.');
+  }
+}
+function mpSugHTML(list){
+  if(list===null) return '';
+  if(!list.length) return `<div class="mpnone"><p>${L('We couldn’t find that plan in your county.','No encontramos ese plan en su condado.')}</p>
+    <button class="mpskip mpsk2" onclick="mpAll()">${L('See today’s plans','Ver los planes de hoy')} ›</button></div>`;
+  return `<div class="mpac" role="listbox">`+list.map((p,i)=>
+    `<button class="mpaci${i===0?' on':''}" role="option" onclick="mpPick('${esc(p.id)}')"><b>${nbLast(esc(dispName(p)))}</b> <small>${esc(p.type)} · ${esc(mpId(p.id))}</small></button>`).join('')+`</div>`;
+}
+function mpEnter(){const b=document.querySelector('#mpsug .mpaci');if(b)b.click();}
+// "No sé cuál es" and "Ver los N planes": today's whole list, every filter off, so the list holds exactly
+// the count the link promised.
+function mpAll(){
+  _typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=D.zip;_shown=PAGE;_foOpen=false;
+  go(flowResults);
+}
+function mpTodosCount(){const n=PLANS.filter(inTodos).length;return n||PLANS.filter(p=>!p._medigap).length;}
+function mpSnp26(t){t=String(t||'');return /D-SNP/.test(t)?'Dual-Eligible':(/C-SNP/.test(t)?'Chronic or Disabling Condition':(/I-SNP/.test(t)?'Institutional':null));}
+function mpOrgWord(o){return mpNorm(o).split(/[^a-z0-9]+/).filter(Boolean)[0]||'';}
+// The rule of section 3, in the order the logic test runs it. N() sends an unknown figure to the end.
+function mpResolve(cur26){
+  const xw=_xw27[D.state], rec=xw?xw.plans.find(r=>r.id===_mpCP(cur26.id)):null;
+  let s=rec?rec.s:'unknown', to=rec?rec.to:null;
+  const pool=PLANS.filter(p=>!p._medigap&&p.cat!=='PDP');
+  const find27=t=>t?(pool.find(p=>p.id===t)||pool.find(p=>_mpCP(p.id)===_mpCP(t))||null):null;
+  // CMS lists more than one outcome (a service-area split). The ZIP's county narrows them; exactly one
+  // left is that outcome, anything else stays "split" and the card says nothing about 2027.
+  if(s==='split'&&rec&&Array.isArray(rec.outs)){const here=rec.outs.filter(o=>find27(o.to));if(here.length===1){s=here[0].s;to=here[0].to;}}
+  const cur27=(s==='same'||s==='renamed'||s==='consolidated')?find27(to):null;
+  const ref=cur27?{id:cur27.id,type:cur27.type,drug:cur27.drug==='Included',snp:cur27.snp||null,prem:cur27.premium,moop:cur27.moop,dded:cur27.ded,org:cur27.carrier,dent:_dentAmt(cur27)}
+                 :{id:null,type:cur26.type,drug:cur26.has_drug!==false,snp:mpSnp26(cur26.type),prem:cur26.premium,moop:cur26.moop,dded:cur26.deductible,org:cur26.carrier};
+  const N=v=>(v==null?1e9:v), st=p=>(p.rating==null?-1:p.rating);
+  const bt=t=>String(t||'').replace(/ [CDI]-SNP/g,'');
+  const isOther=p=>p.snp==='Chronic or Disabling Condition'||p.snp==='Institutional';
+  const dual=x=>x.snp==='Dual-Eligible', isPPO=t=>/PPO/.test(String(t||''));
+  const by=(arr,...ks)=>arr.slice().sort((a,b)=>{for(const k of ks){const x=k(a),y=k(b);if(x<y)return -1;if(x>y)return 1;}return 0;});
+  // never offer their own plan back as "similar" or "different": without a crosswalk mapping we say
+  // nothing about where it goes, so any 2027 plan with the same contract and plan number is left out too
+  const cand=pool.filter(p=>p.id!==ref.id&&_mpCP(p.id)!==_mpCP(cur26.id));
+  const dist=p=>Math.abs((N(p.premium)-N(ref.prem))*12)+Math.abs(N(p.moop)-N(ref.moop))+Math.abs((p.ded||0)-(ref.dded||0));
+  const sim=by(cand.filter(p=>bt(p.type)===bt(ref.type)&&(p.drug==='Included')===!!ref.drug&&(p.snp||null)===(ref.snp||null)),
+               dist,p=>-st(p),p=>p.name)[0]||null;
+  const ok=p=>!isOther(p)&&dual(p)===dual(ref);
+  let diff, rule;
+  if(!isPPO(ref.type)){diff=by(cand.filter(p=>isPPO(p.type)&&ok(p)),p=>N(p.premium)*12+N(p.moop),p=>-st(p),p=>p.name)[0];rule='ppo';}
+  else{diff=by(cand.filter(p=>/HMO/.test(String(p.type||''))&&ok(p)),p=>N(p.moop),p=>N(p.premium),p=>-st(p),p=>p.name)[0];rule='hmo';}
+  if(!diff){
+    const ow=mpOrgWord(ref.org);
+    diff=by(cand.filter(p=>p.carrier!==ref.org&&mpOrgWord(p.carrier)!==ow&&ok(p)&&p.premium===0&&!(sim&&p.id===sim.id)),p=>N(p.moop),p=>-st(p),p=>p.name)[0];
+    rule=isPPO(ref.type)?'zero':'noppo';
+  }
+  const ended=s==='ended';
+  const avail=[cur27,sim,diff||null].filter(Boolean).map(p=>p.id).filter((x,i,a)=>a.indexOf(x)===i);
+  return {cur26,cur27,s,ended,ref,sim,diff:diff||null,rule,avail,
+          match:({same:'same',renamed:'renamed',consolidated:'consolidated',ended:'ended',split:'split'})[s]||'none'};
+}
+function mpPick(id){
+  const p26=mpPlans26().find(p=>p.id===id); if(!p26) return;
+  _mpCtx=mpResolve(p26); _mpCtx.fresh=true;
+  _myPlan={id:p26.id,name:p26.name,zip:D.zip,match:_mpCtx.match};
+  wEvt('my_plan_set',{match:_mpCtx.match});
+  go(flowMyPlanResults);
+}
+// ---- the three cards' lines (section 3 / section 5 row 1). Every figure is one shown on the card. ----
+function mpStayLine(){return L('If you do nothing, on January 1 you stay in this plan with these changes.','Si no hace nada, el 1 de enero sigue en este plan con estos cambios.');}
+function mpEndLine(){const y=planYear();
+  return L(`This plan doesn’t continue in ${y}. If you don’t choose another before December 7, on January 1 you go back to Original Medicare.`,
+           `Este plan no continúa en ${y}. Si no elige otro antes del 7 de diciembre, el 1 de enero vuelve a Medicare Original.`);}
+const _mpEq=(a,b)=>a!=null&&b!=null&&Math.abs(a-b)<0.005;
+const _mpMoney=v=>usd(Math.round(v*100)/100);
+function mpSimLine(c){
+  const p=c.sim, r=c.ref; if(!p) return '';
+  const drug=p.drug==='Included', pd=_dentAmt(p);
+  // dental is only compared against a 2027 plan; a 2026 plan file carries no dental figure
+  const adds=pd!=null&&('dent' in r)&&(r.dent==null||pd>r.dent);
+  if(_mpEq(p.premium,r.prem)&&_mpEq(p.moop,r.moop)&&_mpEq(p.ded||0,r.dded||0))
+    return adds?L(`Same costs as your plan, plus dental up to ${usd(pd)}.`,`Mismos costos que su plan y agrega dental hasta ${usd(pd)}.`)
+               :L('Same costs as your plan.','Mismos costos que su plan.');
+  const t=esc(baseType(p));
+  const head=drug?L(`${t} with drug coverage, like yours.`,`${t} con medicamentos, como el suyo.`)
+                 :L(`${t} without drug coverage, like yours.`,`${t} sin medicamentos, como el suyo.`);
+  let tail;
+  if(p.moop!=null&&r.moop!=null&&p.moop<r.moop) tail=L(`Out-of-pocket max ${_mpMoney(r.moop-p.moop)} lower.`,`Máximo de bolsillo ${_mpMoney(r.moop-p.moop)} más bajo.`);
+  else if(p.premium!=null&&r.prem!=null&&p.premium<r.prem) tail=L(`Premium ${premUsd(Math.round((r.prem-p.premium)*100)/100)} a month lower.`,`Prima ${premUsd(Math.round((r.prem-p.premium)*100)/100)} más baja al mes.`);
+  else if(drug&&p.ded!=null&&r.dded!=null&&p.ded<r.dded) tail=L(`Drug deductible ${_mpMoney(r.dded-p.ded)} lower.`,`Deducible de medicamentos ${_mpMoney(r.dded-p.ded)} más bajo.`);
+  else if(adds) tail=L(`Adds dental up to ${usd(pd)}.`,`Agrega dental hasta ${usd(pd)}.`);
+  else tail=L('The closest in cost.','El más parecido en costos.');
+  return head+' '+tail;
+}
+function mpDiffLine(c){
+  const p=c.diff; if(!p) return '';
+  if(c.rule==='ppo'){const d=_dentAmt(p);
+    return L('PPO: you can see doctors outside the network.','PPO: puede ver médicos fuera de la red.')+(d!=null?' '+L(`Dental up to ${usd(d)}.`,`Dental hasta ${usd(d)}.`):'');}
+  if(c.rule==='hmo') return p.moop!=null?L(`HMO with the lowest out-of-pocket max: ${usd(p.moop)}.`,`HMO con el máximo de bolsillo más bajo: ${usd(p.moop)}.`)
+                                        :L('HMO with the lowest out-of-pocket max.','HMO con el máximo de bolsillo más bajo.');
+  const base=L('Another carrier, no premium and the lowest out-of-pocket max.','Otra aseguradora, sin prima y el máximo de bolsillo más bajo.');
+  const cty=esc(D.county||'');
+  return c.rule==='noppo'?L(`There are no PPOs in ${cty}. `,`En ${cty} no hay PPO. `)+base:base;
+}
+// The line for a plan in Comparar when the comparison started here (section 5 row 1).
+function mpLineFor(p){const c=_mpCtx;if(!c||!p)return '';
+  if(c.cur27&&p.id===c.cur27.id) return mpStayLine();
+  if(c.sim&&p.id===c.sim.id) return mpSimLine(c);
+  if(c.diff&&p.id===c.diff.id) return mpDiffLine(c);
+  return '';}
+// Comparar's pick when it started here: su plan, then parecido, then distinto -- the order the cards
+// are in, a public rule, not a score. Only ever one of the plans on that screen.
+function mpSuggest(plans){
+  if(plans.length<2||!_mpCtx) return null;
+  const order=[_mpCtx.cur27,_mpCtx.sim,_mpCtx.diff].filter(Boolean);
+  for(const o of order){const p=plans.find(x=>x.id===o.id);if(p) return p;}
+  return null;
+}
+// ---- the cards ----
+function mpColor26(p){
+  if(CARRIER_COLORS[p.carrier]) return CARRIER_COLORS[p.carrier];
+  const all=(_planCache[D.state]&&_planCache[D.state].plans)||[], same=all.find(x=>_mpCP(x.id)===_mpCP(p.id));
+  if(same&&CARRIER_COLORS[same.org]) return CARRIER_COLORS[same.org];
+  const w=mpOrgWord(p.carrier), k=Object.keys(CARRIER_COLORS).find(x=>mpOrgWord(x)===w);
+  return k?CARRIER_COLORS[k]:'#3D5A80';
+}
+// The same pills as the list. A 2026 plan (has_drug, no snp field) is read through a small shim so the
+// shared helpers see the fields they expect.
+function mpTags(p){
+  const q=(p.has_drug!==undefined)?{type:p.type,snp:mpSnp26(p.type),cat:'MA',drug:p.has_drug===false?'N/A':'Included'}:p;
+  const out=[`<span class="tg tg-net">${esc(baseType(q))}</span>`];
+  const who=snpWho(q); if(who) out.push(`<span class="tg tg-who">${esc(who)}</span>`);
+  const pl=plainTag(q); if(pl) out.push(`<span class="tg tg-plain">${esc(pl)}</span>`);
+  return out.join('');
+}
+function mpInfo(p){
+  // AB 2026-10-17: on the two option cards here only (frames C and D: never on SU PLAN HOY, the plan
+  // they already have), and nowhere else in the widget. Shown only once the signed carrier file has loaded, so a
+  // failed load never tells a visitor we do not offer a plan we do.
+  return (_rep&&_rep.represented&&!p.rep)?`<div class="mpinfo">${L('Informational only: we don’t offer this plan.','Solo información: no lo ofrecemos.')}</div>`:'';
+}
+function mpRow(lab,a,b,fmt){
+  const fa=a==null?noInfo():fmt(a), fb=b==null?noInfo():fmt(b);
+  let cls='same', ar='';
+  if(a!=null&&b!=null){
+    if(b>a+0.004){cls='up';ar=` <span aria-hidden="true">▲</span><span class="mpsr">${L('(up)','(sube)')}</span>`;}
+    else if(b<a-0.004){cls='down';ar=` <span aria-hidden="true">▼</span><span class="mpsr">${L('(down)','(baja)')}</span>`;}
+  } else cls='na';
+  return `<tr><th>${lab}</th><td${a==null?' class="na"':''}>${fa}</td><td class="${b==null?'na':cls}">${fb}${ar}</td></tr>`;
+}
+function mpCurCard(c){
+  const p26=c.cur26, p27=c.cur27;
+  const chip=(cls,t)=>`<span class="mpchip ${cls}">${t}</span>`;
+  if(c.ended){
+    return `<div class="pc mpc" data-pid="${esc(p26.id)}" style="--cc:${mpColor26(p26)}"><div class="mph">
+        ${chip('gold',L('YOUR PLAN TODAY · ENDING','SU PLAN HOY · TERMINA'))}<p class="pc-name">${nbLast(esc(dispName(p26)))}</p>
+        <div class="mpmeta">${mpTags(p26)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p26)}</b></span></div></div>
+      <p class="mpwhy strong">${nbLast(mpEndLine())}</p>
+      <div class="pc-det"><a class="pc-detl" href="${mpHowURL()}" target="_blank" rel="noopener">${L('How it works','Cómo funciona')} ›</a></div></div>`;
+  }
+  if(!p27){
+    // split / unknown / not offered in this county in 2027: who the plan is, and nothing about 2027
+    return `<div class="pc mpc" data-pid="${esc(p26.id)}" style="--cc:${mpColor26(p26)}"><div class="mph">
+        ${chip('navy',L('YOUR PLAN TODAY','SU PLAN HOY'))}<p class="pc-name">${nbLast(esc(dispName(p26)))}</p>
+        <div class="mpmeta">${mpTags(p26)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p26)}</b></span></div></div></div>`;
+  }
+  const d26=p26.has_drug!==false, d27=p27.drug==='Included';
+  const star=p27.rating!=null?L(`★ ${p27.rating} of 5`,`★ ${p27.rating} de 5`):rStar(p27);
+  const was=dispName(p26)!==dispName(p27)?`<p class="mpwas">${L('In 2026: ','En 2026: ')}${nbLast(esc(dispName(p26)))}</p>`:'';
+  const dedRow=(d26&&d27)?mpRow(L('Drug deductible','Deducible medicamentos'),p26.deductible,p27.ded,v=>usd(v))
+    :`<tr><th>${L('Drug deductible','Deducible medicamentos')}</th><td>${d26?(p26.deductible==null?noInfo():usd(p26.deductible)):L('None','Ninguno')}</td><td>${d27?(p27.ded==null?noInfo():usd(p27.ded)):L('None','Ninguno')}</td></tr>`;
+  return `<div class="pc tap mpc" data-pid="${esc(p27.id)}" style="--cc:${carrierColor(p27)}" onclick="cardTap(event,'${esc(p27.id)}')"><div class="mph">
+      <div class="pc-top"><div>${chip('navy',L('YOUR PLAN TODAY','SU PLAN HOY'))}<p class="pc-name">${nbLast(esc(dispName(p27)))}</p>${was}</div>${cmpBox(p27)}</div>
+      <div class="mpmeta">${mpTags(p27)}<span>ID <b>${planId(p27)}</b></span><span class="rt0">${star}</span></div>${rLow(p27)}</div>
+    <table class="mpdt"><thead><tr><th></th><td>2026</td><td>${planYear()}</td></tr></thead><tbody>
+      ${mpRow(L('Monthly premium','Prima mensual'),p26.premium,p27.premium,premUsd)}
+      ${mpRow(L('Max out‑of‑pocket','Máximo de bolsillo'),p26.moop,p27.moop,v=>usd(v))}
+      ${dedRow}
+    </tbody></table>
+    <p class="mpwhy">${nbLast(mpStayLine())}</p>
+    ${detBtn(p27)}</div>`;
+}
+function mpOptCard(p,chipTxt,line){
+  return `<div class="pc tap mpc" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')"><div class="mph">
+      <div class="pc-top"><div><span class="mpchip mint">${chipTxt}</span><p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${cmpBox(p)}</div>
+      <div class="mpmeta">${mpTags(p)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p)}</b></span></div>
+      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}${mpInfo(p)}</div>
+    ${keyStrip(p)}
+    ${line?`<p class="mpwhy">${nbLast(line)}</p>`:''}
+    ${detBtn(p)}</div>`;
+}
+// "Cómo funciona ›" on an ending plan: the AEP 2027 article, Spanish on BM and English on MC (cross-site
+// pair per CLAUDE.md). Wording about the special period / Medigap rights is PROTECT's call (section 8).
+function mpHowURL(){return lang==='en'?'https://medicare-california.com/blog/medicare-aep-2027-california-changes':'https://beneficiosmedicare.com/blog/inscripcion-anual-aep-2027-california';}
+function flowMyPlanResults(){
+  const c=_mpCtx; if(!c){flowMyPlan();return;}
+  prog(84); _plansView=true;
+  // the cards that can be compared enter ticked (section 3), once; after that the ticks are the visitor's
+  if(c.fresh){selPlans=c.avail.slice(0,3);c.fresh=false;}
+  const n=(c.sim?1:0)+(c.diff?1:0), cty=esc(D.county||''), cnt=mpTodosCount();
+  const title=n===2?L('Your current plan and 2&nbsp;options','Su actual y 2&nbsp;opciones')
+             :(n===1?L('Your current plan and 1&nbsp;option','Su actual y 1&nbsp;opción'):L('Your current plan','Su plan actual'));
+  wb().innerHTML=`<div id="mpres"><div class="mptop">${bk()}<p class="mphl">${title}</p></div>
+    <div class="rh mprh"><div class="zl" id="zl">${PIN}
+      <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">· ${cty}</span>`:''}
+      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
+      <form class="zf" onsubmit="event.preventDefault();mpZipChange()">
+        <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
+        <button type="submit">${L('See','Ver')}</button>
+      </form></div><p class="zerr" id="zerr"></p></div>
+    ${mpCurCard(c)}
+    ${c.sim?mpOptCard(c.sim,L('SIMILAR TO YOURS','SIMILAR AL SUYO'),mpSimLine(c)):''}
+    ${c.diff?mpOptCard(c.diff,L('DIFFERENT FROM YOURS','DIFERENTE AL SUYO'),mpDiffLine(c)):''}
+    <button class="mpall" onclick="mpAll()">${L(`See all ${cnt} plans in ${cty}`,`Ver los ${cnt} planes de ${cty}`)} ›</button>
+    <p class="mpfine">${L(`Figures from CMS for ${planYear()}. Your plan has the final word.`,`Cifras de CMS para ${planYear()}. Su plan es la palabra final.`)}</p>
+    ${starDiscHTML()}</div>
+    ${cbarHTML()}`;
+  _planScreen=true;
+  updBar();
+}
+// "Cambiar" on this screen: a new ZIP is a new county, so a new 2026 list -- back to the search, with
+// what they typed still in the field. A ZIP we have no plans for keeps everything as it was.
+async function mpZipChange(){
+  const i=document.getElementById('zin'), e=document.getElementById('zerr');
+  const v=((i&&i.value)||'').replace(/\D/g,'').slice(0,5);
+  if(v.length!==5){if(e)e.textContent=L('Please enter all 5 digits.','Escriba los 5 dígitos.');return;}
+  const keep={PLANS,zip:D.zip,county:D.county,state:D.state,valid:D._zipValid,meta:_planMeta};
+  D.zip=v; D.county=''; D._zipValid=undefined; PLANS=[];
+  await loadPlansForZip(v);
+  if(D._zipValid===false||!PLANS.length){
+    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
+    const e2=document.getElementById('zerr');
+    if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
+    return;
+  }
+  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
+  delete D.plansSeen; delete D.represented; _myPlan=null; _mpCtx=null;
+  go(flowMyPlan);
+}
+
 // ── COMPARE (b9): up to 3 plans, same group order as the card, label column + plan columns,
 // "show only differences", green only for $0, no "best" or winner, one button at the bottom.
 /* ── T-096 round 3c: which of the compared plans we point at, and why ──────────────────────────
@@ -2838,7 +3259,7 @@ function sugLine(p,plans){
   }
 }
 function sugCard(p,plans){
-  const line=sugLine(p,plans);
+  const line=(_cmpFrom==='myplan'&&_mpCtx)?nbLast(mpLineFor(p)):sugLine(p,plans);   // T-099: section 5 row 1
   const TEL='(310) 597\u20119142';
   return `<div class="sug" style="--sc:${carrierColor(p)}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
@@ -3107,7 +3528,7 @@ function flowCompare(){
   }).join('');
   /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
      three, and the name block reserves two lines so the type · ID line and the stars line up too. */
-  const sug=suggestPlan(plans), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
+  const sug=(_cmpFrom==='myplan'&&_mpCtx)?mpSuggest(plans):suggestPlan(plans), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
   // T-096 round 4 i: "HMO" on all three columns tells nobody anything. The type shows only when
   // the plans being compared actually differ on it.
   const types=[...new Set(plans.map(p=>String(p.type||'')))];
@@ -3386,6 +3807,10 @@ function submitLead(type){
   D.timestamp=new Date().toISOString();
   D.leadType=type;
   if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
+  // T-099: the plan they said they have today, kept in this page only until now. curPlan is the field the
+  // leads script prints as "Plan actual" in the alert email and writes to the sheet; only for this ZIP.
+  if(_myPlan&&_myPlan.zip===D.zip){D.curPlan=_myPlan.name+' · '+mpId(_myPlan.id);D.curPlanId=_myPlan.id;D.curPlanMatch=_myPlan.match;}
+  else{delete D.curPlan;delete D.curPlanId;delete D.curPlanMatch;}
 
   const parentHost=(window.self!==window.top)?document.referrer:'';
   D.source=leadSite();
@@ -3438,7 +3863,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=PAGE;go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
@@ -3447,6 +3872,7 @@ function flowSuccess(){
     <div class="cf-band"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
       ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
       ${cfRow(L('Email','Correo'),email||L('Not given','No lo dio'),!email)}
+      ${D.curPlan?cfRow(L('Current plan','Plan actual'),esc(D.curPlan)):''}
       ${plans?cfRow(L('Plans you looked at','Planes que miró'),plans):''}
       ${D.question?cfRow(L('Your question','Su pregunta'),esc(D.question)):''}
       ${fix}</div>

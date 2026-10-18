@@ -26,6 +26,14 @@ files are served publicly. Checked against the raw CMS files by `spot-check-plan
 - Every PBP field for every plan is kept outside the repo in
   `SHIP/now/2027-plan-data/pbp-full/` (34 MB, internal tools only).
 
+### crosswalk_{STATE}_2027.json (9 files: AZ CA FL IA IL KS MO OK TX, T-099)
+Where a visitor's 2026 plan goes in 2027, for "Revisar mi plan de hoy". Built by
+`SHIP/reference/tools/build-crosswalk-2027.py` from the CMS Plan Crosswalk 2027
+(`SHIP/now/2027-plan-data/plan_crosswalk_2027.zip`, file `PlanCrosswalk2027_10012026.txt`) + this
+folder's `cms_{STATE}.js` (2026 names) + `plans_{STATE}_2027.json`. Status per 2026 plan: same, renamed,
+consolidated, ended, split, unknown. Nothing is guessed: a plan CMS does not map gets no 2027 line.
+The widget also reads `cms_{STATE}.js` on that screen only, for the 2026 plan list and 2026 figures.
+
 ### represented-2027.json
 Licensed states (AZ CA FL IA IL KS MO OK TX) and, per state, the CMS parent organizations we are
 appointed with and Ready to Sell for 2027. Drives the agent button. RED: change only with AB's sign-off.
