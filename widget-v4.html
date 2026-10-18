@@ -212,7 +212,8 @@ body.q3 .widget-body{padding:10px 14px 16px}
 }
 .fc.fcx:before{content:none}
 .fc.fcx b{font-weight:700;font-size:17px;line-height:1;margin-left:2px}
-.fxo{display:flex;flex-wrap:wrap;align-items:center;gap:0 16px;margin:2px 0 0}
+/* T-104 (3): ONE row under the chips, Orden on the left and Aseguradora on the right, never wrapping under */
+.fxo{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:0 16px;margin:2px 0 0}
 .rtop{display:flex;align-items:center;gap:12px;margin:0 0 4px}
 .rtop .btn-back{margin-bottom:0;flex:0 0 auto}
 .rtop .hl{margin:0}
@@ -462,6 +463,13 @@ table.pc-tiers{width:100%;border-collapse:collapse;font-size:14px}
 .cmpall svg{width:18px;height:18px;fill:none;stroke:var(--sage-dark);stroke-width:1.8;stroke-linecap:round}
 .showmore{display:block;width:100%;text-align:center;background:#fff;border:1px solid #e5e9ec;border-radius:12px;padding:12px;font-weight:700;color:#1e2a32;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:6px}
 .showmore span{display:block;font-size:12px;font-weight:600;color:#66727c;margin-top:2px}
+/* T-104 (2) (AB 2026-10-18, "Ver 10 planes más you can see"): a real button, not a grey card. Full width,
+   2px teal outline, teal 16px/700 text, 48px, 12px above and below. One line: the grey "Mostrando 10 de
+   70" under it is folded into the label as the count still to come. */
+#pmore .showmore{display:flex;align-items:center;justify-content:center;width:100%;height:48px;min-height:48px;margin:12px 0;padding:0 12px;box-sizing:border-box;
+  background:#fff;border:2px solid var(--cbar-brand);border-radius:12px;color:var(--cbar-brand);font-family:inherit;font-size:16px;font-weight:700;line-height:1.2;white-space:nowrap}
+#pmore .showmore:hover{background:var(--lt-mint)}
+#pmore .showmore:focus-visible{outline:3px solid #FFB300;outline-offset:2px}
 /* ── T-084: the compare bar is white and on brand. It was #1e2a32, which reads as black and is
    not in either palette. Its colours come from --cbar-brand / --cbar-ink, not from
    var(--sage) / var(--navy), which in THIS file still resolve to the retired Material teal
@@ -511,6 +519,9 @@ body.host-cbar .cbar{display:none!important}
 .mpchip.dif{background:#E8F0FA;color:#1D5FA8;box-shadow:inset 0 0 0 1px #1D5FA8}
 .pc.mpc.sim{border-left:5px solid #007B7B}
 .pc.mpc.dif{border-left:5px solid #1D5FA8}
+/* T-104: in a frame under 320px (a 320 phone) the plan name had 131px beside the Comparar box, so
+   "Medicare Advantage" was cut mid-word. There the box takes its own row above the name, on the right. */
+@media(max-width:319px){.pc-top:not(.mprow){flex-direction:column-reverse;align-items:stretch;gap:6px}.pc-top:not(.mprow)>.pc-cmp{align-self:flex-end}}
 /* T-103 (4): the visitor's current plan, pinned at the top of the list. Ticked and locked: the only way
    out is the x, so a plain tap can never drop it by accident. */
 .pc.pinned{border-left:5px solid var(--cbar-ink)}
@@ -590,6 +601,16 @@ body.host-cbar .cbar{display:none!important}
 .sug .ci2 span{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
 .sug .ci2 svg{width:17px;height:17px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sug .conf a{color:var(--cbar-brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+/* T-104 (5) (AB 2026-10-18): the text wraps AROUND the two icons. They float left as one column, the
+   lines run beside them and then on under them at full width, so no empty strip is left below the icons
+   once the text is taller. A column (not a row) keeps the lines beside them long: 28+ characters at a
+   320 frame: in a narrow frame the icons and the box's side padding shrink rather than the lines. */
+.sug .conf{display:block}
+.sug .conf::after{content:"";display:block;clear:both}
+.sug .ci2{float:left;flex-direction:column;gap:4px;margin:1px 10px 2px 0}
+@media(max-width:359px){.sug{padding-left:10px;padding-right:10px}.sug .ci2 span{width:22px;height:22px}.sug .ci2 svg{width:13px;height:13px}.sug .ci2{gap:3px;margin-right:7px}}
+/* a 320 phone: the frame is 284px, so Comparar gives back some of its side padding as well */
+@media(max-width:319px){body.in-iframe.cmpv .widget-body{padding-left:6px;padding-right:6px}.sug{padding-left:8px;padding-right:8px}.sug .ci2 span{width:20px;height:20px}.sug .ci2 svg{width:12px;height:12px}.sug .ci2{margin-right:6px}}
 .sgc{display:block;width:fit-content;margin:5px auto 0;background:var(--cbar-brand);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px}
 .cmp.s1 thead th:nth-child(1),.cmp.s1 tr.vr td:nth-child(1),
 .cmp.s2 thead th:nth-child(2),.cmp.s2 tr.vr td:nth-child(2),
@@ -1259,13 +1280,49 @@ function agent(){return agentFor(D.state);}
 function agentTel(a){return String(a.tel).replace(') ',') ').replace('-','‑');}
 function agentLicLine(a){return a.lic?'Lic. #'+a.lic:'';}
 
+/* ── T-104 (1) (AB 2026-10-18): plan names in proper case ─────────────────────────────────────────────
+   747 of the 6,373 plans in the 2027 files are named in capitals (740 of them Devoted: "DEVOTED CORE 034 IA
+   (HMO)"). A name that is ALL capitals is set in proper case ONCE, as the plan file loads (cmsToWidget, and
+   loadCms2026 for the 2026 names the Mi plan de hoy search shows), so every surface that prints p.name --
+   list, plan screen, Comparar, the cards, the shared page and its PDF, the lead's plan text -- reads the
+   same. A name with any lower-case letter is the carrier's own casing and is left exactly as it is. The
+   plan ID is a different field and is never touched.
+     kept upper: plan types, Medicare acronyms, roman numerals, a state code after the plan number
+                 ("034 IA"), and a word with no vowel (QMB, PHP), which is an acronym
+     kept lower: of, and, de, y (never the first word)
+     brand casing: the carriers' own, matched without regard to case */
+const PN_UP=new Set(['HMO','PPO','POS','SNP','D-SNP','C-SNP','I-SNP','PDP','MA','MAPD','HMO-POS','PFFS','MSA','QMB','AARP','SCAN']);
+const PN_LOW=new Set(['of','and','de','y']);
+const PN_BRAND={'UNITEDHEALTHCARE':'UnitedHealthcare','AARP':'AARP','SCAN':'SCAN','ANTHEM':'Anthem','AETNA':'Aetna','HUMANA':'Humana',
+  'WELLCARE':'Wellcare','UHC':'UHC','KAISER':'Kaiser','PERMANENTE':'Permanente','BLUE':'Blue','SHIELD':'Shield','MOLINA':'Molina','MEDI-CAL':'Medi-Cal'};
+const PN_ROMAN=new Set(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']);
+const PN_STATES=new Set('AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA PR RI SC SD TN TX UT VT VA WA WV WI WY'.split(' '));
+function properName(s){
+  s=String(s==null?'':s);
+  if(!/[A-Z]/.test(s)||s!==s.toUpperCase()) return s;
+  let prev='', first=true;
+  return s.split(/(\s+|[()\/,])/).map(tok=>{
+    if(!tok||/^\s+$/.test(tok)||/^[()\/,]$/.test(tok)) return tok;
+    const U=tok, letters=U.replace(/[^A-Z]/g,'');
+    let o;
+    if(!letters) o=U;
+    else if(PN_BRAND[U]) o=PN_BRAND[U];
+    else if(PN_UP.has(U)||PN_ROMAN.has(U)) o=U;
+    else if(PN_STATES.has(U)&&/^\d+$/.test(prev)) o=U;
+    else if(!first&&PN_LOW.has(U.toLowerCase())) o=U.toLowerCase();
+    else if(letters.length>=2&&!/[AEIOUY]/.test(letters)) o=U;
+    else o=U.split('-').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join('-');
+    prev=U; first=false;
+    return o;
+  }).join('');
+}
 const T052_KEYS=['gb','mded','oon','mhosp','snf','hh','phosp','rehab','mh','ther','chiro','pod','oprof','tele','wwe',
   'lab','dx','xray','img','rad','dme','pros','diab','dial','partb','acu','meals','pe','x14','ssbci','opt','ssbcic','ssbcio'];
 function cmsToWidget(p, state){
   const rep=isRepresented(p.parent,state);
   return {
     id: p.id,
-    name: p.name,
+    name: properName(p.name),   // T-104 (1): once, here; the ID above is never touched
     carrier: p.org,
     parent: p.parent,
     cat: p.cat,
@@ -1413,7 +1470,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    behaves exactly as it did before this ticket. */
 let _hPush=0, _popping=false, _afterBack=null, _onDetail=false;
 function go(fn){
-  document.body.classList.remove('q3','res');
+  document.body.classList.remove('q3','res','cmpv');
   hist.push(fn);_plansView=false;_planScreen=false;_act=null;_onDetail=false;fn();viewMsg();cbarReport();
   // the first screen gets no entry of its own: Back from there leaves the page, as it should
   if(hist.length>1){ try{ history.pushState({bmw:hist.length},''); _hPush++; }catch(e){} }
@@ -1426,7 +1483,7 @@ function back(){
   _doBack();
 }
 function _doBack(){
-  document.body.classList.remove('q3','res');
+  document.body.classList.remove('q3','res','cmpv');
   // T-075 + T-093: leaving a plan screen lands on the card it was opened from, whether the visitor
   // tapped "‹ Volver a los planes" or pressed the browser's own Back button.
   if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
@@ -1776,7 +1833,18 @@ function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
 function nbLast(x){
   // T-103: a plan ID inside a name ("Giveback H5619-146") never splits at its hyphen, which left "146" alone
   const t=String(x==null?'':x).replace(/\b([A-Z]\d{4})-(\d{3})\b/g,'$1‑$2');
-  if(/[<>]/.test(t)) return t;
+  if(/[<>]/.test(t)){
+    /* T-104: a value with markup in it ("hasta <b>$500 al año</b>, ambos oídos") gets the same rule on its
+       TEXT: the last space outside any tag becomes non-breaking. A tag is never touched. */
+    if(t.replace(/<[^>]*>/g,' ').trim().split(/\s+/).length<3) return t;
+    let inTag=false;
+    for(let i=t.length-1;i>0;i--){
+      const c=t[i];
+      if(c==='>'){inTag=true;continue;} if(c==='<'){inTag=false;continue;} if(inTag) continue;
+      if(c===' '){ const after=t.slice(i+1).replace(/<[^>]*>/g,''); if(/\S/.test(after)) return t.slice(0,i)+'\u00a0'+t.slice(i+1); }
+    }
+    return t;
+  }
   const w=t.trim().split(/\s+/);
   if(w.length<3) return t;
   return t.replace(/\s+(\S+)\s*$/, '\u00a0$1');
@@ -2028,7 +2096,8 @@ function sx(v){
   return V(money(v));
 }
 // Part B premium reduction, a monthly dollar figure from PBP Section D. 0 = the plan gives none.
-function gbV(g){if(g==null) return null;if(!g) return OFF();const v=V(usd(g)+L('\u00a0a\u00a0month','\u00a0al\u00a0mes'));v.z=true;return v;}
+// T-104: the amount may break from its period ("$84" / "a month"), the period never splits: no lone "month" in a third of a phone
+function gbV(g){if(g==null) return null;if(!g) return OFF();const v=V(usd(g)+L(' a\u00a0month',' al\u00a0mes'));v.z=true;return v;}
 // Medical (plan) deductible. {mc} = the plan charges Original Medicare's deductible, whose 2027 amount CMS sets in November.
 function mdedV(m){
   if(!m) return null;
@@ -2210,8 +2279,8 @@ function togSum(el,pdp){if(el.open)wEvt('details_open',{plan_type:pdp?'pdp':'ma'
 function fineBlock(notes,net){
   const nl=net?L("The exact network rules are in each plan's Evidence of Coverage.",
     'Las reglas exactas de la red están en la Evidencia de Cobertura de cada plan.'):'';
-  const inner=(notes||[]).filter(Boolean).map(x=>`<p>${x}</p>`).join('')
-    +(nl?`<p>${nl}</p>`:'')+starDiscHTML()+provNoteHTML();
+  const inner=(notes||[]).filter(Boolean).map(x=>`<p>${nbLast(x)}</p>`).join('')
+    +(nl?`<p>${nbLast(nl)}</p>`:'')+starDiscHTML()+provNoteHTML();
   return inner?`<div class="pd-fine">${inner}</div>`:'';
 }
 function planFine(p){return fineBlock([],!p._medigap);}
@@ -2248,7 +2317,7 @@ function dRow(label,v){
   let cls='',txt;
   if(!v){cls='na';txt=noInfo();}
   else{cls=v.off?'off':(v.z||isZero(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
-  return `<div class="drow"><div class="dl">${label}</div><div class="dv${cls?' '+cls:''}">${txt}</div></div>`;
+  return `<div class="drow"><div class="dl">${nbLast(label)}</div><div class="dv${cls?' '+cls:''}">${nbLast(txt)}</div></div>`;
 }
 function dSec(icon,title){return `<div class="dsec"><svg viewBox="0 0 24 24">${PIC[icon]}</s`+`vg>${title}</div>`;}
 function detailLevel(p){
@@ -2477,7 +2546,10 @@ function _cmpCut(p){
   return k>=nw.length?'':nw.slice(k).join(' ');
 }
 function cmpName(p){
-  const full=dispName(p), short=_cmpCut(p);
+  // T-104: a name that ends in its own plan ID ("Gold Plus Giveback H5619-146") drops it here only: the ID is
+  // printed on the line right under it, and in a third of a phone it was being cut mid-ID.
+  const id=planIdRaw(p), cut=n=>{const w=_words(n);return w.length>2&&w[w.length-1].toUpperCase()===id.toUpperCase()?w.slice(0,-1).join(' '):n;};
+  const full=cut(dispName(p)), short=cut(_cmpCut(p));
   if(!short||short===full) return full;
   // Two plans in this county reading the same short name is worse than one long one.
   return PLANS.some(q=>q.id!==p.id&&(_cmpCut(q)===short||dispName(q)===short))?full:short;
@@ -2584,23 +2656,23 @@ function applyPriority(){
 // lowest max out-of-pocket (b10). Never favours plans we represent.
 let _sortMode='premium';
 function sortModes(){
-  const m=[
-    {id:'premium', en:'Lowest monthly premium',   es:'Prima mensual más baja',             sen:'Lowest premium',       ses:'Prima más baja'},
-    {id:'moop',    en:'Lowest max out-of-pocket', es:'Máximo de bolsillo más bajo',        sen:'Lowest out-of-pocket', ses:'Máx. bolsillo más bajo'},
-    {id:'ded',     en:'Lowest drug deductible',   es:'Deducible de medicamentos más bajo', sen:'Lowest deductible',    ses:'Deducible más bajo'},
-    // T-088. Both say what the order IS, never that a plan is better.
-    {id:'doctors', en:'Doctor network: PPO first', es:'Red de médicos: PPO primero',       sen:'PPO first',            ses:'PPO primero'},
-    {id:'dvh',     en:'Dental, vision and hearing first', es:'Dental, vista y audición primero', sen:'Dental, vision, hearing', ses:'Dental, vista, audición'},
+  /* T-104 (3) (AB 2026-10-18): the panel lists the orders in the order the question screen asks: the five
+     answers (médicos, medicamentos, Medi-Cal, $0 de prima, dental / vista / audición), each row being the
+     order that answer sets (PRI_SORT), then the order "Sin preferencia" gives, which is also the default
+     and has to stay reachable, then CMS stars, then name A-Z. The words say what the order IS, never that
+     a plan is better (T-088). The Medi-Cal row is always there now, named, so nobody meets an order
+     nobody asked for without its name. Sorting by CMS stars is AB's own ask in this ticket (the T-053
+     condition for switching it back on). */
+  return [
+    {id:'doctors', en:'Doctor network: PPO first', es:'Red de médicos: PPO primero'},
+    {id:'ded',     en:'Lowest drug deductible',   es:'Deducible de medicamentos más bajo'},
+    {id:'mcd',     en:`For ${mcd()}: CMS rating first`, es:`Para ${mcd()}: calificación CMS primero`},
+    {id:'moop',    en:'Lowest max out-of-pocket', es:'Máximo de bolsillo más bajo'},
+    {id:'dvh',     en:'Dental, vision and hearing first', es:'Dental, vista y audición primero'},
+    {id:'premium', en:'Lowest monthly premium',   es:'Prima mensual más baja'},
+    {id:'star',    en:'CMS stars',                es:'Estrellas CMS'},
+    {id:'name',    en:'Name A-Z',                 es:'Nombre A-Z'},
   ];
-  // T-101: the order "Tengo Medi-Cal" sets (mock v9 section 5). Offered only to the visitor who gave
-  // that answer, so the list never shows an order nobody chose without a name in the panel.
-  if(saidMedicaid()||_sortMode==='mcd') m.push({id:'mcd', en:`For ${mcd()}: CMS rating first`, es:`Para ${mcd()}: calificación CMS primero`, sen:'CMS rating first', ses:'Calificación primero'});
-  // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
-  // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
-  // true to restore it; sortPlans already handles mode 'star'.
-  const SORT_BY_RATING=false;
-  if(SORT_BY_RATING&&PLANS.some(p=>p.rating!==null&&p.rating!==undefined)) m.push({id:'star', en:'CMS rating', es:'Calificación CMS', sen:'CMS rating', ses:'Calificación CMS'});
-  return m;
 }
 /* T-096 round 4 c (AB: "can the order drawer HIDE after selected"): one tap applies the choice AND
    closes the drawer, and the list goes back to the top so the new first plan is what they see. */
@@ -2655,6 +2727,7 @@ function sortPlans(plans, mode){
   else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(_t1(a),_t1(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   else if(mode==='mcd')  s.sort((a,b)=>_asc(st(a),st(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(mo(a),mo(b))||nm(a,b));
   else if(mode==='star') s.sort((a,b)=>_asc(a.rating==null?null:-a.rating,b.rating==null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='name') s.sort((a,b)=>String(dispName(a)).localeCompare(String(dispName(b)),lang,{sensitivity:'base',numeric:true})||nm(a,b));   // T-104 (3)
   else if(mode==='doctors') s.sort((a,b)=>_asc(_NETRANK(a),_NETRANK(b))||_asc(mo(a),mo(b))||_asc(st(a),st(b))||nm(a,b));
   else if(mode==='dvh')  s.sort((a,b)=>_asc(_dvh3(a),_dvh3(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(_neg(_hearAmt(a)),_neg(_hearAmt(b)))||_asc(a.premium,b.premium)||nm(a,b));
   else                   s.sort((a,b)=>_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
@@ -2752,15 +2825,17 @@ function chipRow(){
 }
 /* T-101 (4) "Aseguradora \u25BE" (AB 2026-10-17, mock v9 section 4): for the visitor who thinks by brand.
    One panel lists the carriers in the list as it stands (every other filter applied, this one not),
-   alphabetically -- never by size or by whom we represent -- each with the number of plans one tap
-   will leave. The choice then shows as a chip with an x that undoes it in one tap. */
+   each with the number of plans one tap will leave, never by whom we represent. T-104 (3) (AB 2026-10-18)
+   changed the order from A-Z to most plans in the county first. The choice then shows as a chip with an x
+   that undoes it in one tap. */
 let _carrier='', _carOpen=false, _carList=[];
 function carOK(p){return !_carrier||p.carrier===_carrier;}
 function carrierList(){
   const m=new Map();
   PLANS.forEach(p=>{if(typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
+  // T-104 (3) (AB 2026-10-18): most plans in this county first, each with its count; a tie goes A-Z.
   _carList=[...m.entries()].map(([c,n])=>({c,n,lb:carrierShort(c)}))
-    .sort((a,b)=>a.lb.localeCompare(b.lb,lang)||a.c.localeCompare(b.c));
+    .sort((a,b)=>b.n-a.n||a.lb.localeCompare(b.lb,lang)||a.c.localeCompare(b.c));
   // two carriers that shorten to the same words keep their full names
   _carList.forEach(x=>{if(_carList.some(y=>y!==x&&y.lb===x.lb))x.lb=carrierName(x.c);});
   return _carList;
@@ -2858,11 +2933,12 @@ async function zipChange(){
 function moreBtn(total){
   if(total<=_shown) return '';
   const left=total-_shown, k=Math.min(PAGE,left);
-  // the last tap says it is the last one, so nobody wonders how deep this goes
+  // the last tap says it is the last one, so nobody wonders how deep this goes. T-104 (2): the label carries
+  // how many are still to come, live from the list as it stands (filters and the pinned plan included).
   const lab=left<=PAGE
-    ? L(`See the last ${left}`,`Ver los últimos ${left}`)
-    : L(`See ${k} more plans`,`Ver ${k} planes más`);
-  return `<button class="showmore" onclick="showMore()">${lab}<span>${L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`)}</span></button>`;
+    ? L(`See the last ${left} plan${left===1?'':'s'}`,`Ver ${left===1?'el último plan':`los últimos ${left} planes`}`)
+    : L(`Show ${k} more plans (${left} left)`,`Ver ${k} planes más (${left} restantes)`);
+  return `<button class="showmore" onclick="showMore()">${lab}</button>`;
 }
 function listHTML(all){
   // Thirteen or fewer: all of them, and no button. "Comparar estos 3 planes" is gone -- comparing is
@@ -3109,7 +3185,10 @@ function loadCms2026(st){
   return fetch('data/cms_'+st+'.js',{cache:'no-cache'})
     .then(r=>{if(!r.ok) throw new Error('no file');return r.text();})
     .then(s=>{const i=s.indexOf('{'), j=s.lastIndexOf('}');const d=JSON.parse(s.slice(i,j+1));
-      if(!d||!d.plans) throw new Error('bad file'); _cms26[st]=d; return d;})
+      if(!d||!d.plans) throw new Error('bad file');
+      // T-104 (1): the 2026 names the search and the cards print, in proper case, once, as the file loads
+      Object.keys(d.plans).forEach(k=>{const a=d.plans[k];if(Array.isArray(a))a.forEach(p=>{if(p&&p.name)p.name=properName(p.name);});});
+      _cms26[st]=d; return d;})
     .catch(()=>null);
 }
 function loadXw27(st){
@@ -3551,7 +3630,7 @@ function sugCard(p,plans){
   const a=agent();   // T-102: the agent for this ZIP's state confirms it, on her own number
   return `<div class="sug" style="--sc:${carrierColor(p)}" data-agent="${a.key}">
     <p class="ey">${L('Our suggestion','Nuestra sugerencia')}</p>
-    <p class="sp"><i></i>${esc(dispName(p))}</p>
+    <p class="sp"><i></i><span>${nbLast(esc(dispName(p)))}</span></p>
     ${line?`<p class="why">${line}</p>`:''}
     <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
       <span>${L('Your doctors and medicines? I will confirm this plan covers them:','¿Sus médicos y medicamentos? Le confirmo si este plan los cubre:')} ${esc(a.name)}, <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></div>
@@ -3756,7 +3835,7 @@ function fallbackCopy(txt,ok){
   try{ document.execCommand('copy'); ok(); }catch(e){} ta.remove();
 }
 function flowCompare(){
-  prog(88); _plansView=true;
+  prog(88); _plansView=true; document.body.classList.add('cmpv');   // T-104 (5): Comparar's own narrow-phone spacing (CSS)
   const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
   if(plans.length<2){back();return;}
   // b17: "No incluido" (CMS: not covered) and "Sin información" (no value in the CMS file) are two different cells.
@@ -4251,7 +4330,12 @@ if(!_dataOnly) go(startZip);
   }
   function report(){
     var b=primary();
-    var st={type:'widget-step',depth:hist.length,results:!!_plansView,pri:document.body.classList.contains('q3'),lead:!!document.querySelector('#wb .lead-consent'),hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
+    /* T-104 (4): list:true only on the plan list, and c3 = how far down the widget the THIRD card ends,
+       so the page can hold its Llamar / WhatsApp bar there until 4 s pass or the visitor scrolls past it. */
+    var pl=document.getElementById('plist'), c3=-1;
+    if(pl&&_plansView){var cs=pl.querySelectorAll('.pc'), cc=cs[Math.min(2,cs.length-1)], ww=document.querySelector('.widget-wrap');
+      if(cc&&ww) c3=Math.round(cc.getBoundingClientRect().bottom-ww.getBoundingClientRect().top);}
+    var st={type:'widget-step',depth:hist.length,results:!!_plansView,list:!!(pl&&_plansView),c3:c3,pri:document.body.classList.contains('q3'),lead:!!document.querySelector('#wb .lead-consent'),hasNext:!!b,label:b?b.textContent.replace(/[→←]/g,'').trim():'',disabled:b?!!b.disabled:true};
     var k=JSON.stringify(st); if(k===last) return; last=k;
     window.parent.postMessage(st,'*');
   }

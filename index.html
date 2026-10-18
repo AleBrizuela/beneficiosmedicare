@@ -858,6 +858,12 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
   html body.t31-q .t31-bar>a{display:none!important}
   html body.t31-q .t31-bar .t31-next{display:flex}
   html body.t31-qn .t31-bar,html body.t31-pri .t31-bar{display:none!important}   /* T-100: none on the question screen either */
+  /* T-104 (4) (AB 2026-10-18): on the plan LIST only, Llamar / WhatsApp waits until the list has been on
+     screen 4 seconds or the visitor scrolls past the third card, then slides up and stays. Hidden, not
+     removed: the space it needs is already reserved, so nothing jumps when it arrives. */
+  html body .t31-bar{transition:transform .35s ease-out,visibility 0s}
+  html body.t31-wait .t31-bar{transform:translateY(calc(100% + 16px));visibility:hidden;transition:none}
+  @media (prefers-reduced-motion:reduce){html body .t31-bar{transition:none}}
   html body .t31-bar .t31-next{flex:1 1 auto;height:58px;margin:0;padding:0 16px;display:none;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;
     border:2px solid var(--t31-brand);border-radius:12px;background:var(--t31-brand);color:#fff;cursor:pointer;
     font:700 18px/1 'Open Sans',-apple-system,'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -1803,6 +1809,42 @@ presses the widget's own next button, and a screen with no next button (tap an a
     if(next.disabled) return;
     try{frame.contentWindow.postMessage({type:'widget-next'},new URL(frame.src,location.href).origin);}catch(err){}
   });
+})();
+/* T-104 (4) (AB 2026-10-18): the Llamar / WhatsApp bar does not greet the plan list. On the list ONLY it
+waits until the list has been on screen 4 seconds or the visitor has scrolled past the third card (the widget
+reports where that card ends, c3), whichever comes first, slides in and stays for the rest of the visit. Every
+other screen shows it at once, as before; the question screen still has none (T-100); the compare bar still
+replaces it while plans are ticked (T-084), so the two never overlap. Phones only: on a computer the bar is
+not drawn at all. cta_bar_shown says after how many seconds, and why. */
+(function(){
+  var bar=document.querySelector('.t31-bar'), frame=document.getElementById('widget-frame'), b=document.body;
+  if(!bar||!frame) return;
+  var OK=/^https:\/\/((www\.)?beneficiosmedicare\.com|([a-z0-9-]+\.)?beneficiosmedicare\.pages\.dev)$/;
+  var waiting=false, done=false, t0=0, timer=0, c3=-1;
+  function phone(){ return !!(window.matchMedia&&window.matchMedia('(max-width:768px)').matches); }
+  function show(why){
+    if(!waiting) return;
+    waiting=false; done=true; clearTimeout(timer);
+    b.classList.remove('t31-wait');
+    if(window.t31Sync) window.t31Sync();
+    var o={site:'bm',lang:(document.documentElement.lang||'').slice(0,2),page:location.pathname,
+      seconds:Math.round((Date.now()-t0)/100)/10,trigger:why,visible:getComputedStyle(bar).display!=='none'};
+    try{ if(typeof gtag==='function') gtag('event','cta_bar_shown',o); }catch(e){}
+  }
+  function past(){ if(waiting&&c3>0&&frame.getBoundingClientRect().top+c3<=0) show('scroll'); }
+  window.addEventListener('message',function(e){
+    if(!OK.test(e.origin)||!e.data||e.data.type!=='widget-step') return;
+    var d=e.data;
+    if(d.list&&!done&&phone()){
+      c3=typeof d.c3==='number'?d.c3:-1;
+      if(!waiting){ waiting=true; t0=Date.now(); b.classList.add('t31-wait'); timer=setTimeout(function(){ show('time'); },4000); }
+      past();
+    } else if(!d.list&&waiting){
+      /* left the list before it came in: the next screen shows the bar at once, as every other screen does */
+      waiting=false; clearTimeout(timer); b.classList.remove('t31-wait');
+    }
+  });
+  window.addEventListener('scroll',past,{passive:true});
 })();
 /* desktop shows the city list open; on phones it waits behind its toggle */
 if(window.matchMedia&&window.matchMedia('(min-width:769px)').matches){[].forEach.call(document.querySelectorAll('details.t31-cities'),function(d){d.open=true;});}
