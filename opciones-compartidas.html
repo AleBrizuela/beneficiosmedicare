@@ -161,6 +161,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     role:   EN ? 'Medicare agent' : 'Agente de Medicare',
     before: EN ? 'Choose before <b>Dec 7</b>' : 'Elija antes del <b>7 de dic.</b>',
     q:      EN ? 'Questions? I answer today.' : '¿Tiene preguntas? Le respondo hoy.',
+    textme: EN ? 'Text me' : 'Escríbame',
     callb:  EN ? 'Call' : 'Llamar',
     cw:     EN ? 'Call or text: ' : 'Llamada o texto: ',
     pageT:  EN ? 'Medicare options for 2027' : 'Opciones de Medicare 2027',
@@ -191,6 +192,9 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   // 12:55: WhatsApp on the agent's own number with a prefilled hello in the page's language
   function waH(a){ return 'https://wa.me/' + a.digits + '?text=' + encodeURIComponent(EN ? 'Hi ' + first(a) + ', I saw my comparison' : 'Hola ' + first(a) + ', vi mi comparación'); }
   function mailH(a){ return 'mailto:' + a.email + '?subject=' + encodeURIComponent(T.subj); }
+  // T-105 (8) AMENDMENT 14:50: the bottom box's one action is a text message, not email or a bare
+  // number (the sticky bar already has Llamar and WhatsApp for those).
+  function smsH(a){ return 'sms:+' + a.digits + '?&body=' + encodeURIComponent(EN ? 'Hi, I saw my comparison' : 'Hola, vi mi comparación'); }
   var esc = function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 
@@ -284,9 +288,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +
           '<img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="72" height="72">' +
           '<div><div class="q">' + esc(T.q) + '</div><div class="nm">' + esc(A.name) + '</div>' +
-          '<a class="lnk t44" data-cta="shared_call" href="' + esc(mailH(A)) + '">' + esc(A.email).replace('@', '@<wbr>') + '</a>' +
-          '<div class="sig">' + esc(T.cw) + '<a data-cta="shared_call" href="' + telH(A) + '">' + tel(A) + '</a><br>' +
-            'WhatsApp: <a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">wa.me/' + A.digits + '</a></div>' +
+          '<a class="lnk t44" data-cta="shared_call" href="' + esc(smsH(A)) + '">' + esc(T.textme) + ' ›</a>' +
           '</div></div></div>' +
         '<div class="cmpw" id="cmpB"></div>' +
         '<p class="disc">' + discHTML() + ' ' + esc(T.sent) + esc(when) + '.</p>' +
@@ -295,7 +297,13 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<a class="s" data-cta="shared_call" href="' + telH(A) + '">' + esc(T.callb) + '</a>' +
         '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>';
 
-    part(document.getElementById('cmpA'), d.css, d.html.top + d.html.table);
+    var rootA = part(document.getElementById('cmpA'), d.css, d.html.top + d.html.table);
+    // T-103 (5)(c): with "Su plan hoy" in a column, "Mostrar diferencias" starts ON here too --
+    // same rule as the widget's own Compare screen (flowCompare), same toggle code (cmpDiff).
+    if (d.hoy) {
+      var cb = rootA.querySelector('.cmptog input[type="checkbox"]');
+      if (cb) { cb.checked = true; cmpDiff(cb); }
+    }
     part(document.getElementById('cmpB'), d.css, d.html.fine);
     if (typeof gtag === 'function') gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, hoy:HOY?1:0});
     if (PRINT) setTimeout(function(){ window.print(); }, 800);
@@ -310,7 +318,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     for (var i = 0; i < path.length && !a; i++) if (path[i] && path[i].tagName === 'A' && path[i].getAttribute('href')) a = path[i];
     if (!a) return;
     var h = a.getAttribute('href') || '';
-    var n = /^tel:\+18006334227/.test(h) ? '' : /^tel:/i.test(h) ? 'phone_click' : /wa\.me/i.test(h) ? 'whatsapp_click' : /^mailto:/i.test(h) ? 'email_click' : '';
+    var n = /^tel:\+18006334227/.test(h) ? '' : /^tel:/i.test(h) ? 'phone_click' : /wa\.me/i.test(h) ? 'whatsapp_click' : /^mailto:/i.test(h) ? 'email_click' : /^sms:/i.test(h) ? 'sms_click' : '';
     if (!n) return;
     var spot = a.closest('.bar') ? 'bar' : a.closest('.box') ? 'box' : a.closest('.err') ? 'error' : 'suggestion';
     gtag('event', n, {site:'bm', lang:EN?'en':'es', page:location.pathname, placement:'shared_call', spot:spot});
