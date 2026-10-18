@@ -1,6 +1,21 @@
 <!doctype html>
 <html lang="es">
 <head>
+<!-- T-105 (2): GA4, so taps on the agent's phone, WhatsApp and email from a shared page are counted
+     (placement shared_call). The page's address is sent WITHOUT its query string: the ZIP and the plan
+     IDs in a shared link never reach GA4. Tester mode (?qa=1) as on every other page. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  (function(){var t=false;try{var q=/[?&]qa=([01])(?=&|#|$)/.exec(location.search);if(q){if(q[1]==='1')localStorage.setItem('bm_tester','1');else localStorage.removeItem('bm_tester');}t=localStorage.getItem('bm_tester')==='1';}catch(e){t=/[?&]qa=1(?=&|#|$)/.test(location.search);}window.bmTester=t;window.bmInternal=t||/\.pages\.dev$/i.test(location.hostname);if(window.bmInternal)gtag('set',{traffic_type:'internal'});})();
+  gtag('js', new Date());
+  gtag('config', 'G-VG5N9NKWPF', {page_location: location.origin + location.pathname});
+  setTimeout(function(){
+    var s=document.createElement('script');
+    s.src='https://www.googletagmanager.com/gtag/js?id=G-VG5N9NKWPF';
+    document.head.appendChild(s);
+  },3000);
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- T-078: the page a shared link opens. Not for search engines: it is one person's three plans,
@@ -8,150 +23,106 @@
      rule keeps it out of the sitemap. -->
 <meta name="robots" content="noindex, follow">
 <title>Opciones de Medicare 2027 | Beneficios Medicare</title>
-<meta property="og:title" content="3 opciones de Medicare 2027">
-<meta property="og:description" content="Las opciones que le compartieron, con los costos de CMS para 2027.">
+<!-- T-105 (4) (AB 2026-10-18): the preview carries the agent for the link's state, with her photo and name.
+     These are the defaults (Alejandra, Spanish: every state that is not KS, MO, TX or FL). For a preview
+     crawler, functions/opciones-compartidas.js rewrites each of them from the link itself: Susana's card
+     for KS, MO, TX and FL, the English card for ?lang=en, and a title naming the comparison. -->
+<meta property="og:title" content="Opciones de Medicare 2027, lado a lado">
+<meta property="og:description" content="Lado a lado, con los costos de CMS. ¿Preguntas? Alejandra Brizuela, (310) 597-9142.">
 <meta property="og:type" content="website">
-<!-- The card a shared link shows: card B+, drawn once at build time, NOT per link (AB 2026-10-15:
-     not touching the Cloudflare build today). One fixed image is shown for every shared link, so it
-     deliberately carries no ZIP and no carrier names — those would be right for one link and wrong
-     for every other. The title and the ZIP travel in the message text instead. -->
-<meta property="og:image" content="https://beneficiosmedicare.com/og-opciones-bm.png">
+<meta property="og:url" content="https://beneficiosmedicare.com/opciones-compartidas">
+<meta property="og:image" content="https://beneficiosmedicare.com/og-opciones-alejandra-es.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Alejandra Brizuela, (310) 597-9142, BeneficiosMedicare.com">
 <meta property="og:site_name" content="Beneficios Medicare">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Opciones de Medicare 2027, lado a lado">
+<meta name="twitter:description" content="Lado a lado, con los costos de CMS. ¿Preguntas? Alejandra Brizuela, (310) 597-9142.">
+<meta name="twitter:image" content="https://beneficiosmedicare.com/og-opciones-alejandra-es.jpg">
 <link rel="icon" href="favicon-beneficios.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── T-078 (AB 2026-10-15, rounds 2-8). ONE document renders three things: the sheet on a desktop,
-   the same sheet stacked on a phone, and the PDF (the browser's own print of this page, one letter
-   portrait page). Pixel spec: 2026-10-15_2200_opciones-hoja-v8.html. Values below are the mock's. */
+/* ── T-105 (AB 2026-10-18 13:05, APPROVED): pixel spec DECIDE/now/2026-10-18_compartido-menos-es-mas/
+   2026-10-18_1310_compartido-menos-es-mas-v1.html, "Propuesta". Top card: logo, 88px photo, name on one
+   line, "Agente de Medicare", nothing else. The band on one line, one yellow date. Then the widget's OWN
+   comparison (cmpParts in widget-v4.html: the suggestion box, "Mostrar diferencias", the columns), drawn
+   read-only from the plan IDs in the link in a shadow root that carries the widget's own stylesheet, so
+   this page can neither restyle it nor drift from it. Then the teal box (photo, one line, name, email:
+   no buttons), then the fine print, last (T-086). The phone shows in the suggestion box and the bottom
+   bar only. One page renders the screen, the phone, and the PDF (the browser's print of this page). */
 *{box-sizing:border-box}
-body{margin:0;font-family:"Open Sans",Arial,sans-serif;color:#1E2A3B;background:#fff}
+body{margin:0;font-family:"Open Sans",Arial,sans-serif;color:#002147;background:#fff}
 p,div,span{text-wrap:pretty}
-.sheet{max-width:1056px;margin:0 auto;padding:18px 26px}
-/* header: the client-sheet template, exactly (round 6) */
-.hdr2{display:flex;align-items:center;background:#F4F6F8;border:1px solid #DDE3E9;border-radius:10px;padding:8px 16px;margin-bottom:6px;gap:16px}
-.logo2{flex:0 0 auto}
-.sep2{width:1px;align-self:stretch;background:#D3DAE1}
-.who2{display:flex;align-items:center;gap:10px;flex:1}
-.who2 img{width:46px;height:46px;border-radius:50%;border:2px solid #fff;object-fit:cover}
-.lab2{font-size:10.5px;letter-spacing:2px;font-weight:700;color:#007B7B}
-.nm2{font-size:17px;font-weight:700;color:#002147;line-height:1.15}
-.em2{font-size:12.5px;color:#007B7B}
-.call2{text-align:center}
-.ph2{font-size:21px;font-weight:700;color:#002147;white-space:nowrap}
-.band2{background:linear-gradient(135deg,#002147 0%,#007B7B 100%);color:#fff;border-radius:8px;padding:7px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.band2 h1{margin:0;font-size:22px;font-weight:700}
-.band2 h1 em{font-style:normal;font-weight:400;color:#B2DFDB}
-.dl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.gold{background:#FFD54F;color:#002147;border-radius:6px;padding:2px 10px;white-space:nowrap;font-weight:600;font-size:14px}
-/* T-098 item 13: the deadline is the only thing that earns the yellow. */
-.plain{color:#fff;font-size:14px;font-weight:400;white-space:nowrap}
-.gold b{color:#002147}
-.pick2{margin:5px 0 6px;padding:5px 14px;background:#E0F2F1;border-radius:7px;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:14.5px;color:#1A202C}
-.sgt{color:#002147;font-weight:700}
-/* the table itself */
-.grid{display:grid;grid-template-columns:24% repeat(var(--n,3),1fr);column-gap:8px;position:relative}
-/* ── T-078 round 9 (AB 2026-10-15 22:30): the suggested plan is marked down its WHOLE column, not
-   just named on the line above. The outline is drawn ON the cells — top and sides on the header,
-   sides on every value, bottom on the last — so it reads as one continuous line and stays in flow.
-   An absolutely positioned overlay was tried first and pushed the sheet onto a second printed
-   page, which the PDF cannot afford. On a phone the columns are too narrow for a full outline, so
-   there it is the header box and the tint only. */
-.col.sug{background:#E0F2F1;border-left:2.5px solid #007B7B;border-right:2.5px solid #007B7B;border-radius:6px 6px 0 0}
-.v.sug{background:#EEF8F6;border-left:2.5px solid #007B7B;border-right:2.5px solid #007B7B}
-.v.sug.vlast{border-bottom:2.5px solid #007B7B;border-radius:0 0 6px 6px}
-.sgc.ph{display:none}
-@media (max-width:600px){
-  .col.sug{border:2.5px solid #007B7B;border-radius:6px}
-  .v.sug{border-left:0;border-right:0}
-  .v.sug.vlast{border-bottom:0;border-radius:0}
-  .sgc.dk{display:none}
-  .sgc.ph{display:inline-block}
-}
-.col{border-top:5px solid var(--c);background:#fff;border-radius:4px 4px 0 0;text-align:center;padding:8px 6px 7px}
-.car{font-size:22px;font-weight:700;color:var(--c)}
-.pn{font-size:15px;color:#3a4650}
-.id{font-size:13px;color:#4A5568}
-/* T-098: the type and the plan ID each stay whole, but the line may break BETWEEN them.
-   Without the break, three columns of "HMO · H0523-085" set a min-content floor wider
-   than a 375px phone and the whole sheet scrolled sideways (8px on BM, 28px on MC). */
-.id .ty,.id .pid{white-space:nowrap}
-.sgc{display:inline-block;margin-top:4px;background:#007B7B;color:#fff;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px}
-.row{display:contents}
-.row>div{padding:5px 6px;border-bottom:1px solid #EEF1F3;font-size:16px}
-.rl{font-weight:400;color:#4A5568}
-.v{text-align:center;font-weight:600;color:#1A202C}
-.v.z{color:#1f7a5a}
-.v.off{color:#56616a;font-weight:400;font-style:italic}
-.sec{grid-column:1/-1;background:#EEF1F3;font-size:13px;letter-spacing:2px;font-weight:700;color:#5b6670;padding:4px 6px;margin-top:4px;display:flex;align-items:center}
-.si{width:17px;height:17px;fill:none;stroke:#007B7B;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex:0 0 17px}
-/* the two rows only a person can answer (round 8e) */
-.callrow{position:relative;z-index:3;grid-column:2/-1;background:#E0F2F1;border-radius:8px;margin:3px 0;padding:6px 10px!important;color:#002147!important;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:400;font-size:15px!important;border-bottom:0!important}
-.callrow b{font-weight:700;color:#007B7B;white-space:nowrap}
-.cri{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:#007B7B;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.cta2{margin:14px 0 0;background:#E0F2F1;border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;color:#002147}
-.c2t{font-size:18px;font-weight:700}
-.c2p{font-size:18px}
-.c2p b{font-size:22px;font-weight:800;white-space:nowrap}
-.c2w{font-size:17px;font-weight:700;color:#007B7B}
-.disc{font-size:12.5px;color:#4A5568;margin-top:10px;line-height:1.45}
+.nw{white-space:nowrap}
+.sheet{max-width:760px;margin:0 auto;padding:12px 12px 24px}
+/* top card */
+.card{background:#F0F3F6;border:1px solid #dbe2e9;border-radius:14px;padding:14px 16px;margin:0 0 12px}
+.logo a{display:inline-block;text-decoration:none;padding:6px 0;margin:-6px 0;min-height:44px}
+.logo svg{width:200px;height:auto;display:block}
+.agent{display:flex;gap:12px;align-items:center;margin-top:12px}
+.ph-img{border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 0 0 1px #cfd8e0;flex:none}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:700;color:#007B7B;text-transform:uppercase}
+.nm{font-size:19px;font-weight:700;white-space:nowrap;color:#002147}
+.role{font-size:14px;color:#445;margin-top:2px}
+/* the blue band: one line, one date */
+.band{border-radius:14px;background:linear-gradient(100deg,#002147,#007B7B);color:#fff;padding:14px 16px;margin:0 0 12px}
+.band h1{margin:0;font-size:19.5px;line-height:1.25;font-weight:700}
+.band h1 span.z{font-weight:400;opacity:.85}
+.chiprow{display:flex;gap:10px;align-items:center;margin-top:10px}
+.chip{background:#FFD54F;color:#002147;border-radius:8px;padding:4px 10px;font-weight:600;font-size:14px;white-space:nowrap}
+.chip b{font-weight:700}
+/* the comparison, as the widget draws it */
+.cmpw{font-family:"Open Sans",-apple-system,sans-serif;font-size:16px;color:#1e2a3b}
+/* the teal box at the bottom: photo, one line, name, email. No buttons (they live in the bar). */
+.box{background:#E0F2F1;border-radius:16px;margin:14px 0 0;padding:16px}
+.box .two{display:flex;gap:12px;align-items:center}
+.box .two>div,.agent>div{min-width:0}
+.box .q{font-weight:700;font-size:18px;line-height:1.3}
+.box .nm{margin-top:4px}
+.lnk{color:#007B7B;text-decoration:underline;text-underline-offset:2px;font-size:13.5px}
+a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
+.box .sig{display:none}
+/* the fine print, after the widget's own notes */
+.disc{font-size:13px;line-height:1.5;color:#66727c;margin:9px 2px 9px}
+.disc a{color:#007B7B;text-decoration:underline;text-underline-offset:2px}
 .err{max-width:640px;margin:60px auto;padding:0 20px;text-align:center;font-size:17px;line-height:1.5;color:#1E2A3B}
 .err a{color:#007B7B;font-weight:700}
 .loading{max-width:640px;margin:80px auto;text-align:center;color:#5b6670;font-size:16px}
-/* phone: the same sheet, stacked, bigger values (round 5: seniors) */
+/* the bar at the bottom of a phone: Llamar + WhatsApp */
+.bar{display:none}
 @media (max-width:600px){
-  .sheet{padding:12px 10px 96px}
-  .hdr2{flex-wrap:wrap;gap:8px}.hdr2 .sep2{display:none}.logo2{flex:0 0 100%}.call2{text-align:left}
-  .band2{flex-direction:column;align-items:flex-start}.band2 h1{font-size:19px}
-  .pick2{flex-direction:column;align-items:flex-start}
-  .grid{grid-template-columns:repeat(var(--n,3),minmax(0,1fr));column-gap:5px}
-  .grid>.blank{display:none}
-  .rl{grid-column:1/-1;border-bottom:0!important;padding:8px 4px 0!important;font-size:15.5px;color:#4A5568}
-  .v{font-size:17px!important;font-weight:600!important;padding:2px 3px 9px!important}
-  .v,.rl{overflow-wrap:break-word;hyphens:auto}
-  .car{font-size:18px}.pn{font-size:13px}
-  .callrow{grid-column:1/-1}
-  .cta2{flex-direction:column;align-items:flex-start;padding:12px 14px}
-  .disc{font-size:11.5px}
-  .fix{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E3E7EA;padding:10px 12px;display:flex;gap:10px;z-index:5}
-  .fix a{flex:1;display:flex;align-items:center;justify-content:center;height:56px;border-radius:12px;font-weight:600;font-size:16.5px;text-decoration:none}
-  .fix .l{background:#007B7B;color:#fff}
-  .fix .w{border:2px solid #007B7B;color:#007B7B}
-  .q{font-size:15px;font-weight:700;color:#002147;text-align:center;margin:12px 0 0}
+  .sheet{padding:12px 12px 96px}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dbe2e9;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:10px;z-index:5}
+  .bar a{display:flex;align-items:center;justify-content:center;min-height:52px;border:2px solid #007B7B;border-radius:14px;background:#fff;color:#007B7B;font-weight:700;font-size:17px;text-decoration:none}
+  .bar a.s{background:#007B7B;color:#fff}
 }
-@media (min-width:601px){.fix,.q{display:none}}
-/* the PDF is this page printed: one letter portrait page (round 5) */
-@page{size:letter portrait;margin:0.25in 0.3in}
+/* a 320 phone: the photos and the box's side padding give way, never the name (it stays on one line) */
+@media (max-width:359px){
+  .band h1{font-size:18px}.nm{font-size:18px}
+  .card{padding:12px}.card .ph-img{width:72px;height:72px}
+  .box{padding:14px 12px}.box .ph-img{width:56px;height:56px}.box .two{gap:10px}
+  .box .q{font-size:17px}
+}
+/* the PDF is this page printed. Links stay links in the PDF; the screen-only bar goes; the bottom box
+   carries the agent's whole block (12:55: the PDF footer carries it, links live). */
+@page{size:letter portrait;margin:0.3in 0.35in}
 @media print{
   .sheet{padding:0;max-width:none}
-  .logo2 svg{width:228px;height:auto}
-  .nm2{font-size:15.5px}.ph2{font-size:18px}.lab2{font-size:9.5px;letter-spacing:1.5px}.em2{font-size:11.5px}
-  .who2 img{width:40px;height:40px}
-  .grid{grid-template-columns:31% repeat(var(--n,3),1fr)!important}
-  .row>div{padding:1px 5px!important;font-size:14.5px!important;line-height:1.28}
-  .disc{margin-top:4px!important;font-size:11.5px!important;line-height:1.35!important}
-  .col{padding:5px 4px!important}.pn{font-size:13px!important}.id{font-size:12px!important}
-  .plain{font-size:12.5px!important}
-  .sec{margin-top:2px!important;padding:3px 6px!important}
-  .hdr2{margin-bottom:4px;padding:6px 12px;gap:12px}
-  .band2{padding:6px 12px!important;flex-direction:row}
-  .band2 h1{font-size:18px!important;white-space:nowrap}
-  .gold{font-size:12.5px!important}
-  .callrow{font-size:14px!important;white-space:nowrap;padding:3px 10px!important;margin:2px 0!important}
-  .pick2{font-size:13.5px!important;margin:4px 0!important;padding:4px 12px!important}
-  .sgc{font-size:11px!important;margin-top:2px!important;padding:1px 8px!important}
-  .cta2{margin-top:5px!important;padding:6px 14px!important;flex-wrap:nowrap!important}
-  .c2t,.c2p,.c2w{white-space:nowrap}
-  .c2t,.c2p{font-size:15px!important}.c2p b{font-size:18px!important}.c2w{font-size:15px!important}
-  .fix,.q{display:none!important}
-  /* the phone chip is not a print thing: without this it printed under the desktop one and the
-     taller header pushed the sheet onto a second page */
-  .sgc.ph{display:none!important}
-  .sgc.dk{display:inline-block!important}
+  .card{padding:8px 14px;display:flex;align-items:center;gap:24px}
+  .card .agent{margin-top:0}
+  .card .ph-img{width:56px;height:56px}
+  .logo svg{width:190px}
+  .band{padding:8px 14px;margin-bottom:8px}
+  .band h1{font-size:17px}
+  .box{break-inside:avoid;padding:10px 14px}
+  .box .ph-img{width:56px;height:56px}
+  .box .sig{display:block;font-size:13px;line-height:1.5;margin-top:4px}
+  .box .sig a{color:#007B7B}
+  .bar{display:none!important}
+  .disc{font-size:11.5px;margin-top:4px}
 }
 </style>
 </head>
@@ -160,103 +131,77 @@ p,div,span{text-wrap:pretty}
 <iframe id="src" title="" aria-hidden="true" style="position:absolute;width:1px;height:1px;left:-9999px;border:0"></iframe>
 <script>
 /* ── T-078 · the shared sheet ──────────────────────────────────────────────────────────────────
-   The link carries everything: /opciones/90230/H0504-056/H5496-012/H0523-085?lang=en&r=cost
+   The link carries everything: ?zip=90230&p=H0504-056,H5496-012,H0523-085&lang=en&r=cost&hoy=H0504-056
    Nothing is stored on a server, so a link cannot rot and nothing about the sender is kept.
 
-   The figures come from the plan finder itself, loaded in a hidden frame with ?data=1 (no UI, no
-   GA4) and asked for exactly these plan IDs. That is deliberate: the CMS mapping lives in ONE file,
-   so this sheet and the comparison it came from can never print different numbers for the same
-   plan. On medicare-california the same frame is loaded from beneficiosmedicare, which is where the
-   plan data lives, and the reply is origin-checked at both ends. */
+   T-105 (AB 2026-10-18): the comparison itself comes from the plan finder, loaded in a hidden frame with
+   ?data=1 (no UI, no GA4) and asked to RENDER these plan IDs: it answers with the markup its own Comparar
+   screen is made of (read-only), the stylesheet that styles it, and the code of its two toggles. So this
+   page shows exactly what the sender saw, and the CMS mapping, the layout and the behaviour all live in
+   ONE file. On medicare-california the frame is loaded from beneficiosmedicare, where the plan data
+   lives, and the reply is origin-checked at both ends. */
 (function(){
   var seg = location.pathname.split('/').filter(Boolean);   // ["opciones","90230","H0504-056",...]
   var q   = new URLSearchParams(location.search);
   var ZIP = seg[1] || q.get('zip') || '';
-  var IDS = seg.slice(2).filter(function(x){return /^[A-Z0-9-]{4,}$/i.test(x);});
-  if (!IDS.length && q.get('p')) IDS = q.get('p').split(',');
+  var OKID = function(x){return /^[A-Z0-9-]{4,}$/i.test(x);};
+  var IDS = seg.slice(2).filter(OKID);
+  if (!IDS.length && q.get('p')) IDS = q.get('p').split(',').filter(OKID);
   var EN  = q.get('lang') === 'en';
   var PRI = q.get('r') || '';
+  var HOY = OKID(q.get('hoy') || '') ? q.get('hoy') : '';
   var PRINT = q.get('print') === '1';
   document.documentElement.lang = EN ? 'en' : 'es';
 
   var T = {
-    title:  EN ? 'Medicare options for 2027' : 'opciones de Medicare 2027',
+    opts:   EN ? 'options for 2027' : 'opciones 2027',
     adv:    EN ? 'YOUR AGENT' : 'SU ASESORA',   // T-102: + ' · LIC. #…' only when the agent has one on file
-    call:   EN ? 'CALL, TEXT OR WHATSAPP' : 'LLAMADA, TEXTO O WHATSAPP',
+    role:   EN ? 'Medicare agent' : 'Agente de Medicare',
     before: EN ? 'Choose before <b>Dec 7</b>' : 'Elija antes del <b>7 de dic.</b>',
-    start:  EN ? 'starts January 1' : 'inicia el 1 de enero',
-    sug:    EN ? 'Our suggestion' : 'Nuestra sugerencia',
-    sugShort: EN ? 'Suggested' : 'Sugerido',
-    costs:  EN ? 'COSTS' : 'COSTOS',
-    doctor: EN ? 'YOUR DOCTOR' : 'SU MÉDICO',
-    hosp:   EN ? 'HOSPITAL AND EMERGENCIES' : 'HOSPITAL Y EMERGENCIAS',
-    drugs:  EN ? 'MEDICINES (1 MONTH)' : 'MEDICAMENTOS (1 MES)',
-    extras: EN ? 'EXTRAS' : 'EXTRAS',
-    docCall:EN ? 'Tell me your doctor and I will confirm whether they are in network: '
-               : 'Dígame su médico y le confirmo si está en la red: ',
-    rxCall: EN ? 'Tell me your medicines and I will confirm whether they are covered: '
-               : 'Dígame sus medicamentos y le confirmo si los cubre: ',
     q:      EN ? 'Questions? I answer today.' : '¿Tiene preguntas? Le respondo hoy.',
-    cw:     EN ? 'Call or text: ' : 'Llame o escriba: ',
     callb:  EN ? 'Call' : 'Llamar',
-    rows: {
-      premium: EN?'Monthly premium':'Prima mensual',
-      giveback:EN?'Part B premium reduction':'Reducción prima Parte B',
-      moop:    EN?'Yearly out-of-pocket maximum':'Máximo de bolsillo al año',
-      mded:    EN?'Medical deductible':'Deducible médico',
-      pcp:     EN?'Primary doctor':'Médico de cabecera',
-      spec:    EN?'Specialist':'Especialista',
-      hosp:    EN?'Hospital':'Hospital',
-      er:      EN?'Emergency / urgent care':'Emergencias / urgencias',
-      amb:     EN?'Ambulance':'Ambulancia',
-      wwe:     EN?'Emergency care outside the U.S.':'Emergencias fuera del país',
-      ded:     EN?'Drug deductible':'Deducible de medicamentos',
-      tiers:   EN?'Tiers 1 · 2 · 3':'Niveles 1 · 2 · 3',
-      dental:  EN?'Dental':'Dental',
-      vision:  EN?'Eyewear':'Anteojos',
-      hearing: EN?'Hearing aids':'Audífonos',
-      otc:     EN?'OTC card (pharmacy)':'Tarjeta OTC (farmacia)',
-      trans:   EN?'Rides':'Transporte'
-    },
-    /* PROTECT: these four lines are required and are not ours to shorten. The first is the TPMO
-       disclaimer, word for word as the widget and the compare screen carry it. */
+    cw:     EN ? 'Call or text: ' : 'Llamada o texto: ',
+    pageT:  EN ? 'Medicare options for 2027' : 'Opciones de Medicare 2027',
+    subj:   EN ? 'My 2027 plan comparison' : 'Mi comparación de planes 2027',
+    /* PROTECT: these lines are required and are not ours to shorten. The first is the TPMO disclaimer,
+       word for word as the shared sheet has carried it since T-078; unchanged by T-105. Medicare.gov and
+       the phone number in it are links. */
     disc: EN
       ? 'We do not offer every plan available in your area. Contact Medicare.gov, 1-800-MEDICARE (1-800-633-4227) or your State Health Insurance Assistance Program (SHIP) for information on all of your options. Every year, Medicare evaluates plans based on a 5-star rating system. We are not connected with or endorsed by the U.S. government or the federal Medicare program. Data: CMS 2027.'
       : 'No ofrecemos todos los planes disponibles en su área. Comuníquese con Medicare.gov, 1-800-MEDICARE (1-800-633-4227) o su Programa Estatal de Asistencia sobre Seguros de Salud (SHIP) para obtener información sobre todas sus opciones. Cada año, Medicare evalúa los planes según un sistema de calificación de 5 estrellas. No estamos conectados ni respaldados por el gobierno de EE.UU. ni por el programa federal de Medicare. Datos: CMS 2027.',
     sent: EN ? 'Sent on ' : 'Enviado el '
   };
 
-  var PIC = {
-    cost:'<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.8 0-3 .9-3 2.1 0 2.9 6 1.6 6 4.4 0 1.2-1.2 2.1-3 2.1-1.4 0-2.6-.6-3-1.6M12 6.5v1.5M12 16v1.5"/>',
-    visits:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="12" r="2"/>',
-    hosp:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 7v6M9 10h6M9 21v-4h6v4"/>',
-    drug:'<g transform="rotate(-35 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></g>',
-    star:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>'
-  };
-  /* T-102: who heads the sheet follows the ZIP's state. The widget owns the one state->agent map and
-     sends the agent with the plans (d.agent); this is only the fallback for the error screen, which
-     is drawn before any state is known, and for an older widget that does not send one. */
+  /* T-102: who is on the page follows the ZIP's state. The widget owns the one state->agent map and
+     sends the agent with the plans (d.agent); this is only the fallback for the error screen, which is
+     drawn before any state is known. */
   var AGENT = {key:'alejandra', name:'Alejandra Brizuela', tel:'(310) 597-9142', digits:'13105979142',
                email:'Alejandra@BeneficiosMedicare.com', photo:'images/alejandra-headshot.jpg', lic:'4507923'};
-  var TEL = '(310) 597‑9142', TELH = 'tel:+13105979142';
   function useAgent(a){
     if (!a || !/^1\d{10}$/.test(String(a.digits || '')) || !/^images\/[a-z-]+\.jpg$/.test(String(a.photo || ''))) return;
     AGENT = {key:String(a.key || ''), name:String(a.name || ''), tel:String(a.tel || ''), digits:String(a.digits),
              email:String(a.email || ''), photo:String(a.photo), lic:/^\d+$/.test(String(a.lic || '')) ? String(a.lic) : ''};
-    TEL = AGENT.tel.replace(') ', ')\u00a0').replace('-', '\u2011'); TELH = 'tel:+' + AGENT.digits;
   }
+  // (913) 488-5341 with a non-breaking space and hyphen: it never splits. The href is +1 and digits.
+  function tel(a){ return String(a.tel).replace(') ', ') ').replace('-', '‑'); }
+  function telH(a){ return 'tel:+' + a.digits; }
+  function first(a){ return String(a.name).split(' ')[0]; }
+  // 12:55: WhatsApp on the agent's own number with a prefilled hello in the page's language
+  function waH(a){ return 'https://wa.me/' + a.digits + '?text=' + encodeURIComponent(EN ? 'Hi ' + first(a) + ', I saw my comparison' : 'Hola ' + first(a) + ', vi mi comparación'); }
+  function mailH(a){ return 'mailto:' + a.email + '?subject=' + encodeURIComponent(T.subj); }
   var esc = function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 
   function fail(){
+    var A = AGENT;
     document.getElementById('out').innerHTML =
       '<div class="err"><p>' + (EN
         ? 'We could not open these options. The link may be incomplete.'
         : 'No pudimos abrir estas opciones. El enlace puede estar incompleto.') +
-      '</p><p><a href="/">' + (EN ? 'Find plans for your ZIP code' : 'Busque planes para su código postal') +
-      '</a></p><p>' + T.cw + '<a href="tel:+13105979142">' + TEL + '</a></p></div>';
+      '</p><p><a class="t44" href="/' + (EN ? 'en' : '') + '">' + (EN ? 'Find plans for your ZIP code' : 'Busque planes para su código postal') +
+      '</a></p><p>' + esc(T.cw) + '<a class="t44" data-cta="shared_call" href="' + telH(A) + '">' + tel(A) + '</a></p></div>';
   }
-  if (!/^\d{5}$/.test(ZIP) || !IDS.length) { fail(); return; }
+  if (!/^\d{5}$/.test(ZIP) || IDS.length < 2) { fail(); return; }
 
   // The frame is the plan finder with its UI switched off. On medicare-california it is loaded from
   // beneficiosmedicare, where the CMS files live; everywhere else it is this same site.
@@ -275,114 +220,99 @@ p,div,span{text-wrap:pretty}
     var d = e.data;
     if (!d || d.type !== 'widget-plans-result' || d.rid !== rid) return;
     done = true; clearTimeout(timer);
-    if (!d.ok || !d.plans.length) { fail(); return; }
-    render(d);
+    if (!d.ok || !d.html || !d.css || !d.fns) { fail(); return; }
+    try { render(d); } catch (err) { fail(); }
   });
   frame.addEventListener('load', function(){
     try {
-      frame.contentWindow.postMessage({type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI}, WIDGET_HOST);
+      frame.contentWindow.postMessage({type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true}, WIDGET_HOST);
     } catch (err) { fail(); }
   });
   frame.src = WIDGET_HOST + '/widget-v4.html?data=1&lang=' + (EN ? 'en' : 'es');
 
-  function cell(v, isSug){
-    var sg = isSug ? ' sug' : '';
-    if (!v) return '<div class="v off' + sg + '">' + (EN ? 'No information' : 'Sin información') + '</div>';
-    var t = String(v.t);
-    var zero = !v.off && /^\$0(\.00)?($|\/| )/.test(t.replace(/<[^>]+>/g, '').trim());
-    return '<div class="v' + (v.off ? ' off' : (zero ? ' z' : '')) + sg + '">' + t + '</div>';
+  /* The widget's own toggles, from the widget itself (same origin-checked reply). Its event helper
+     reports to this page's GA4 under the same event names. */
+  function install(fns){
+    window.wEvt = function(n, o){ if (typeof gtag === 'function') gtag('event', n, Object.assign({page:'shared'}, o || {})); };
+    window.cmpDiff = (new Function('return ' + fns.cmpDiff))();
+    window.cmpGrp  = (new Function('return ' + fns.cmpGrp))();
   }
-  function rowHTML(key, plans, sugId){
-    var any = plans.some(function(p){ return p.rows[key]; });
-    if (!any) return '';
-    return '<div class="row"><div class="rl">' + esc(T.rows[key]) + '</div>' +
-      plans.map(function(p){ return cell(p.rows[key], sugId && p.id === sugId); }).join('') + '</div>';
+  // A shadow root holding a part of the comparison, with the widget's stylesheet (its :root variables
+  // become :host) and the print rules: no toggle on paper, no shadow, no row split across pages. The
+  // star sentence is already in this page's own disclaimer, word for word, so it is not said twice.
+  function part(host, css, html){
+    var root = host.attachShadow({mode:'open'});
+    root.innerHTML = '<style>' + css.replace(/:root\b/g, ':host') +
+      ':host{display:block}.sdisc{display:none}' +
+      '@media print{.cmptog,.diffline{display:none!important}.cmp{box-shadow:none!important;border:1px solid #e5e9ec}tr{break-inside:avoid}.sug{break-inside:avoid;padding:8px 12px}' +
+      '.cmp tr.lr td{padding:4px 8px 0;font-size:12.5px}.cmp tr.vr td{padding:0 6px 4px;font-size:14px}.cmp tr.grp td{padding:4px 10px}.cmp thead th{padding:4px 6px}' +
+      '.cmp thead th .nm2,.cmp thead th .pid{min-height:0}.pd-fine{margin-top:8px;padding-top:6px}.pd-fine p{font-size:11.5px;margin-bottom:4px}}</style>' + html;
+    // links in the comparison that leave the site open in a new tab; phones are the agent's: tracked
+    [].forEach.call(root.querySelectorAll('a[href^="http"]'), function(a){ a.target = '_blank'; a.rel = 'noopener'; });
+    [].forEach.call(root.querySelectorAll('a[href^="tel:"]'), function(a){ a.setAttribute('data-cta', 'shared_call'); a.removeAttribute('onclick'); });
+    return root;
   }
-  function secHTML(icon, label){
-    return '<div class="sec"><svg class="si" viewBox="0 0 24 24">' + PIC[icon] + '</svg>' + esc(label) + '</div>';
-  }
-  function callRow(icon, text){
-    return '<div class="row"><div class="rl"></div><div class="callrow">' +
-      '<svg class="cri" viewBox="0 0 24 24">' + PIC[icon] + '</svg><span>' + esc(text) +
-      '<b><a href="' + TELH + '" style="color:inherit;text-decoration:none">' + TEL + '</a></b></span></div></div>';
+  function discHTML(){
+    return esc(T.disc)
+      .replace('Medicare.gov', '<a class="t44" href="https://www.medicare.gov' + (EN ? '' : '/es') + '" target="_blank" rel="noopener">Medicare.gov</a>')
+      .replace('1-800-MEDICARE (1-800-633-4227)', '<a class="t44" href="tel:+18006334227">1-800-MEDICARE (1-800-633-4227)</a>');
   }
 
   function render(d){
     useAgent(d.agent);
+    install(d.fns);
     var A = AGENT, adv = T.adv + (A.lic ? ' · LIC. #' + A.lic : '');
-    var plans = d.plans, n = plans.length;
-    var sug = d.sug;
-    var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES',
-      {day:'numeric', month:'short', year:'numeric'});
-    var where = esc(ZIP) + (d.state ? ', ' + esc(d.state) : '');
-
-    var cols = '<div class="blank"></div>' + plans.map(function(p){
-      var stars = p.stars == null ? '' : '<span>★ ' + p.stars + (EN ? ' of 5' : ' de 5') + '</span>';
-      return '<div class="col' + (sug && sug.id === p.id ? ' sug' : '') + '" style="--c:' + esc(p.color) + '">' +
-        '<div class="car">' + esc(p.carrier) + '</div>' +
-        '<div class="pn">' + esc(p.name) + '</div>' +
-        '<div class="id"><span class="ty">' + esc(p.type) + ' ·</span> <span class="pid">' +
-          esc(p.id) + '</span> ' + stars + '</div>' +
-        (sug && sug.id === p.id
-          ? '<span class="sgc dk">' + esc(T.sug) + '</span><span class="sgc ph">' + esc(T.sugShort) + '</span>'
-          : '') +
-      '</div>';
-    }).join('');
-
-    var sugId = sug ? sug.id : '';
-    var table =
-      secHTML('cost', T.costs) +
-      rowHTML('premium', plans, sugId) + rowHTML('giveback', plans, sugId) + rowHTML('moop', plans, sugId) + rowHTML('mded', plans, sugId) +
-      secHTML('visits', T.doctor) +
-      rowHTML('pcp', plans, sugId) + rowHTML('spec', plans, sugId) + callRow('visits', T.docCall) +
-      secHTML('hosp', T.hosp) +
-      rowHTML('hosp', plans, sugId) + rowHTML('er', plans, sugId) + rowHTML('amb', plans, sugId) + rowHTML('wwe', plans, sugId) +
-      secHTML('drug', T.drugs) +
-      rowHTML('ded', plans, sugId) + rowHTML('tiers', plans, sugId) + callRow('drug', T.rxCall) +
-      secHTML('star', T.extras) +
-      rowHTML('dental', plans, sugId) + rowHTML('vision', plans, sugId) + rowHTML('hearing', plans, sugId) +
-      rowHTML('otc', plans, sugId) + rowHTML('trans', plans, sugId);
-
-    var sugLine = sug
-      ? '<div class="pick2"><div><b class="sgt">' + esc(T.sug) + ': ' + esc(sug.name) + '.</b> ' +
-        esc([sug.lead, sug.why].filter(Boolean).join(' ')) + '</div></div>'
-      : '';
+    var n = (d.names || []).length || IDS.length;
+    var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES', {day:'numeric', month:'short', year:'numeric'});
+    var siteURL = 'https://beneficiosmedicare.com/' + (EN ? 'en' : '');
+    var photo = IMGBASE + esc(A.photo);
+    document.title = n + ' ' + (EN ? 'Medicare options for 2027' : 'opciones de Medicare 2027') + ' · ZIP ' + ZIP + ' | Beneficios Medicare';
 
     document.getElementById('out').innerHTML =
       '<div class="sheet">' +
-        '<div class="hdr2">' +
-          '<div class="logo2"><a href="/" aria-label="Inicio de BeneficiosMedicare.com" ' +
-            'style="display:inline-block;text-decoration:none">' + LOGO + '</a></div><div class="sep2"></div>' +
-          '<div class="who2" data-agent="' + esc(A.key) + '"><img src="' + IMGBASE + esc(A.photo) + '" alt="' + esc(A.name) + '" width="46" height="46">' +
-            '<div><div class="lab2">' + esc(adv) + '</div><div class="nm2">' + esc(A.name) + '</div>' +
-            '<div class="em2"><a href="mailto:' + esc(A.email.toLowerCase()) + '" style="color:inherit;text-decoration:none">' + esc(A.email) + '</a></div></div></div>' +
-          '<div class="sep2"></div>' +
-          '<div class="call2"><div class="lab2">' + esc(T.call) + '</div>' +
-            '<div class="ph2"><a href="' + TELH + '" style="color:inherit;text-decoration:none">' + TEL + '</a></div></div>' +
+        '<div class="card" data-agent="' + esc(A.key) + '">' +
+          '<div class="logo"><a href="' + siteURL + '" target="_blank" rel="noopener" aria-label="BeneficiosMedicare.com">' + LOGO + '</a></div>' +
+          '<div class="agent"><img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="88" height="88">' +
+            '<div><div class="eyebrow">' + esc(adv) + '</div><div class="nm">' + esc(A.name) + '</div>' +
+            '<div class="role">' + esc(T.role) + '</div></div></div>' +
         '</div>' +
-        '<div class="band2"><h1>' + n + ' ' + esc(T.title) + ' <em>· ZIP ' + where + '</em></h1>' +
-          '<div class="dl"><span class="gold">' + T.before + '</span>' +
-            '<span class="plain">' + esc(T.start) + '</span></div></div>' +
-        sugLine +
-        '<div class="grid" style="--n:' + n + '">' + cols + table + '</div>' +
-        '<div class="cta2"><div class="c2t">' + esc(T.q) + '</div>' +
-          '<div class="c2p">' + esc(T.cw) + '<b>' + TEL + '</b></div>' +
-          '<div class="c2w">BeneficiosMedicare.com</div></div>' +
-        '<p class="disc">' + esc(T.disc) + ' ' + esc(T.sent) + esc(when) + '.</p>' +
+        '<div class="band"><h1><span class="nw">' + n + ' ' + esc(T.opts) + '</span> <span class="z nw">· ZIP ' + esc(ZIP) + '</span></h1>' +
+          '<div class="chiprow"><span class="chip">' + T.before + '</span></div></div>' +
+        '<div class="cmpw" id="cmpA"></div>' +
+        '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +
+          '<img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="72" height="72">' +
+          '<div><div class="q">' + esc(T.q) + '</div><div class="nm">' + esc(A.name) + '</div>' +
+          '<a class="lnk t44" data-cta="shared_call" href="' + esc(mailH(A)) + '">' + esc(A.email).replace('@', '@<wbr>') + '</a>' +
+          '<div class="sig">' + esc(T.cw) + '<a data-cta="shared_call" href="' + telH(A) + '">' + tel(A) + '</a><br>' +
+            'WhatsApp: <a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">wa.me/' + A.digits + '</a></div>' +
+          '</div></div></div>' +
+        '<div class="cmpw" id="cmpB"></div>' +
+        '<p class="disc">' + discHTML() + ' ' + esc(T.sent) + esc(when) + '.</p>' +
       '</div>' +
-      '<div class="fix"><a class="l" href="' + TELH + '">' + esc(T.callb) + '</a>' +
-        '<a class="w" href="https://wa.me/' + A.digits + '" target="_blank" rel="noopener">WhatsApp</a></div>';
+      '<nav class="bar" aria-label="' + (EN ? 'Contact' : 'Contacto') + '">' +
+        '<a class="s" data-cta="shared_call" href="' + telH(A) + '">' + esc(T.callb) + '</a>' +
+        '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>';
 
-    placeSugBox();
-    if (window.gtag) window.gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es'});
-    if (PRINT) setTimeout(function(){ window.print(); }, 600);
+    part(document.getElementById('cmpA'), d.css, d.html.top + d.html.table);
+    part(document.getElementById('cmpB'), d.css, d.html.fine);
+    if (typeof gtag === 'function') gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, hoy:HOY?1:0});
+    if (PRINT) setTimeout(function(){ window.print(); }, 800);
   }
 
-  // The bottom of the outline belongs to whichever value row happens to be last.
-  function placeSugBox(){
-    var cells = document.querySelectorAll('.v.sug');
-    if (cells.length) cells[cells.length - 1].classList.add('vlast');
-  }
+  /* T-105 (2): every tap on the agent's phone, WhatsApp or email, here or inside the comparison (a shadow
+     root, so the tap is read from the event's own path), goes to GA4 with placement shared_call. Only the
+     channel and where on the page; never the number, the ZIP or a plan. */
+  document.addEventListener('click', function(e){
+    if (typeof gtag !== 'function') return;
+    var path = e.composedPath ? e.composedPath() : [e.target], a = null;
+    for (var i = 0; i < path.length && !a; i++) if (path[i] && path[i].tagName === 'A' && path[i].getAttribute('href')) a = path[i];
+    if (!a) return;
+    var h = a.getAttribute('href') || '';
+    var n = /^tel:\+18006334227/.test(h) ? '' : /^tel:/i.test(h) ? 'phone_click' : /wa\.me/i.test(h) ? 'whatsapp_click' : /^mailto:/i.test(h) ? 'email_click' : '';
+    if (!n) return;
+    var spot = a.closest('.bar') ? 'bar' : a.closest('.box') ? 'box' : a.closest('.err') ? 'error' : 'suggestion';
+    gtag('event', n, {site:'bm', lang:EN?'en':'es', page:location.pathname, placement:'shared_call', spot:spot});
+  }, true);
 
   var IMGBASE = (location.hostname.indexOf('medicare-california') > -1) ? (WIDGET_HOST + '/') : '/';
   /* T-102: the real logo, the exact markup of the site header (index.html), not a typed stand-in. */
