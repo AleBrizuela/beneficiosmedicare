@@ -497,6 +497,8 @@ body.host-cbar .cbar{display:none!important}
    and the sheet are placed absolutely over the part of the frame that is actually on screen. */
 #shwrap.vp .shbg{position:absolute;inset:auto 0 auto 0}
 #shwrap.vp .sheet{position:absolute;bottom:auto}
+/* B-012: on a computer the sheet sits in the middle of the screen, so it is a card, not a tray */
+#shwrap.vp.mid .sheet{border-radius:20px}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
 .sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
@@ -3435,7 +3437,7 @@ function openShare(){
   askViewport();
 }
 function closeShare(){
-  const el=document.getElementById('shwrap'); if(el) el.remove();
+  const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
   try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
 }
 /* T-098. In the host page's iframe the sheet cannot find the screen on its own: there is no
@@ -3448,14 +3450,36 @@ function askViewport(){
   try{ window.parent.postMessage({type:'widget-want-viewport',on:true},'*'); }catch(e){}
   placeSheet();
 }
+/* B-012 (AB 2026-10-17, desktop): the frame is exactly as tall as the widget and the sheet is
+   not part of the widget, so any of the sheet that falls below the frame's bottom edge is cut
+   off by the iframe. On a phone the frame runs past the bottom of the screen and that never
+   showed; on a computer the Compartir button is the widget's own, a few px above the frame's
+   end, and once the page is scrolled past it the bottom of the screen is BELOW the frame: the
+   sheet was drawn there, clipped away, and only the dimming showed. So the sheet is placed in
+   the part of the frame that is actually on screen -- at its bottom on a phone, as before, in
+   its middle on a computer (the page says which, by its own 769px line) -- and if that part is
+   too short to hold it, the page is asked to scroll just enough. Until then nothing is drawn,
+   dimming included; a page too old to scroll for us gets 400ms, then the best placement. */
 function placeSheet(){
   const el=document.getElementById('shwrap'); if(!el) return;
   if(window.self===window.top){ el.classList.remove('vp'); el.style.visibility=''; return; }
   if(!_hostVP) return;                    // still waiting for the page; stay hidden
   const sheet=el.querySelector('.sheet'), bg=el.querySelector('.shbg');
-  el.classList.add('vp');
-  bg.style.top=_hostVP.top+'px'; bg.style.height=_hostVP.height+'px';
-  sheet.style.top=Math.max(_hostVP.top,_hostVP.top+_hostVP.height-sheet.offsetHeight)+'px';
+  el.classList.add('vp'); el.classList.toggle('mid',!!_hostVP.desk);
+  const h=sheet.offsetHeight, fh=window.innerHeight;          // fh: the frame's own height
+  const vt=Math.max(0,_hostVP.top), vb=Math.min(fh,_hostVP.top+_hostVP.height);
+  let top=_hostVP.desk?vt+Math.round((vb-vt-h)/2):vb-h;
+  top=Math.max(0,Math.min(Math.max(vt,top),fh-h));
+  bg.style.top=vt+'px'; bg.style.height=Math.max(0,vb-vt)+'px';
+  sheet.style.top=top+'px';
+  const fits=top>=vt&&top+h<=vb;
+  if(!fits&&!el._gaveUp&&h<=_hostVP.height){   // a sheet taller than the screen can never fit: show it now
+    if(!el._asked){ el._asked=1;
+      try{ window.parent.postMessage({type:'widget-reveal',top:top,height:h},'*'); }catch(e){}
+      el._t=setTimeout(function(){ el._gaveUp=1; placeSheet(); },400); }
+    return;                               // stay hidden while the page scrolls
+  }
+  clearTimeout(el._t);
   el.style.visibility='';
 }
 function shareSend(k){
