@@ -191,13 +191,36 @@ body.q3 .widget-body{padding:10px 14px 16px}
    what is filtering the list is visible and one tap undoes it, with nothing to open first. The order
    and the type filters -- the ones almost nobody touches -- sit behind one link at the end of the row.
    Measurements are the mock's: chip 14px/600 in a 1.5px #D4DEE8 pill, 6px 9px, 40px tall. */
-.fx{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 2px}
-.fc{display:inline-flex;align-items:center;gap:5px;font:inherit;border:1.5px solid #D4DEE8;border-radius:999px;padding:6px 9px;font-size:14px;white-space:nowrap;font-weight:600;color:#1A202C;background:#fff;min-height:40px;cursor:pointer}
+/* T-101 (AB 2026-10-17, mock v9 section 4): seven chips, shorter words, in THREE fixed rows of
+   2 + 3 + 2 -- each row is its own flex line so the grouping holds in both languages instead of
+   depending on how wide the English words happen to be. 13.5px, 38px tall, 5px apart. */
+.fx{display:flex;flex-direction:column;gap:5px;margin:8px 0 4px}
+.fxr{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.fc{display:inline-flex;align-items:center;gap:4px;font:inherit;border:1.5px solid #D4DEE8;border-radius:999px;padding:0 7px;font-size:13.5px;white-space:nowrap;font-weight:600;color:#1A202C;background:#fff;height:38px;min-height:38px;cursor:pointer}
 .fc i{font-style:normal;font-weight:400;color:#4A5568;font-size:13.5px}
 .fc.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
 .fc.on i{color:#E0F2F1}
 .fc.on:before{content:"\2713";font-weight:700}
-.fxo{display:flex;margin:2px 0 0}
+/* The mock's phone gives the chips 328px; the real page does not. At 390 the home page puts the
+   finder in a 354px frame (BM) or 366px (MC), and the frame's 18px + the card's 14px padding left
+   290px -- the middle row ("✓ Medi-Cal" on, the "Tengo Medi-Cal" answer) needs 328. So on the plan
+   list only, at phone width, the space around the cards gives way instead of the chips: 334px in
+   BM's frame, 346 in MC's, 6px to spare at the widest row. */
+@media(max-width:400px){
+  body.res .rh{padding-left:7px;padding-right:7px}
+  body.in-iframe.res .widget-body{padding-left:3px;padding-right:3px}
+}
+.fc.fcx:before{content:none}
+.fc.fcx b{font-weight:700;font-size:17px;line-height:1;margin-left:2px}
+.fxo{display:flex;flex-wrap:wrap;align-items:center;gap:0 16px;margin:2px 0 0}
+.rtop{display:flex;align-items:center;gap:12px;margin:0 0 4px}
+.rtop .btn-back{margin-bottom:0;flex:0 0 auto}
+.rtop .hl{margin:0}
+.rh .hl .zipb{color:var(--cbar-brand)}
+.ordp .orow.crow{display:flex;justify-content:space-between;gap:12px}
+.ordp .orow.crow i{font-style:normal;font-weight:400;color:#4A5568}
+.sug.ask{padding:10px 14px}
+.sug.ask .conf{border-top:0;margin-top:0;padding-top:0}
 .ord{font:inherit;background:none;border:0;color:var(--cbar-brand);font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer;min-height:40px;padding:0 2px}
 .ordp{margin:10px 0 2px;border:1.5px solid #D4DEE8;border-radius:12px;background:#fff;padding:6px 0}
 .ordp[hidden]{display:none}
@@ -334,6 +357,9 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .pc-keys.k2 .v.word{font-size:13.5px;font-weight:600}
 .pc-key .l{font-size:11.5px;font-weight:600;color:#66727c;margin-top:4px;line-height:1.25;hyphens:none;overflow-wrap:break-word}
 .pc-key.zero .v,.pc-visit .v.zero,.pc .zero,.cmp .zero{color:var(--sage-dark)}
+/* T-101: the first tile is the figure the list is ordered by, and it is in teal so the order reads
+   without a sentence. A missing figure ("Sin información") or a word ("Ninguno") keeps its grey. */
+.pc-keys:not(.k2) .pc-key:first-child .v:not(.na):not(.word){color:var(--cbar-brand)}
 @media(max-width:359px){
   .pc-key{padding:10px 3px 11px}
   .pc-key .v{font-size:18px}
@@ -1330,7 +1356,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    behaves exactly as it did before this ticket. */
 let _hPush=0, _popping=false, _afterBack=null, _onDetail=false;
 function go(fn){
-  document.body.classList.remove('q3');
+  document.body.classList.remove('q3','res');
   hist.push(fn);_plansView=false;_planScreen=false;_act=null;_onDetail=false;fn();viewMsg();cbarReport();
   // the first screen gets no entry of its own: Back from there leaves the page, as it should
   if(hist.length>1){ try{ history.pushState({bmw:hist.length},''); _hPush++; }catch(e){} }
@@ -1343,7 +1369,7 @@ function back(){
   _doBack();
 }
 function _doBack(){
-  document.body.classList.remove('q3');
+  document.body.classList.remove('q3','res');
   // T-075 + T-093: leaving a plan screen lands on the card it was opened from, whether the visitor
   // tapped "‹ Volver a los planes" or pressed the browser's own Back button.
   if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
@@ -2233,16 +2259,18 @@ function kTile(v,l,o){
 }
 // A figure, or "Sin información" when CMS published none for this plan. Never blank.
 function kNum(v,l){return v==null?kTile(noInfo(),l,'na'):kTile(v,l,v==='$0'?'zero':'');}
+/* T-101 (2): the FIRST tile is the figure the list is ordered by, in teal (CSS above). Ordered by
+   drug deductible ("Mis medicamentos") -> the deductible comes first; every other order -> the
+   monthly premium, as before ("$0 de prima" filters on it, and it is the default order). */
 function keyStrip(p){
   const isMA=p.cat!=='PDP', drug=p.drug==='Included';
-  return `<div class="pc-keys">`+
-    kNum(p.premium==null?null:premUsd(p.premium),KL('Monthly','premium','Prima','mensual'))+
-    // a drug-only plan has no medical out-of-pocket maximum: CMS publishes none, so neither do we
-    (isMA?kNum(p.moop==null?null:usd(p.moop),KL('Max out\u2011of\u2011','pocket','Máximo de','bolsillo'))
-         :kTile('—',KL('Max out\u2011of\u2011','pocket','Máximo de','bolsillo'),'word'))+
-    (drug?kNum(p.ded==null?null:usd(p.ded),KL('Drug','deductible','Deducible','medicamentos'))
-         :kTile(L('None','Ninguno'),KL('Drug','deductible','Deducible','medicamentos'),'word'))+
-  `</div>`;
+  const prem=kNum(p.premium==null?null:premUsd(p.premium),KL('Monthly','premium','Prima','mensual'));
+  // a drug-only plan has no medical out-of-pocket maximum: CMS publishes none, so neither do we
+  const moop=isMA?kNum(p.moop==null?null:usd(p.moop),KL('Max out‑of‑','pocket','Máximo de','bolsillo'))
+                 :kTile('—',KL('Max out‑of‑','pocket','Máximo de','bolsillo'),'word');
+  const ded=drug?kNum(p.ded==null?null:usd(p.ded),KL('Drug','deductible','Deducible','medicamentos'))
+                :kTile(L('None','Ninguno'),KL('Drug','deductible','Deducible','medicamentos'),'word');
+  return `<div class="pc-keys">`+(_sortMode==='ded'?ded+prem+moop:prem+moop+ded)+`</div>`;
 }
 /* T-089 (AB 2026-10-15): the Comparar box is on the plan screen too, in the same place in the same
    header, so a plan can be added to the comparison where it is being read instead of going back to
@@ -2439,7 +2467,7 @@ function typeSet(id,p){
   const pl=PILLS.find(x=>x.id===id)||PILLS[0];
   return pl.f(p);
 }
-function extrasOK(p){return (!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p));}
+function extrasOK(p){return (!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&carOK(p);}
 function filterByType(plans){return plans.filter(p=>typeSet(_typeFilter,p)&&extrasOK(p));}
 function setType(v){
   wEvt('filter_pill',{pill:v});
@@ -2449,7 +2477,8 @@ function setType(v){
   // rather than showing "0 planes": the panel said how many there are, so that is what appears.
   if(!filterByType(PLANS).length&&_zeroOnly){_zeroOnly=false;}
   if(!filterByType(PLANS).length&&_drugOnly){_drugOnly=false;}
-  _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
+  if(!filterByType(PLANS).length&&_carrier){_carrier='';}
+  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 // T-028 + T-088: the answer to "¿Qué es lo más importante para usted?" sets the order and the
 // filters ONCE per ZIP, the first time the plans are shown. After that the visitor's own pills and
@@ -2458,10 +2487,10 @@ function setType(v){
 // silently: the line under the sort bar names each filter and undoes it in one tap, and if our own
 // pre-filter would leave an empty list we drop it and show everything.
 let _priAuto=null;
-const PRI_SORT={doctors:'doctors',cost:'moop',drugs:'ded',benefits:'dvh',medicaid:'moop'};
+const PRI_SORT={doctors:'doctors',cost:'moop',drugs:'ded',benefits:'dvh',medicaid:'mcd'};
 function applyPriority(){
   if(!PLANS.length||_priAuto===D.zip) return;
-  _priAuto=D.zip;
+  _priAuto=D.zip; _carrier=''; _carOpen=false;   // T-101: a new ZIP or a new answer starts with every carrier
   const pr=Array.isArray(D.priorities)?D.priorities:[];
   if(!pr.length) return;
   if(pr.indexOf('cost')>=0&&PLANS.some(p=>inTodos(p)&&p.premium===0)) _zeroOnly=true;
@@ -2489,6 +2518,9 @@ function sortModes(){
     {id:'doctors', en:'Doctor network: PPO first', es:'Red de médicos: PPO primero',       sen:'PPO first',            ses:'PPO primero'},
     {id:'dvh',     en:'Dental, vision and hearing first', es:'Dental, vista y audición primero', sen:'Dental, vision, hearing', ses:'Dental, vista, audición'},
   ];
+  // T-101: the order "Tengo Medi-Cal" sets (mock v9 section 5). Offered only to the visitor who gave
+  // that answer, so the list never shows an order nobody chose without a name in the panel.
+  if(saidMedicaid()||_sortMode==='mcd') m.push({id:'mcd', en:`For ${mcd()}: CMS rating first`, es:`Para ${mcd()}: calificación CMS primero`, sen:'CMS rating first', ses:'Calificación primero'});
   // T-053: sorting BY rating needs AB's yes of its own ("re-enable the Calificacion sort only after
   // AB's yes"), and the 2027 ratings landing would otherwise switch it back on by itself. Flip this to
   // true to restore it; sortPlans already handles mode 'star'.
@@ -2498,7 +2530,7 @@ function sortModes(){
 }
 /* T-096 round 4 c (AB: "can the order drawer HIDE after selected"): one tap applies the choice AND
    closes the drawer, and the list goes back to the top so the new first plan is what they see. */
-function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;_foOpen=false;flowResults();toTop();}
+function setSort(v){wEvt('sort_change',{sort:v});_sortMode=v;_shown=PAGE;_foOpen=false;_carOpen=false;flowResults();toTop();}
 function toTop(){
   try{
     if(window.self!==window.top){window.parent.postMessage({type:'widget-scrolltop'},'*');return;}
@@ -2519,16 +2551,38 @@ function hasDent(p){return !!(p.dent&&(p.dent.prev||p.dent.comp));}
 function hasVis(p){return !!(p.vis&&(p.vis.exam||p.vis.wear));}
 function hasHear(p){return !!(p.hear&&(p.hear.exam||p.hear.aids));}
 function _dvh3(p){return (hasDent(p)&&hasVis(p)&&hasHear(p))?0:1;}
+/* T-101 (5): the tie-breaks are mock v9 section 5's rule table, column "Ordena por (en este orden)",
+   exactly as DECIDE/now/2026-10-17_logica-y-plan-de-hoy/2026-10-17_logic-test.py implements it
+   (the ticket's test): a row's own keys, then the plan name. Nothing is blended into a score: each
+   key decides only when every key before it is tied. Unknown values (null) sort last, never as $0.
+   NOT applied: the note under the table ("Empates en todas las filas: estrellas, prima, máximo,
+   nombre"). The script and the mock's own PROPUESTA frame both break a full tie by name -- in 90230
+   "Mis medicamentos" that puts Alignment 008 (3.5 stars) second, as the frame shows; the note would
+   put Clever Care Longevity (4.5) there. If AB wants the note: stars, premium, max before each nm.
+     moop    ($0 de prima)       max out-of-pocket, drug deductible, stars
+     ded     (Mis medicamentos)  drug deductible, tier-1 copay, premium, max out-of-pocket
+     mcd     (Tengo Medi-Cal)    stars, yearly dental allowance (highest), max out-of-pocket
+     doctors (Mis médicos)       PPO -> HMO-POS -> HMO, max out-of-pocket, stars
+     dvh     (Dental, vista...)  covers all three, dental (highest), hearing aids (highest), premium
+     premium (Sin preferencia)   premium, max out-of-pocket -- the list as it was */
+function _t1(p){
+  const t=(p.tiers||[])[0]; if(!t||t.v==null) return null;
+  const v=String(t.v); if(/%/.test(v)) return null;          // coinsurance is not a copay figure
+  const n=parseFloat(v.replace(/[$,\s]/g,'')); return isNaN(n)?null:n;
+}
+function _hearAmt(p){const a=p.hear&&p.hear.amax;return (a&&a.amt!=null)?a.amt:null;}
+const _neg=x=>x==null?null:-x;
 function sortPlans(plans, mode){
   const s=[...plans], nm=(a,b)=>String(a.name).localeCompare(String(b.name));
   // Medigap entries carry placeholder 0s for MOOP/deductible: they have neither, so they sort as unknown.
   const dd=p=>p._medigap||p.drug!=='Included'?null:p.ded, mo=p=>p._medigap||p.cat==='PDP'?null:p.moop;
-  if(mode==='moop')      s.sort((a,b)=>_asc(mo(a),mo(b))||_asc(a.premium,b.premium)||nm(a,b));
-  else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
+  const st=p=>_neg(p.rating);
+  if(mode==='moop')      s.sort((a,b)=>_asc(mo(a),mo(b))||_asc(dd(a),dd(b))||_asc(st(a),st(b))||nm(a,b));
+  else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(_t1(a),_t1(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
+  else if(mode==='mcd')  s.sort((a,b)=>_asc(st(a),st(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(mo(a),mo(b))||nm(a,b));
   else if(mode==='star') s.sort((a,b)=>_asc(a.rating==null?null:-a.rating,b.rating==null?null:-b.rating)||_asc(a.premium,b.premium)||nm(a,b));
-  else if(mode==='doctors') s.sort((a,b)=>_asc(_NETRANK(a),_NETRANK(b))||_asc(a.premium,b.premium)||nm(a,b));
-  else if(mode==='dvh')  s.sort((a,b)=>{const x=_dentAmt(a),y=_dentAmt(b);
-    return _asc(_dvh3(a),_dvh3(b))||_asc(x==null?null:-x,y==null?null:-y)||_asc(a.premium,b.premium)||nm(a,b);});
+  else if(mode==='doctors') s.sort((a,b)=>_asc(_NETRANK(a),_NETRANK(b))||_asc(mo(a),mo(b))||_asc(st(a),st(b))||nm(a,b));
+  else if(mode==='dvh')  s.sort((a,b)=>_asc(_dvh3(a),_dvh3(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(_neg(_hearAmt(a)),_neg(_hearAmt(b)))||_asc(a.premium,b.premium)||nm(a,b));
   else                   s.sort((a,b)=>_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   return s;
 }
@@ -2550,16 +2604,20 @@ const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9
 // already showed. The count in the title is the list AFTER filters, so it always matches what is
 // under it. The order is still the visitor's to see and change: "Filtros y orden" opens the type
 // pills and the sort list in one panel, with the order that is on ticked.
+/* T-101 (AB 2026-10-17, mock v9 section 4): the title sits beside Volver and says where --
+   "65 planes en 90230", the ZIP in teal -- and the year is gone from it, because the band above
+   the finder already says 2027. The county and "Cambiar" are the line underneath. */
 function resultsHead(list){
-  const n=list.length, y=planYear(), cty=D.county?esc(D.county):'';
+  const n=list.length, cty=D.county?esc(D.county):'';
   const mg=_typeFilter==='supp';
+  const zb=`<span class="zipb">${esc(D.zip||'')}</span>`;
   const title=mg?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
-                :L(`${n} plan${n===1?'':'s'} for ${y}`,`${n} plan${n===1?'':'es'} para ${y}`);
+                :L(`${n} plan${n===1?'':'s'} in&nbsp;${zb}`,`${n} plan${n===1?'':'es'} en&nbsp;${zb}`);
   return `<div class="rh">
-    <p class="hl">${title}</p>
+    <div class="rtop">${bk()}<p class="hl">${title}</p></div>
     <div class="zl" id="zl">${PIN}
-      <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">\u00b7 ${cty}</span>`:''}
-      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">\u270E ${L('Change','Cambiar')}</button>
+      ${cty?`<span class="zcty">${cty}</span>`:''}
+      <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">${L('Change','Cambiar')}</button>
       <form class="zf" onsubmit="event.preventDefault();zipChange()">
         <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
         <button type="submit">${L('See','Ver')}</button>
@@ -2568,6 +2626,7 @@ function resultsHead(list){
     ${dualLine()}
     ${chipRow()}
     ${foPanel()}
+    ${carPanel()}
   </div>`;
 }
 /* T-096 round 5 b (AB 2026-10-16 00:50). The three "Solo" answers from the question screen are
@@ -2582,37 +2641,87 @@ function chipDefs(){
   // The two that sit ON TOP of the type (both can be on at once), then the types. The type counts
   // follow the old panel's convention -- counted WITHOUT the other chips -- so a type never reads
   // "0" and offers a filter that leads nowhere; chipTap drops a chip that would empty the list.
-  const ty=id=>{
+  // T-101 (AB 2026-10-17): the labels are the short ones from the mock, never "MA" or "MA-PD";
+  // "Con / Solo" says what each one is. `row` is the line the chip sits on: 2 + 3 + 2.
+  const ty=(id,lb,row)=>{
     const x=PILLS.find(q=>q.id===id);
-    return {k:id, lb:(typeof x[lang]==='function'?x[lang]():x[lang]),
+    return {k:id, lb:lb||(typeof x[lang]==='function'?x[lang]():x[lang]), row:row,
             on:_typeFilter===id, type:true,
             any:PLANS.filter(x.f).length>0, n:PLANS.filter(p=>typeSet(id,p)).length};
   };
   return [
-    {k:'zero', lb:L('$0 premium','$0 de prima'), on:_zeroOnly,
-     any:PLANS.some(p=>inTodos(p)&&p.premium===0),
-     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&p.premium===0).length},
-    {k:'drug', lb:L('With drug coverage','Con medicamentos'), on:_drugOnly,
+    {k:'drug', lb:L('With drugs','Con medicamentos'), on:_drugOnly, row:0,
      any:PLANS.some(hasDrug),
-     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&hasDrug(p)).length},
-    {k:'dsnp', lb:L('With ','Con ')+mcd(), on:_typeFilter==='dsnp', type:true,
+     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length},
+    {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, row:0,
+     any:PLANS.some(p=>inTodos(p)&&p.premium===0),
+     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length},
+    ty('pdp',L('Drugs only','Solo medicamentos'),1),
+    {k:'dsnp', lb:mcd(), on:_typeFilter==='dsnp', type:true, row:1,
      any:PLANS.some(isDual),
      n:PLANS.filter(p=>isDual(p)&&extrasOK(p)).length},
-    ty('ppo'), ty('hmo'), ty('snp'), ty('supp'), ty('pdp')
+    ty('ppo','',1), ty('hmo','',2), ty('snp',L('Special needs','Necesidades especiales'),2)
   ];
 }
 function chipRow(){
   const cs=chipDefs().filter(c=>c.any);
-  return `<div class="fx">`+cs.map(c=>
+  const rows=[0,1,2].map(r=>cs.filter(c=>c.row===r)).filter(r=>r.length);
+  const cars=carrierList();
+  // "Aseguradora" only where choosing one changes something: two or more carriers in this list.
+  const car=_carrier
+    ? `<button class="fc on fcx" onclick="carrierClear()" aria-label="${L('Remove the filter: ','Quitar el filtro: ')}${esc(carrierShort(_carrier))}">${esc(carrierShort(_carrier))} <b aria-hidden="true">\u00D7</b></button>`
+    : (cars.length>1?`<button class="ord ordc" aria-expanded="${_carOpen}" aria-controls="carpan" onclick="toggleCar()">${L('Carrier','Aseguradora')} ${_carOpen?'\u25B4':'\u25BE'}</button>`:'');
+  return `<div class="fx">`+rows.map(r=>`<div class="fxr">`+r.map(c=>
       `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${c.lb} <i aria-hidden="true">${c.n}</i></button>`
-    ).join('')+`</div>`+
-    `<div class="fxo"><button class="ord" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button></div>`;
+    ).join('')+`</div>`).join('')+`</div>`+
+    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${car}</div>`;
+}
+/* T-101 (4) "Aseguradora \u25BE" (AB 2026-10-17, mock v9 section 4): for the visitor who thinks by brand.
+   One panel lists the carriers in the list as it stands (every other filter applied, this one not),
+   alphabetically -- never by size or by whom we represent -- each with the number of plans one tap
+   will leave. The choice then shows as a chip with an x that undoes it in one tap. */
+let _carrier='', _carOpen=false, _carList=[];
+function carOK(p){return !_carrier||p.carrier===_carrier;}
+function carrierList(){
+  const m=new Map();
+  PLANS.forEach(p=>{if(typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
+  _carList=[...m.entries()].map(([c,n])=>({c,n,lb:carrierShort(c)}))
+    .sort((a,b)=>a.lb.localeCompare(b.lb,lang)||a.c.localeCompare(b.c));
+  // two carriers that shorten to the same words keep their full names
+  _carList.forEach(x=>{if(_carList.some(y=>y!==x&&y.lb===x.lb))x.lb=carrierName(x.c);});
+  return _carList;
+}
+function carPanel(){
+  const cs=carrierList();
+  return `<div class="ordp" id="carpan"${_carOpen?'':' hidden'}>
+    ${cs.map((x,i)=>`<button class="orow crow" onclick="carrierPick(${i})"><span>${esc(x.lb)}</span><i>${x.n}</i></button>`).join('')}
+  </div>`;
+}
+function toggleCar(){
+  _carOpen=!_carOpen; if(_carOpen&&_foOpen) toggleFO();
+  wEvt('carrier_panel',{on:_carOpen});
+  const p=document.getElementById('carpan'), b=document.querySelector('.ordc');
+  if(p) p.hidden=!_carOpen;
+  if(b){b.setAttribute('aria-expanded',_carOpen);b.innerHTML=L('Carrier','Aseguradora')+' '+(_carOpen?'\u25B4':'\u25BE');}
+}
+function carrierPick(i){
+  const x=_carList[i]; if(!x) return;
+  _carrier=x.c;
+  wEvt('filter_use',{filter:'carrier',on:true});
+  wEvt('filter_carrier',{carrier:x.lb,plans:x.n});
+  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
+}
+function carrierClear(){
+  _carrier='';
+  wEvt('filter_use',{filter:'carrier',on:false});
+  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 /* One tap toggles. "Con <Medi-Cal>" is the dsnp TYPE, which is single-select, so turning it off
    goes back to Todos -- the same thing the old pill did, reached in one tap instead of three. */
 function chipTap(k){
   const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:_typeFilter===k;
   wEvt('filter_chip',{chip:k,on:!was});
+  wEvt('filter_use',{filter:k,on:!was});
   if(k==='zero') _zeroOnly=!_zeroOnly;
   else if(k==='drug') _drugOnly=!_drugOnly;
   // the types are single-select: tapping the one that is on goes back to every plan
@@ -2621,7 +2730,9 @@ function chipTap(k){
   // toggle rather than showing "0 planes" -- the chip said how many there are, so that is what appears
   if(!filterByType(PLANS).length&&_zeroOnly) _zeroOnly=false;
   if(!filterByType(PLANS).length&&_drugOnly) _drugOnly=false;
-  _shown=PAGE;selPlans=[];_foOpen=false;flowResults();toTop();
+  // a carrier with no plans of the type just chosen steps aside the same way
+  if(!filterByType(PLANS).length&&_carrier) _carrier='';
+  _shown=PAGE;selPlans=[];_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 /* T-096 round 5 c: one panel, the order first because it is what people change, then the five type
    filters. A tap applies AND closes (round 4 c), so the list is never hidden behind an open panel.
@@ -2634,10 +2745,10 @@ function foPanel(){
   </div>`;
 }
 function toggleFO(){
-  _foOpen=!_foOpen;
+  _foOpen=!_foOpen; if(_foOpen&&_carOpen) toggleCar();
   wEvt('filters_sort_panel',{on:_foOpen});
   const p=document.getElementById('fopan');
-  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ord');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort','Orden')+' '+(_foOpen?'\u25B4':'\u25BE');}}
+  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ordo');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort','Orden')+' '+(_foOpen?'\u25B4':'\u25BE');}}
 }
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
@@ -2666,7 +2777,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
+  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false; _carrier=''; _carOpen=false;
   delete D.plansSeen; delete D.represented;
   flowResults();
 }
@@ -2829,7 +2940,8 @@ async function flowResults(){
     return;
   }
   const noPlans=plans.length===0;
-  wb().innerHTML=`${bk()}
+  document.body.classList.add('res');   // T-101: the list's own phone spacing (CSS)
+  wb().innerHTML=`
     ${resultsHead(plans)}
     ${unlicensedNote()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#66727c;font-size:14px">${L('No plans of this type here. Choose another type above.','No hay planes de este tipo aquí. Elija otro tipo arriba.')}</div>`:''}
@@ -3250,13 +3362,17 @@ const _dd=p=>(p.drug!=='Included'||p.ded==null)?Infinity:p.ded;
 const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
 function suggestPlan(plans){
   if(plans.length<2) return null;
-  const by=(...fs)=>[...plans].sort((a,b)=>{for(const f of fs){const d=f(a)-f(b);if(d)return d;}return 0;})[0];
   const pr=D.priority||'';
+  // T-101 (6), mock v9 section 5 "Sin preferencia": with no answer there is nothing to suggest FROM,
+  // and "the best rating and the lowest cost" is the closest thing to a "recommended" badge. No card;
+  // the comparison asks for the two facts that would decide it instead (askLine).
+  if(!pr) return null;
+  const by=(...fs)=>[...plans].sort((a,b)=>{for(const f of fs){const d=f(a)-f(b);if(d)return d;}return 0;})[0];
   if(pr==='drugs')        return by(_dd,p=>-_st(p),_mo);
   if(pr==='benefits')     return by(p=>-_dent(p),p=>-_st(p),_mo);
   if(pr==='doctors')      return by(_NETRANK,p=>-_st(p),_mo);
   if(pr==='medicaid')     return by(p=>isDual(p)?0:1,p=>-_st(p),_mo);
-  return by(p=>-_st(p),p=>_mo(p)+_dd(p));      // $0 de prima, and Sin preferencia
+  return by(p=>-_st(p),p=>_mo(p)+_dd(p));      // $0 de prima
 }
 // Up to three things this plan does that NO other plan on the screen matches. Every one of them is
 // a figure the visitor can find in the table below; if there are none, the card says nothing extra.
@@ -3303,6 +3419,15 @@ function sugLine(p,plans){
     default:
       return L('The best rating and the lowest cost.','La mejor calificación y el costo más bajo.');
   }
+}
+// T-101 (6): what stands where the suggestion card was, for a visitor who answered "Sin preferencia".
+// One line and the phone, in the suggestion card's own pattern (the same two icons, the same link).
+function askLine(){
+  const TEL='(310) 597\u20119142';
+  return `<div class="sug ask">
+    <div class="conf"><span class="ci2"><span><svg viewBox="0 0 24 24">${PIC.visits}</s`+`vg></span><span><svg viewBox="0 0 24 24">${PIC.drug}</s`+`vg></span></span>
+      <span>${L('Which one is right for you? Tell me your doctors and medications.','\u00BFCu\u00E1l le conviene? D\u00EDgame sus m\u00E9dicos y medicamentos.')} <a href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'compare_ask'})">${TEL}</a></span></div>
+  </div>`;
 }
 function sugCard(p,plans){
   const line=(_cmpFrom==='myplan'&&_mpCtx)?nbLast(mpLineFor(p)):sugLine(p,plans);   // T-099: section 5 row 1
@@ -3611,7 +3736,7 @@ function flowCompare(){
     <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>
     ${unlicensedNote()}
     <div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
-      ${sug?sugCard(sug,plans):''}
+      ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
       ${can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`}
     </div>
@@ -3931,7 +4056,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
