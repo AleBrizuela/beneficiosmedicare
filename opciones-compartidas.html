@@ -153,6 +153,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   var HOY = OKID(q.get('hoy') || '') ? q.get('hoy') : '';
   var PRINT = q.get('print') === '1';
   document.documentElement.lang = EN ? 'en' : 'es';
+  if (EN) { var ld = document.querySelector('.loading'); if (ld) ld.textContent = 'Loading your options…'; }
 
   var T = {
     opts:   EN ? 'options for 2027' : 'opciones 2027',
