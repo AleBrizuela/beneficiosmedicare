@@ -1488,7 +1488,13 @@ function _doBack(){
   // tapped "‹ Volver a los planes" or pressed the browser's own Back button.
   if(_onDetail&&!_afterBack) _afterBack=_scrollToCard;
   _onDetail=false;
-  hist.pop();_plansView=false;_planScreen=false;_act=null;hist[hist.length-1]();viewMsg();cbarReport();
+  hist.pop();_plansView=false;_planScreen=false;_act=null;
+  // T-104 (6) (AB 2026-10-18): Volver onto the question screen itself clears the list's filters,
+  // carrier, sort and ticks back to clean, same as picking a new answer; Volver onto anything else
+  // (the list, Compare, a plan screen) leaves them exactly as the visitor set them.
+  const _dest=hist[hist.length-1];
+  if(typeof resetListFilters==='function'&&(_dest===ft_priority||_dest===mv_priority)) resetListFilters('back');
+  _dest();viewMsg();cbarReport();
   // T-103 (2): back onto the "Mi plan de hoy" cards (from Comparar, a plan screen, the list or the search)
   // lands on the cards at the top of the widget, never on the page footer the taller screen left behind.
   // The search and the question before it are the same flow, so Volver onto them lands at the top too.
@@ -1717,8 +1723,19 @@ function pickPri(id){
   }
   D.priority=id; D.priorities=id?[id]:[];
   _priAuto=null;   // a new answer sets the order and the filters once more
+  resetListFilters('answer_change');
   wEvt('priority_pick',{priority:id||'none'});
   _priTimer=setTimeout(()=>{_priTimer=null;go(_cb.priority);}, id?400:0);
+}
+// T-104 (6) (AB 2026-10-18): picking a different answer, or Volver-ing back onto the question
+// screen, clears every chip, the carrier and the sort back to the answer's default, and drops the
+// ticked plans -- a visitor who leaves the list/compare loop for the question starts clean. Coming
+// back to the list from Compare or a plan screen is NOT this: nothing here runs on a plain back()
+// into the list, so those filters and ticks are left exactly as the visitor set them.
+function resetListFilters(reason){
+  _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _pdpOnly=false; _dsnpOnly=false; _snpOnly=false;
+  _carrier=''; _carOpen=false; _foOpen=false; _sortMode='premium'; selPlans=[];
+  wEvt('filter_reset',{reason:reason});
 }
 
 
@@ -2605,16 +2622,42 @@ const PILLS=[
 // can both be on at once. Both are off by default, so with no filter on, the list and every pill
 // count are exactly what they were before this ticket.
 let _zeroOnly=false, _drugOnly=false;
+// T-104 (7) (AB 2026-10-18): PPO and HMO stay ONE group (mutually exclusive, still via _typeFilter).
+// "Solo medicamentos", "Con Medi-Cal" and "Necesidades especiales" used to share that same single
+// slot, so picking one silently dropped another. They are now three independent toggles that
+// combine freely with each other and with PPO/HMO: with none on, the base set is "Todos" (as
+// today); with one or more on, the base set is the UNION of the categories that are on (so
+// "Solo medicamentos" + "Con Medi-Cal" shows Part-D-only plans together with dual-SNP plans, not
+// just one or the other), still narrowed by whichever of PPO/HMO is active.
+let _pdpOnly=false, _dsnpOnly=false, _snpOnly=false;
 function hasDrug(p){return !p._medigap&&p.drug==='Included';}
-// While "Medicamentos cubiertos" is on, "Todos" means every plan that covers drugs, so the
-// standalone Part D plans belong in it too (the ticket: MAPD + PDP). Off, "Todos" is unchanged.
-function typeSet(id,p){
-  if(id==='all'&&_drugOnly) return !p._medigap&&(inTodos(p)||isPDP(p));
-  const pl=PILLS.find(x=>x.id===id)||PILLS[0];
-  return pl.f(p);
+function categoryOK(p){
+  if(_pdpOnly||_dsnpOnly||_snpOnly) return (_pdpOnly&&isPDP(p))||(_dsnpOnly&&isDual(p))||(_snpOnly&&isSNP(p)&&!isDual(p));
+  // While "Medicamentos cubiertos" is on and no category chip is on, "Todos" means every plan that
+  // covers drugs, so the standalone Part D plans belong in it too (the ticket: MAPD + PDP).
+  return inTodos(p)||(_drugOnly&&isPDP(p));
+}
+function networkOK(p){
+  if(_typeFilter==='ppo') return /PPO/.test(p.type||'');
+  if(_typeFilter==='hmo') return /HMO/.test(p.type||'');
+  if(_typeFilter==='supp') return !!p._medigap;
+  return true;
 }
 function extrasOK(p){return (!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&carOK(p);}
-function filterByType(plans){return plans.filter(p=>typeSet(_typeFilter,p)&&extrasOK(p));}
+function filterByType(plans){return plans.filter(p=>categoryOK(p)&&networkOK(p)&&extrasOK(p));}
+// How many plans WOULD show if the chip named by `over` were also turned on, combined with every
+// OTHER filter exactly as it stands now -- the "what tapping this would leave" convention every
+// chip's count already followed for zero/drug; ppo/hmo/pdp/dsnp/snp now follow it too.
+function countWith(over){
+  const o=Object.assign({typeFilter:_typeFilter,pdp:_pdpOnly,dsnp:_dsnpOnly,snp:_snpOnly},over);
+  return PLANS.filter(p=>{
+    const cat=(o.pdp||o.dsnp||o.snp)
+      ? ((o.pdp&&isPDP(p))||(o.dsnp&&isDual(p))||(o.snp&&isSNP(p)&&!isDual(p)))
+      : (inTodos(p)||(_drugOnly&&isPDP(p)));
+    const net=o.typeFilter==='ppo'?/PPO/.test(p.type||''):o.typeFilter==='hmo'?/HMO/.test(p.type||''):o.typeFilter==='supp'?!!p._medigap:true;
+    return cat&&net&&extrasOK(p);
+  }).length;
+}
 function setType(v){
   wEvt('filter_pill',{pill:v});
   // "$0 prima" toggles (one tap on, one tap off). The others pick the type, as before.
@@ -2641,12 +2684,12 @@ function applyPriority(){
   if(!pr.length) return;
   if(pr.indexOf('cost')>=0&&PLANS.some(p=>inTodos(p)&&p.premium===0)) _zeroOnly=true;
   if(pr.indexOf('drugs')>=0&&PLANS.some(hasDrug)) _drugOnly=true;
-  if(pr.indexOf('medicaid')>=0&&PLANS.some(isDual)) _typeFilter='dsnp';
+  if(pr.indexOf('medicaid')>=0&&PLANS.some(isDual)) _dsnpOnly=true;
   if(!filterByType(PLANS).length){_zeroOnly=false;if(!filterByType(PLANS).length)_drugOnly=false;}
   const so=PRI_SORT[pr[0]];
   if(so) _sortMode=so;
   wEvt('priority_sort',{priority:pr[0]||'',sort:_sortMode,
-    filters:[(_zeroOnly?'zero':''),(_drugOnly?'drug':''),(_typeFilter==='dsnp'?'dsnp':'')].filter(Boolean).join('+')||'none'});
+    filters:[(_zeroOnly?'zero':''),(_drugOnly?'drug':''),(_dsnpOnly?'dsnp':'')].filter(Boolean).join('+')||'none'});
 }
 /* The "Todos / HMO / PPO / ..." pill row and the chip that cleared one filter both went with round
    5: the three chips and the Orden y más filtros panel do the same job in fewer taps. PILLS itself
@@ -2785,29 +2828,34 @@ function resultsHead(list){
    OTHER filters already applied, so the number on the chip is the number the title will show. */
 let _foOpen=false;
 function chipDefs(){
-  // The two that sit ON TOP of the type (both can be on at once), then the types. The type counts
-  // follow the old panel's convention -- counted WITHOUT the other chips -- so a type never reads
-  // "0" and offers a filter that leads nowhere; chipTap drops a chip that would empty the list.
+  // T-104 (7) (AB 2026-10-18): PPO/HMO stay single-select; "Solo medicamentos", "Con Medi-Cal" and
+  // "Necesidades especiales" are each their own on/off switch now, so any combination of them (and
+  // of PPO/HMO) is possible. Every chip's count is "what tapping it would leave", combined with
+  // every OTHER filter exactly as it stands -- never the bare category alone -- so a chip never
+  // promises a number the list does not actually show; chipTap drops a chip that would empty it.
   // T-101 (AB 2026-10-17): the labels are the short ones from the mock, never "MA" or "MA-PD";
   // "Con / Solo" says what each one is. `row` is the line the chip sits on: 2 + 3 + 2.
-  const ty=(id,lb,row)=>{
+  const net=(id,lb,row)=>{
     const x=PILLS.find(q=>q.id===id);
     return {k:id, lb:lb||(typeof x[lang]==='function'?x[lang]():x[lang]), row:row,
             on:_typeFilter===id, type:true,
-            any:PLANS.filter(x.f).length>0, n:PLANS.filter(p=>typeSet(id,p)).length};
+            any:PLANS.filter(x.f).length>0, n:countWith({typeFilter:id})};
+  };
+  const cat=(id,lb,row,on)=>{
+    const x=PILLS.find(q=>q.id===id);
+    return {k:id, lb:lb||(typeof x[lang]==='function'?x[lang]():x[lang]), row:row, on, type:true,
+            any:PLANS.filter(x.f).length>0, n:countWith({[id]:true})};
   };
   return [
     {k:'drug', lb:L('With drugs','Con medicamentos'), on:_drugOnly, row:0,
      any:PLANS.some(hasDrug),
-     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length},
+     n:PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length},
     {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, row:0,
      any:PLANS.some(p=>inTodos(p)&&p.premium===0),
-     n:PLANS.filter(p=>typeSet(_typeFilter,p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length},
-    ty('pdp',L('Drugs only','Solo medicamentos'),1),
-    {k:'dsnp', lb:mcd(), on:_typeFilter==='dsnp', type:true, row:1,
-     any:PLANS.some(isDual),
-     n:PLANS.filter(p=>isDual(p)&&extrasOK(p)).length},
-    ty('ppo','',1), ty('hmo','',2), ty('snp',L('Special needs','Necesidades especiales'),2)
+     n:PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length},
+    cat('pdp',L('Drugs only','Solo medicamentos'),1,_pdpOnly),
+    cat('dsnp',mcd(),1,_dsnpOnly),
+    net('ppo','',1), net('hmo','',2), cat('snp',L('Special needs','Necesidades especiales'),2,_snpOnly)
   ];
 }
 function chipRow(){
@@ -2832,7 +2880,7 @@ let _carrier='', _carOpen=false, _carList=[];
 function carOK(p){return !_carrier||p.carrier===_carrier;}
 function carrierList(){
   const m=new Map();
-  PLANS.forEach(p=>{if(typeSet(_typeFilter,p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
+  PLANS.forEach(p=>{if(categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
   // T-104 (3) (AB 2026-10-18): most plans in this county first, each with its count; a tie goes A-Z.
   _carList=[...m.entries()].map(([c,n])=>({c,n,lb:carrierShort(c)}))
     .sort((a,b)=>b.n-a.n||a.lb.localeCompare(b.lb,lang)||a.c.localeCompare(b.c));
@@ -2865,22 +2913,30 @@ function carrierClear(){
   wEvt('filter_use',{filter:'carrier',on:false});
   _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
-/* One tap toggles. "Con <Medi-Cal>" is the dsnp TYPE, which is single-select, so turning it off
-   goes back to Todos -- the same thing the old pill did, reached in one tap instead of three. */
+/* T-104 (7) (AB 2026-10-18): one tap toggles. PPO and HMO still share one slot (_typeFilter) and
+   turn each other off, same as the old single-select pill. "Solo medicamentos", "Con Medi-Cal" and
+   "Necesidades especiales" are each their own switch now and never clear one another -- a visitor
+   can have any mix of them, plus PPO or HMO, on at once. */
 function chipTap(k){
-  const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:_typeFilter===k;
+  const was=k==='zero'?_zeroOnly:k==='drug'?_drugOnly:k==='pdp'?_pdpOnly:k==='dsnp'?_dsnpOnly:k==='snp'?_snpOnly:_typeFilter===k;
   wEvt('filter_chip',{chip:k,on:!was});
   wEvt('filter_use',{filter:k,on:!was});
   if(k==='zero') _zeroOnly=!_zeroOnly;
   else if(k==='drug') _drugOnly=!_drugOnly;
-  // the types are single-select: tapping the one that is on goes back to every plan
+  else if(k==='pdp') _pdpOnly=!_pdpOnly;
+  else if(k==='dsnp') _dsnpOnly=!_dsnpOnly;
+  else if(k==='snp') _snpOnly=!_snpOnly;
+  // ppo/hmo are single-select between themselves: tapping the one that is on goes back to "all"
   else _typeFilter=was?'all':k;
-  // a type the toggles would empty (Medigap or Parte D while "$0 de prima" is on) drops the
-  // toggle rather than showing "0 planes" -- the chip said how many there are, so that is what appears
+  // a combination the chips would empty drops extras first, then the chip just tapped -- never
+  // "0 planes" silently, and never a dead end the visitor cannot get out of in one more tap
   if(!filterByType(PLANS).length&&_zeroOnly) _zeroOnly=false;
   if(!filterByType(PLANS).length&&_drugOnly) _drugOnly=false;
-  // a carrier with no plans of the type just chosen steps aside the same way
   if(!filterByType(PLANS).length&&_carrier) _carrier='';
+  if(!filterByType(PLANS).length){
+    if(k==='pdp') _pdpOnly=false; else if(k==='dsnp') _dsnpOnly=false; else if(k==='snp') _snpOnly=false;
+    else if(k==='ppo'||k==='hmo') _typeFilter='all';
+  }
   _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
 }
 /* T-096 round 5 c: one panel, the order first because it is what people change, then the five type
@@ -2906,7 +2962,7 @@ function dualLine(){
   // T-088 round 3 / "less is more": while the D-SNP filter is on, the chip above says so and takes
   // it off in one tap, so the sentence that used to say the same thing is gone. The line that says
   // this county has none stays -- nothing else tells them that.
-  if(_typeFilter==='dsnp') return '';
+  if(_dsnpOnly) return '';
   if(!PLANS.some(isDual)) return `<p class="t1 dual">${L(`There are no plans for people with Medicare and ${m} in this county.`,`No hay planes para Medicare y ${m} en este condado.`)}</p>`;
   return '';
 }
@@ -2926,7 +2982,7 @@ async function zipChange(){
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
   }
-  selPlans=[]; _pin=''; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false; _carrier=''; _carOpen=false;
+  selPlans=[]; _pin=''; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _pdpOnly=false; _dsnpOnly=false; _snpOnly=false; _priAuto=null; _foOpen=false; _carrier=''; _carOpen=false;
   delete D.plansSeen; delete D.represented;
   flowResults();
 }
@@ -3080,7 +3136,10 @@ async function flowResults(){
   // T-028: someone who said they have Medi-Cal / Medicaid opens on their plans, once per ZIP; after
   // that their own pill choice sticks. If the county has none, they open on Todos with a line saying so.
   applyPriority();
-  if(_typeFilter==='all'&&PLANS.length&&!PLANS.some(inTodos)){const pl=PILLS.find(x=>x.id!=='all'&&PLANS.some(x.f));if(pl)_typeFilter=pl.id;}
+  if(_typeFilter==='all'&&!_pdpOnly&&!_dsnpOnly&&!_snpOnly&&PLANS.length&&!PLANS.some(inTodos)){
+    const pl=PILLS.find(x=>x.id!=='all'&&x.id!=='zero'&&PLANS.some(x.f));
+    if(pl){ if(pl.id==='pdp')_pdpOnly=true; else if(pl.id==='dsnp')_dsnpOnly=true; else if(pl.id==='snp')_snpOnly=true; else _typeFilter=pl.id; }
+  }
   const plans=orderedPlans();
   D.conditions=[...selConds];
   // The ZIP resolved to no state or no county, so there are no plans to filter. The
@@ -3288,7 +3347,7 @@ function mpEnter(){const b=document.querySelector('#mpsug .mpaci');if(b)b.click(
 // the count the link promised.
 // T-103 (4): from the cards (pin=true) the 2027 version of their plan is pinned at the top and ticked.
 function mpAll(pin){
-  _typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=D.zip;_shown=PAGE;_foOpen=false;
+  _typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carrier='';_carOpen=false;_priAuto=D.zip;_shown=PAGE;_foOpen=false;
   _pin='';
   const cur=pin&&_mpCtx&&_mpCtx.cur27;
   if(cur){ _pin=cur.id; selPlans=[cur.id]; }
@@ -3535,7 +3594,7 @@ async function mpZipChange(){
     if(was.seen!==undefined) D.plansSeen=was.seen; if(was.rep!==undefined) D.represented=was.rep;
     flowMyPlanResults();
   };
-  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _priAuto=null; _foOpen=false;
+  selPlans=[]; _shown=PAGE; _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _pdpOnly=false; _dsnpOnly=false; _snpOnly=false; _priAuto=null; _foOpen=false;
   delete D.plansSeen; delete D.represented; _myPlan=null; _mpCtx=null;
   go(flowMyPlan);
 }
@@ -4261,7 +4320,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_carrier='';_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carrier='';_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
