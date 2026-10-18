@@ -607,6 +607,10 @@ body.host-cbar .cbar{display:none!important}
 .mphintbox{display:flex;gap:10px;align-items:center;background:#F0F3F6;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.4;color:#4A5568;text-align:left}
 .mphintbox svg{width:26px;height:26px;flex:0 0 26px;fill:none;stroke:var(--cbar-ink);stroke-width:1.7;stroke-linecap:round}
 .mphl{font-size:21px;font-weight:700;color:var(--cbar-ink);margin:0;line-height:1.2;text-align:left;text-wrap:balance}
+.mphl{min-width:0;flex:1 1 auto}
+.mphl.one{white-space:nowrap;overflow:hidden}
+/* mock: the ticked Comparar pill is tinted on these cards */
+.mpc .pc-cmp:has(input:checked){border:1.5px solid var(--cbar-brand);background:var(--lt-mint)}
 .rh.mprh{box-shadow:none;padding:0;margin:4px 0 10px;border-radius:0;background:none;z-index:auto}
 .rh.mprh .zl{margin:0;min-height:0}
 .mpc .mph{padding:10px 14px 9px;border-bottom:1px solid #E5E9EC}
@@ -630,7 +634,7 @@ table.mpdt td.up{color:#A8473B}
 table.mpdt td.down{color:#1F7A5A}
 table.mpdt td.na{font-size:13px;font-weight:600;color:#56616a;white-space:normal}
 .mpsr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.mpwhy{margin:0;padding:8px 14px;font-size:14px;color:#1A202C;line-height:1.4;background:#fff;text-align:left;text-wrap:pretty}
+.mpwhy{margin:0;padding:8px 14px;font-size:14px;color:#1A202C;line-height:1.4;background:#fff;text-align:left;text-wrap:pretty;border-bottom:1px solid #E5E9EC}
 .mpwhy.strong{font-weight:600;color:var(--cbar-ink);background:#FFF8E1}
 .mpc .pc-det{border-top:1px solid #E5E9EC;padding:9px 14px}
 .mpc .mpwhy+.pc-det{border-top:0}
@@ -3165,7 +3169,20 @@ function flowMyPlanResults(){
     ${cbarHTML()}`;
   _planScreen=true;
   updBar();
+  mpFit();
+  try{ document.fonts&&document.fonts.ready.then(mpFit); }catch(e){}
 }
+/* The title sits beside Volver on ONE line, as in the mock, stepping down half a pixel at a time
+   (never below 17px) where the frame is narrower than the mock's; only past that does it wrap. */
+function mpFit(){
+  const q=document.querySelector('#mpres .mphl'); if(!q) return;
+  q.style.fontSize=''; q.classList.add('one');
+  let fs=parseFloat(getComputedStyle(q).fontSize);
+  const over=()=>q.scrollWidth>q.clientWidth+0.5;
+  while(over()&&fs>17){fs-=0.5;q.style.fontSize=fs+'px';}
+  if(over()){q.classList.remove('one');q.style.fontSize='';}
+}
+window.addEventListener('resize',mpFit);
 // "Cambiar" on this screen: a new ZIP is a new county, so a new 2026 list -- back to the search, with
 // what they typed still in the field. A ZIP we have no plans for keeps everything as it was.
 async function mpZipChange(){
