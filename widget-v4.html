@@ -4342,6 +4342,8 @@ if(!_dataOnly) go(startZip);
   function start(){
     var wb=document.getElementById('wb'); if(!wb) return;
     new MutationObserver(report).observe(wb,{subtree:true,childList:true,attributes:true,attributeFilter:['disabled','style','class']});
+    // T-104 (4): c3 moves when the webfont or a late layout settles; re-measure whenever the widget resizes
+    try{ new ResizeObserver(report).observe(document.querySelector('.widget-wrap')); }catch(e){}
     report();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
