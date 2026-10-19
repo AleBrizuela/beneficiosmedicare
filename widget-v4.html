@@ -1550,7 +1550,19 @@ function setLang(l){
   document.getElementById('hdr-title').textContent=t('title');
   document.getElementById('hdr-sub').textContent=t('sub');
   document.getElementById('wf').innerHTML=t('disc');
+  // T-110: re-running the last screen's render function already carries every pick, tick, filter
+  // and sort forward (none of that lives anywhere a re-render touches) -- the one thing innerHTML
+  // replacement silently throws away is scroll position, so save and restore it explicitly. Found
+  // testing this ticket: without this, switching language on a scrolled list jumped back to the top.
+  const sy=window.scrollY;
   if(hist.length>0)hist[hist.length-1]();
+  // A plain synchronous scrollTo (even deferred one or two rAFs) gets silently overridden the FIRST
+  // time a given screen's images (carrier logos, icons) are still loading -- found testing this
+  // ticket: they finish loading and reflow the page after paint, which moves scroll back to 0 later
+  // than any fixed number of frames can predict. A re-render of an already-rendered screen (images
+  // cached) does not have this problem, so it only shows up the first time. Re-applying across a
+  // short window beats it regardless of which case this is, without guessing a single "safe" delay.
+  [0,50,150,300,600].forEach(ms=>setTimeout(()=>window.scrollTo(0,sy),ms));
 }
 document.addEventListener('DOMContentLoaded',()=>{
   document.documentElement.lang=lang;
