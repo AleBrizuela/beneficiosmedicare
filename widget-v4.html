@@ -553,12 +553,16 @@ body.host-cbar .cbar{display:none!important}
    this screen -- the strip is what the CARD shows, and the card is still right above it. */
 .dsec{display:flex;align-items:center;background:#f3f5f7;font-size:13px;letter-spacing:.03em;font-weight:600;color:#1e2a32;padding:8px 14px;margin:0 -14px;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
 .dsec svg{width:17px;height:17px;margin-right:7px;flex:0 0 17px;fill:none;stroke:var(--cbar-brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.drow{padding:9px 0 10px;border-bottom:1px solid #eef1f3}
+/* T-111 (1)(3): one line per row -- label left, value bold and right-aligned, same grammar as the
+   2026-vs-2027 table (label, 2026, 2027) so both views read as one system. A long label wraps on
+   its own column only; baseline alignment keeps the value level with the label's FIRST line when
+   it wraps, never the vertical middle of a now-taller row. ~40px tall, lighter divider. */
+.drow{display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-height:40px;padding:9px 0;border-bottom:1px solid #f1f3f5}
 .drow:last-child{border-bottom:0}
-.dl{font-size:14px;font-weight:400;color:#3a4650;line-height:1.3}
-.dv{font-size:16px;font-weight:700;color:#1e2a32;margin-top:2px}
+.dl{font-size:14px;font-weight:400;color:#3a4650;line-height:1.3;flex:1 1 auto}
+.dv{font-size:16px;font-weight:700;color:#1e2a32;flex:0 0 auto;text-align:right;white-space:nowrap;padding-left:4px}
 .dv.z{color:var(--sage-dark)}
-.dv.off{color:#56616a;font-weight:400;font-style:italic;font-size:14.5px}
+.dv.off{color:#56616a;font-weight:400;font-style:italic;font-size:14.5px;white-space:normal}
 .dv.na{color:#56616a;font-weight:400;font-size:13.5px}
 .dcall{display:flex;align-items:flex-start;gap:9px;background:#E0F2F1;border-radius:10px;padding:10px 12px;margin:12px 0 0;font-size:14.5px;line-height:1.4;color:var(--cbar-ink)}
 .dcall svg{width:18px;height:18px;flex:0 0 18px;margin-top:1px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -2486,7 +2490,9 @@ function _scrollToCard(){
 function dRow(label,v){
   if(v===undefined) return '';
   let cls='',txt;
-  if(!v){cls='na';txt=noInfo();}
+  // T-111 (4): a grey dash, never a blank -- only for a field CMS genuinely has no information on;
+  // v.off (e.g. "No drug coverage") is real information, not a gap, and keeps its own text.
+  if(!v){cls='na';txt='–';}
   else{cls=v.off?'off':(v.z||isZero(String(v.t).replace(/<[^>]+>/g,'').trim())?'z':'');txt=v.t;}
   return `<div class="drow"><div class="dl">${nbLast(label)}</div><div class="dv${cls?' '+cls:''}">${nbLast(txt)}</div></div>`;
 }
@@ -2544,8 +2550,12 @@ function planDetail(id){
   // T-103 (7): "Ver todos los cambios" -- when this is the plan the visitor has today (Mi plan de hoy),
   // the 2026|2027 verdict + table sits right under the header, Costos only (see mp26v27Block's note).
   const mpBlock=(_mpCtx&&_mpCtx.cur27&&_mpCtx.cur27.id===p.id&&_mpCtx.cur26)?mp26v27Block(_mpCtx.cur26,_mpCtx.cur27):'';
+  // T-111 (2): a key-figures strip under the plan name, same three tiles as the list card, so the
+  // top of "Ver detalles" is never empty. Medigap already has its own 2-tile strip inline in `body`.
+  const keys=p._medigap?'':keyStrip(p);
   wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to the list','\u2039 Volver a la lista'),'backToPlans()')}</div>
     <div class="pc" style="--cc:${p._medigap?'var(--cbar-brand)':carrierColor(p)}">${planHead(p,true,true)}
+      ${keys}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${mpBlock}
       ${body}
