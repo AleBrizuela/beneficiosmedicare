@@ -3858,8 +3858,12 @@ function mp26v27Block(p26,p27){
   const sorted=rows.map((r,i)=>({r,i})).sort((x,y)=>(y.r.changed-x.r.changed)||(x.i-y.i)).map(x=>x.r);
   const pill=`<span class="mppill" style="background:${cc}">${L(`${changedN} change${changedN===1?'':'s'} in ${planYear()}`,`${changedN} ${changedN===1?'cambio':'cambios'} en ${planYear()}`)}</span>`;
   const cells=sorted.map(r=>{
-    const lcls='mp26l'+(r.changed?' chg':''), lstyle=r.changed?` style="border-left-color:${cc}"`:'';
-    const label=`<div class="${lcls}"${lstyle}>${nbLast(r.lab)}</div>`;
+    // AMENDMENT AB 2026-10-18 evening ("drop side lines"), built 2026-10-19: this row used to get
+    // its own carrier-colored left bar when changed -- the amendment asks to drop it too, so the
+    // 2027 column header above is the only carrier accent left in this table; the struck-through
+    // 2026 value and the arrow already mark which rows changed.
+    const lcls='mp26l'+(r.changed?' chg':'');
+    const label=`<div class="${lcls}">${nbLast(r.lab)}</div>`;
     const v26=!r.comparable?`<div class="mp26a na">${L('Not in 2026 data','No disponible en 2026')}</div>`
              :`<div class="mp26a${r.changed?' strike':''}">${r.v26}</div>`;
     const arrow=!r.changed||!r.dir?'':r.dir>0
