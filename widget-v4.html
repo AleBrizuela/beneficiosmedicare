@@ -757,18 +757,19 @@ body.host-cbar .cbar{display:none!important}
 .mpc .pc-rating{margin-top:5px}
 .mpinfo{margin-top:6px;font-size:12px;color:#4A5568;background:#F0F3F6;border-radius:8px;padding:5px 9px;display:inline-block}
 /* T-103 (5)(7) + amendments (18:40 carrier-colour, 19:10 "format A" of the v5 mock, SHARE =
-   EVERYTHING): the pill ("N changes in 2027") sits over a grid table, 2026 | 2027, in the plan's
-   OWN carrier color (carrierSafe() darkens it first if white text on it would read under 4.5:1 --
-   18:40(b)'s guardrail). Changed rows sort first, get the color on the left edge, a "Changes" tag
-   and a struck-through 2026 value; unchanged rows stay plain grey. No "Sin cambios (N)" collapse --
-   19:10 explicitly dropped it, every row shows at once. */
-.mppill{display:inline-block;color:#fff;font-weight:800;font-size:12.5px;border-radius:99px;padding:4px 12px;margin:10px 14px 8px}
+   EVERYTHING, and the evening "turn the volume down" pass): the pill ("N changes in 2027") sits over
+   a grid table, 2026 | 2027. Carrier color (carrierSafe()-guarded, 4.5:1) now lives ONLY on the pill,
+   the 2027 header and a changed row's left bar; the 2027 VALUES are plain dark ink and the up/down
+   arrow alone carries amber/emerald (see mp26v27Block) -- a cost going down must never read as bad
+   news just because the carrier's own color happens to be red (the SCAN case that prompted this).
+   No "Changes" tag any more: the bar plus the struck-through 2026 value already say it. No
+   "Sin cambios (N)" collapse -- 19:10 dropped it, every row shows at once. */
+.mppill{display:inline-block;color:#fff;font-weight:800;font-size:12.5px;border-radius:99px;padding:4px 12px;margin:0 14px 8px}
 .mp26g{display:grid;grid-template-columns:1.3fr .85fr .85fr;background:#fff;border-bottom:1px solid #E5E9EC;font-size:13.5px}
 .mp26g .mp26h{padding:6px 4px 5px;text-align:center;font-weight:800;font-size:11px;color:#fff;background:#E5E7EB}
 .mp26g .mp26h.a{background:#E5E7EB;color:#4B5563}
 .mp26g .mp26l{padding:8px 6px 8px 10px;border-top:1px solid #E5E9EC;border-left:4px solid transparent;font-weight:600;color:#1e2a32;line-height:1.3}
 .mp26g .mp26l.chg{background:#FAFBFC}
-.mp26g .mp26tag{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
 .mp26g .mp26a{padding:8px 4px;border-top:1px solid #E5E9EC;text-align:center;color:#6B7280;font-weight:600;align-self:stretch;display:flex;align-items:center;justify-content:center}
 .mp26g .mp26a.na{font-size:11px;font-style:italic;color:#8a94a1;font-weight:500}
 .mp26g .mp26a.strike{text-decoration:line-through;color:#9aa3ad}
@@ -3672,28 +3673,33 @@ function mpCurCard(c){
     <p class="mpwhy">${nbLast(mpStayLine())}</p>
     ${detBtn(p27)}</div>`;
 }
-/* T-103 (7) + amendment 19:10 ("FORMAT = option A of the v5 mock... SHARE = EVERYTHING"): reused on
-   the plan's own "Ver detalles" screen as well as the 3-card summary, so both are equally honest about
-   every row that exists in both years. Pill + grid table, changed rows first with the carrier-color
-   bar and a "Changes" tag, unchanged rows plain grey -- no "Sin cambios (N)" collapse, amendment 19:10
-   dropped it explicitly: everything shows at once. Button text is plain "Share"/"Compartir" (19:10
-   supersedes the earlier "Share what's changing" wording from T-105(9) and the 18:40 amendment). */
+/* T-103 (7) + amendment 19:10 ("FORMAT = option A of the v5 mock... SHARE = EVERYTHING") + the
+   evening "turn the volume down" amendment (AB, after seeing SCAN on STG, "too LOUD?"): reused on the
+   plan's own "Ver detalles" screen as well as the 3-card summary. Pill + grid table, changed rows
+   first, unchanged rows plain grey, no "Sin cambios (N)" collapse. The evening amendment keeps the
+   carrier color ONLY on the pill, the 2027 header and the left bars (point 5); everywhere else it is
+   quieter: 2027 values are dark ink, not the carrier color (1); the up/down arrow alone carries amber
+   (costs more) / emerald (costs less) regardless of carrier color, so a plan's deductible going DOWN
+   never again reads as bad news just because that carrier's color is red (2, the SCAN case that
+   prompted this); the 2027 tint is 6%, half of what it was (3); the "Changes" tag under the row label
+   is gone, the bar and the struck-through 2026 value already say it (4). Button text is plain
+   "Share"/"Compartir" (19:10 supersedes the earlier "Share what's changing" wording). */
+const MP26_UP='#B45309', MP26_DOWN='#047857', MP26_INK='#111827';
 function mp26v27Block(p26,p27){
-  const cc=carrierSafe(carrierColor(p27)), tint=carrierTint(cc,0.14);
+  const cc=carrierSafe(carrierColor(p27)), tint=carrierTint(cc,0.06);
   const rows=mp26v27Rows(p26,p27);
   const changedN=rows.filter(r=>r.changed).length;
   const sorted=rows.map((r,i)=>({r,i})).sort((x,y)=>(y.r.changed-x.r.changed)||(x.i-y.i)).map(x=>x.r);
   const pill=`<span class="mppill" style="background:${cc}">${L(`${changedN} change${changedN===1?'':'s'} in ${planYear()}`,`${changedN} ${changedN===1?'cambio':'cambios'} en ${planYear()}`)}</span>`;
   const cells=sorted.map(r=>{
-    const tag=r.changed?`<span class="mp26tag" style="color:${cc}">${L('Changes','Cambia')}</span>`:'';
     const lcls='mp26l'+(r.changed?' chg':''), lstyle=r.changed?` style="border-left-color:${cc}"`:'';
-    const label=`<div class="${lcls}"${lstyle}>${nbLast(r.lab)}${tag}</div>`;
+    const label=`<div class="${lcls}"${lstyle}>${nbLast(r.lab)}</div>`;
     const v26=!r.comparable?`<div class="mp26a na">${L('Not in 2026 data','No disponible en 2026')}</div>`
              :`<div class="mp26a${r.changed?' strike':''}">${r.v26}</div>`;
     const arrow=!r.changed||!r.dir?'':r.dir>0
-      ?` <i aria-hidden="true">▲</i><span class="mpsr">${L('(up)','(sube)')}</span>`
-      :` <i aria-hidden="true">▼</i><span class="mpsr">${L('(down)','(baja)')}</span>`;
-    const v27=r.changed?`<div class="mp26b" style="background:${tint};color:${cc}">${r.v27}${arrow}</div>`
+      ?` <i aria-hidden="true" style="color:${MP26_UP}">▲</i><span class="mpsr">${L('(up)','(sube)')}</span>`
+      :` <i aria-hidden="true" style="color:${MP26_DOWN}">▼</i><span class="mpsr">${L('(down)','(baja)')}</span>`;
+    const v27=r.changed?`<div class="mp26b" style="background:${tint};color:${MP26_INK}">${r.v27}${arrow}</div>`
                        :`<div class="mp26a">${r.v27}</div>`;
     return label+v26+v27;
   }).join('');
