@@ -1315,16 +1315,28 @@ function loadRepresented(){
     .then(j=>{_repTried=true;_rep=j;return j;})
     .catch(()=>{_repTried=false;_rep=null;return null;});
 }
+// NOW.md T-106 follow-up (SHIP part of the PROTECT note, 2026-10-18): licensed states live in ONE
+// list with the license date per state (data/represented-2027.json, "licensedSince"), so adding a
+// state with a future date correctly stays unlicensed until that day arrives, and the note clears
+// itself on the date with no code change. Falls back to the plain "licensed" membership check when
+// a state has no date on file yet (older data shape, or a state added to "licensed" without a date
+// -- fails toward SHOWING the note, never toward silently granting lead capture early).
+function _licensedAsOf(state){
+  if(!_rep||!Array.isArray(_rep.licensed)||_rep.licensed.indexOf(state)<0) return false;
+  const since=_rep.licensedSince&&_rep.licensedSince[state];
+  if(!since) return true;   // on the list, no date on file: treat as always-licensed (old shape)
+  return new Date(since+'T00:00:00')<=new Date();
+}
 // May this visitor be offered lead capture? No ZIP/state yet = yes, as before T-017. A known state
-// is offered lead capture only when the signed list loaded AND names it.
+// is offered lead capture only when the signed list loaded AND names it AND today is on/after its date.
 function leadOK(){
   if(!D.state) return true;
   if(!_rep||!Array.isArray(_rep.licensed)) return false;
-  return _rep.licensed.indexOf(D.state)>=0;
+  return _licensedAsOf(D.state);
 }
 // True only when we positively know the state is not licensed (drives the Medicare.gov notice).
 function knownUnlicensed(){
-  return !!(D.state&&_rep&&Array.isArray(_rep.licensed)&&_rep.licensed.indexOf(D.state)<0);
+  return !!(D.state&&_rep&&Array.isArray(_rep.licensed)&&!_licensedAsOf(D.state));
 }
 function isRepresented(parent,state){
   if(!_rep||!_rep.represented) return false;

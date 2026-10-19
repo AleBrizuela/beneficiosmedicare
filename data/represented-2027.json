@@ -2,7 +2,7 @@
  "year": 2027,
  "updated": "2026-10-02",
  "signed": "Alejandra Brizuela 2026-10-02 (T-017: CA); same 7 carriers in AZ FL IA IL KS MO OK TX, AB 2026-10-02 (D-056)",
- "_README": "Which states we are licensed in, and per state which CMS parent organizations we are appointed with and Ready to Sell for 2027. The widget shows an agent button ONLY on plans whose CMS Parent Organization Name is listed for the visitor's state; every other plan is 'Information only'. A state not in 'licensed' gets no lead capture at all. An empty list means licensed but no appointment confirmed there yet. Change this file only with AB's sign-off (RED).",
+ "_README": "Which states we are licensed in, and per state which CMS parent organizations we are appointed with and Ready to Sell for 2027. The widget shows an agent button ONLY on plans whose CMS Parent Organization Name is listed for the visitor's state; every other plan is 'Information only'. A state not in 'licensed' gets no lead capture at all. An empty list means licensed but no appointment confirmed there yet. Change this file only with AB's sign-off (RED). 'licensedSince' added 2026-10-18 (NOW.md T-106 follow-up, SHIP part of the PROTECT note): ONE list with the license date per state, purely additive -- 'licensed' is unchanged and still read by older code paths. Dates here are the ones already on record above (the 2026-10-02 sign-off), not new facts. The widget now checks the date, not just membership, so a FUTURE-dated state (added ahead of its actual effective date) correctly stays unlicensed until that day, and the unlicensed note clears itself on the date without a code change.",
  "licensed": [
   "AZ",
   "CA",
@@ -14,6 +14,17 @@
   "OK",
   "TX"
  ],
+ "licensedSince": {
+  "AZ": "2026-10-02",
+  "CA": "2026-10-02",
+  "FL": "2026-10-02",
+  "IA": "2026-10-02",
+  "IL": "2026-10-02",
+  "KS": "2026-10-02",
+  "MO": "2026-10-02",
+  "OK": "2026-10-02",
+  "TX": "2026-10-02"
+ },
  "represented": {
   "AZ": [
    "Alignment Healthcare USA, LLC",
