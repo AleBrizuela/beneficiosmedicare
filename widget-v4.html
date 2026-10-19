@@ -756,20 +756,24 @@ body.host-cbar .cbar{display:none!important}
 .mpmeta .rt0{font-size:12.5px}
 .mpc .pc-rating{margin-top:5px}
 .mpinfo{margin-top:6px;font-size:12px;color:#4A5568;background:#F0F3F6;border-radius:8px;padding:5px 9px;display:inline-block}
-/* T-103 (5): the one-line verdict, right above the 2026|2027 table, and the "Qué cambia" summary
-   right under it -- both built from CMS facts only, text-wrap:pretty so a short line never widows. */
-.mpverdict{margin:0;padding:10px 14px 2px;font-size:15px;font-weight:600;color:#1e2a32;background:#fff;text-align:left;text-wrap:pretty}
-.mpwc{padding:4px 14px 10px;background:#fff;border-bottom:1px solid #E5E9EC}
-.mpwct{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#66727c}
-.mpwc ul{margin:0;padding-left:18px}
-.mpwc li{font-size:13.5px;color:#3a4650;line-height:1.4;margin-bottom:2px;text-wrap:pretty}
-table.mpdt{width:100%;border-collapse:collapse;font-size:14px;background:#f3f5f7;border-bottom:1px solid #E5E9EC}
-table.mpdt th{font-weight:400;color:#4A5568;text-align:left;padding:5px 14px;width:50%;line-height:1.25}
-table.mpdt td{text-align:center;padding:5px 6px;font-weight:700;color:#1e2a32;font-size:16px;white-space:nowrap}
-table.mpdt thead td{font-size:12px;font-weight:600;color:#66727c;padding:6px 6px 0}
-table.mpdt td.up{color:#A8473B}
-table.mpdt td.down{color:#1F7A5A}
-table.mpdt td.na{font-size:13px;font-weight:600;color:#56616a;white-space:normal}
+/* T-103 (5)(7) + amendments (18:40 carrier-colour, 19:10 "format A" of the v5 mock, SHARE =
+   EVERYTHING): the pill ("N changes in 2027") sits over a grid table, 2026 | 2027, in the plan's
+   OWN carrier color (carrierSafe() darkens it first if white text on it would read under 4.5:1 --
+   18:40(b)'s guardrail). Changed rows sort first, get the color on the left edge, a "Changes" tag
+   and a struck-through 2026 value; unchanged rows stay plain grey. No "Sin cambios (N)" collapse --
+   19:10 explicitly dropped it, every row shows at once. */
+.mppill{display:inline-block;color:#fff;font-weight:800;font-size:12.5px;border-radius:99px;padding:4px 12px;margin:10px 14px 8px}
+.mp26g{display:grid;grid-template-columns:1.3fr .85fr .85fr;background:#fff;border-bottom:1px solid #E5E9EC;font-size:13.5px}
+.mp26g .mp26h{padding:6px 4px 5px;text-align:center;font-weight:800;font-size:11px;color:#fff;background:#E5E7EB}
+.mp26g .mp26h.a{background:#E5E7EB;color:#4B5563}
+.mp26g .mp26l{padding:8px 6px 8px 10px;border-top:1px solid #E5E9EC;border-left:4px solid transparent;font-weight:600;color:#1e2a32;line-height:1.3}
+.mp26g .mp26l.chg{background:#FAFBFC}
+.mp26g .mp26tag{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.mp26g .mp26a{padding:8px 4px;border-top:1px solid #E5E9EC;text-align:center;color:#6B7280;font-weight:600;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.mp26g .mp26a.na{font-size:11px;font-style:italic;color:#8a94a1;font-weight:500}
+.mp26g .mp26a.strike{text-decoration:line-through;color:#9aa3ad}
+.mp26g .mp26b{padding:8px 4px;border-top:1px solid #E5E9EC;text-align:center;font-weight:800;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.mp26g .mp26b i{font-style:normal;font-size:10.5px;margin-left:2px}
 .mpsr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .mpwhy{margin:0;padding:8px 14px;font-size:14px;color:#1A202C;line-height:1.4;background:#fff;text-align:left;text-wrap:pretty;border-bottom:1px solid #E5E9EC}
 .mpwhy.strong{font-weight:600;color:var(--cbar-ink);background:#FFF8E1}
@@ -1084,7 +1088,9 @@ const CARRIER_COLORS = {
   "Florida Blue":'#0066A4',
   "Imperial Health Plan of California, Inc.":'#2E8B57',
   "Molina Healthcare of Illinois":'#E31837',
-  "SCAN Health Plan":'#0057A6',
+  "SCAN Health Plan":'#FD2324', // T-062 follow-up: SCAN is a crimson-red heart, not blue; sampled from the
+                                // official logo PNG at scanhealthplan.com (dominant opaque red pixel, not
+                                // guessed). Previous value here was the hex 0057A6 (a blue).
   "Simply Healthcare Plans, Inc.":'#CE1141',
   "Essence Healthcare":'#6A1B9A',
   "Optimum HealthCare, Inc.":'#1F6FB2',
@@ -3573,59 +3579,65 @@ function mpInfo(p){
   // failed load never tells a visitor we do not offer a plan we do.
   return (_rep&&_rep.represented&&!p.rep)?`<div class="mpinfo">${L('Informational only: we don’t offer this plan.','Solo información: no lo ofrecemos.')}</div>`:'';
 }
-function mpRow(lab,a,b,fmt){
-  const fa=a==null?noInfo():fmt(a), fb=b==null?noInfo():fmt(b);
-  let cls='same', ar='';
-  if(a!=null&&b!=null){
-    if(b>a+0.004){cls='up';ar=` <span aria-hidden="true">▲</span><span class="mpsr">${L('(up)','(sube)')}</span>`;}
-    else if(b<a-0.004){cls='down';ar=` <span aria-hidden="true">▼</span><span class="mpsr">${L('(down)','(baja)')}</span>`;}
-  } else cls='na';
-  return `<tr><th>${nbLast(lab)}</th><td${a==null?' class="na"':''}>${fa}</td><td class="${b==null?'na':cls}">${fb}${ar}</td></tr>`;
-}
-/* T-103 (5) (AB 2026-10-18): one plain verdict line, then up to 3 "what changes" lines, built ONLY from
-   fields both years actually carry. 2026 data (cms_<ST>.js) has premium, moop, medical deductible
-   ("deductible"), stars and type -- checked while building this (SHIP, 2026-10-18): it has no drug
-   deductible, no Part B give-back, and no dental/OTC/vision/fitness figures, so none of those can be
-   compared against 2026 honestly and none are attempted here. Every sentence is a CMS fact; never a
-   savings claim, never "mejor/peor", never advice. PROTECT reviews the sentence shapes (section 8). */
 // p27.mded is CMS's own structure ({amt} or {mc:'A'|'B'|'AB'} for "same as Original Medicare, whose
 // 2027 amount CMS sets in November") -- never a plain number. A real 2026-vs-2027 comparison only
 // exists when there's an actual 2027 dollar figure; an mc-flagged plan has none yet, so it's silent
 // here rather than comparing against nothing or, worse, crashing into "$NaN" (found testing this build).
 function mpMdedAmt(m){return (m&&m.amt!=null)?m.amt:null;}
-function mpUsdDelta(a,b){const d=Math.round((b-a)*100)/100;return {up:d>0,amt:usd(Math.abs(d))};}
-function mpVerdictLine(p26,p27){
-  const facts=[];
-  const add=(a,b,es,en)=>{ if(a==null||b==null) return; const d=b-a; if(Math.abs(d)<0.005) return; const u=d>0; facts.push({abs:Math.abs(d),es:es(u,usd(Math.abs(d))),en:en(u,usd(Math.abs(d)))}); };
-  add(p26.premium,p27.premium,(u,a)=>`su prima mensual ${u?'sube':'baja'} ${a}`,(u,a)=>`your monthly premium goes ${u?'up':'down'} ${a}`);
-  add(p26.moop,p27.moop,(u,a)=>`su máximo de bolsillo ${u?'sube':'baja'} ${a}`,(u,a)=>`your max out-of-pocket goes ${u?'up':'down'} ${a}`);
-  add(p26.deductible,mpMdedAmt(p27.mded),(u,a)=>`su deducible médico ${u?'sube':'baja'} ${a}`,(u,a)=>`your medical deductible goes ${u?'up':'down'} ${a}`);
-  if(!facts.length) return L('Your plan barely changes.','Su plan casi no cambia.');
-  facts.sort((x,y)=>y.abs-x.abs);
-  const top=facts.slice(0,2);
-  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-  return top.length>1?L(`${cap(top[0].en)} and ${top[1].en}.`,`${cap(top[0].es)} y ${top[1].es}.`)
-                     :L(`${cap(top[0].en)}.`,`${cap(top[0].es)}.`);
+/* T-103 amendment 18:40(b): the guardrail is literal -- if WHITE text on the plan's own carrier color
+   reads under 4.5:1, darken that color (never substitute a different one) until it clears the bar.
+   Humana, Devoted, Alignment, Clever and Imperial are all light enough to fail outright; this keeps
+   every carrier recognizably "theirs" instead of falling back to one shared safe color for all of them. */
+function _srgbLin(c){c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+function _relLum(hex){const n=parseInt(hex.slice(1),16);return 0.2126*_srgbLin((n>>16)&255)+0.7152*_srgbLin((n>>8)&255)+0.0722*_srgbLin(n&255);}
+function _contrastRatio(h1,h2){const a=_relLum(h1)+0.05,b=_relLum(h2)+0.05;return a>b?a/b:b/a;}
+function carrierSafe(hex){
+  let n=parseInt(hex.slice(1),16), r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  const toHex=()=>'#'+[r,g,b].map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+  for(let i=0;i<24 && _contrastRatio('#ffffff',toHex())<4.5;i++){ r*=0.9; g*=0.9; b*=0.9; }
+  return toHex();
 }
-function mpWhatChanges(p26,p27){
-  const lines=[];
-  const pushD=(a,b,esL,enL)=>{ if(a==null||b==null) return; const d=b-a; if(Math.abs(d)<0.005) return; const u=d>0, amt=usd(Math.abs(d));
-    lines.push({abs:Math.abs(d),es:`Su ${esL} ${u?'sube':'baja'} ${amt}.`,en:`Your ${enL} goes ${u?'up':'down'} ${amt}.`}); };
-  pushD(p26.premium,p27.premium,'prima mensual','monthly premium');
-  pushD(p26.moop,p27.moop,'máximo de bolsillo','max out-of-pocket');
-  pushD(p26.deductible,mpMdedAmt(p27.mded),'deducible médico','medical deductible');
-  if(p26.stars!=null&&p27.rating!=null&&Math.abs(p27.rating-p26.stars)>=0.5){
-    const u=p27.rating>p26.stars;
-    lines.push({abs:999,es:`Su calificación ${u?'sube':'baja'} de ${p26.stars} a ${p27.rating} estrellas.`,en:`Your rating goes ${u?'up':'down'} from ${p26.stars} to ${p27.rating} stars.`});
+// A pale wash of the carrier color for a changed row's 2027 cell: text sits in navy, which is always
+// far past the 7:1 amendment (b) asks for at this low a tint, so no separate guardrail is needed here.
+function carrierTint(hex,pct){
+  const n=parseInt(hex.slice(1),16), mix=v=>Math.round(v*pct+255*(1-pct));
+  return '#'+[mix((n>>16)&255),mix((n>>8)&255),mix(n&255)].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+/* T-103 (7) + its amendments (AB 2026-10-18): every row BOTH years actually carry. 2026 data
+   (cms_<ST>.js) has only premium, moop, medical deductible, stars, type and has_drug -- checked
+   building this: no drug deductible, no Part B give-back, no dental/vision/hearing/OTC/fitness for
+   2026, so the Hospital, Fuera de la red, Pruebas, Equipo and Beneficios extra groups the ticket
+   describes cannot be compared against a real 2026 number without inventing the missing side; this
+   stays Costos + stars/type/drug-coverage, the fields that genuinely exist in both years, reported to
+   AB rather than built further. Drug deductible has no 2026 side at all: shown, not hidden (19:10),
+   2026 reads "not in 2026 data", and it is never counted as a change -- there is nothing to compare it
+   against. */
+function mp26v27Rows(p26,p27){
+  const rows=[];
+  const addNum=(key,lab,a,b,fmt)=>{
+    if(a==null||b==null){ rows.push({key,lab,v26:null,v27:b==null?null:fmt(b),comparable:false,changed:false,dir:0}); return; }
+    const d=b-a, changed=Math.abs(d)>=0.005;
+    rows.push({key,lab,v26:fmt(a),v27:fmt(b),comparable:true,changed,dir:changed?(d>0?1:-1):0});
+  };
+  addNum('premium',L('Monthly premium','Prima mensual'),p26.premium,p27.premium,premUsd);
+  addNum('moop',L('Max out‑of‑pocket','Máximo de bolsillo'),p26.moop,p27.moop,usd);
+  addNum('mded',L('Medical deductible','Deducible médico'),p26.deductible,mpMdedAmt(p27.mded),usd);
+  const d27=p27.drug==='Included';
+  rows.push({key:'ded',lab:L('Drug deductible','Deducible de medicamentos'),v26:null,
+    v27:d27?(p27.ded==null?noInfo():usd(p27.ded)):L('None','Ninguno'),comparable:false,changed:false,dir:0});
+  if(p26.stars!=null&&p27.rating!=null){
+    const changed=Math.abs(p27.rating-p26.stars)>=0.5;
+    rows.push({key:'stars',lab:L('CMS star rating','Calificación CMS'),
+      v26:L(`${p26.stars} stars`,`${p26.stars} estrellas`),v27:L(`${p27.rating} stars`,`${p27.rating} estrellas`),
+      comparable:true,changed,dir:0});
   }
   const t26=String(p26.type||'').replace(/ [CDI]?-?SNP/gi,'').trim(), t27=String(p27.type||'').replace(/ [CDI]?-?SNP/gi,'').trim();
-  if(t26&&t27&&t26!==t27) lines.push({abs:998,es:`Cambia de ${t26} a ${t27}.`,en:`Changes from ${t26} to ${t27}.`});
-  const d26=p26.has_drug!==false, d27=p27.drug==='Included';
-  if(d26!==d27) lines.push({abs:997,es:d27?'Ahora incluye medicamentos.':'Ya no incluye medicamentos.',en:d27?'Now includes drug coverage.':'No longer includes drug coverage.'});
-  if(!lines.length) return '';
-  lines.sort((x,y)=>y.abs-x.abs);
-  const top=lines.slice(0,3);
-  return `<div class="mpwc"><p class="mpwct">${L('What changes','Qué cambia')}</p><ul>${top.map(l=>`<li>${nbLast(L(l.en,l.es))}</li>`).join('')}</ul></div>`;
+  if(t26&&t27) rows.push({key:'type',lab:L('Plan type','Tipo de plan'),v26:t26,v27:t27,comparable:true,changed:t26!==t27,dir:0});
+  const dr26=p26.has_drug!==false, dr27=p27.drug==='Included';
+  rows.push({key:'drug',lab:L('Drug coverage','Cobertura de medicamentos'),
+    v26:L(dr26?'Included':'Not included',dr26?'Incluida':'No incluida'),
+    v27:L(dr27?'Included':'Not included',dr27?'Incluida':'No incluida'),comparable:true,changed:dr26!==dr27,dir:0});
+  return rows;
 }
 function mpCurCard(c){
   const p26=c.cur26, p27=c.cur27;
@@ -3660,28 +3672,34 @@ function mpCurCard(c){
     <p class="mpwhy">${nbLast(mpStayLine())}</p>
     ${detBtn(p27)}</div>`;
 }
-/* T-103 (7): the same 2026|2027 block (verdict, table, "qué cambia") reused on the plan's own "Ver
-   detalles" screen, not just the 3-card summary -- so "every dimension" is as honest there as here.
-   Checked what 2026 data exists (SHIP, 2026-10-18): cms_<ST>.js has only premium, max out-of-pocket,
-   medical deductible, stars and type. It has NO drug deductible, no Part B give-back, and no
-   dental/vision/hearing/OTC/fitness figures for 2026, so the Hospital, Fuera de la red, Pruebas, Equipo
-   and Beneficios extra groups the ticket describes CANNOT be compared against a real 2026 number --
-   building a table for them would mean inventing the missing side. This block is therefore Costos
-   only, which is the one group where every field genuinely exists in both years; reported to AB rather
-   than built further. No "Solo lo que cambió" toggle: with 3 rows total there is nothing to hide. */
+/* T-103 (7) + amendment 19:10 ("FORMAT = option A of the v5 mock... SHARE = EVERYTHING"): reused on
+   the plan's own "Ver detalles" screen as well as the 3-card summary, so both are equally honest about
+   every row that exists in both years. Pill + grid table, changed rows first with the carrier-color
+   bar and a "Changes" tag, unchanged rows plain grey -- no "Sin cambios (N)" collapse, amendment 19:10
+   dropped it explicitly: everything shows at once. Button text is plain "Share"/"Compartir" (19:10
+   supersedes the earlier "Share what's changing" wording from T-105(9) and the 18:40 amendment). */
 function mp26v27Block(p26,p27){
-  const d27=p27.drug==='Included';
-  const dedRow=`<tr><th>${nbLast(L('Drug deductible','Deducible de medicamentos'))}</th><td class="na">${L('Not in 2026 data','No disponible en 2026')}</td><td${d27?'':' class="na"'}>${d27?(p27.ded==null?noInfo():usd(p27.ded)):L('None','Ninguno')}</td></tr>`;
-  const mdedRow=mpRow(L('Medical deductible','Deducible médico'),p26.deductible,mpMdedAmt(p27.mded),v=>usd(v));
-  return `<p class="mpverdict">${nbLast(mpVerdictLine(p26,p27))}</p>
-    <table class="mpdt"><thead><tr><th></th><td>2026</td><td>${planYear()}</td></tr></thead><tbody>
-      ${mpRow(L('Monthly premium','Prima mensual'),p26.premium,p27.premium,premUsd)}
-      ${mpRow(L('Max out‑of‑pocket','Máximo de bolsillo'),p26.moop,p27.moop,v=>usd(v))}
-      ${mdedRow}
-      ${dedRow}
-    </tbody></table>
-    ${mpWhatChanges(p26,p27)}
-    <button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share what’s changing','Compartir lo que cambia')} ›</button>`;
+  const cc=carrierSafe(carrierColor(p27)), tint=carrierTint(cc,0.14);
+  const rows=mp26v27Rows(p26,p27);
+  const changedN=rows.filter(r=>r.changed).length;
+  const sorted=rows.map((r,i)=>({r,i})).sort((x,y)=>(y.r.changed-x.r.changed)||(x.i-y.i)).map(x=>x.r);
+  const pill=`<span class="mppill" style="background:${cc}">${L(`${changedN} change${changedN===1?'':'s'} in ${planYear()}`,`${changedN} ${changedN===1?'cambio':'cambios'} en ${planYear()}`)}</span>`;
+  const cells=sorted.map(r=>{
+    const tag=r.changed?`<span class="mp26tag" style="color:${cc}">${L('Changes','Cambia')}</span>`:'';
+    const lcls='mp26l'+(r.changed?' chg':''), lstyle=r.changed?` style="border-left-color:${cc}"`:'';
+    const label=`<div class="${lcls}"${lstyle}>${nbLast(r.lab)}${tag}</div>`;
+    const v26=!r.comparable?`<div class="mp26a na">${L('Not in 2026 data','No disponible en 2026')}</div>`
+             :`<div class="mp26a${r.changed?' strike':''}">${r.v26}</div>`;
+    const arrow=!r.changed||!r.dir?'':r.dir>0
+      ?` <i aria-hidden="true">▲</i><span class="mpsr">${L('(up)','(sube)')}</span>`
+      :` <i aria-hidden="true">▼</i><span class="mpsr">${L('(down)','(baja)')}</span>`;
+    const v27=r.changed?`<div class="mp26b" style="background:${tint};color:${cc}">${r.v27}${arrow}</div>`
+                       :`<div class="mp26a">${r.v27}</div>`;
+    return label+v26+v27;
+  }).join('');
+  return `${pill}
+    <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
+    <button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share','Compartir')} ›</button>`;
 }
 function mpOptCard(p,chipTxt,line,kind){
   // T-103 (3): kind = 'sim' (teal) or 'dif' (blue): the chip, its tint and the card's left edge
