@@ -345,6 +345,9 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .pc-low{margin-top:6px;padding:7px 10px;border-radius:8px;background:#fdecea;color:#a50e0e;font-size:12px;line-height:1.45}
 .pc-cmp{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sage-dark);border:1px solid #e5e9ec;border-radius:999px;padding:0 10px 0 8px;white-space:nowrap;min-height:36px;background:#fff;cursor:pointer;flex:0 0 auto}
 .pc-cmp input{accent-color:var(--sage);width:18px;height:18px;margin:0;cursor:pointer}
+/* T-112 (2): the quiet line at exactly 1 ticked -- no bar yet, just a nudge on the one card that
+   is ticked. Right-aligned under the checkbox corner, same tone as other quiet hints on this screen. */
+.cmphint{margin:2px 0 0;text-align:right;font-size:12.5px;color:#66727c;font-style:italic}
 /* T-079: the three cost numbers as one band of tiles under the card header.
    A FIGURE NEVER BREAKS ACROSS LINES: .v is nowrap, and below 360px (iPhone SE) the value and
    label step down so "$10,100" still fits one tile. Only word values wrap, at spaces. */
@@ -2438,6 +2441,20 @@ function planAction(p){
 }
 // A carrier outside the nine states still gets a colour, never the old grey.
 function carrierColor(p){return CARRIER_COLORS[p.carrier]||'#3D5A80';}
+// T-112 (2): the quiet line under a card's OWN checkbox when it is the only one ticked -- the
+// bar itself stays hidden until there is something to compare (2+, see barState()). Always in the
+// DOM (hidden by default, data-pid carries which card it belongs to): ticking a box on the list
+// runs through toggleCmp(), which updates the bar WITHOUT re-rendering 70 cards for performance --
+// updateCmpHints() below does the same surgical update for this hint, rather than relying on a
+// render that will not happen on that path.
+function cmpHint(p){
+  if(p._medigap) return '';
+  return `<p class="cmphint" data-pid="${esc(p.id)}" hidden>${L('Pick one more to compare','Elija otro para comparar')}</p>`;
+}
+function updateCmpHints(){
+  const show=selPlans.length===1?selPlans[0]:null;
+  document.querySelectorAll('.cmphint').forEach(el=>{ el.hidden=el.getAttribute('data-pid')!==show; });
+}
 function cmpBox(p){
   if(p._medigap) return '';
   // T-103 (4): the pinned current plan is ticked and locked; only the x takes it out
@@ -2555,6 +2572,7 @@ function planDetail(id){
   const keys=p._medigap?'':keyStrip(p);
   wb().innerHTML=`<div class="bkrow">${bk(L('\u2039 Back to the list','\u2039 Volver a la lista'),'backToPlans()')}</div>
     <div class="pc" style="--cc:${p._medigap?'var(--cbar-brand)':carrierColor(p)}">${planHead(p,true,true)}
+      ${cmpHint(p)}
       ${keys}
       ${gap?`<p class="nodet">${L('CMS has not published benefit details for this plan.','CMS no publicó el detalle de beneficios de este plan.')}</p>`:''}
       ${mpBlock}
@@ -2636,6 +2654,7 @@ function planCard(p,selectable){
   // against that pinned plan in one tap, instead of the visitor having to find and tick both boxes.
   const withPin=(_pin&&p.id!==_pin)?`<button class="pc-withpin" onclick="cmpWithPin(event,'${esc(p.id)}')">${L('Compare with my plan','Comparar con mi plan')}</button>`:'';
   return `<div class="pc tap${_pin&&p.id===_pin?' pinned':''}" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')">${planHead(p,selectable)}
+    ${cmpHint(p)}
     ${keyStrip(p)}
     ${withPin}
     ${detBtn(p)}</div>`;
@@ -3314,7 +3333,11 @@ function barState(){
   // T-096 round 4 f (AB: "Compare (2)"): the count rides in the button, so the bar is one thing to
   // read and one thing to tap instead of a label and a button competing.
   // T-098 item 7 (AB 2026-10-15 01:55): at three the button stops counting and starts asking.
-  if(k>0&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
+  // T-112 (2) (AB 2026-10-18, "the bar should pop at 2, not 1"): the bar itself only appears once
+  // there is something to compare (2+); at exactly 1 there is no bar, only the quiet per-card hint
+  // (cmpHint below) -- this naturally also covers (3), the my-plan flow's own plan counting as
+  // ticked, since that is just k starting at 1 or more under the same rule, nothing extra to build.
+  if(k>=2&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
     compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare (${k})`,`Comparar (${k})`),
     canCompare:k>=1&&total>=2};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
@@ -3331,6 +3354,7 @@ function cbarReport(){
   window.parent.postMessage(st,'*');
 }
 function updBar(msg){
+  updateCmpHints();
   cbarReport();
   const st=barState();
   // nothing on screen may sit under the bar: the content gets the bar's height as padding
@@ -3798,6 +3822,7 @@ function mpCurCard(c){
   return `<div class="pc tap mpc" data-pid="${esc(p27.id)}" style="--cc:${carrierColor(p27)}" onclick="cardTap(event,'${esc(p27.id)}')"><div class="mph">
       <div class="pc-top mprow">${chip('navy',L('YOUR PLAN TODAY','SU PLAN HOY'))}${cmpBox(p27)}</div><p class="pc-name">${nbLast(esc(dispName(p27)))}</p>${was}
       <div class="mpmeta">${mpTags(p27)}<span>ID <b>${planId(p27)}</b></span><span class="rt0">${star}</span></div>${rLow(p27)}</div>
+    ${cmpHint(p27)}
     ${mp26v27Block(p26,p27)}
     <p class="mpwhy">${nbLast(mpStayLine())}</p>
     ${detBtn(p27)}</div>`;
@@ -3842,6 +3867,7 @@ function mpOptCard(p,chipTxt,line,kind){
       <div class="pc-top mprow"><span class="mpchip ${kind}">${chipTxt}</span>${cmpBox(p)}</div><p class="pc-name">${nbLast(esc(dispName(p)))}</p>
       <div class="mpmeta">${mpTags(p)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p)}</b></span></div>
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}${mpInfo(p)}</div>
+    ${cmpHint(p)}
     ${keyStrip(p)}
     ${line?`<p class="mpwhy">${nbLast(line)}</p>`:''}
     ${detBtn(p)}</div>`;
