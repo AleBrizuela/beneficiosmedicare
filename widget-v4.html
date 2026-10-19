@@ -3427,9 +3427,11 @@ async function flowResults(){
       ${bm(msg
         ? (lang==='en' ? 'Let us try a different ZIP code, or call us and we will look it up with you.'
                        : 'Probemos otro código postal, o llámenos y lo buscamos juntos.')
+        // T-115 (AB 2026-10-19): short headline first ("No encontramos ese código postal" /
+        // "We couldn't find that ZIP code"), same guidance sentence kept underneath it.
         : (lang==='en'
-            ? `We do not have plan data for <strong>${esc(D.zip)}</strong>. Check the ZIP code and try another, or call us and we will look it up with you.`
-            : `No tenemos datos de planes para <strong>${esc(D.zip)}</strong>. Verifique el código postal y pruebe otro, o llámenos y lo buscamos juntos.`))}
+            ? `<strong>We couldn't find that ZIP code.</strong> Check <strong>${esc(D.zip)}</strong> and try another, or call us and we will look it up with you.`
+            : `<strong>No encontramos ese código postal.</strong> Verifique <strong>${esc(D.zip)}</strong> y pruebe otro, o llámenos y lo buscamos juntos.`))}
       ${msg?`<div style="background:#fff3f3;border:1px solid #f0c0c0;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:13px;color:#c00;text-align:center">${msg}</div>`:''}
       <div class="input-group zip-group">
         <label for="zip-retry">${lang==='en'?'Try another ZIP code':'Pruebe otro código postal'}</label>

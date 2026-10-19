@@ -1245,8 +1245,8 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
         <div class="section-label" style="color:var(--green)">TESTIMONIOS</div>
         <h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2>
       </div>
-      <!-- T-031: the real Google rating instead of unverified quotes (D-068). Update the count every Monday from the Business Profile. -->
-      <p class="t31-rating"><span class="t31-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong>5.0 en Google · 9 reseñas</strong> <a href="https://maps.app.goo.gl/wfbQjcZ2C4wkN5E99" target="_blank" rel="noopener">Leer las reseñas &rarr;</a></p>
+      <!-- T-116 (AB 2026-10-19): no static review count to keep current -- a link straight to the live Google reviews instead. -->
+      <p class="t31-rating"><span class="t31-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <a href="https://maps.app.goo.gl/wfbQjcZ2C4wkN5E99" target="_blank" rel="noopener">Lea nuestras rese&ntilde;as en Google &rarr;</a></p>
     </div>
   </section>
 
@@ -1639,6 +1639,9 @@ function toggleMobile() {
   zipInput.addEventListener('input', function() {
     this.value = this.value.replace(/\D/g, '').slice(0, 5);
     zipError.style.display = 'none';
+    // T-115: a complete 5-digit ZIP, typed or pasted, advances on its own. The button
+    // stays for anyone who prefers to tap it (autofill, or a paste that doesn't fire input).
+    if (this.value.length === 5) handleZipSubmit();
   });
 
   var submitted = false;
