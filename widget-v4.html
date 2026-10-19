@@ -4153,23 +4153,18 @@ function shareURL(){
   const plans=sharePlans(); if(!plans.length) return '';
   const mc=leadSite()==='medicare-california';
   const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
-  if(D.priority) q.push('r='+encodeURIComponent(D.priority));
+  // T-113: r= (the priority/suggestion reason, e.g. "drugs") was an internal personalization flag
+  // with no reason to travel in a URL people forward to each other. Dropped; a recipient's shared
+  // page just shows no "For X:" lead line, same as it already did when D.priority was empty.
   // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them.
-  // Also true for the T-105(9) "Compartir lo que cambia" button, which shares straight from the mpCurCard
+  // Also true for the "Compartir lo que cambia" button, which shares straight from the mpCurCard
   // screen -- before Compare has ever been opened, so _cmpFrom might not say 'myplan' yet even though
-  // _mpCtx already holds the right current-plan context.
+  // _mpCtx already holds the right current-plan context. This ALSO doubles as the "changes" flag: a
+  // single-plan share (ids.length===1) with hoy===that same id is how the receiving page and its link
+  // preview tell "what changes in your plan" apart from an ordinary compare, with no separate param
+  // (T-113: dropped the redundant chg=1 the same way).
   const hoy=((_cmpFrom==='myplan'||_shareIds)&&_mpCtx&&_mpCtx.cur27)?plans.find(p=>p.id===_mpCtx.cur27.id):null;
   if(hoy) q.push('hoy='+encodeURIComponent(planIdRaw(hoy)));
-  // T-105 (9): "Compartir lo que cambia" shares this one plan via the normal shared-page mechanics
-  // (same page, same agent branding by state) with a flag so the link preview can say "what
-  // changes" instead of "N options" -- no new rendering path, no 2026 figures on the shared page
-  // (it only ever reads 2027 CMS data); the link itself and the recipient's view are the existing
-  // single-plan share, tagged accordingly. Reported as a simplification, not the full ticket text.
-  // NOTE (simplification, flagged not guessed-past): the ticket asks this link to carry "no ZIP
-  // beyond the state" -- it still carries the exact zip= below, reused from the normal share path,
-  // because the Function resolves state FROM that zip (zip_index.js) and swapping it for a bare
-  // state code needs a second lookup path there that this pass did not build. Reported to AB.
-  if(_shareIds) q.push('chg=1');
   if(SHARE_READABLE_PATH){
     const word=mc?'options':'opciones';
     return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
@@ -4185,29 +4180,21 @@ function shareURL(){
 // it back to null on close so the very next ordinary Compartir tap reads selPlans again.
 let _shareIds=null;
 function sharePlans(){return (_shareIds||selPlans).map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
-function shareMsg(){
-  // T-102: the questions go to the agent for this ZIP's state, by name, on her own number.
-  // T-105 (AB 2026-10-18 12:55): the link first, then the agent's signature block (shareSig).
-  const n=sharePlans().length, z=String(D.zip||'').replace(/\D/g,''), a=agent();
-  const intro=_shareIds?L(`What's changing in your plan for ${planYear()}, ZIP ${z}:`,`Lo que cambia en su plan para ${planYear()}, ZIP ${z}:`)
-                       :L(`${n} Medicare options for 2027, ZIP ${z}:`,`${n} opciones de Medicare 2027 para el ZIP ${z}:`);
-  return intro+'\n'+shareURL()+'\n\n'+shareSig(a);
+/* T-113 (AB 2026-10-19 audit, ZIP 64078): "less is more." The card already carries the plan count,
+   the county and state, the tagline, the agent's name and phone (the share page's own header), so
+   the MESSAGE just needs one line to say what the link is, then the link, and nothing else -- no
+   agent block, no wa.me line, no email line, no signature. Whatever the sender wants to say rides in
+   front of this in their own app, since we no longer fill the rest of the bubble with our own text.
+   Replaces the T-105 shareSig block (agent name/phone/WhatsApp/email on every message) that AB's
+   audit flagged as the clutter crowding out a sender's own words. The agent still appears -- on the
+   page the link opens, per shareRender/plansForShare -- just not inside the text itself. */
+function shareLine(){
+  const z=String(D.zip||'').replace(/\D/g,'');
+  return _shareIds
+    ?L(`What changes in your plan for ${planYear()} · ZIP ${z}`,`Lo que cambia en su plan ${planYear()} · ZIP ${z}`)
+    :L(`Medicare plans for ${planYear()} · ZIP ${z}`,`Planes Medicare ${planYear()} · ZIP ${z}`);
 }
-/* T-105 (AB 2026-10-18 12:55): the signature on every text the share sheet sends (WhatsApp, Texto, Email),
-   both agents, ES + EN, in this order and these words. No "con licencia" / "licensed", no bare website
-   line (the email's domain already says it). The number shows as (913) 488-5341 with a non-breaking
-   space after the bracket so it never splits; no non-breaking hyphen here, so the phone's own number
-   detection still sees it. The email stays plain text in a message; the phone's apps link it. */
-function shareWaText(a){return L(`Hi ${agentFirst(a)}, I saw my comparison`,`Hola ${agentFirst(a)}, vi mi comparación`);}
-function shareWaURL(a){return 'https://wa.me/'+a.digits+'?text='+encodeURIComponent(shareWaText(a));}
-function shareSig(a){
-  return L(`Questions? ${a.name}, Medicare agent`,`¿Preguntas? ${a.name}, agente de Medicare`)+'\n'+
-    L('Call or text: ','Llamada o texto: ')+String(a.tel).replace(') ',')\u00A0')+'\n'+
-    'WhatsApp: '+shareWaURL(a)+
-    // T-098: a medicare-california page never shows a BeneficiosMedicare address. Both agents' addresses are
-    // BM ones, so a text sent from MC carries no Email line until MC's own pass (after AB's "BM good").
-    (leadSite()==='medicare-california'?'':'\nEmail: '+a.email);
-}
+function shareMsg(){ return shareLine()+'\n'+shareURL(); }
 const SHARE_ICONS={
   wa:'<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.6 20.4l4.2-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="#fff" stroke-width="1.7"/><path fill="#fff" stroke="none" d="M9.3 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.8c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3-.1.5.6 1 1.4 1.9 2.5 2.4.2.1.4.1.5 0l.7-.8c.1-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.4 0 .5-.2 1.2-.8 1.6-.6.4-1.5.5-3.2-.2-1.9-.8-3.2-2.7-3.4-3-.2-.3-.9-1.3-.9-2.4 0-1.1.5-1.6.7-1.9z"/>',
   sms:'<path fill="#fff" stroke="none" d="M12 4.6c-4.7 0-8.4 3-8.4 6.7 0 2.2 1.3 4.1 3.3 5.3-.2 1.2-.8 2.3-1.7 3.1 1.8 0 3.4-.7 4.6-1.7.7.1 1.4.2 2.2.2 4.7 0 8.4-3 8.4-6.7S16.7 4.6 12 4.6z"/>',
@@ -4311,9 +4298,10 @@ function shareSend(k){
   }
   if(k==='pdf'){ wEvt('pdf_open',{plans:sharePlans().length}); openTop(url+(url.indexOf('?')<0?'?':'&')+'print=1'); closeShare(); return; }
   const t=encodeURIComponent(msg);
+  // T-113: the email subject is the same one line the message opens with, not a separate generic line.
   const href=k==='whatsapp'?`https://wa.me/?text=${t}`
             :k==='sms'?`sms:?&body=${t}`
-            :`mailto:?subject=${encodeURIComponent(L('Medicare options for 2027','Opciones de Medicare 2027'))}&body=${t}`;
+            :`mailto:?subject=${encodeURIComponent(shareLine())}&body=${t}`;
   openTop(href); closeShare();
 }
 // Inside the iframe, window.open can be blocked and a sms:/mailto: has to leave from the PAGE, not

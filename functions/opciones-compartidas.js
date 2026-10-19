@@ -1,11 +1,21 @@
 /* T-105 · the link preview of a shared comparison, per link (AB 2026-10-18).
+ * T-113 (AB 2026-10-19 audit, ZIP 64078) · "less is more":
+ *   - the title no longer lists plan names. That was the actual bug AB found: with 3 plans it read
+ *     "Humana Essentials Plus Giveback, Humana Essentials Plus Giveback, Huma..." -- one name repeated
+ *     and the whole thing cut off by the platform's own title-length limit. The count and the place are
+ *     enough; the names are one tap away on the page itself.
+ *   - no description at all. The image already carries the tagline, the agent's name and phone, so a
+ *     caption repeating them was pure duplication.
+ *   - the "what changes" title no longer depends on a dedicated ?chg=1 flag. The widget only ever
+ *     produces a single-plan share for that screen, with hoy= set to that same plan's id (T-113 dropped
+ *     chg=1 as redundant with that), so ids.length===1 && hoy===ids[0] is the one-plan "what changes"
+ *     share and anything else is an ordinary compare.
  *
  * WhatsApp, iMessage, Facebook and Gmail do not run JavaScript: the preview is whatever HTML the server
  * hands their crawler. /opciones-compartidas is one static file for every link, so on its own every preview
  * reads the same. For a link-preview crawler only, this serves that same file with its og/twitter tags
  * rewritten from the link: the agent for the ZIP's state (T-102: Susana for KS, MO, TX, FL; Alejandra for
- * everything else), her card image (1200x630, og-opciones-<agent>-<lang>.jpg), and a title that says the
- * comparison itself ("3 opciones de Medicare 2027 en Douglas, KS: Devoted Choice 001 ...").
+ * everything else) and her card image (1200x630, og-opciones-<agent>-<lang>.jpg).
  *
  * People get the plain file, untouched and with no extra work: the page draws itself in the browser. Only a
  * crawler (or ?og=1, for checking) pays for the two lookups, and both are plain text searches, never a JSON
@@ -26,37 +36,12 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 
 // "H4348_001_0" -> "H4348-001" (the form a link carries), as planIdRaw does in the widget
 const rawId = id => { const m = String(id).split('_'); return m[0] + (m[1] ? '-' + m[1] : '') + (m[2] && m[2] !== '0' ? '-' + m[2] : ''); };
-const toFileId = raw => { const m = String(raw).split('-'); return m[0] + '_' + (m[1] || '') + '_' + (m[2] || '0'); };
-// the display rules the widget uses for a name: no trailing "(HMO)"-type bracket, no trailing "Plan",
-// capitals set in proper case (a short version of properName: enough for a preview title)
-function shortName(n) {
-  let s = String(n || '').replace(/\s*\([^()]*\)\s*$/, '').replace(/\s+Plan\s*$/i, '').trim();
-  if (/[A-Z]/.test(s) && s === s.toUpperCase()) {
-    const UP = /^(HMO|PPO|POS|SNP|D-SNP|C-SNP|I-SNP|PDP|MA|MAPD|QMB|AARP|SCAN|[A-Z]{2}|I{1,3}|IV|V|VI{0,3}|IX|X)$/;
-    s = s.split(/\s+/).map((w, i) => (UP.test(w) && (w.length !== 2 || i > 0)) ? w : w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
-  }
-  return s;
-}
 // '"<key>":"<value>"' found by plain search
 function pick(text, key) {
   const k = '"' + key + '":"', i = text.indexOf(k);
   if (i < 0) return '';
   const j = text.indexOf('"', i + k.length);
   return j < 0 ? '' : text.slice(i + k.length, j);
-}
-function planName(text, fileId) {
-  const k = '"id":"' + fileId + '"';
-  let i = text.indexOf(k);
-  if (i < 0) return '';
-  // the name sits in the same object; look a short way either side of the id
-  const win = text.slice(Math.max(0, i - 600), i + 600);
-  const m = win.match(/"name":"((?:[^"\\]|\\.)*)"/g);
-  if (!m) return '';
-  // the closest "name" to the id
-  const off = i - Math.max(0, i - 600);
-  let best = '', bd = 1e9;
-  for (const x of m) { const p = win.indexOf(x); const d = Math.abs(p - off); if (d < bd) { bd = d; best = x; } }
-  try { return JSON.parse(best.slice(7)); } catch (e) { return ''; }
 }
 
 export async function onRequestGet(context) {
@@ -77,38 +62,34 @@ export async function onRequestGet(context) {
     if (!/^[A-Z]{2}$/.test(st)) return res;
     const ak = SUSANA[st] ? 'susana' : 'alejandra', A = AGENTS[ak];
 
-    let county = '', names = [];
+    let county = '';
     const pf = await env.ASSETS.fetch(new URL('/data/plans_' + st + '_2027.json', url.origin));
-    if (pf.ok) {
-      const t = await pf.text();
-      county = pick(t, zip);
-      names = ids.map(r => planName(t, toFileId(r))).filter(Boolean).map(shortName);
-    }
+    if (pf.ok) county = pick(await pf.text(), zip);
+
     const n = ids.length;
     const where = (county ? county + ', ' : '') + st;
-    // T-105 (9): "Compartir lo que cambia" tags its link ?chg=1 so the preview says what it is,
-    // not "N options" -- the page and image are otherwise the same single-plan share.
-    const chg = url.searchParams.get('chg') === '1';
+    // T-113: the widget only ever shares a single plan from the "what changes" screen, tagged with
+    // hoy= equal to that same plan's id (?chg=1 was redundant with that and is gone) -- so that
+    // exact shape, and nothing else, is "what changes" rather than an ordinary compare.
+    const hoy = url.searchParams.get('hoy') || '';
+    const chg = n === 1 && !!hoy && hoy === ids[0];
     const title = chg
-      ? (en ? 'What changes in your plan in 2027' : 'Lo que cambia en su plan en 2027')
+      ? (en ? 'What changes in your plan for 2027' : 'Lo que cambia en su plan en 2027')
       : en
-      ? `${n} Medicare option${n === 1 ? '' : 's'} for 2027 in ${where}` + (names.length ? `: ${names.join(', ')}` : '')
-      : `${n} ${n === 1 ? 'opción' : 'opciones'} de Medicare 2027 en ${where}` + (names.length ? `: ${names.join(', ')}` : '');
-    // never "free" / "licensed" in a preview (the T-090 og rule site-check.py enforces on static pages)
-    const desc = en
-      ? `Side by side, with the CMS costs. Questions? ${A.name}, ${A.tel}.`
-      : `Lado a lado, con los costos de CMS. ¿Preguntas? ${A.name}, ${A.tel}.`;
+      ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 in ${where}`
+      : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 en ${where}`;
     const img = `${url.origin}/og-opciones-${ak}-${en ? 'en' : 'es'}.jpg`;
     const alt = en ? `${A.name}, ${A.tel}, BeneficiosMedicare.com` : `${A.name}, ${A.tel}, BeneficiosMedicare.com`;
 
+    // T-113: no description at all -- the image already carries the tagline, the agent's name and
+    // phone, so the static file's og:description/twitter:description tags were dropped; nothing here
+    // replaces them.
     const html = (await res.text())
       .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)} | Beneficios Medicare</title>`)
       .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${esc(title)}">`)
-      .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${esc(desc)}">`)
       .replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${esc(img)}">`)
       .replace(/<meta property="og:image:alt" content="[^"]*">/, `<meta property="og:image:alt" content="${esc(alt)}">`)
       .replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${esc(title)}">`)
-      .replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${esc(desc)}">`)
       .replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${esc(img)}">`)
       .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${esc(url.toString())}">`);
     const headers = new Headers(res.headers);

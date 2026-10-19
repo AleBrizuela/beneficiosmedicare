@@ -37,18 +37,18 @@ export async function onRequest(context) {
 
     const en = url.searchParams.get('lang') === 'en';
     const n = Math.min(ids.length, 3);
-    const title = en ? `${n} Medicare options for 2027 · ZIP ${zip}`
-                     : `${n} opciones de Medicare 2027 · ZIP ${zip}`;
-    const desc = en ? 'Side by side, with the 2027 CMS costs. Questions: (310) 597-9142'
-                    : 'Lado a lado, con los costos de CMS para 2027. Preguntas: (310) 597-9142';
+    // T-113: ZIP in the title was less useful than the county/state the live query-string path shows
+    // (functions/opciones-compartidas.js), and this path has no county lookup of its own; kept simple
+    // since SHARE_READABLE_PATH is off and no outgoing link uses this route today. No description --
+    // the image carries the tagline, agent name and phone.
+    const title = en ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 · ZIP ${zip}`
+                     : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 · ZIP ${zip}`;
     const esc = s => String(s).replace(/[&<>"]/g,
       c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
     const html = (await res.text())
       .replace(/<meta property="og:title" content="[^"]*">/,
                `<meta property="og:title" content="${esc(title)}">`)
-      .replace(/<meta property="og:description" content="[^"]*">/,
-               `<meta property="og:description" content="${esc(desc)}">`)
       .replace(/<title>[^<]*<\/title>/,
                `<title>${esc(title)} | Beneficios Medicare</title>`);
 
