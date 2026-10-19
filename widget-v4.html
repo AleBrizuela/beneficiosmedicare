@@ -119,6 +119,9 @@ body.host-next #wb .btn-p{display:none!important}
 .bkrow .btn-back{margin-bottom:0}
 /* T-107 (3-REVISED): the agent's photo, right end of the Volver row, no extra height. */
 .volver-ph{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;flex:0 0 40px}
+/* T-107 (3): the list's own slim agent row, under the title/ZIP line, above the filter chips. */
+.aslim{display:flex;align-items:center;gap:8px;margin:8px 0 10px;font-size:14px;font-weight:600;color:#3a4650}
+.aslim img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:0 0 44px}
 .btn-ghost{background:none;border:none;color:#1a73e8;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;padding:10px 0;text-decoration:none;min-height:44px}
 .btn-remind{width:100%;padding:14px;background:var(--lt-blue);color:var(--blue);border:2px solid var(--lt-blue);border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;min-height:50px}
 .btn-remind:hover{border-color:var(--blue)}
@@ -714,6 +717,7 @@ body.host-cbar .cbar{display:none!important}
    is --mint, the gold chip and its cream line are the AEP strip's yellow (js/date-strip.js), up/down
    are the question screen's own red and green families. */
 .mptop{display:flex;align-items:center;gap:12px;margin:0 0 6px}
+.mptop .mphl,.mptop .mpq{flex:1 1 auto}
 .mptop .btn-back{margin-bottom:0;flex:0 0 auto}
 .mpq{font-size:19px;line-height:1.22;font-weight:700;color:var(--cbar-ink);margin:0;text-align:left;text-wrap:balance}
 .mphint{font-size:14.5px;color:#4A5568;margin:0 0 8px;text-align:left;text-wrap:pretty}
@@ -2908,6 +2912,7 @@ function resultsHead(list){
         <button type="submit">${L('See','Ver')}</button>
       </form></div>
     <p class="zerr" id="zerr"></p>
+    ${agentSlimRow()}
     ${dualLine()}
     ${chipRow()}
     ${foPanel()}
@@ -3397,7 +3402,7 @@ function mpSearch(q){
 const MP_CARD='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M3 9.5h18M6.5 14h5"/></s'+'vg>';
 function flowMyPlan(){
   prog(55); _plansView=false; _pin='';
-  wb().innerHTML=`<div class="mptop">${bk()}<p class="mpq">${L('What plan do you have today?','¿Qué plan tiene hoy?')}</p></div>
+  wb().innerHTML=`<div class="mptop">${bk()}<p class="mpq">${L('What plan do you have today?','¿Qué plan tiene hoy?')}</p>${agentRow()}</div>
     <p class="mphint">${L('Type the plan name or the number on your plan&nbsp;card.','Escriba el nombre o el número de su tarjeta del&nbsp;plan.')}</p>
     <input id="mpin" class="mpfield" type="text" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false"
       aria-label="${L('Your plan name or card number','Nombre del plan o número de tarjeta')}" aria-controls="mpsug" value="${esc(_mpQ)}"
@@ -3675,7 +3680,8 @@ function mp26v27Block(p26,p27){
       ${mdedRow}
       ${dedRow}
     </tbody></table>
-    ${mpWhatChanges(p26,p27)}`;
+    ${mpWhatChanges(p26,p27)}
+    <button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share what’s changing','Compartir lo que cambia')} ›</button>`;
 }
 function mpOptCard(p,chipTxt,line,kind){
   // T-103 (3): kind = 'sim' (teal) or 'dif' (blue): the chip, its tint and the card's left edge
@@ -3700,7 +3706,7 @@ function flowMyPlanResults(){
   const n=(c.sim?1:0)+(c.diff?1:0), cty=esc(D.county||''), cnt=mpTodosCount();
   const title=n===2?L('Your current plan and 2&nbsp;options','Su actual y 2&nbsp;opciones')
              :(n===1?L('Your current plan and 1&nbsp;option','Su actual y 1&nbsp;opción'):L('Your current plan','Su plan actual'));
-  wb().innerHTML=`<div id="mpres"><div class="mptop">${bk()}<p class="mphl">${title}</p></div>
+  wb().innerHTML=`<div id="mpres"><div class="mptop">${bk()}<p class="mphl">${title}</p>${agentRow()}</div>
     <div class="rh mprh"><div class="zl" id="zl">${PIN}
       <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">· ${cty}</span>`:''}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
@@ -3853,6 +3859,14 @@ function confPhoto(a){return `<span class="ci2 ph"><img src="${esc(a.photo)}" al
    flagged rather than rushed, since that's exactly the crowded case the mock itself calls out as
    needing the fallback, and getting it wrong is a 375px-vs-320px regression risk on a live site. */
 function agentRow(){const a=agent();return `<img class="volver-ph" src="${esc(a.photo)}" alt="${esc(a.name)}" width="40" height="40">`;}
+/* T-107 (3) (AB 15:55): the list's own agent presence -- a slim row under the title/ZIP line, 44px
+   photo + "Su asesora: <name>", name nowrap, no phone and no button (the call bar after 4s, T-104,
+   does that job). Per (4), this is the list screen's ONE photo -- it gets no Volver-row photo too. */
+function agentSlimRow(){
+  const a=agent();
+  return `<div class="aslim" data-agent="${a.key}"><img src="${esc(a.photo)}" alt="" width="44" height="44">
+    <span>${L('Your advisor:','Su asesora:')} <span class="nw">${esc(a.name)}</span></span></div>`;
+}
 function agentFirst(a){return String(a.name).split(' ')[0];}
 function askLine(){
   const a=agent();   // T-102: same per-state agent as the suggestion card, not a hardcoded number
@@ -3968,9 +3982,22 @@ function shareURL(){
   const mc=leadSite()==='medicare-california';
   const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
   if(D.priority) q.push('r='+encodeURIComponent(D.priority));
-  // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them
-  const hoy=(_cmpFrom==='myplan'&&_mpCtx&&_mpCtx.cur27)?plans.find(p=>p.id===_mpCtx.cur27.id):null;
+  // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them.
+  // Also true for the T-105(9) "Compartir lo que cambia" button, which shares straight from the mpCurCard
+  // screen -- before Compare has ever been opened, so _cmpFrom might not say 'myplan' yet even though
+  // _mpCtx already holds the right current-plan context.
+  const hoy=((_cmpFrom==='myplan'||_shareIds)&&_mpCtx&&_mpCtx.cur27)?plans.find(p=>p.id===_mpCtx.cur27.id):null;
   if(hoy) q.push('hoy='+encodeURIComponent(planIdRaw(hoy)));
+  // T-105 (9): "Compartir lo que cambia" shares this one plan via the normal shared-page mechanics
+  // (same page, same agent branding by state) with a flag so the link preview can say "what
+  // changes" instead of "N options" -- no new rendering path, no 2026 figures on the shared page
+  // (it only ever reads 2027 CMS data); the link itself and the recipient's view are the existing
+  // single-plan share, tagged accordingly. Reported as a simplification, not the full ticket text.
+  // NOTE (simplification, flagged not guessed-past): the ticket asks this link to carry "no ZIP
+  // beyond the state" -- it still carries the exact zip= below, reused from the normal share path,
+  // because the Function resolves state FROM that zip (zip_index.js) and swapping it for a bare
+  // state code needs a second lookup path there that this pass did not build. Reported to AB.
+  if(_shareIds) q.push('chg=1');
   if(SHARE_READABLE_PATH){
     const word=mc?'options':'opciones';
     return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
@@ -3980,12 +4007,19 @@ function shareURL(){
   q.unshift('zip='+encodeURIComponent(D.zip||''));
   return `${shareOrigin()}/${file}?${q.join('&')}`;
 }
-function sharePlans(){return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
+// T-105 (9): "Compartir lo que cambia" on the 2026-vs-2027 block opens this same sheet for just that
+// one plan, without touching selPlans (the Compare bar's own ticks must survive opening and closing
+// the sheet unchanged). _shareIds overrides the normal selPlans source for one open; openShare clears
+// it back to null on close so the very next ordinary Compartir tap reads selPlans again.
+let _shareIds=null;
+function sharePlans(){return (_shareIds||selPlans).map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);}
 function shareMsg(){
   // T-102: the questions go to the agent for this ZIP's state, by name, on her own number.
   // T-105 (AB 2026-10-18 12:55): the link first, then the agent's signature block (shareSig).
   const n=sharePlans().length, z=String(D.zip||'').replace(/\D/g,''), a=agent();
-  return L(`${n} Medicare options for 2027, ZIP ${z}:`,`${n} opciones de Medicare 2027 para el ZIP ${z}:`)+'\n'+shareURL()+'\n\n'+shareSig(a);
+  const intro=_shareIds?L(`What's changing in your plan for ${planYear()}, ZIP ${z}:`,`Lo que cambia en su plan para ${planYear()}, ZIP ${z}:`)
+                       :L(`${n} Medicare options for 2027, ZIP ${z}:`,`${n} opciones de Medicare 2027 para el ZIP ${z}:`);
+  return intro+'\n'+shareURL()+'\n\n'+shareSig(a);
 }
 /* T-105 (AB 2026-10-18 12:55): the signature on every text the share sheet sends (WhatsApp, Texto, Email),
    both agents, ES + EN, in this order and these words. No "con licencia" / "licensed", no bare website
@@ -4026,9 +4060,10 @@ function shareChannels(){
    large tiles side by side (the channels people actually tap -- WhatsApp, text, email), row 2 is
    two quieter outlined buttons (copy link, PDF). Same channels, same shareSend(), same tracking;
    only the layout changed. Mock: compartido-menos-es-mas, ronda-del-domingo-v2, section 4. */
-function openShare(){
+function openShare(ids){
+  _shareIds=ids||null;
   if(!sharePlans().length) return;
-  wEvt('share_open',{plans:sharePlans().length});
+  wEvt('share_open',{plans:sharePlans().length,mode:ids?'plan_change':'compare'});
   const tile=c=>`<button class="cht" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span><span class="chtl">${c.lb}</span></button>`;
   const quiet=c=>`<button class="chq" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
   const chans=shareChannels(), tiles=chans.slice(0,3), quiets=chans.slice(3);
@@ -4047,6 +4082,7 @@ function openShare(){
 }
 function closeShare(){
   const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
+  _shareIds=null;
   try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
 }
 /* T-098. In the host page's iframe the sheet cannot find the screen on its own: there is no
@@ -4254,7 +4290,11 @@ function cmpParts(plans,ro){
   const foot=can?'':`<div class="cmp-foot">${sanct?`<p class="plan-flag warn">${L('One of these plans has a CMS sanction, see','Uno de estos planes tiene una sanción de CMS, consulte')} <a href="https://www.medicare.gov" target="_blank" rel="noopener">Medicare.gov</a></p>`:`<p class="plan-flag">${L('Information only','Solo información')}</p>`}</div>`;
   // T-105 (8): Volver alone on top (Comparar only); the suggestion box; "Mostrar diferencias" and its line
   // directly above the columns.
-  const top=`${ro?'':`<div class="cmptop">${bk()}${agentRow()}</div>`}
+  // T-107 (4) ("i don't want TWO pics"): the suggestion box (sugCard or askLine) already carries the
+  // agent's photo whenever it renders; the Volver row only gets one when NEITHER renders -- the one
+  // edge case where a priority answer is set but no suggestion plan was found, so the box is empty.
+  const hasSugBox=!!sug||!D.priority;
+  const top=`${ro?'':`<div class="cmptop">${bk()}${hasSugBox?'':agentRow()}</div>`}
     ${unlicensedNote()}
     ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
     <div class="cmptog"><label class="tog"><input type="checkbox" onchange="cmpDiff(this)"> ${L('Show differences','Mostrar diferencias')}</label></div>

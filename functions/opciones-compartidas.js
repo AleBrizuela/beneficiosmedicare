@@ -86,7 +86,12 @@ export async function onRequestGet(context) {
     }
     const n = ids.length;
     const where = (county ? county + ', ' : '') + st;
-    const title = en
+    // T-105 (9): "Compartir lo que cambia" tags its link ?chg=1 so the preview says what it is,
+    // not "N options" -- the page and image are otherwise the same single-plan share.
+    const chg = url.searchParams.get('chg') === '1';
+    const title = chg
+      ? (en ? 'What changes in your plan in 2027' : 'Lo que cambia en su plan en 2027')
+      : en
       ? `${n} Medicare option${n === 1 ? '' : 's'} for 2027 in ${where}` + (names.length ? `: ${names.join(', ')}` : '')
       : `${n} ${n === 1 ? 'opción' : 'opciones'} de Medicare 2027 en ${where}` + (names.length ? `: ${names.join(', ')}` : '');
     // never "free" / "licensed" in a preview (the T-090 og rule site-check.py enforces on static pages)
