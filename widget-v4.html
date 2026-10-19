@@ -533,14 +533,15 @@ body.host-cbar .cbar{display:none!important}
    Gold stays for TERMINA only. */
 .mpchip.sim{background:#E6F2F1;color:#005C5C;box-shadow:inset 0 0 0 1px #007B7B}
 .mpchip.dif{background:#E8F0FA;color:#1D5FA8;box-shadow:inset 0 0 0 1px #1D5FA8}
-.pc.mpc.sim{border-left:5px solid #007B7B}
-.pc.mpc.dif{border-left:5px solid #1D5FA8}
+/* AMENDMENT AB 2026-10-18 evening ("drop side lines"), built 2026-10-19: these three used to add
+   their own colored LEFT border (teal/blue/ink) on top of the card's carrier-colored top stripe
+   from T-062 -- two accents on one card. ONE carrier accent per card now: the top stripe, already
+   set via --cc on every .pc (including these), is enough. */
 /* T-104: in a frame under 320px (a 320 phone) the plan name had 131px beside the Comparar box, so
    "Medicare Advantage" was cut mid-word. There the box takes its own row above the name, on the right. */
 @media(max-width:319px){.pc-top:not(.mprow){flex-direction:column-reverse;align-items:stretch;gap:6px}.pc-top:not(.mprow)>.pc-cmp{align-self:flex-end}}
 /* T-103 (4): the visitor's current plan, pinned at the top of the list. Ticked and locked: the only way
    out is the x, so a plain tap can never drop it by accident. */
-.pc.pinned{border-left:5px solid var(--cbar-ink)}
 .pc-cmp.pinned{border:1.5px solid var(--cbar-brand);background:var(--lt-mint);color:var(--cbar-ink);padding-right:0;gap:6px;cursor:default}
 .pc-cmp.pinned .pck{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:var(--cbar-brand);color:#fff;font-size:13px;font-weight:700}
 .pc-cmp.pinned .unpin{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -2px -10px 0;background:none;border:0;font:inherit;font-size:24px;line-height:1;color:var(--cbar-ink);cursor:pointer}
@@ -3872,30 +3873,26 @@ function mp26v27Block(p26,p27){
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
     <button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share','Compartir')} ›</button>`;
 }
-function mpOptCard(p,chipTxt,line,kind){
-  // T-103 (3): kind = 'sim' (teal) or 'dif' (blue): the chip, its tint and the card's left edge
-  return `<div class="pc tap mpc ${kind}" data-pid="${esc(p.id)}" style="--cc:${carrierColor(p)}" onclick="cardTap(event,'${esc(p.id)}')"><div class="mph">
-      <div class="pc-top mprow"><span class="mpchip ${kind}">${chipTxt}</span>${cmpBox(p)}</div><p class="pc-name">${nbLast(esc(dispName(p)))}</p>
-      <div class="mpmeta">${mpTags(p)}<span>${L('Plan ID: ','ID del plan: ')}<b>${planId(p)}</b></span></div>
-      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}${mpInfo(p)}</div>
-    ${cmpHint(p)}
-    ${keyStrip(p)}
-    ${line?`<p class="mpwhy">${nbLast(line)}</p>`:''}
-    ${detBtn(p)}</div>`;
-}
+// mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
+// its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
+// mpResolve()'s c.sim/c.diff computation stays -- mpLineFor()/mpSuggest() still use it to explain a
+// match in Compare when the visitor's own picks land on one. In git history if ever needed again.
 // "Cómo funciona ›" on an ending plan: the AEP 2027 article, Spanish on BM and English on MC (cross-site
 // pair per CLAUDE.md). Wording about the special period / Medigap rights is PROTECT's call (section 8).
 function mpHowURL(){return lang==='en'?'https://medicare-california.com/blog/medicare-aep-2027-california-changes':'https://beneficiosmedicare.com/blog/inscripcion-anual-aep-2027-california';}
 function flowMyPlanResults(){
   const c=_mpCtx; if(!c){flowMyPlan();return;}
   prog(84); _plansView=true;
-  // T-103 (4): back on the cards, the list's pin is over; ticks on plans that are not on these cards go too
+  // AMENDMENT AB 2026-10-18 evening ("generic picks, little value, less is more"), built 2026-10-19:
+  // this screen shows ONLY the current plan's 2026-vs-2027 card -- no "Similar to yours"/"Different
+  // from yours" cards. mpResolve() still computes c.sim/c.diff (mpLineFor/mpSuggest in Compare still
+  // use them to explain a match if the visitor's OWN picks happen to land on one), just nothing here
+  // renders them. "Compare with other plans" is the one path onward, via mpAll(true).
   if(_pin){_pin='';selPlans=selPlans.filter(id=>c.avail.indexOf(id)>=0);}
-  // the cards that can be compared enter ticked (section 3), once; after that the ticks are the visitor's
-  if(c.fresh){selPlans=c.avail.slice(0,3);c.fresh=false;}
-  const n=(c.sim?1:0)+(c.diff?1:0), cty=esc(D.county||''), cnt=mpTodosCount();
-  const title=n===2?L('Your current plan and 2&nbsp;options','Su actual y 2&nbsp;opciones')
-             :(n===1?L('Your current plan and 1&nbsp;option','Su actual y 1&nbsp;opción'):L('Your current plan','Su plan actual'));
+  // only the current plan enters ticked (there is only one card to tick); after that the ticks are the visitor's
+  if(c.fresh){selPlans=c.cur27?[c.cur27.id]:[];c.fresh=false;}
+  const cty=esc(D.county||''), cnt=mpTodosCount();
+  const title=L('Your current plan','Su plan actual');
   wb().innerHTML=`<div id="mpres"><div class="mptop">${bk()}<p class="mphl">${title}</p></div>
     <div class="rh mprh"><div class="zl" id="zl">${PIN}
       <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">· ${cty}</span>`:''}
@@ -3905,8 +3902,6 @@ function flowMyPlanResults(){
         <button type="submit">${L('See','Ver')}</button>
       </form></div><p class="zerr" id="zerr"></p></div>
     ${mpCurCard(c)}
-    ${c.sim?mpOptCard(c.sim,L('SIMILAR TO YOURS','SIMILAR AL SUYO'),mpSimLine(c),'sim'):''}
-    ${c.diff?mpOptCard(c.diff,L('DIFFERENT FROM YOURS','DIFERENTE AL SUYO'),mpDiffLine(c),'dif'):''}
     ${c.cur27?`<button class="mpall mpother" onclick="mpAll(true)">${L('Compare with other plans','Comparar con otros planes')} ›</button>`:''}
     <button class="mpall" onclick="mpAll(true)">${L(`See all ${cnt} plans in ${cty}`,`Ver los ${cnt} planes de ${cty}`)} ›</button>
     <p class="mpfine">${L(`Figures from CMS for ${planYear()}. Your plan has the final word.`,`Cifras de CMS para ${planYear()}. Su plan es la palabra final.`)}</p>
