@@ -1808,11 +1808,13 @@ function priorityStep(nextFn){
   prog(50);
   _cb.priority=nextFn;
   const cur=D.priority||'';
-  // RED flag: "Revisar mi plan de hoy" is T-099's own entry point, and everything T-099/T-103 build
-  // (flowMyPlan, flowMyPlanResults, mp26v27Block) only ever runs once a visitor has picked it -- so
-  // hiding this one option is enough to keep both RED tickets off in production, today's behaviour
-  // unchanged, with no separate flag needed anywhere else in that flow.
-  const opts=RED_RUN?PRI_OPTIONS:PRI_OPTIONS.filter(o=>o.id!=='myplan');
+  // T-099/T-103 turned ON in production 2026-10-19 (NOW.md SIGN-OFF: PROTECT yes on the wording,
+  // relayed + go by AB). This was the one place the RED gate lived -- hiding "Revisar mi plan de
+  // hoy" was enough to keep everything T-099/T-103 build (flowMyPlan, flowMyPlanResults,
+  // mp26v27Block) unreachable, since none of it runs until a visitor picks this option. RED_RUN
+  // itself stays defined, for whichever of the fine-print/unlicensed-state/multi-county items (none
+  // of which exist in code yet) needs the same mechanism once PROTECT signs each of those.
+  const opts=PRI_OPTIONS;
   const cards=opts.map(o=>{
     const h=o[lang](), d=o[lang+'D'], dd=typeof d==='function'?d():d;
     return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
