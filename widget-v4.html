@@ -389,7 +389,7 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .pc-visit .v.na{font-size:13px;font-weight:600;color:#56616a}
 .pc-chips{display:flex;flex-wrap:wrap;gap:6px}
 /* T-074 plan-type pills + the official plan ID line. Tag palette AB 2026-10-14. */
-.pc-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.pc-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
 .tg{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.35;white-space:nowrap}
 .tg-net{border:1.5px solid #002147;color:#002147;background:#fff;padding:2px 8px}
 .tg-who{background:var(--sage-dark);color:#fff}
@@ -2622,13 +2622,21 @@ function keyStrip(p){
    and the same "up to 3" message appears on either screen. `detail` keeps the plan screen's own
    header spacing; it no longer doubles as "this header has no checkbox". */
 function planHead(p,selectable,detail){
-  return `<div class="pc-head${detail?' pd-head':''}">
-      ${_pin&&p.id===_pin?`<div class="pc-top mprow"><span class="mpchip navy">${L('YOUR PLAN TODAY','SU PLAN HOY')}</span>${selectable?cmpBox(p):''}</div>
-      ${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p>`
-      :`<div class="pc-top"><div>${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p></div>${selectable?cmpBox(p):''}</div>`}
+  // T-104 amendment (AB 2026-10-19, CARD GAP): name, pill, ID and stars must form ONE left column
+  // that starts at the top and lays out on its own, never pushed down by the Compare button's
+  // height. Previously the pill/ID/stars were siblings of .pc-top rather than children of its left
+  // div, so they started below the WHOLE .pc-top row (whose height is the max of the name and the
+  // taller Compare button) instead of right under the name -- a one-line name (Imperial Dynamic,
+  // SCAN Prime) left a visible gap that a two- or three-line name did not. Nesting them inside the
+  // left div makes their position depend only on the name's own height, never the button's.
+  const body=`${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p>
       ${planTags(p)}
       ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
-      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}
+      <div class="pc-rating">${rStar(p)}</div>${rLow(p)}`;
+  return `<div class="pc-head${detail?' pd-head':''}">
+      ${_pin&&p.id===_pin?`<div class="pc-top mprow"><span class="mpchip navy">${L('YOUR PLAN TODAY','SU PLAN HOY')}</span>${selectable?cmpBox(p):''}</div>
+      ${body}`
+      :`<div class="pc-top"><div>${body}</div>${selectable?cmpBox(p):''}</div>`}
       </div>`;
 }
 function detBtn(p){
@@ -3337,8 +3345,9 @@ function barState(){
   // there is something to compare (2+); at exactly 1 there is no bar, only the quiet per-card hint
   // (cmpHint below) -- this naturally also covers (3), the my-plan flow's own plan counting as
   // ticked, since that is just k starting at 1 or more under the same rule, nothing extra to build.
+  // T-104 amendment (AB 2026-10-19): "Comparar 2 planes" / "Compare 2 plans", not "Compare (2)".
   if(k>=2&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
-    compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare (${k})`,`Comparar (${k})`),
+    compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare ${k} plans`,`Comparar ${k} planes`),
     canCompare:k>=1&&total>=2};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
 }
