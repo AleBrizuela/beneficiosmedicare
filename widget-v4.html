@@ -957,6 +957,14 @@ body.host-cbar .cbar{display:none!important}
 // WIDGET v4 - REDESIGNED
 // ═══════════════════════════════════════
 
+/* PRD RED-flag gate (AB 2026-10-18, "straight to PRD... RED items stay OFF in PRD behind a flag,
+   default off"): T-099 ("Revisar mi plan de hoy") and T-103 (its 2026-vs-2027 view) stay available
+   for AB to keep reviewing on any preview, off on the two live domains. Decided at VIEW time from
+   the hostname, same pattern already used by the staging badge below -- the exact same file ships
+   to both the `staging` and `production` branches unchanged; only where it is SERVED FROM differs
+   what a visitor sees. This is why `git diff staging production` can stay empty: the flag is not a
+   code difference between the two trees, it is a runtime check of where the code is running. */
+const RED_RUN=!/^(beneficiosmedicare\.com|www\.beneficiosmedicare\.com|medicare-california\.com|www\.medicare-california\.com)$/i.test(location.hostname);
 const _params=new URLSearchParams(location.search);
 let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[], _submitting=false;
 const _initZip=_params.get('zip')||'';
@@ -1786,7 +1794,12 @@ function priorityStep(nextFn){
   prog(50);
   _cb.priority=nextFn;
   const cur=D.priority||'';
-  const cards=PRI_OPTIONS.map(o=>{
+  // RED flag: "Revisar mi plan de hoy" is T-099's own entry point, and everything T-099/T-103 build
+  // (flowMyPlan, flowMyPlanResults, mp26v27Block) only ever runs once a visitor has picked it -- so
+  // hiding this one option is enough to keep both RED tickets off in production, today's behaviour
+  // unchanged, with no separate flag needed anywhere else in that flow.
+  const opts=RED_RUN?PRI_OPTIONS:PRI_OPTIONS.filter(o=>o.id!=='myplan');
+  const cards=opts.map(o=>{
     const h=o[lang](), d=o[lang+'D'], dd=typeof d==='function'?d():d;
     return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
       priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
