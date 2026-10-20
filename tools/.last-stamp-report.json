@@ -1,0 +1,2400 @@
+{
+  "headerStamped": [
+    {
+      "file": "404.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "beneficios.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "benefits.html",
+      "family": "key",
+      "lang": "en"
+    },
+    {
+      "file": "blog/5-cosas-antes-inscripcion-anual-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/agente-medicare-confiable-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/beneficios-adicionales-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/beneficios-preventivos-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/calificacion-estrellas-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/carta-anoc-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/cirugia-cataratas-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/comparar-planes-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/comparar-supplement-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/cuando-cambiar-plan-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/errores-inscripcion-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/examen-cancer-piel-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/guia-hijos-adultos-medicare-padres-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/index.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/jubilarse-a-los-65-medicare-seguro-social-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/limite-gastos-bolsillo-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/lista-medicare-ano-nuevo-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicamentos-medicare-parte-d-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-dental-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-gimnasio-silversneakers-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medigap-plan-g-vs-plan-n-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/periodo-inscripcion-anual-medicare-california-2026.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/planes-necesidades-especiales-medicare-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/tarjeta-flex-otc-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/verificar-formulario-medicamentos-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "blog/verificar-red-doctores-medicare-advantage-california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/bakersfield.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/beverly-hills.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/culver-city.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/del-rey.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/el-segundo.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/fresno.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/index.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/long-beach.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/los-angeles.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/mar-vista.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/marina-del-rey.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/mid-city.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/orange-county.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/playa-del-rey.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/playa-vista.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/riverside.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/sacramento.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/san-diego.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/san-francisco.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/san-jose.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/santa-monica.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/cities/westchester.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "california/index.html",
+      "family": "plain",
+      "lang": "en"
+    },
+    {
+      "file": "careers.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "como-inscribirse-medicare.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "contact.html",
+      "family": "key",
+      "lang": "en"
+    },
+    {
+      "file": "contacto.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "costos-medicare-2026.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "doble-elegibilidad-medicare-medicaid.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "equipo.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/california.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/florida.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/illinois.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/index.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/iowa.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/kansas.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/missouri.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/oklahoma.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "estados/texas.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "inscripcion-anual-aep.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "medicare-advantage-california.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "medigap-suplementos-california.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "nosotros.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "partes-medicare.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "politica-editorial.html",
+      "family": "plain",
+      "lang": "es"
+    },
+    {
+      "file": "privacidad.html",
+      "family": "key",
+      "lang": "es"
+    },
+    {
+      "file": "privacy.html",
+      "family": "key",
+      "lang": "en"
+    },
+    {
+      "file": "que-es-medicare.html",
+      "family": "key",
+      "lang": "es"
+    }
+  ],
+  "headerKept": [
+    {
+      "file": "blog/medicare-diabetes-california.html",
+      "why": "header content differs from plain-es canonical beyond the language link (or lang-link mismatch between desktop/mobile)"
+    },
+    {
+      "file": "en.html",
+      "why": "different header system (t31 home / topbar partner page), out of scope for STEP 1"
+    },
+    {
+      "file": "index.html",
+      "why": "different header system (t31 home / topbar partner page), out of scope for STEP 1"
+    },
+    {
+      "file": "presentacion.html",
+      "why": "different header system (t31 home / topbar partner page), out of scope for STEP 1"
+    },
+    {
+      "file": "presentation.html",
+      "why": "different header system (t31 home / topbar partner page), out of scope for STEP 1"
+    },
+    {
+      "file": "team.html",
+      "why": "header content differs from plain-en canonical beyond the language link (or lang-link mismatch between desktop/mobile)"
+    }
+  ],
+  "footerStamped": [
+    {
+      "file": "404.html",
+      "lang": "es"
+    },
+    {
+      "file": "beneficios.html",
+      "lang": "es"
+    },
+    {
+      "file": "benefits.html",
+      "lang": "en"
+    },
+    {
+      "file": "blog/5-cosas-antes-inscripcion-anual-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/agente-medicare-confiable-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/beneficios-adicionales-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/beneficios-preventivos-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/calificacion-estrellas-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/carta-anoc-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/cirugia-cataratas-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/comparar-planes-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/comparar-supplement-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/cuando-cambiar-plan-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/errores-inscripcion-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/examen-cancer-piel-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/guia-hijos-adultos-medicare-padres-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/index.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/jubilarse-a-los-65-medicare-seguro-social-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/limite-gastos-bolsillo-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/lista-medicare-ano-nuevo-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicamentos-medicare-parte-d-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-dental-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-diabetes-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-gimnasio-silversneakers-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/medigap-plan-g-vs-plan-n-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/periodo-inscripcion-anual-medicare-california-2026.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/planes-necesidades-especiales-medicare-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/tarjeta-flex-otc-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/verificar-formulario-medicamentos-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "blog/verificar-red-doctores-medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "california/index.html",
+      "lang": "en"
+    },
+    {
+      "file": "careers.html",
+      "lang": "es"
+    },
+    {
+      "file": "como-inscribirse-medicare.html",
+      "lang": "es"
+    },
+    {
+      "file": "contact.html",
+      "lang": "en"
+    },
+    {
+      "file": "contacto.html",
+      "lang": "es"
+    },
+    {
+      "file": "costos-medicare-2026.html",
+      "lang": "es"
+    },
+    {
+      "file": "doble-elegibilidad-medicare-medicaid.html",
+      "lang": "es"
+    },
+    {
+      "file": "en.html",
+      "lang": "en"
+    },
+    {
+      "file": "equipo.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/california.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/florida.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/illinois.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/index.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/iowa.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/kansas.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/missouri.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/oklahoma.html",
+      "lang": "es"
+    },
+    {
+      "file": "estados/texas.html",
+      "lang": "es"
+    },
+    {
+      "file": "index.html",
+      "lang": "es"
+    },
+    {
+      "file": "inscripcion-anual-aep.html",
+      "lang": "es"
+    },
+    {
+      "file": "medicare-advantage-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "medigap-suplementos-california.html",
+      "lang": "es"
+    },
+    {
+      "file": "nosotros.html",
+      "lang": "es"
+    },
+    {
+      "file": "partes-medicare.html",
+      "lang": "es"
+    },
+    {
+      "file": "politica-editorial.html",
+      "lang": "es"
+    },
+    {
+      "file": "privacidad.html",
+      "lang": "es"
+    },
+    {
+      "file": "privacy.html",
+      "lang": "en"
+    },
+    {
+      "file": "que-es-medicare.html",
+      "lang": "es"
+    }
+  ],
+  "footerKept": [
+    {
+      "file": "california/cities/bakersfield.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/beverly-hills.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/culver-city.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/del-rey.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/el-segundo.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/fresno.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/index.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/long-beach.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/los-angeles.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/mar-vista.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/marina-del-rey.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/mid-city.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/orange-county.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/playa-del-rey.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/playa-vista.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/riverside.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/sacramento.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/san-diego.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/san-francisco.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/san-jose.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/santa-monica.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "california/cities/westchester.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "presentacion.html",
+      "why": "footer text differs from es canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "presentation.html",
+      "why": "footer text differs from en canonical (not touched — see disclaimer-diff report)"
+    },
+    {
+      "file": "team.html",
+      "why": "footer text differs from en canonical (not touched — see disclaimer-diff report)"
+    }
+  ],
+  "ga4Stamped": [
+    "beneficios.html",
+    "benefits.html",
+    "blog/5-cosas-antes-inscripcion-anual-medicare-california.html",
+    "blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california.html",
+    "blog/agente-medicare-confiable-california.html",
+    "blog/beneficios-adicionales-medicare-advantage-california.html",
+    "blog/beneficios-preventivos-medicare-california.html",
+    "blog/calificacion-estrellas-medicare-advantage-california.html",
+    "blog/carta-anoc-medicare-california.html",
+    "blog/cirugia-cataratas-medicare-california.html",
+    "blog/comparar-planes-medicare-advantage-california.html",
+    "blog/comparar-supplement-advantage-california.html",
+    "blog/cuando-cambiar-plan-medicare-advantage-california.html",
+    "blog/errores-inscripcion-medicare-california.html",
+    "blog/examen-cancer-piel-medicare-california.html",
+    "blog/free-medicare-preventive-services-california.html",
+    "blog/guia-hijos-adultos-medicare-padres-california.html",
+    "blog/inscripcion-anual-aep-2027-california.html",
+    "blog/inscripcion-inicial-cumplir-65.html",
+    "blog/jubilarse-a-los-65-medicare-seguro-social-california.html",
+    "blog/limite-gastos-bolsillo-medicare-advantage-california.html",
+    "blog/lista-medicare-ano-nuevo-california.html",
+    "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+    "blog/medicamentos-medicare-parte-d-california.html",
+    "blog/medicare-dental-california.html",
+    "blog/medicare-dental-vision-hearing-california.html",
+    "blog/medicare-diabetes-cobertura-california.html",
+    "blog/medicare-gimnasio-silversneakers-california.html",
+    "blog/medicare-hmo-vs-ppo-california.html",
+    "blog/medicare-jubilacion-familias-hispanas-california.html",
+    "blog/medicare-late-enrollment-penalties-california.html",
+    "blog/medicare-para-residentes-permanentes-california.html",
+    "blog/medicare-part-b-irmaa-california.html",
+    "blog/medicare-parte-a-california.html",
+    "blog/medicare-parte-d-medicamentos-california.html",
+    "blog/medicare-seguro-empleador-california.html",
+    "blog/medicare-special-enrollment-periods-california.html",
+    "blog/medicare-supplement-plans-california.html",
+    "blog/medicare-vaccine-coverage-california.html",
+    "blog/medicare-viajes-fuera-california.html",
+    "blog/medicare-viajes-fuera-estados-unidos-california.html",
+    "blog/medicare-wellness-visit-vs-physical-california.html",
+    "blog/medigap-plan-g-vs-plan-n-california.html",
+    "blog/oep-termina-marzo-2026.html",
+    "blog/periodo-inscripcion-anual-medicare-california-2026.html",
+    "blog/planes-necesidades-especiales-medicare-california.html",
+    "blog/preparese-inscripcion-anual-aep.html",
+    "blog/tarjeta-flex-otc-medicare-advantage-california.html",
+    "blog/verificar-formulario-medicamentos-medicare-advantage-california.html",
+    "blog/verificar-red-doctores-medicare-advantage-california.html",
+    "california/cities/bakersfield.html",
+    "california/cities/beverly-hills.html",
+    "california/cities/culver-city.html",
+    "california/cities/del-rey.html",
+    "california/cities/el-segundo.html",
+    "california/cities/fresno.html",
+    "california/cities/index.html",
+    "california/cities/long-beach.html",
+    "california/cities/los-angeles.html",
+    "california/cities/mar-vista.html",
+    "california/cities/marina-del-rey.html",
+    "california/cities/mid-city.html",
+    "california/cities/orange-county.html",
+    "california/cities/playa-del-rey.html",
+    "california/cities/playa-vista.html",
+    "california/cities/riverside.html",
+    "california/cities/sacramento.html",
+    "california/cities/san-diego.html",
+    "california/cities/san-francisco.html",
+    "california/cities/san-jose.html",
+    "california/cities/santa-monica.html",
+    "california/cities/westchester.html",
+    "california/index.html",
+    "como-inscribirse-medicare.html",
+    "contact.html",
+    "contacto.html",
+    "costos-medicare-2026.html",
+    "doble-elegibilidad-medicare-medicaid.html",
+    "equipo.html",
+    "estados/california.html",
+    "estados/florida.html",
+    "estados/illinois.html",
+    "estados/index.html",
+    "estados/iowa.html",
+    "estados/kansas.html",
+    "estados/missouri.html",
+    "estados/oklahoma.html",
+    "estados/texas.html",
+    "inscripcion-anual-aep.html",
+    "medicare-advantage-california.html",
+    "medigap-suplementos-california.html",
+    "nosotros.html",
+    "partes-medicare.html",
+    "politica-editorial.html",
+    "privacidad.html",
+    "privacy.html",
+    "que-es-medicare.html",
+    "team.html",
+    "tools/medigap-scraper-v2.html",
+    "tools/medigap-scraper.html",
+    "widget-v3.html",
+    "widget.html"
+  ],
+  "ga4Kept": [
+    {
+      "file": "404.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "blog/index.html",
+      "why": "GA4 script block differs from canonical (not touched)"
+    },
+    {
+      "file": "blog/medicare-diabetes-california.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "careers.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "en.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "index.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "opciones-compartidas.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "presentacion.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "presentation.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "social/bridge.html",
+      "why": "no GA4 script found on this page"
+    },
+    {
+      "file": "widget-v4.html",
+      "why": "GA4 script block differs from canonical (not touched)"
+    }
+  ],
+  "favStamped": [
+    {
+      "file": "blog/5-cosas-antes-inscripcion-anual-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/agente-medicare-confiable-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/beneficios-adicionales-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/beneficios-preventivos-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/calificacion-estrellas-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/carta-anoc-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/cirugia-cataratas-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/comparar-planes-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/comparar-supplement-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/cuando-cambiar-plan-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/errores-inscripcion-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/examen-cancer-piel-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/guia-hijos-adultos-medicare-padres-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/index.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/jubilarse-a-los-65-medicare-seguro-social-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/limite-gastos-bolsillo-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/lista-medicare-ano-nuevo-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicamentos-medicare-parte-d-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-dental-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-gimnasio-silversneakers-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medigap-plan-g-vs-plan-n-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/periodo-inscripcion-anual-medicare-california-2026.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/planes-necesidades-especiales-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/tarjeta-flex-otc-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/verificar-formulario-medicamentos-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/verificar-red-doctores-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "california/cities/bakersfield.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/beverly-hills.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/culver-city.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/del-rey.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/el-segundo.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/fresno.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/long-beach.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/los-angeles.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/mar-vista.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/marina-del-rey.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/mid-city.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/orange-county.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/playa-del-rey.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/playa-vista.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/riverside.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/sacramento.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/san-diego.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/san-francisco.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/san-jose.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/santa-monica.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "california/cities/westchester.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "como-inscribirse-medicare.html",
+      "variant": "primary"
+    },
+    {
+      "file": "costos-medicare-2026.html",
+      "variant": "primary"
+    },
+    {
+      "file": "doble-elegibilidad-medicare-medicaid.html",
+      "variant": "primary"
+    },
+    {
+      "file": "equipo.html",
+      "variant": "alt (svg-only)"
+    },
+    {
+      "file": "inscripcion-anual-aep.html",
+      "variant": "primary"
+    },
+    {
+      "file": "medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "medigap-suplementos-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "nosotros.html",
+      "variant": "primary"
+    },
+    {
+      "file": "partes-medicare.html",
+      "variant": "primary"
+    },
+    {
+      "file": "politica-editorial.html",
+      "variant": "primary"
+    },
+    {
+      "file": "privacidad.html",
+      "variant": "primary"
+    },
+    {
+      "file": "privacy.html",
+      "variant": "primary"
+    },
+    {
+      "file": "que-es-medicare.html",
+      "variant": "primary"
+    },
+    {
+      "file": "team.html",
+      "variant": "alt (svg-only)"
+    }
+  ],
+  "favKept": [
+    {
+      "file": "404.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "beneficios.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "benefits.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "blog/medicare-diabetes-california.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "california/cities/index.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "california/index.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "careers.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "contact.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "contacto.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "en.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "estados/california.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/florida.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/illinois.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/index.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/iowa.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/kansas.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/missouri.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/oklahoma.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "estados/texas.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "index.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "opciones-compartidas.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "presentacion.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "presentation.html",
+      "why": "favicon links differ from both known canonical variants"
+    },
+    {
+      "file": "social/bridge.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "tools/medigap-scraper-v2.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "tools/medigap-scraper.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "widget-v3.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "widget-v4.html",
+      "why": "no favicon link found on this page"
+    },
+    {
+      "file": "widget.html",
+      "why": "no favicon link found on this page"
+    }
+  ],
+  "fontStamped": [
+    {
+      "file": "blog/5-cosas-antes-inscripcion-anual-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/aep-vs-periodo-inscripcion-abierta-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/agente-medicare-confiable-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/beneficios-adicionales-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/beneficios-preventivos-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/calificacion-estrellas-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/carta-anoc-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/cirugia-cataratas-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/comparar-planes-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/comparar-supplement-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/cuando-cambiar-plan-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/errores-inscripcion-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/examen-cancer-piel-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/guia-hijos-adultos-medicare-padres-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/index.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/jubilarse-a-los-65-medicare-seguro-social-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/limite-gastos-bolsillo-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/lista-medicare-ano-nuevo-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicamentos-medicare-parte-d-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-dental-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-diabetes-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-gimnasio-silversneakers-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/medigap-plan-g-vs-plan-n-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/periodo-inscripcion-anual-medicare-california-2026.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/planes-necesidades-especiales-medicare-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/tarjeta-flex-otc-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/verificar-formulario-medicamentos-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "blog/verificar-red-doctores-medicare-advantage-california.html",
+      "variant": "primary"
+    },
+    {
+      "file": "nosotros.html",
+      "variant": "primary"
+    },
+    {
+      "file": "politica-editorial.html",
+      "variant": "primary"
+    },
+    {
+      "file": "privacidad.html",
+      "variant": "primary"
+    },
+    {
+      "file": "privacy.html",
+      "variant": "primary"
+    }
+  ],
+  "fontKept": [
+    {
+      "file": "404.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "beneficios.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "benefits.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/bakersfield.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/beverly-hills.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/culver-city.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/del-rey.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/el-segundo.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/fresno.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/index.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/long-beach.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/los-angeles.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/mar-vista.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/marina-del-rey.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/mid-city.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/orange-county.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/playa-del-rey.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/playa-vista.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/riverside.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/sacramento.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/san-diego.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/san-francisco.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/san-jose.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/santa-monica.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/cities/westchester.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "california/index.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "careers.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "como-inscribirse-medicare.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "contact.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "contacto.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "costos-medicare-2026.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "doble-elegibilidad-medicare-medicaid.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "en.html",
+      "why": "font-loading links differ from both known canonical variants"
+    },
+    {
+      "file": "equipo.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/california.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/florida.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/illinois.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/index.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/iowa.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/kansas.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/missouri.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/oklahoma.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "estados/texas.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "index.html",
+      "why": "font-loading links differ from both known canonical variants"
+    },
+    {
+      "file": "inscripcion-anual-aep.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "medicare-advantage-california.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "medigap-suplementos-california.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "opciones-compartidas.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "partes-medicare.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "presentacion.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "presentation.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "que-es-medicare.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "social/bridge.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "team.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "tools/medigap-scraper-v2.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "tools/medigap-scraper.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "widget-v3.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "widget-v4.html",
+      "why": "no font link found on this page"
+    },
+    {
+      "file": "widget.html",
+      "why": "no font link found on this page"
+    }
+  ],
+  "logoInlined": 100,
+  "offTokenColors": [
+    {
+      "file": "beneficios.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "benefits.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/free-medicare-preventive-services-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/inscripcion-anual-aep-2027-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/inscripcion-inicial-cumplir-65.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medi-cal-y-medicare-beneficios-dobles-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-dental-vision-hearing-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-diabetes-cobertura-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-hmo-vs-ppo-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-jubilacion-familias-hispanas-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-late-enrollment-penalties-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-para-residentes-permanentes-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-part-b-irmaa-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-parte-a-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-parte-d-medicamentos-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-seguro-empleador-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-special-enrollment-periods-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-supplement-plans-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-vaccine-coverage-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-viajes-fuera-estados-unidos-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/medicare-wellness-visit-vs-physical-california.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/oep-termina-marzo-2026.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "blog/preparese-inscripcion-anual-aep.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/bakersfield.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/beverly-hills.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/culver-city.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/del-rey.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/el-segundo.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/fresno.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/index.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/index.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/long-beach.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/los-angeles.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/mar-vista.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/marina-del-rey.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/mid-city.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/orange-county.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/playa-del-rey.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/playa-vista.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/riverside.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/sacramento.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/san-diego.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/san-francisco.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/san-jose.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/santa-monica.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "california/cities/westchester.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contact.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contact.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contact.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contacto.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contacto.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "contacto.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "en.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "en.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "equipo.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "index.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "index.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "nosotros.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "nosotros.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "politica-editorial.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "politica-editorial.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "privacidad.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "privacidad.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "privacy.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "privacy.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "team.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#00897B"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#00897B"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#00897B"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#00796B"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#00796B"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#B2DFDB"
+    },
+    {
+      "file": "widget-v4.html",
+      "hex": "#B2DFDB"
+    }
+  ],
+  "errors": []
+}
