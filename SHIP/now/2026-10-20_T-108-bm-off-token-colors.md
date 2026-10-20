@@ -1,26 +1,25 @@
 # T-108 BM — off-token / near-miss brand colors (audit only, nothing changed)
 
-Color-token substitution (hex -> var(--name)) was attempted and REVERTED — see the top-of-file
-note in tools/stamp-shared.mjs for why (it silently changes rendered color on pages that define
-their own CSS variable of the same name with a different value, e.g. widget-v4.html's own
---teal is #00897B, not brand.css's #007B7B). This report is an audit only; zero pages were changed.
+Color-token substitution was attempted and reverted (see tools/stamp-shared.mjs). This is an
+audit only; zero pages were changed by it.
 
-## #B2DFDB — NOT a phantom, this is real and widespread
+## #B2DFDB is real, not a phantom
 
-The ticket text in NOW.md names `#B2DFDB` as BM's canonical mint. It is NOT:
-`beneficiosmedicare-brand.css` (the actual source of truth per CLAUDE.md) defines
-`--mint: #A8D8B9`. But `#B2DFDB` is not invented either — it is the literal, exact hex
-hardcoded in the inline <style> block of a large share of BM pages (counted below). This is a
-real site-wide divergence between the brand CSS file and what pages actually render, and needs
-a DECIDE/DREAM call on which is canonical — not something this ticket should silently resolve.
+NOW.md's T-108 ticket text names `#B2DFDB` as BM's mint. `beneficiosmedicare-brand.css` (the
+actual source of truth per CLAUDE.md) defines `--mint: #A8D8B9` — a DIFFERENT hex. `#B2DFDB`
+is not invented: it is the literal, exact value hardcoded in a large share of BM pages' own
+inline <style> blocks (counted below). This is a real, site-wide divergence between the brand
+CSS file and what pages actually render — needs a DECIDE/DREAM call on which is canonical, not
+something this ticket should resolve by guessing.
 
-Total near-miss/off-token hex hits found (file, hex) across inline <style> blocks: 94
+Total near-miss hex hits across inline <style> blocks: 94
 
 - `#B2DFDB`: 89 occurrences
 - `#00897B`: 3 occurrences
 - `#00796B`: 2 occurrences
 
-Full file list:
+<details><summary>Full file list</summary>
+
 - `beneficios.html` — `#B2DFDB`
 - `benefits.html` — `#B2DFDB`
 - `blog/free-medicare-preventive-services-california.html` — `#B2DFDB`
@@ -115,3 +114,4 @@ Full file list:
 - `widget-v4.html` — `#00796B`
 - `widget-v4.html` — `#B2DFDB`
 - `widget-v4.html` — `#B2DFDB`
+</details>

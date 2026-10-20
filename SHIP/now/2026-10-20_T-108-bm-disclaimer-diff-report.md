@@ -1,12 +1,7 @@
 # T-108 BM — disclaimer / footer-content diff report
 
-Footer content (the CMS multi-plan disclaimer paragraph and everything else in <footer>) was
-compared byte-for-byte against the ES/EN majority. Pages below did NOT match and were left
-completely untouched — their own footer text is unchanged.
-
-**Stamped (byte-identical to majority, now shared via partials/footer-{es,en}.html): 81 pages.**
-
-**Kept own footer (differs from majority, not touched): 25 pages.**
+**Stamped (byte-identical to majority, shared via partials/footer-{es,en}.html): 81 pages.**
+**Kept own footer (not touched): 25 pages.**
 
 - `california/cities/bakersfield.html` — footer text differs from es canonical (not touched — see disclaimer-diff report)
 - `california/cities/beverly-hills.html` — footer text differs from es canonical (not touched — see disclaimer-diff report)
@@ -34,20 +29,16 @@ completely untouched — their own footer text is unchanged.
 - `presentation.html` — footer text differs from en canonical (not touched — see disclaimer-diff report)
 - `team.html` — footer text differs from en canonical (not touched — see disclaimer-diff report)
 
-## What the differences actually are (hand-verified, not guessed)
+## What the "kept own" differences actually are (hand-verified)
 
 - **22 `california/cities/*` pages**: disclaimer WORDING is byte-identical to the majority.
-  The only difference is the (production-invisible) staging-badge script's CSS position:
-  majority pages position it `bottom-left`, these 22 position it `top-right`. The badge only
-  renders on `*.pages.dev` hosts, never on production. Not stamped this pass out of caution —
-  recommend a tiny, separate, content-preserving follow-up to normalize the position and fold
-  these in, rather than doing it silently inside T-108.
-- **`team.html`**: footer TEXT is identical to the EN majority (`benefits.html` etc.), word for
-  word. The only differences are HTML serialization (`<path d="..."/>` vs `<path d="..."></path>`,
-  `&copy;` vs `©`) — both render identically. Not stamped this pass for the same reason as above.
-- **`presentacion.html` / `presentation.html`**: the approved partner/chamber-of-commerce pages
-  (CLAUDE.md, Alejandra 2026-09-24). Different design (`topbar` class, no `sm-footer` class) by
-  design, not drift. Out of scope, not touched.
+  Only difference: the staging-badge script's CSS position (production-invisible, only
+  renders on *.pages.dev). Not folded in this pass — flagged for a tiny separate follow-up.
+- **`team.html`**: footer TEXT identical to the EN majority, word for word. Only difference:
+  HTML serialization (self-closing vs explicit-close SVG tags, `&copy;` vs `©`) — renders
+  identically either way. Not folded in this pass for the same reason.
+- **`presentacion.html` / `presentation.html`**: approved partner pages (CLAUDE.md, AB
+  2026-09-24), different design by intent, not drift. Out of scope.
 
-**No page's actual disclaimer WORDING differs from the majority.** The multi-plan figure
-("7 organizaciones / 255 productos") is identical everywhere a footer exists.
+**No page's actual disclaimer WORDING differs from the majority** — the "7 organizaciones /
+255 productos" figure is identical everywhere a footer exists.
