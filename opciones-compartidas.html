@@ -165,6 +165,9 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     callb:  EN ? 'Call' : 'Llamar',
     cw:     EN ? 'Call or text: ' : 'Llamada o texto: ',
     pageT:  EN ? 'Medicare options for 2027' : 'Opciones de Medicare 2027',
+    // FIX (AB 2026-10-20): the my-plan single-id share is not "N opciones" (bad grammar at N=1 anyway) --
+    // it's the one thing this link actually shows, in the words NOW.md's T-103 amendment already chose.
+    mpTitle: EN ? 'What changes in your plan in 2027' : 'Lo que cambia en su plan en 2027',
     subj:   EN ? 'My 2027 plan comparison' : 'Mi comparación de planes 2027',
     /* PROTECT: these lines are required and are not ours to shorten. The first is the TPMO disclaimer,
        word for word as the shared sheet has carried it since T-078; unchanged by T-105. Medicare.gov and
@@ -207,7 +210,13 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       '</p><p><a class="t44" href="/' + (EN ? 'en' : '') + '">' + (EN ? 'Find plans for your ZIP code' : 'Busque planes para su código postal') +
       '</a></p><p>' + esc(T.cw) + '<a class="t44" data-cta="shared_call" href="' + telH(A) + '">' + tel(A) + '</a></p></div>';
   }
-  if (!/^\d{5}$/.test(ZIP) || IDS.length < 2) { fail(); return; }
+  // FIX (AB 2026-10-20): the my-plan card's own "Compartir" always sends exactly ONE id (its
+  // 2026-vs-2027 "what changes" view, never a comparison) with hoy= that same id -- this page used to
+  // require 2+ ids unconditionally, so every one of those links landed here and failed. A single id is
+  // now allowed in that one specific shape; any other single-id link (hoy missing or not matching) is
+  // still incomplete and still fails, same as before.
+  var MP_SINGLE = IDS.length === 1 && !!HOY && HOY === IDS[0];
+  if (!/^\d{5}$/.test(ZIP) || (IDS.length < 2 && !MP_SINGLE)) { fail(); return; }
 
   // The frame is the plan finder with its UI switched off. On medicare-california it is loaded from
   // beneficiosmedicare, where the CMS files live; everywhere else it is this same site.
@@ -269,10 +278,11 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     install(d.fns);
     var A = AGENT, adv = T.adv + (A.lic ? ' · LIC. #' + A.lic : '');
     var n = (d.names || []).length || IDS.length;
+    var mpOne = MP_SINGLE && n === 1;
     var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES', {day:'numeric', month:'short', year:'numeric'});
     var siteURL = 'https://beneficiosmedicare.com/' + (EN ? 'en' : '');
     var photo = IMGBASE + esc(A.photo);
-    document.title = n + ' ' + (EN ? 'Medicare options for 2027' : 'opciones de Medicare 2027') + ' · ZIP ' + ZIP + ' | Beneficios Medicare';
+    document.title = (mpOne ? T.mpTitle : n + ' ' + (EN ? 'Medicare options for 2027' : 'opciones de Medicare 2027')) + ' · ZIP ' + ZIP + ' | Beneficios Medicare';
 
     document.getElementById('out').innerHTML =
       '<div class="sheet">' +
@@ -282,7 +292,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<div class="card logo-only">' +
           '<div class="logo"><a href="' + siteURL + '" target="_blank" rel="noopener" aria-label="BeneficiosMedicare.com">' + LOGO + '</a></div>' +
         '</div>' +
-        '<div class="band"><h1><span class="nw">' + n + ' ' + esc(T.opts) + '</span> <span class="z nw">· ZIP ' + esc(ZIP) + '</span></h1>' +
+        '<div class="band"><h1><span class="nw">' + (mpOne ? esc(T.mpTitle) : n + ' ' + esc(T.opts)) + '</span> <span class="z nw">· ZIP ' + esc(ZIP) + '</span></h1>' +
           '<div class="chiprow"><span class="chip">' + T.before + '</span></div></div>' +
         '<div class="cmpw" id="cmpA"></div>' +
         '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +

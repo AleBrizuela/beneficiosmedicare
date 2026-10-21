@@ -3853,7 +3853,7 @@ function mpCurCard(c){
    is gone, the bar and the struck-through 2026 value already say it (4). Button text is plain
    "Share"/"Compartir" (19:10 supersedes the earlier "Share what's changing" wording). */
 const MP26_UP='#B45309', MP26_DOWN='#047857', MP26_INK='#111827';
-function mp26v27Block(p26,p27){
+function mp26v27Block(p26,p27,ro){
   const cc=carrierSafe(carrierColor(p27)), tint=carrierTint(cc,0.06);
   const rows=mp26v27Rows(p26,p27);
   const changedN=rows.filter(r=>r.changed).length;
@@ -3875,9 +3875,12 @@ function mp26v27Block(p26,p27){
                        :`<div class="mp26a">${r.v27}</div>`;
     return label+v26+v27;
   }).join('');
+  // ro (AB 2026-10-20 fix): the shared page renders this same block read-only -- its own "Compartir"
+  // button would call a global openShare() that doesn't exist on that page (and sharing the page you
+  // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-    <button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share','Compartir')} ›</button>`;
+    ${ro?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${L('Share','Compartir')} ›</button>`}`;
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
@@ -4096,13 +4099,40 @@ async function plansForShare(zip,ids,priority){
    hoy = the plan ID of the sender's current plan, when the comparison started from Mi plan de hoy: the
    2027 plan only, never anything about the person (T-105 (5)). The suggestion then follows the same rule
    as the widget (their plan first, with the line the widget shows under it). */
+function mpFind26For27(p27){
+  const xw=_xw27[D.state]; if(!xw||!p27) return null;
+  const rec=xw.plans.find(r=>r.to&&(r.to===p27.id||_mpCP(r.to)===_mpCP(p27.id)));
+  if(!rec) return null;
+  return mpPlans26().find(p=>p.id===rec.id||_mpCP(p.id)===_mpCP(rec.id))||null;
+}
 async function shareRender(q){
   const base=await plansForShare(q.zip,q.ids,q.r);
   if(base.err) return base;
-  const plans=(q.ids||[]).map(String).map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(p=>p&&!p._medigap).slice(0,3);
-  if(plans.length<2) return {err:'need two plans'};
+  const ids=(q.ids||[]).map(String);
+  const plans=ids.map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(p=>p&&!p._medigap).slice(0,3);
+  if(!plans.length) return {err:'no match'};
   selPlans=plans.map(p=>p.id); _pin=''; _cmpFrom=''; _mpCtx=null;
   const hoy=q.hoy?plans.find(p=>planIdRaw(p)===String(q.hoy)):null;
+  /* FIX (AB 2026-10-20): the my-plan card's own "Compartir" (mp26v27Block) sends exactly ONE plan id --
+     its 2026-vs-2027 "what changes" view, never a comparison -- and running that through cmpParts below
+     (which needs 2+ columns) produced a dead "el enlace puede estar incompleto" page for every visitor
+     who tapped it since the my-plan flag went live, reported live by AB. Fixed by reconstructing the
+     2026 side here with a reverse crosswalk lookup (2027 id -> 2026 id via mpFind26For27): the one piece
+     NOW.md's T-103 (6)(c)/(6)(d) backlog item flagged as not built, but that item was about a general
+     browse/swap UI -- this only needs it for the one known id already in the link. */
+  if(plans.length===1&&hoy){
+    await Promise.all([loadCms2026(D.state),loadXw27(D.state)]);
+    const p26=mpFind26For27(hoy);
+    if(!p26) return {err:'no 2026 match'};
+    _mpCtx={cur26:p26,cur27:hoy,sim:null,diff:null,avail:[],ended:false}; _cmpFrom='myplan';
+    const vars2=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
+    return Object.assign(base,{
+      html:{top:'',table:mp26v27Block(p26,hoy,true),fine:planFine(hoy)},
+      css:[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n')+(vars2?`:host{${vars2}}`:''),
+      fns:{cmpDiff:(function(){}).toString(),cmpGrp:(function(){}).toString()},
+      names:[dispName(hoy)], hoy:planIdRaw(hoy)});
+  }
+  if(plans.length<2) return {err:'need two plans'};
   if(hoy){ _mpCtx={cur27:hoy,sim:null,diff:null,avail:[],ended:false}; _cmpFrom='myplan'; }
   const c=cmpParts(plans,true);
   const vars=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
