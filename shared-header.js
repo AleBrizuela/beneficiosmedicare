@@ -74,7 +74,7 @@
     + '<defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00897B"/><stop offset="100%" style="stop-color:#00796B"/></linearGradient></defs>'
     + '<path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/>'
     + '<path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/>'
-    + '<text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#26A69A">Medicare</tspan></text>'
+    + '<text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#1a1a1a">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="700" fill="#26A69A">Medicare</tspan></text>'
     + '</svg></a>'
     + '<nav id="desktop-nav">' + navLinks + langPill + '</nav>'
     + '<button class="mobile-menu-btn" onclick="document.getElementById(\'mobile-nav\').classList.toggle(\'open\')" aria-label="Menu"><i class="fas fa-bars"></i></button>'

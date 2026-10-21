@@ -308,12 +308,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>';
 
     var rootA = part(document.getElementById('cmpA'), d.css, d.html.top + d.html.table);
-    // T-103 (5)(c): with "Su plan hoy" in a column, "Mostrar diferencias" starts ON here too --
-    // same rule as the widget's own Compare screen (flowCompare), same toggle code (cmpDiff).
-    if (d.hoy) {
-      var cb = rootA.querySelector('.cmptog input[type="checkbox"]');
-      if (cb) { cb.checked = true; cmpDiff(cb); }
-    }
+    // T-117 (4)/L1 (AB 2026-10-21): the shared page opens with every row shown; "Mostrar diferencias" stays the visitor's choice.
     part(document.getElementById('cmpB'), d.css, d.html.fine);
     if (typeof gtag === 'function') gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, hoy:HOY?1:0});
     if (PRINT) setTimeout(function(){ window.print(); }, 800);
@@ -336,7 +331,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
 
   var IMGBASE = (location.hostname.indexOf('medicare-california') > -1) ? (WIDGET_HOST + '/') : '/';
   /* T-102: the real logo, the exact markup of the site header (index.html), not a typed stand-in. */
-  var LOGO = '<svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/><text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="600" fill="#007B7B">Medicare</tspan></text></svg>';
+  var LOGO = '<svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/><text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="700" fill="#007B7B">Medicare</tspan></text></svg>';
 })();
 </script>
 </body>

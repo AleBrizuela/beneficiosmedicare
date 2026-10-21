@@ -236,6 +236,9 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .fz0{margin:2px 0 8px;padding:10px 12px;background:#FBEDEA;border:1px solid #F0C3BA;border-radius:10px;font-size:14px;color:#6b4a43;line-height:1.4}
 .fz0x{display:inline-block;margin-top:4px;font:inherit;font-weight:700;color:var(--cbar-brand);background:none;border:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer;min-height:32px;padding:0}
 .ordp .orow.on:before{content:"\2713  "}
+.ordp .orow.crow.on:before{content:none}
+.ordp .orow.crow span{text-align:left;flex:1 1 auto;min-width:0}
+.ordp .orow.crow i{flex:none;margin-left:auto}
 .mf{display:flex;flex-wrap:wrap;gap:6px;padding:6px 14px 10px}
 .mf button{font:inherit;border:1.5px solid #D4DEE8;border-radius:999px;padding:5px 10px;font-size:14px;font-weight:600;background:#fff;color:#1A202C;cursor:pointer}
 .mf button.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
@@ -697,7 +700,7 @@ body.host-cbar .cbar{display:none!important}
    the moment a real plan name needed a third line (found: 90230, "CareMore Health Plan by SCAN"). */
 .cmp thead th{position:sticky;top:0;z-index:2;width:33.33%;vertical-align:top;text-align:left;background:#fff;padding:0 6px}
 .cmp thead tr:last-child th{padding-bottom:8px;border-bottom:2px solid #e5e9ec}
-.cmp thead tr.eb th{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#4a5560;border-top:4px solid var(--cc,#c9d1d8);padding-top:9px;overflow-wrap:anywhere}
+.cmp thead tr.eb th{font-size:10.5px;font-weight:600;letter-spacing:.02em;color:#4a5560;border-top:4px solid var(--cc,#c9d1d8);padding-top:9px;overflow-wrap:anywhere}
 .cmp thead tr.nm2 th{line-height:1.3;font-size:13px;font-weight:600;color:#1e2a32;padding-top:2px}
 .cmp thead tr.pid th{font-size:11px;font-weight:400;line-height:1.2;color:#66727c;padding-top:3px}
 .cmp thead tr.st2 th{font-size:12.5px;font-weight:700;color:#3b4650;padding-top:3px}
@@ -855,7 +858,7 @@ body.host-cbar .cbar{display:none!important}
    Colours stay the widget's theme variables (BM teal, MC blue), as in the first build. */
 .pc .ls{padding:0 14px 4px}
 /* b19 (AB 2026-10-03): each section header is a full-width light-grey band, like the compare table */
-.pc .lh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#3b4650;margin:0 -14px 4px;padding:8px 14px;background:#f3f5f7;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
+.pc .lh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.02em;color:#3b4650;margin:0 -14px 4px;padding:8px 14px;background:#f3f5f7;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}
 .pc-head{border-bottom:0}
 /* T-091: COSTOS band -> strip -> the small rows, with no gaps between them */
 .pc .ls.hdr{padding:0 14px}
@@ -3104,7 +3107,7 @@ function chipRow(){
   const cs=orderedChips();
   const cars=carrierList();
   // T-109: multi-select -- each picked carrier is its own removable chip, in pick order.
-  const carChips=_carriers.map(c=>`<button class="fc on fcx" onclick="carrierClear('${esc(c).replace(/'/g,"\\'")}')" aria-label="${L('Remove the filter: ','Quitar el filtro: ')}${esc(carrierShort(c))}">${esc(carrierShort(c))} <b aria-hidden="true">\u00D7</b></button>`).join('');
+  const carChips=_carriers.map(c=>`<button class="fc on fcx" onclick="carrierClear('${esc(c).replace(/'/g,"\\'")}')" aria-label="${L('Remove the filter: ','Quitar el filtro: ')}${esc(carLb(c))}">${esc(carLb(c))} <b aria-hidden="true">\u00D7</b></button>`).join('');
   // "Aseguradora" only where picking one (more) changes something: 2+ carriers still on the table.
   const carBtn=cars.length>1||_carriers.length
     ? `<button class="ord ordc" aria-expanded="${_carOpen}" aria-controls="carpan" onclick="toggleCar()">${L('Carrier','Aseguradora')} ${_carOpen?'\u25B4':'\u25BE'}</button>` : '';
@@ -3148,10 +3151,22 @@ function carPanel(){
   const search=all.length>8?`<input class="carq" type="search" value="${esc(_carQ)}" placeholder="${L('Search carriers','Buscar aseguradora')}" oninput="carSearch(this.value)" aria-label="${L('Search carriers','Buscar aseguradora')}">`:'';
   return `<div class="ordp" id="carpan"${_carOpen?'':' hidden'}>${search}
     ${cs.map(x=>{const on=_carriers.indexOf(x.c)>=0;
-      return `<button class="orow crow${on?' on':''}" aria-pressed="${on}" onclick="carrierToggle('${esc(x.c).replace(/'/g,"\\'")}')"><span>${esc(x.lb)}</span><i>${x.n}</i></button>`;
+      return `<button class="orow crow${on?' on':''}" aria-pressed="${on}" onclick="carrierToggle('${esc(x.c).replace(/'/g,"\\'")}')"><span>${on?'\u2713 ':''}${esc(x.lb)}</span><i>${x.n}</i></button>`;
     }).join('')}
   </div>`;
 }
+/* T-117 (1)/L2: a tap outside the open panel, or Esc, closes it (carrier or sort). Taps on the panel,
+   on its own button and on the search box are left alone; nothing is prevented, so taps still work. */
+document.addEventListener('click',function(e){
+  const t=e.target; if(!t||!t.closest) return;
+  if(_carOpen&&!t.closest('#carpan,.ordc')) toggleCar();
+  if(_foOpen&&!t.closest('#fopan,.ordo')) toggleFO();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape') return;
+  if(_carOpen) toggleCar();
+  if(_foOpen) toggleFO();
+});
 function carSearch(v){ _carQ=v; const p=document.getElementById('carpan'); if(p) p.outerHTML=carPanel(); }
 function toggleCar(){
   _carOpen=!_carOpen; if(_carOpen&&_foOpen) toggleFO();
@@ -3169,8 +3184,10 @@ function carrierToggle(c){
   // T-109 (3): a pick that empties the list is KEPT, not auto-reverted -- the 0-result message
   // names it and offers one tap out, so the visitor sees why rather than wondering why nothing moved.
   _lastChip=(!was&&!filterByType(PLANS).length)?{label:carrierShort(c),undo:`carrierClear('${c.replace(/'/g,"\\'")}')`}:null;
+  _carOpen=false;   // T-117 L2: a pick closes the panel and shows the result; open it again to pick another
   _shown=PAGE;selReset();flowResults();toTop();
 }
+function carLb(c){const x=_carList.find(y=>y.c===c);return x?x.lb:carrierShort(c);}
 function carrierClear(c){
   const i=_carriers.indexOf(c); if(i>=0) _carriers.splice(i,1);
   wEvt('filter_use',{filter:'carrier',on:false});
@@ -4383,11 +4400,7 @@ function flowCompare(){
     ${bs(L('\u2039 Back to the list','\u2039 Volver a la lista'),'back()')}
     ${c.fine}
     ${cbarHTML()}`;
-  // T-103 (5)(c): with "Su plan hoy" in a column, "Mostrar diferencias" starts ON.
-  if(_cmpFrom==='myplan'&&_mpCtx&&_mpCtx.cur27&&plans.some(p=>p.id===_mpCtx.cur27.id)){
-    const cb=document.querySelector('#wb .cmptog input[type="checkbox"]');
-    if(cb){ cb.checked=true; cmpDiff(cb); }
-  }
+  // T-117 L1 (AB 2026-10-21): "Mostrar diferencias" always starts OFF, every row shown (was auto-ON from "Su plan hoy", T-103 (5)(c)).
   updBar();
 }
 /* ── T-105 (AB 2026-10-18): ONE comparison, drawn by ONE function ───────────────────────────────────────
