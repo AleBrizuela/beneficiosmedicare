@@ -8,4 +8,5 @@
   --gold: #FFD54F;
   --gray: #4A5568;
   --radius: 12px;
+  --hero-gradient: linear-gradient(135deg,#002147 0%,#007B7B 100%); /* T-119 (AB 2026-10-21): the 4 home-page hero bands. Reference value — the live copy lives in each home page's own .t31-band rule, see T-119 */
 }
