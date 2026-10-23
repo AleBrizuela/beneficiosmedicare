@@ -4274,26 +4274,16 @@ function shareChannels(){
    large tiles side by side (the channels people actually tap -- WhatsApp, text, email), row 2 is
    two quieter outlined buttons (copy link, PDF). Same channels, same shareSend(), same tracking;
    only the layout changed. Mock: compartido-menos-es-mas, ronda-del-domingo-v2, section 4. */
+/* T-127 (AB + DECIDE 2026-10-23): T-113 (E)'s native-share-first behavior is reverted. Most
+   sharers are the adult kids, not the older visitor, and both are served better by our own
+   labeled tiles than by the phone's generic share menu, which hides the PDF, hides which
+   channel was used, and pops a second menu when the visitor backs out. Compartir always
+   opens our sheet now; tryNativeShare() and its share_send channel:native event are gone. */
 function openShare(ids){
   _shareIds=ids||null;
   if(!sharePlans().length) return;
   wEvt('share_open',{plans:sharePlans().length,mode:ids?'plan_change':'compare'});
-  if(tryNativeShare()) return;
   openShareSheet();
-}
-/* T-113 (E) (AB 2026-10-20): where the OS offers one, Compartir opens the native share sheet first
-   -- title, short link and the agent phone line, same content shareMsg() puts in every other channel
-   (no sender's-note field exists anywhere in this flow to carry across, so that part is simply
-   absent) -- so the visitor picks from every app the phone already offers, not only our five tiles.
-   Unsupported browsers fall straight through; a visitor who backs out of the native sheet also falls
-   through, since navigator.share() rejects with AbortError on cancel the same way it rejects on any
-   other failure, and there is nothing useful to do with either except show today's sheet instead. */
-function tryNativeShare(){
-  if(typeof navigator==='undefined'||typeof navigator.share!=='function') return false;
-  wEvt('share_send',{channel:'native',plans:sharePlans().length});
-  try{ navigator.share({title:shareLine(),text:sharePhoneLine(),url:shareURL()}).catch(()=>openShareSheet()); }
-  catch(e){ openShareSheet(); }
-  return true;
 }
 function openShareSheet(){
   const tile=c=>`<button class="cht" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span><span class="chtl">${c.lb}</span></button>`;
