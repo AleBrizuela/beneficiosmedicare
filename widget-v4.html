@@ -4377,9 +4377,18 @@ function fallbackCopy(txt,ok){
   ta.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(ta); ta.select();
   try{ document.execCommand('copy'); ok(); }catch(e){} ta.remove();
 }
+/* Found live 2026-10-23 (AB): flowCompare() filtered selPlans to non-Medigap, capped at 3, before
+   deciding whether the screen's main action (Ayúdeme a elegir) is enabled; helpCompare() re-read
+   selPlans on its own with no filtering at all, so a stale or out-of-view id (a ticked Medigap plan,
+   or a 4th+ tick) could make the table show a fully-enabled button that silently did nothing when
+   tapped -- no "Información only" notice, no error, just no screen change. ONE function now, used
+   by both, so the table shown and the plans actually acted on can never diverge again. */
+function compareSelection(){
+  return selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
+}
 function flowCompare(){
   prog(88); _plansView=true; document.body.classList.add('cmpv');   // T-104 (5): Comparar's own narrow-phone spacing (CSS)
-  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
+  const plans=compareSelection();
   if(plans.length<2){back();return;}
   const c=cmpParts(plans,false);
   // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
@@ -4578,8 +4587,11 @@ function shortPlan(n){
   return s||String(n);
 }
 function helpCompare(){
-  const plans=selPlans.map(id=>PLANS.find(p=>p.id===id)).filter(Boolean);
-  if(!plans.length||!plans.every(p=>p.agent)) return;
+  const plans=compareSelection();
+  // Belt and suspenders: this should never fire now that both the button's enabled state
+  // and its action read the same list, but a silent no-op is a dead CTA with no trace, so if
+  // it ever does, at least it is visible in GA4 instead of looking like nothing happened.
+  if(!plans.length||!plans.every(p=>p.agent)){ wEvt('compare_cta_blocked',{plans:plans.length}); return; }
   D.selectedPlan=L('Compared: ','Comparó: ')+plans.map(p=>p.name).join('; ');
   D.selectedPlanId=plans.map(p=>p.id).join(';');
   D.plansSeen=plans.map(planLeadTag).join(' | ');
