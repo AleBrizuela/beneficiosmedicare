@@ -480,7 +480,8 @@ def check_bodies(root, f):
 # A new name goes there first, then here, then onto a page.
 CTA_PLACEMENTS = {"header", "home_hero", "home_alt", "sticky_bar", "float_call", "float_text", "contact_card",
                   "guide_cta", "inline_body", "sidebar", "blog_cta", "city_cta",
-                  "state_cta", "final_cta", "footer", "widget", "float", "thank_you"}
+                  "state_cta", "final_cta", "footer", "widget", "float", "thank_you",
+                  "zip_top", "zip_end"}  # T-133: the zip box's two placements on non-home pages
 CTA_TARGETS = {"plan_finder"}
 
 _VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta",
@@ -518,6 +519,11 @@ def cta_kind(tag, attrs, text=""):
         if re.match(_HOME + r"(?:#[\w-]+)?$", h) and _PLAN_TEXT.search(text):
             return "plan_finder"
     elif tag == "button":
+        # T-133: the zip box's submit button has no onclick (zbx.js listens for the
+        # form's submit event instead), so it needs its own class-based signal to be
+        # seen as a CTA at all -- otherwise a copy missing data-cta would pass silently.
+        if "zbx-btn" in (attrs.get("class") or "").split():
+            return "zip_box"
         oc = attrs.get("onclick") or ""
         if re.search(r"handleZipSubmit\s*\(", oc):
             return "home_zip"   # the home ZIP card: widget_start already counts it
@@ -759,12 +765,14 @@ def _page_type(rel):
 
 
 def _core_words(src):
-    """Visible text with header/nav/footer stripped, so two pages sharing chrome don't
-    look like duplicates of each other. Falls back to the whole page if there is no
-    <main>/<article> landmark to anchor on."""
+    """Visible text with header/nav/footer AND any stamped shared block (zip box, lang-cta,
+    etc. -- anything between <!-- shared:X --> markers) stripped, so two pages sharing
+    chrome or a shared component don't look like duplicates of each other on that account.
+    Falls back to the whole page if there is no <main>/<article> landmark to anchor on."""
     m = re.search(r"<(main|article)\b.*?</\1>", src, re.S | re.I)
     body = m.group(0) if m else src
     body = re.sub(r"<(header|footer|nav)\b.*?</\1>", " ", body, flags=re.S | re.I)
+    body = re.sub(r"<!--\s*shared:[^>]*?-->.*?<!--\s*/shared:[^>]*?-->", " ", body, flags=re.S)
     text = visible_text(body).lower()
     return re.findall(r"[a-z0-9]+", text)
 
@@ -798,9 +806,29 @@ def check_google_safety(root, domain, f, base=None):
     changed = _changed_files(root, base) if base else None
 
     # (a) look-alike --------------------------------------------------------------
+    # ERROR only for a pairing that CROSSED the 40% line because of this push -- not every
+    # pairing that happens to include a page this push touched. A page that was already a
+    # near-duplicate before this push (T-135's own backlog) stays WARN even when something
+    # unrelated on it changed; only a pairing that is newly over the line, or a brand-new
+    # page that lands over the line, is this push's own doing.
     by_type = defaultdict(list)
     for rel, src in pages:
         by_type[_page_type(rel)].append((rel, _core_words(src)))
+
+    _old_cache = {}
+
+    def _old_words(rel):
+        if not base:
+            return None
+        if rel not in _old_cache:
+            try:
+                out = subprocess.run(["git", "show", f"{base}:{rel}"], cwd=root,
+                                      capture_output=True, text=True, timeout=20)
+                _old_cache[rel] = _core_words(out.stdout) if out.returncode == 0 else []
+            except Exception:
+                _old_cache[rel] = None
+        return _old_cache[rel]
+
     seen_pairs = 0
     for ptype, items in by_type.items():
         for i in range(len(items)):
@@ -813,9 +841,20 @@ def check_google_safety(root, domain, f, base=None):
                 if ratio <= 0.40:
                     continue
                 seen_pairs += 1
-                is_new = changed is not None and (rel_a in changed or rel_b in changed)
                 detail = f"{ratio:.0%} identical to {rel_b}"
-                if is_new:
+                touched = changed is not None and (rel_a in changed or rel_b in changed)
+                is_new_pairing = False
+                if touched:
+                    old_a = _old_words(rel_a) if rel_a in changed else words_a
+                    old_b = _old_words(rel_b) if rel_b in changed else words_b
+                    if old_a is None or old_b is None:
+                        is_new_pairing = True  # couldn't establish a before -- be conservative
+                    elif not old_a or not old_b:
+                        is_new_pairing = True  # one side is a brand-new page
+                    else:
+                        old_ratio = difflib.SequenceMatcher(None, old_a, old_b).quick_ratio()
+                        is_new_pairing = old_ratio <= 0.40
+                if is_new_pairing:
                     f.error("google-safety-lookalike", rel_a, detail)
                 else:
                     f.warn("google-safety-lookalike-existing", rel_a, detail)

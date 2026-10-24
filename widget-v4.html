@@ -997,6 +997,9 @@ const RED_RUN=!/^(beneficiosmedicare\.com|www\.beneficiosmedicare\.com|medicare-
 const _params=new URLSearchParams(location.search);
 let lang=_params.get('lang')==='es'?'es':'en', hist=[], D={}, selConds=[], priRank=[], selPlans=[], _submitting=false;
 const _initZip=_params.get('zip')||'';
+// T-133: zip_top/zip_end when this load came from a page's zip-box, via ?from=, so the first
+// widget_start can say which page started the search. Only ever attached to the INITIAL zip.
+const _initSource=_params.get('from')||'';
 if(_initZip && /^\d{5}$/.test(_initZip)){
   D.zip=_initZip;
   // Pre-load plan data for the initial ZIP
@@ -1556,7 +1559,11 @@ async function loadPlansForZip(zip){
     D.county = county;
     D.state = state;
     D._zipValid = true;
-    if(_gaStartZip!==zip){ _gaStartZip=zip; wEvt('widget_start',{step:'zip'}); }
+    if(_gaStartZip!==zip){
+      _gaStartZip=zip;
+      const src=(zip===_initZip && _initSource)?_initSource:'';
+      wEvt('widget_start', src?{step:'zip',source:src}:{step:'zip'});
+    }
     _planMeta = {year:data.year, source:data.source||''};
     // This county's plans + plans sold statewide (PDPs), deduped
     const ids = [...(data.counties?.[county]||[]), ...(data.counties?.[data.statewide||'All Counties']||[])];

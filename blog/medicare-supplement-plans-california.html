@@ -143,6 +143,7 @@ img { max-width: 100%; height: auto; }
     {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://beneficiosmedicare.com"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://beneficiosmedicare.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Cobertura"}, {"@type": "ListItem", "position": 4, "name": "Planes de Suplemento de Medicare en California 2026: Guia..."}]}
     </script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20261023">
+<link rel="stylesheet" href="/zbx.css">
 </head>
 <body>
 <!-- sm-header:start -->
@@ -171,6 +172,17 @@ img { max-width: 100%; height: auto; }
             <header class="blog-article-header">
                 <div class="blog-tag">Cobertura</div>
                 <h1>Planes de Suplemento de Medicare en California 2026: Guia Completa de Medigap</h1>
+<!-- shared:zip-top -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_top">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-top -->
+
                 <div class="blog-article-meta">
                     <span class="blog-article-byline">Por <a href="/equipo#susana" rel="author" style="color:#007B40;text-decoration:none;font-weight:600">Susana Marcos</a>, Agente de Medicare con licencia</span>
                     <span class="blog-article-divider">&middot;</span>
@@ -298,7 +310,17 @@ img { max-width: 100%; height: auto; }
 
             <div class="lang-cta"> <span class="lang-cta-icon">EN</span> Este art&iacute;culo tambi&eacute;n est&aacute; disponible en ingl&eacute;s. <a href="https://medicare-california.com/blog/medicare-supplement-plans-california">Leerlo en ingl&eacute;s &rarr;</a> </div>
             </div>
-        </article>
+        <!-- shared:zip-end -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_end">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-end -->
+</article>
     </main>
 <!-- sm-footer:start -->
 <!-- shared:footer -->
@@ -353,5 +375,6 @@ img { max-width: 100%; height: auto; }
 <script>
 window.addEventListener('scroll',function(){document.getElementById('header').classList.toggle('scrolled',window.scrollY>10)});
 </script>
+<script src="/zbx.js" defer></script>
 </body>
 </html>

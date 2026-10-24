@@ -193,6 +193,7 @@
 }
 </script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20261023">
+<link rel="stylesheet" href="/zbx.css">
 </head>
 <body>
 <!-- sm-header:start -->
@@ -221,6 +222,17 @@
             <header class="blog-article-header">
                 <div class="blog-tag">AEP</div>
                 <h1>Prepárese para la Inscripción Anual de Medicare (AEP) 2027: Guía Completa</h1>
+<!-- shared:zip-top -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_top">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-top -->
+
                 <div class="blog-article-meta">
                     <span class="blog-article-byline">Por <a href="/equipo#susana" rel="author" style="color:#007B40;text-decoration:none;font-weight:600">Susana Marcos</a>, Agente de Medicare con licencia</span>
                     <span class="blog-article-divider">&middot;</span>
@@ -305,7 +317,17 @@
                 <p>En <strong>Beneficios Medicare</strong>, ayudamos a la comunidad hispana a navegar Medicare con confianza. <a href="/">Contáctenos hoy</a> para planificar su mejor cobertura para 2027.</p>
 
             </div>
-        </article>
+        <!-- shared:zip-end -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_end">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-end -->
+</article>
     </main>
 <!-- sm-footer:start -->
 <!-- shared:footer -->
@@ -360,5 +382,6 @@
 <script>
 window.addEventListener('scroll',function(){document.getElementById('header').classList.toggle('scrolled',window.scrollY>10)});
 </script>
+<script src="/zbx.js" defer></script>
 </body>
 </html>

@@ -227,6 +227,7 @@ function goLang(lang) {
 }
 </script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20261023">
+<link rel="stylesheet" href="/zbx.css">
 </head>
 <body>
 
@@ -256,6 +257,17 @@ function goLang(lang) {
   <div class="article-header">
     <div class="article-tag">Cobertura de Medicamentos</div>
     <h1>Medicamentos y Medicare en California: Guia Completa de la Parte D 2026</h1>
+<!-- shared:zip-top -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_top">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-top -->
+
     <div class="article-meta">
       <span>Por <a href="/equipo#susana" rel="author" style="color:var(--teal-dark);text-decoration:none;font-weight:600">Susana Marcos</a>, Agente de Medicare con licencia</span> &middot; <time datetime="2026-05-27">Publicado el 27 de mayo, 2026</time> &middot; 10 min de lectura
     </div>
@@ -413,6 +425,16 @@ function goLang(lang) {
     </div>
 
   </div>
+<!-- shared:zip-end -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_end">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-end -->
 </main>
 
 <!-- sm-footer:start -->
@@ -466,5 +488,6 @@ function goLang(lang) {
 <!-- /shared:footer -->
 <!-- sm-footer:end -->
 
+<script src="/zbx.js" defer></script>
 </body>
 </html>

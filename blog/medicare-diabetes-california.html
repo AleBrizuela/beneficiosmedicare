@@ -155,6 +155,7 @@ img { max-width: 100%; height: auto; }
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 <!-- /shared:head-font -->
+<link rel="stylesheet" href="/zbx.css">
 </head>
 <body>
 <!-- sm-header:start -->
@@ -185,6 +186,17 @@ img { max-width: 100%; height: auto; }
   <main class="es">
 
     <h1>Medicare y la Diabetes en California: ¿Qué Cubre en 2026?</h1>
+<!-- shared:zip-top -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_top">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-top -->
+
     <p class="byline">Por <a href="/equipo#susana" rel="author" style="color:var(--teal-dark);text-decoration:none;font-weight:600">Susana Marcos</a>, Agente de Medicare con licencia &bull; Publicado el 11 de junio de 2026</p>
 
     <nav class="breadcrumbs" aria-label="breadcrumbs" style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">
@@ -265,7 +277,17 @@ img { max-width: 100%; height: auto; }
       Comparte esto con alguien que quieres. Un padre, un hermano o un vecino con diabetes debería saber cuánto cubre Medicare en 2026.
     </div>
 
-  </main>
+  <!-- shared:zip-end -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_end">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-end -->
+</main>
 
   <!-- sm-footer:start -->
 <!-- shared:footer -->
@@ -318,5 +340,6 @@ img { max-width: 100%; height: auto; }
 <!-- /shared:footer -->
 <!-- sm-footer:end -->
 
+<script src="/zbx.js" defer></script>
 </body>
 </html>

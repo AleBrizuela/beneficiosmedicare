@@ -236,6 +236,7 @@
 }
 </script>
 <link rel="stylesheet" href="/sm-chrome.css?v=20261023">
+<link rel="stylesheet" href="/zbx.css">
 </head>
 <body>
 <!-- sm-header:start -->
@@ -269,6 +270,17 @@
 
     <section class="hero">
         <h1>Ayuda con Medicare en Beverly Hills</h1>
+<!-- shared:zip-top -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_top">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-top -->
+
         <p class="subtitle">Asesoría gratuita y personalizada de Medicare para residentes de Beverly Hills y el Condado de Los Ángeles</p>
         <div class="zip-form">
             <input type="tel" id="city-zip" placeholder="Ingrese su código postal" maxlength="5" inputmode="numeric" autocomplete="postal-code">
@@ -388,6 +400,16 @@
             </div>
         </div>
     </section>
+<!-- shared:zip-end -->
+<div class="zbx" data-target="/?zip=" data-site="bm" data-lang="es">
+  <p class="zbx-title">Compare los planes 2027 de su condado</p>
+  <form class="zbx-form">
+    <input type="tel" inputmode="numeric" maxlength="5" autocomplete="postal-code" class="zbx-input" placeholder="Ej. 90230" aria-label="Compare los planes 2027 de su condado">
+    <button type="submit" class="zbx-btn" data-cta="zip_end">Ver mis planes</button>
+  </form>
+  <p class="zbx-error">Escriba 5 números</p>
+</div>
+<!-- /shared:zip-end -->
 </main>
 
 <!-- sm-footer:start -->
@@ -459,5 +481,6 @@
         document.getElementById('mobile-nav').classList.toggle('active');
     }
 </script>
+<script src="/zbx.js" defer></script>
 </body>
 </html>

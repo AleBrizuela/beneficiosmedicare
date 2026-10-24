@@ -1467,6 +1467,7 @@ function toggleMobile() {
   var zipInput = document.getElementById('zip-input');
   var zipError = document.getElementById('zip-error');
   var zipCard  = document.getElementById('zip-card');
+  var zipFromSource = '';  // T-133: zip_top/zip_end when the ZIP arrived via ?from=
   var widgetC  = document.getElementById('widget-anchor');
   var frame    = document.getElementById('widget-frame');
   var heroEl   = document.getElementById('hero');
@@ -1509,7 +1510,7 @@ function toggleMobile() {
 
 
     // Load widget with zip param
-    frame.src = 'widget-v4?lang=en&v=20260309b&zip=' + zip + (window.bmTester ? '&qa=1' : '');
+    frame.src = 'widget-v4?lang=en&v=20260309b&zip=' + zip + (zipFromSource ? '&from=' + encodeURIComponent(zipFromSource) : '') + (window.bmTester ? '&qa=1' : '');
   };
 
   // Auto-submit if a valid zip came in via URL param (from city/neighborhood pages)
@@ -1522,6 +1523,7 @@ function toggleMobile() {
       if (/^\d{5}$/.test(urlZip)) {
         zipInput.value = urlZip;
         autoLoaded = true;
+        zipFromSource = (params.get('from') || '').trim();
         setTimeout(function(){ window.handleZipSubmit(); }, 0);
       }
     } catch (err) { /* fail open: normal flow */ }
