@@ -15,7 +15,7 @@
  * hands their crawler. /opciones-compartidas is one static file for every link, so on its own every preview
  * reads the same. For a link-preview crawler only, this serves that same file with its og/twitter tags
  * rewritten from the link: the agent for the ZIP's state (T-102: Susana for KS, MO, TX, FL; Alejandra for
- * everything else) and her card image (1200x630, og-opciones-<agent>-<lang>.jpg).
+ * everything else) and her card image (1200x630, og-plans-bm-<agent>-<lang>-20261024.jpg; T-136).
  *
  * People get the plain file, untouched and with no extra work: the page draws itself in the browser. Only a
  * crawler (or ?og=1, for checking) pays for the two lookups, and both are plain text searches, never a JSON
@@ -78,7 +78,7 @@ export async function onRequestGet(context) {
       : en
       ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 in ${where}`
       : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 en ${where}`;
-    const img = `${url.origin}/og-opciones-${ak}-${en ? 'en' : 'es'}-20261023.jpg`;
+    const img = `${url.origin}/og-plans-bm-${ak}-${en ? 'en' : 'es'}-20261024.jpg`;
     const alt = en ? `${A.name}, ${A.tel}, BeneficiosMedicare.com` : `${A.name}, ${A.tel}, BeneficiosMedicare.com`;
 
     // T-113: no description at all -- the image already carries the tagline, the agent's name and
