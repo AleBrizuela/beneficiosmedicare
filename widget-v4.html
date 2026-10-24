@@ -165,6 +165,17 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .q3ck{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--cbar-brand);color:#fff;font-weight:700;font-size:13px;display:none;align-items:center;justify-content:center}
 .q3opt.on .q3ck{display:flex}
 .q3skip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;margin:8px 0 0;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px}
+/* T-132 B1: multi-select. .q3sub is the second, smaller sentence under the one-line fitQ3 question.
+   .q3go is "Ver mis planes", hidden until 1+ is picked; .q3go-fixed is the below-the-fold case,
+   pinned to the bottom of the visible screen (placeQ3Go() decides which, measured not guessed). */
+.q3sub{margin:-6px 0 12px;font-size:13.5px;color:#66727c;line-height:1.3}
+.q3go{display:none;margin-top:4px}
+.q3go.show{display:block}
+body.q3-go-fixed .q3go.show{position:fixed;left:14px;right:14px;bottom:12px;z-index:5;box-shadow:0 -6px 16px rgba(0,0,0,.14);margin-top:0}
+/* The fixed button always sits at the same screen position regardless of scroll, so whatever is
+   last in normal flow (the skip link) needs its OWN clearance, not just extra scrollable space at
+   the end of the page -- a bottom-padded body does not move content that already fits on screen. */
+body.q3-go-fixed .q3skip{margin-bottom:74px}
 /* iPhone SE, 320 wide: four of the five explanations wrapped to a second line and pushed "Sin
    preferencia" 25px below the screen. They are one line again here -- the words are not cut, the
    type is, and only on the narrowest phone.
@@ -1781,15 +1792,17 @@ const PRI_OPTIONS=[
   {id:'drugs',   ic:'bottle', d:'#007B7B', t:'#A6DCD8', b:'#E2F3F2',
    en:()=>'My medicines',     es:()=>'Mis medicamentos',
    enD:'<em>Only</em> plans with drug&nbsp;coverage.',     esD:'<em>Solo</em> planes con&nbsp;medicamentos.'},
-  {id:'medicaid',ic:'shieldb',d:'#A8473B', t:'#F0C3BA', b:'#FBEDEA',
-   en:()=>'I have '+mcd(),    es:()=>'Tengo '+mcd(),
-   enD:()=>'<em>Only</em> plans for&nbsp;'+mcdBoth()+'.',  esD:()=>'<em>Solo</em> planes para&nbsp;'+mcdBoth()+'.'},
   {id:'cost',    ic:'coin',   d:'#1F7A5A', t:'#A7DCC4', b:'#E6F4EE',
    en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
    enD:'<em>Only</em> plans with no monthly&nbsp;premium.',esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
   {id:'benefits',ic:'toothb', d:'#9A6410', t:'#F3D58E', b:'#FCF4E1',
    en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
-   enD:'<em>First</em>, the ones that cover all&nbsp;three.', esD:'<em>Primero</em> los que cubren los&nbsp;tres.'}
+   enD:'<em>First</em>, the ones that cover all&nbsp;three.', esD:'<em>Primero</em> los que cubren los&nbsp;tres.'},
+  /* T-132 B4 (AB 2026-10-23): moved last -- most common things go up top, and Medi-Cal is the
+     fewest people and mostly a filter. Was 4th (right after "Mis medicamentos"). */
+  {id:'medicaid',ic:'shieldb',d:'#A8473B', t:'#F0C3BA', b:'#FBEDEA',
+   en:()=>'I have '+mcd(),    es:()=>'Tengo '+mcd(),
+   enD:()=>'<em>Only</em> plans for&nbsp;'+mcdBoth()+'.',  esD:()=>'<em>Solo</em> planes para&nbsp;'+mcdBoth()+'.'}
 ];
 // Design B's own glyphs: the filled shapes carry class "f" and take the family's mid tone.
 const PRI_GLYPH={
@@ -1803,15 +1816,25 @@ const PRI_GLYPH={
 function priIcon(o){
   return `<span class="q3ic" style="--d:${o.d};--t:${o.t};--b:${o.b}"><svg viewBox="0 0 24 24">${PRI_GLYPH[o.ic]}</s`+`vg></span>`;
 }
-/* T-088 round 3 (AB 2026-10-15, "perhaps we should not allow multiple"): one answer, not several.
-   Tapping an option is the whole interaction -- it marks teal for 0.4s so the visitor sees what they
-   picked, then the plans open. No "Ver mis planes" button to find, no checkbox to understand. The
-   answer is never final: "Volver" and the browser's Back bring them here with it still marked, and
-   the filter chip on the results takes it off in one tap. */
+// T-132 B5: "the same rule" as B4 -- whichever picked answer is HIGHEST on the question screen,
+// not whichever was tapped first. suggestPlan()/sugLine() key off this instead of D.priority's old
+// tap-order value (D.priority itself is kept in sync, screen-first, for the few other readers).
+function screenFirstPri(){
+  const pr=Array.isArray(D.priorities)?D.priorities:[];
+  for(const o of PRI_OPTIONS){ if(pr.indexOf(o.id)>=0) return o.id; }
+  return D.priority||'';
+}
+/* T-132 B1 (AB 2026-10-23, "have been asked to make it a multi select"): replaces T-088 round 3's
+   one-answer rule. Tapping an option TOGGLES it; nothing auto-advances. "Ver mis planes" appears
+   once 1+ is picked and is the only way off this screen with picks still open (besides "Sin
+   preferencia", which clears and goes straight on, and "Revisar mi plan de hoy", its own one-tap
+   destination -- see pickPri()/pickMyPlan()). The picks are never final: "Volver" and the browser's
+   Back bring them here still ticked (D.priorities persists), and each pick's filter chip on the
+   results takes it off in one tap. */
 function priorityStep(nextFn){
   prog(50);
   _cb.priority=nextFn;
-  const cur=D.priority||'';
+  const cur=Array.isArray(D.priorities)?D.priorities:[];
   // T-099/T-103 turned ON in production 2026-10-19 (NOW.md SIGN-OFF: PROTECT yes on the wording,
   // relayed + go by AB). This was the one place the RED gate lived -- hiding "Revisar mi plan de
   // hoy" was enough to keep everything T-099/T-103 build (flowMyPlan, flowMyPlanResults,
@@ -1821,19 +1844,36 @@ function priorityStep(nextFn){
   const opts=PRI_OPTIONS;
   const cards=opts.map(o=>{
     const h=o[lang](), d=o[lang+'D'], dd=typeof d==='function'?d():d;
-    return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
+    return `<button class="q3opt${cur.indexOf(o.id)>=0?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
       priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
   }).join('');
   document.body.classList.add('q3');
+  document.body.classList.remove('q3-go-fixed');
   wb().innerHTML=`<div class="q3top">${bk()}<p class="q3q">${L('What matters most to you?','\u00BFQu\u00E9 le importa m\u00E1s?')}</p></div>
+    <p class="q3sub">${L('Pick all that apply.','Elija todas las que quiera.')}</p>
     ${cards}
-    <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>`;
+    <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>
+    <button class="btn-p q3go${cur.length?' show':''}" id="q3go" onclick="q3GoPlans()">${L('See my plans','Ver mis planes')} \u203A</button>`;
   fitQ3();
   try{ document.fonts&&document.fonts.ready.then(fitQ3); }catch(e){}
+  placeQ3Go();
+  if(!_q3GoListener){ _q3GoListener=true; window.addEventListener('resize',placeQ3Go); }
   // The ZIP's state arrives with the plan file, which can land after this screen has drawn. Until
   // it does, mcd() says "Medicaid"; a California visitor must read "Medi-Cal", which is the word the
   // ticket spells out. So the one option that carries the name is refreshed when the state lands.
   if(!D.state) fixMcdLabel(0);
+}
+/* T-132 B1: "Ver mis planes" sits inline under the last option by default; if that would put it
+   below the visible screen (390x660's fold, or the iframe's own viewport via _hostVP), it pins to
+   the bottom instead -- measured after every render and after resize, same pattern as placeSheet(). */
+let _q3GoListener=false;
+function placeQ3Go(){
+  const go=document.getElementById('q3go'); if(!go||!go.classList.contains('show')) {
+    document.body.classList.remove('q3-go-fixed'); return;
+  }
+  document.body.classList.remove('q3-go-fixed');
+  const vh=(_hostVP&&_hostVP.height)||window.innerHeight;
+  if(go.getBoundingClientRect().bottom>vh) document.body.classList.add('q3-go-fixed');
 }
 function fixMcdLabel(n){
   const el=document.getElementById('pri-medicaid'); if(!el) return;
@@ -1864,26 +1904,75 @@ function fitQ3(){
 }
 window.addEventListener('resize',fitQ3);
 let _priTimer=null;
+/* T-132 B1/B2: "Revisar mi plan de hoy" and "Sin preferencia" are the two one-tap exits this screen
+   always had -- unchanged behavior, just no longer sharing pickPri's old single-answer branch with
+   the toggle. Any other option tap now only toggles D.priorities; "Ver mis planes" (q3GoPlans) is
+   the only way those picks leave this screen. */
 function pickPri(id){
   if(_priTimer) return;
-  document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',!!id&&el.id==='pri-'+id));
   if(id==='myplan'){
-    // Not an order or a filter, so D.priority is left as it was and the list behaves as before.
-    wEvt('priority_pick',{priority:'myplan'});
+    document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',el.id==='pri-myplan'));
+    // Not an order or a filter, so D.priorities is left as it was and the list behaves as before.
+    wEvt('priority_pick',{priority:'myplan',on:true});
     _priTimer=setTimeout(()=>{
       _priTimer=null;
       // T-099 wires the real destination (flowMyPlan, "¿Qué plan tiene hoy?"); until it exists, log and stay here.
       if(typeof flowMyPlan==='function'){ go(flowMyPlan); return; }
       try{ console.info('[T-100] priority_pick=myplan: flowMyPlan() is not built yet (T-099)'); }catch(e){}
-      const el=document.getElementById('pri-myplan'); if(el) el.classList.remove('on');
+      restoreQ3OnStates();
     },400);
     return;
   }
-  D.priority=id; D.priorities=id?[id]:[];
-  _priAuto=null;   // a new answer sets the order and the filters once more
-  resetListFilters('answer_change');
-  wEvt('priority_pick',{priority:id||'none'});
-  _priTimer=setTimeout(()=>{_priTimer=null;go(_cb.priority);}, id?400:0);
+  if(id===''){   // "Sin preferencia": clears every pick and goes straight on, as before
+    D.priority=''; D.priorities=[];
+    _priAuto=null; _priAppliedKey=null;   // a new answer sets the order and the filters once more
+    resetListFilters('answer_change');
+    wEvt('priority_pick',{priority:'none',on:true});
+    go(_cb.priority);
+    return;
+  }
+  const cur=Array.isArray(D.priorities)?D.priorities:(D.priorities=[]);
+  const at=cur.indexOf(id), on=at<0;
+  if(on) cur.push(id); else cur.splice(at,1);
+  D.priority=screenFirstPri();   // legacy single-value readers (SUG_SHORT, askLine) get the screen-first pick
+  const el=document.getElementById('pri-'+id); if(el) el.classList.toggle('on',on);
+  wEvt('priority_pick',{priority:id,on:on});
+  const go3=document.getElementById('q3go');
+  if(go3) go3.classList.toggle('show',cur.length>0);
+  placeQ3Go();
+}
+function restoreQ3OnStates(){
+  const cur=Array.isArray(D.priorities)?D.priorities:[];
+  document.querySelectorAll('.q3opt').forEach(el=>{
+    const id=el.id.replace(/^pri-/,'');
+    el.classList.toggle('on',id!=='myplan'&&cur.indexOf(id)>=0);
+  });
+}
+/* T-132 B1: the only way picks on this screen reach the plan list. Opens with whatever the picks
+   already set via applyPriority()/flowResults() -- same destination pickPri() used to jump to after
+   its 400ms "you picked this" pause, now a deliberate tap instead of an auto-advance timer. */
+let _priAppliedKey=null;
+function q3GoPlans(){
+  const pr=Array.isArray(D.priorities)?D.priorities:[];
+  if(!pr.length) return;
+  // B4: screen order, not pick order, for both the key and telemetry.
+  const screenPr=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0);
+  const key=screenPr.join('+');
+  // B8: the lead sheet's existing "priority" column (D.priority, sent wholesale by sendLead(D)) gets
+  // this same "+"-joined set -- no new column. Internal readers (sugLine, suggestPlan, saidMedicaid)
+  // already read D.priorities/screenFirstPri(), not this string, so widening it here is safe.
+  D.priority=key;
+  // B7: "Volver ... keeps the picks ticked (today a new answer resets the list; keep that reset
+  // only when the picks change)" -- tapping "Ver mis planes" with the SAME set already applied (a
+  // visitor who went back to look, changed nothing, and came forward again) must not wipe the chips,
+  // carrier and sort they had set on the list.
+  if(key!==_priAppliedKey){
+    _priAppliedKey=key;
+    _priAuto=null;   // a changed set of picks sets the order and filters once more
+    resetListFilters('answer_change');
+  }
+  wEvt('priority_submit',{priorities:key});
+  go(_cb.priority);
 }
 // T-104 (6) (AB 2026-10-18): picking a different answer, or Volver-ing back onto the question
 // screen, clears every chip, the carrier and the sort back to the answer's default, and drops the
@@ -1892,7 +1981,7 @@ function pickPri(id){
 // into the list, so those filters and ticks are left exactly as the visitor set them.
 function resetListFilters(reason){
   _typeFilter='all'; _zeroOnly=false; _drugOnly=false; _pdpOnly=false; _dsnpOnly=false; _snpOnly=false;
-  _carriers=[];_planTypes.clear(); _carOpen=false; _foOpen=false; _sortMode='premium'; selPlans=[];
+  _carriers=[];_planTypes.clear(); _carOpen=false; _foOpen=false; _sortMode='premium'; selPlans=[]; _priDropMsg=null;
   wEvt('filter_reset',{reason:reason});
 }
 
@@ -2877,20 +2966,41 @@ function countWith(over){
 // order; every ticked option that is a filter switches that filter on. Nothing is ever hidden
 // silently: the line under the sort bar names each filter and undoes it in one tap, and if our own
 // pre-filter would leave an empty list we drop it and show everything.
-let _priAuto=null;
+let _priAuto=null, _priDropMsg=null;
 const PRI_SORT={doctors:'doctors',cost:'moop',drugs:'ded',benefits:'dvh',medicaid:'mcd'};
+// T-132 B3: priority id -> {on filter flag, chip key, CHIP_LBL key, "any plans" test}.
+const PRI_FILT={
+  cost:    {k:'zero', test:()=>PLANS.some(p=>inTodos(p)&&p.premium===0)},
+  drugs:   {k:'drug', test:()=>PLANS.some(hasDrug)},
+  medicaid:{k:'dsnp', test:()=>PLANS.some(isDual)}
+};
+function setPriFilter(k,v){ if(k==='zero')_zeroOnly=v; else if(k==='drug')_drugOnly=v; else if(k==='dsnp')_dsnpOnly=v; }
 function applyPriority(){
   if(!PLANS.length||_priAuto===D.zip) return;
-  _priAuto=D.zip; _carriers=[];_planTypes.clear(); _carOpen=false;   // T-101: a new ZIP or a new answer starts with every carrier
+  _priAuto=D.zip; _carriers=[];_planTypes.clear(); _carOpen=false; _priDropMsg=null;   // T-101: a new ZIP or a new answer starts with every carrier
   const pr=Array.isArray(D.priorities)?D.priorities:[];
   if(!pr.length) return;
-  if(pr.indexOf('cost')>=0&&PLANS.some(p=>inTodos(p)&&p.premium===0)) _zeroOnly=true;
-  if(pr.indexOf('drugs')>=0&&PLANS.some(hasDrug)) _drugOnly=true;
-  if(pr.indexOf('medicaid')>=0&&PLANS.some(isDual)) _dsnpOnly=true;
-  if(!filterByType(PLANS).length){_zeroOnly=false;if(!filterByType(PLANS).length)_drugOnly=false;}
-  const so=PRI_SORT[pr[0]];
-  if(so) _sortMode=so;
-  wEvt('priority_sort',{priority:pr[0]||'',sort:_sortMode,
+  // B3: turn on every picked filter, together (AND) -- pick order, since that is also drop order.
+  const applied=[];
+  pr.forEach(id=>{
+    const f=PRI_FILT[id]; if(!f||!f.test()) return;
+    setPriFilter(f.k,true); applied.push({id,k:f.k});
+  });
+  // B3: a combination that leaves 0 plans drops the LAST-PICKED filter first, repeating until the
+  // list is non-empty or there is nothing left to drop; never silent -- _priDropMsg says which
+  // filter(s) were dropped and which ones are still on, and reuses the chip row's one-tap undo.
+  const triedKeys=applied.map(a=>a.k), droppedKeys=[];
+  while(applied.length&&!filterByType(PLANS).length){
+    const dropped=applied.pop();
+    setPriFilter(dropped.k,false);
+    droppedKeys.push(dropped.k);
+    _priDropMsg={triedKeys,droppedKeys:[...droppedKeys],keptKeys:applied.map(a=>a.k)};
+  }
+  // B4: the order is screen position, not tap order -- first-picked-on-screen decides, ties fall to
+  // the next picked-on-screen answer, then always CMS rating. Replaces the old PRI_SORT[pr[0]] rule.
+  const screenPr=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0);
+  if(screenPr.some(id=>PRI_SORT[id])) _sortMode='priority';
+  wEvt('priority_sort',{priority:screenPr.join('+')||'',sort:_sortMode,
     filters:[(_zeroOnly?'zero':''),(_drugOnly?'drug':''),(_dsnpOnly?'dsnp':'')].filter(Boolean).join('+')||'none'});
 }
 /* The "Todos / HMO / PPO / ..." pill row and the chip that cleared one filter both went with round
@@ -2963,11 +3073,14 @@ function _t1(p){
 }
 function _hearAmt(p){const a=p.hear&&p.hear.amax;return (a&&a.amt!=null)?a.amt:null;}
 const _neg=x=>x==null?null:-x;
+// Medigap entries carry placeholder 0s for MOOP/deductible: they have neither, so they sort as unknown.
+// Named _sDD/_sMO/_sST (not _dd/_mo/_st) -- suggestPlan()/sugLine() below declare their own top-level
+// _dd/_mo/_st with a different null-convention (Infinity/-1, not null); same script, so same names twice is a SyntaxError.
+const _sDD=p=>p._medigap||p.drug!=='Included'?null:p.ded, _sMO=p=>p._medigap||p.cat==='PDP'?null:p.moop;
+const _sST=p=>_neg(p.rating);
 function sortPlans(plans, mode){
   const s=[...plans], nm=(a,b)=>String(a.name).localeCompare(String(b.name));
-  // Medigap entries carry placeholder 0s for MOOP/deductible: they have neither, so they sort as unknown.
-  const dd=p=>p._medigap||p.drug!=='Included'?null:p.ded, mo=p=>p._medigap||p.cat==='PDP'?null:p.moop;
-  const st=p=>_neg(p.rating);
+  const dd=_sDD, mo=_sMO, st=_sST;
   if(mode==='moop')      s.sort((a,b)=>_asc(mo(a),mo(b))||_asc(dd(a),dd(b))||_asc(st(a),st(b))||nm(a,b));
   else if(mode==='ded')  s.sort((a,b)=>_asc(dd(a),dd(b))||_asc(_t1(a),_t1(b))||_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   else if(mode==='mcd')  s.sort((a,b)=>_asc(st(a),st(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(mo(a),mo(b))||nm(a,b));
@@ -2975,8 +3088,24 @@ function sortPlans(plans, mode){
   else if(mode==='name') s.sort((a,b)=>String(dispName(a)).localeCompare(String(dispName(b)),lang,{sensitivity:'base',numeric:true})||nm(a,b));   // T-104 (3)
   else if(mode==='doctors') s.sort((a,b)=>_asc(_NETRANK(a),_NETRANK(b))||_asc(mo(a),mo(b))||_asc(st(a),st(b))||nm(a,b));
   else if(mode==='dvh')  s.sort((a,b)=>_asc(_dvh3(a),_dvh3(b))||_asc(_neg(_dentAmt(a)),_neg(_dentAmt(b)))||_asc(_neg(_hearAmt(a)),_neg(_hearAmt(b)))||_asc(a.premium,b.premium)||nm(a,b));
+  else if(mode==='priority') s.sort(priorityComparator(Array.isArray(D.priorities)?D.priorities:[]));
   else                   s.sort((a,b)=>_asc(a.premium,b.premium)||_asc(mo(a),mo(b))||nm(a,b));
   return s;
+}
+/* T-132 B4 (AB 2026-10-23): "should most common things go up top?" -- yes, and the order a visitor
+   sees IS the order the question screen lists its options in, every time: the first-picked answer
+   (by screen position, not tap order) decides first, a tie falls to the NEXT picked answer (again by
+   screen position), and a tie through every picked answer always falls to CMS rating, then name.
+   Replaces the single-sortMode precedence list and the "Medi-Cal always first" special case --
+   Medi-Cal is just the last option on screen now, and wins ties on rating like everything else. */
+const PRI_KEY={doctors:_NETRANK, cost:_sMO, drugs:_sDD, benefits:_dvh3, medicaid:_sST};
+function priorityComparator(pr){
+  const screenOrder=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0&&PRI_KEY[id]);
+  const nm=(a,b)=>String(a.name).localeCompare(String(b.name));
+  return (a,b)=>{
+    for(const id of screenOrder){ const k=PRI_KEY[id]; const r=_asc(k(a),k(b)); if(r) return r; }
+    return _asc(_sST(a),_sST(b))||nm(a,b);
+  };
 }
 
 // ── RESULTS ──
@@ -3006,12 +3135,24 @@ function typeNameWords(){
   const arr=[..._planTypes]; if(!arr.length) return '';
   return arr.length===1?arr[0]:arr.slice(0,-1).join(', ')+L(' and ',' y ')+arr[arr.length-1];
 }
+/* T-132 B6: "12 planes con medicamentos y $0 de prima en Los Angeles" -- the title names the
+   picked FILTER answers (drugs/cost/medicaid) in plain words, same slot typeNameWords() already
+   fills for plan type. 3+ picks (every filter the question can set is on at once): count + county
+   only, naming three things in a title reads as noise, not information. */
+function priorityNameWords(){
+  const parts=[];
+  if(_drugOnly) parts.push(L('with drug coverage','con medicamentos'));
+  if(_zeroOnly) parts.push(L('$0 premium','$0 de prima'));
+  if(_dsnpOnly) parts.push(L('with '+mcd(),'con '+mcd()));
+  if(parts.length>=3) return '';
+  return parts.length<=1?(parts[0]||''):parts.join(L(' and ',' y '));
+}
 function resultsHead(list){
   const n=list.length, cty=D.county?esc(D.county):'';
   const mg=_typeFilter==='supp';
   const zb=`<span class="zipb">${esc(D.zip||'')}</span>`;
   const where=cty?`<span class="zipb">${cty}</span>`:zb;
-  const tn=typeNameWords();
+  const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
   const title=mg?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
                 :tn?L(`${n} ${esc(tn)} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} ${esc(tn)} en&nbsp;${where}`)
                    :L(`${n} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} en&nbsp;${where}`);
@@ -3058,9 +3199,9 @@ function chipDefs(){
     {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, group:'rest',
      any:PLANS.some(p=>inTodos(p)&&p.premium===0),
      n:PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length},
-    cat('pdp',L('Drugs only','Solo medicamentos')),
-    {...cat('dsnp',mcd()), group:'last'},
-    {...cat('snp',L('Special needs','Necesidades especiales')), group:'last'}
+    cat('pdp',L('Drugs only','Solo medicamentos'),_pdpOnly),
+    {...cat('dsnp',mcd(),_dsnpOnly), group:'last'},
+    {...cat('snp',L('Special needs','Necesidades especiales'),_snpOnly), group:'last'}
   ];
 }
 /* T-109 (1): "Tipo de plan" -- every distinct network type that actually exists among plans the
@@ -3096,10 +3237,15 @@ const PRI_CHIP={cost:'zero', drugs:'drug', medicaid:'dsnp'};
 function orderedChips(){
   const type=planTypeChipDefs(), rest=chipDefs();
   let ordered=[...type, ...rest.filter(c=>c.group==='rest'), ...rest.filter(c=>c.group==='last')];
-  const priKey=PRI_CHIP[D.priority];
-  if(priKey){
-    const idx=ordered.findIndex(c=>c.k===priKey);
-    if(idx>0){ const [c]=ordered.splice(idx,1); ordered.unshift(c); }
+  // T-132 B3: every picked filter chip is pre-selected and moves to the front, in pick order --
+  // not just the single one T-109 promoted for the old one-answer question.
+  const pr=Array.isArray(D.priorities)?D.priorities:[];
+  const promoteKeys=pr.map(id=>PRI_CHIP[id]).filter(Boolean);
+  if(promoteKeys.length){
+    const promoted=[], rest2=[];
+    ordered.forEach(c=>{ (promoteKeys.indexOf(c.k)>=0?promoted:rest2).push(c); });
+    promoted.sort((a,b)=>promoteKeys.indexOf(a.k)-promoteKeys.indexOf(b.k));
+    ordered=[...promoted,...rest2];
   }
   return ordered.filter(c=>c.any);
 }
@@ -3111,12 +3257,28 @@ function chipRow(){
   // "Aseguradora" only where picking one (more) changes something: 2+ carriers still on the table.
   const carBtn=cars.length>1||_carriers.length
     ? `<button class="ord ordc" aria-expanded="${_carOpen}" aria-controls="carpan" onclick="toggleCar()">${L('Carrier','Aseguradora')} ${_carOpen?'\u25B4':'\u25BE'}</button>` : '';
-  const zeroMsg=zeroResultMsg();
+  const zeroMsg=zeroResultMsg()||priDropMsgHTML();
   return `<div class="fx"><div class="fxr">`+cs.map(c=>
       `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
     `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
     +zeroMsg;
+}
+/* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
+   says so by name (what was tried, what is showing) and undoes with the same one-tap pattern as
+   zeroResultMsg -- re-ticking the dropped chip(s) via chipTap, which re-filters and re-renders. */
+function priDropMsgHTML(){
+  if(!_priDropMsg) return '';
+  const {triedKeys,droppedKeys,keptKeys}=_priDropMsg;
+  const lbl=k=>CHIP_LBL[k]?CHIP_LBL[k]():k;
+  const and=L(' and ',' y ');
+  const tried=triedKeys.map(lbl).join(and), kept=keptKeys.map(lbl).join(and);
+  const msg=keptKeys.length
+    ? L(`No plans with ${tried} in your county; showing ${kept}.`,`No hay planes con ${tried} en su condado; mostramos los de ${kept}.`)
+    : L(`No plans with ${tried} in your county; showing every plan.`,`No hay planes con ${tried} en su condado; mostramos todos los planes.`);
+  const undo=droppedKeys.map(k=>`chipTap('${k}')`).join(';');
+  return `<p class="fz0">${msg}
+    <button class="fz0x" onclick="${esc(undo)}">${L('Show them anyway','Mostrarlos de todas formas')}</button></p>`;
 }
 /* T-109 (3): if the current combination leaves 0 plans, say so plainly (built from the data, never
    assumed) with a way out. Only the MOST RECENTLY toggled filter is named, so the message always
@@ -3202,6 +3364,7 @@ function carrierClear(c){
 const CHIP_LBL={zero:()=>L('$0 premium','$0 prima'), drug:()=>L('With drugs','Con medicamentos'),
   pdp:()=>L('Drugs only','Solo medicamentos'), dsnp:()=>mcd(), snp:()=>L('Special needs','Necesidades especiales')};
 function chipTap(k){
+  _priDropMsg=null;   // T-132 B3: a manual chip tap (including the drop message's own undo) supersedes the auto-applied message
   if(k.indexOf('type:')===0){
     const t=k.slice(5), was=_planTypes.has(t);
     wEvt('filter_chip',{chip:k,on:!was}); wEvt('filter_use',{filter:'type_'+t,on:!was});
@@ -3995,19 +4158,26 @@ const _st=p=>p.rating==null?-1:p.rating;
 const _mo=p=>p.moop==null?Infinity:p.moop;
 const _dd=p=>(p.drug!=='Included'||p.ded==null)?Infinity:p.ded;
 const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
+// T-132 B5 (AB 2026-10-23): "the same rule" as the list order (B4) -- the highest picked answer
+// on screen decides, a tie falls to the next picked answer, then CMS rating. Replaces the old
+// one-answer-at-a-time branches (which each ended the same way: the metric, then rating, then
+// out-of-pocket) with one chain built from however many answers were picked, in screen order.
 function suggestPlan(plans){
   if(plans.length<2) return null;
-  const pr=D.priority||'';
+  const pr=Array.isArray(D.priorities)?D.priorities:(D.priority?[D.priority]:[]);
+  const screenOrder=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0&&(id==='medicaid'||PRI_KEY[id]));
   // T-101 (6), mock v9 section 5 "Sin preferencia": with no answer there is nothing to suggest FROM,
   // and "the best rating and the lowest cost" is the closest thing to a "recommended" badge. No card;
   // the comparison asks for the two facts that would decide it instead (askLine).
-  if(!pr) return null;
+  if(!screenOrder.length) return null;
   const by=(...fs)=>[...plans].sort((a,b)=>{for(const f of fs){const d=f(a)-f(b);if(d)return d;}return 0;})[0];
-  if(pr==='drugs')        return by(_dd,p=>-_st(p),_mo);
-  if(pr==='benefits')     return by(p=>-_dent(p),p=>-_st(p),_mo);
-  if(pr==='doctors')      return by(_NETRANK,p=>-_st(p),_mo);
-  if(pr==='medicaid')     return by(p=>isDual(p)?0:1,p=>-_st(p),_mo);
-  return by(p=>-_st(p),p=>_mo(p)+_dd(p));      // $0 de prima
+  const keys=[];
+  screenOrder.forEach(id=>{
+    if(id==='medicaid') keys.push(p=>isDual(p)?0:1);   // kept as its own first step: dual-eligible plans before rating, even among manually compared plans the filter did not reach
+    keys.push(p=>PRI_KEY[id](p)==null?Infinity:PRI_KEY[id](p));
+  });
+  keys.push(p=>-_st(p), _mo);
+  return by(...keys);
 }
 // Up to three things this plan does that NO other plan on the screen matches. Every one of them is
 // a figure the visitor can find in the table below; if there are none, the card says nothing extra.
@@ -4037,7 +4207,7 @@ function sugLine(p,plans){
   const ded=_dd(p)===Infinity?'':usd(p.ded);
   const dent=_dentAmt(p)==null?'':usd(_dentAmt(p));
   const ppo=/PPO/.test(String(p.type||''));
-  switch(D.priority){
+  switch(screenFirstPri()){   // T-132 B5: screen order, not tap order
     case 'cost':
       return p.premium===0&&moop
         ? L(`No premium and the lowest out-of-pocket max: ${moop}.`,`Sin prima y el máximo de bolsillo más bajo: ${moop}.`)
@@ -4090,7 +4260,12 @@ function sugCard(p,plans){
 async function plansForShare(zip,ids,priority){
   try{
     if(!/^\d{5}$/.test(String(zip||''))) return {err:'bad zip'};
-    D.priority=priority||'';
+    // T-132 B8: the link's pr= carries the whole "+"-joined set (screen order, written by
+    // shareURL()); split it back into D.priorities so suggestPlan() runs its real multi-pick rule
+    // on the recipient's page, not just its first id. D.priority stays the screen-first id, for
+    // SUG_SHORT's "For X:" lead-in, which names only one thing by design.
+    const prList=String(priority||'').split('+').filter(Boolean);
+    D.priorities=prList; D.priority=prList[0]||'';
     D.zip=String(zip); await loadPlansForZip(D.zip);
     if(D._zipValid===false||!PLANS.length) return {err:'no plans'};
     const want=(ids||[]).map(String);
@@ -4202,9 +4377,13 @@ function shareURL(){
   const plans=sharePlans(); if(!plans.length) return '';
   const mc=leadSite()==='medicare-california';
   const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
-  // T-113: r= (the priority/suggestion reason, e.g. "drugs") was an internal personalization flag
-  // with no reason to travel in a URL people forward to each other. Dropped; a recipient's shared
-  // page just shows no "For X:" lead line, same as it already did when D.priority was empty.
+  // T-113 dropped r= (the single priority/suggestion reason) as a URL people forward to each other
+  // had no reason to carry an internal personalization flag. T-132 B8 (AB 2026-10-23) explicitly
+  // asks for it back, now as the whole picked set, so the recipient's own shared page can draw the
+  // same suggestion reasoning (plansForShare splits it back into D.priorities). Screen order, same
+  // as everywhere else in this ticket, not pick order.
+  const prSet=Array.isArray(D.priorities)?PRI_OPTIONS.map(o=>o.id).filter(id=>D.priorities.indexOf(id)>=0):[];
+  if(prSet.length) q.push('r='+encodeURIComponent(prSet.join('+')));
   // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them.
   // Also true for the "Compartir lo que cambia" button, which shares straight from the mpCurCard
   // screen -- before Compare has ever been opened, so _cmpFrom might not say 'myplan' yet even though
@@ -4248,6 +4427,10 @@ function shareLine(){
 }
 function sharePhoneLine(){ return '📞 '+agentTel(agentFor(D.state)); }
 function shareMsg(){ return shareLine()+'\n'+shareURL()+'\n'+sharePhoneLine(); }
+/* T-132 A3 (AB 2026-10-23): iMessage only draws a link-preview card when the URL is the LAST
+   line of the body; WhatsApp draws one either way. So SMS/iMessage gets its own ordering
+   (title, phone, URL) while WhatsApp/email keep shareMsg()'s order unchanged. */
+function smsMsg(){ return shareLine()+'\n'+sharePhoneLine()+'\n'+shareURL(); }
 const SHARE_ICONS={
   wa:'<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.6 20.4l4.2-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="#fff" stroke-width="1.7"/><path fill="#fff" stroke="none" d="M9.3 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.8c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3-.1.5.6 1 1.4 1.9 2.5 2.4.2.1.4.1.5 0l.7-.8c.1-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.4 0 .5-.2 1.2-.8 1.6-.6.4-1.5.5-3.2-.2-1.9-.8-3.2-2.7-3.4-3-.2-.3-.9-1.3-.9-2.4 0-1.1.5-1.6.7-1.9z"/>',
   sms:'<path fill="#fff" stroke="none" d="M12 4.6c-4.7 0-8.4 3-8.4 6.7 0 2.2 1.3 4.1 3.3 5.3-.2 1.2-.8 2.3-1.7 3.1 1.8 0 3.4-.7 4.6-1.7.7.1 1.4.2 2.2.2 4.7 0 8.4-3 8.4-6.7S16.7 4.6 12 4.6z"/>',
@@ -4358,7 +4541,7 @@ function shareSend(k){
     return;
   }
   if(k==='pdf'){ wEvt('pdf_open',{plans:sharePlans().length}); openTop(url+(url.indexOf('?')<0?'?':'&')+'print=1'); closeShare(); return; }
-  const t=encodeURIComponent(msg);
+  const t=encodeURIComponent(k==='sms'?smsMsg():msg);
   // T-113: the email subject is the same one line the message opens with, not a separate generic line.
   const href=k==='whatsapp'?`https://wa.me/?text=${t}`
             :k==='sms'?`sms:?&body=${t}`
@@ -4853,7 +5036,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carriers=[];_planTypes.clear();_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carriers=[];_planTypes.clear();_carOpen=false;_priAuto=null;_priAppliedKey=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>

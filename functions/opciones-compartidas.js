@@ -78,7 +78,7 @@ export async function onRequestGet(context) {
       : en
       ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 in ${where}`
       : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 en ${where}`;
-    const img = `${url.origin}/og-opciones-${ak}-${en ? 'en' : 'es'}.jpg`;
+    const img = `${url.origin}/og-opciones-${ak}-${en ? 'en' : 'es'}-20261023.jpg`;
     const alt = en ? `${A.name}, ${A.tel}, BeneficiosMedicare.com` : `${A.name}, ${A.tel}, BeneficiosMedicare.com`;
 
     // T-113: no description at all -- the image already carries the tagline, the agent's name and
