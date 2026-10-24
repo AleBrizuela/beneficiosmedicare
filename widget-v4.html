@@ -4254,7 +4254,7 @@ function sugCard(p,plans){
     <p class="sp"><i></i><span>${nbLast(esc(dispName(p)))}</span></p>
     ${line?`<p class="why">${line}</p>`:''}
     <div class="conf">${confPhoto(a)}
-      <span>${L('Your doctors and medicines?','¿Sus médicos y medicamentos?')} <span class="nw">${L(`${esc(agentFirst(a))} will confirm:`,`${esc(agentFirst(a))} lo confirma:`)} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></span></div>
+      <span>${L('Doctors and medicines?','¿Médicos y medicamentos?')} <span class="nw">${L(`${esc(agentFirst(a))} confirms:`,`${esc(agentFirst(a))} confirma:`)} <a href="tel:+${a.digits}" onclick="wEvt('phone_click',{placement:'suggestion'})">${agentTel(a)}</a></span></span></div>
   </div>`;
 }
 /* ── T-078: sharing the comparison ─────────────────────────────────────────────────────────────
