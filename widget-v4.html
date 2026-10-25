@@ -5206,7 +5206,7 @@ if(!_dataOnly) go(startZip);
       // plain rows as before (medicare-california's options-shared still asks that way until its pass)
       Promise.resolve(q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
-          county:r.county||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
+          county:r.county||'',city:r.city||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
           html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||''},org); }catch(x){}
       });
       return;
