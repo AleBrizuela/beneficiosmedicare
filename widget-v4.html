@@ -942,6 +942,11 @@ body.host-cbar .cbar{display:none!important}
 .pill span{color:#66727c;font-weight:500;margin-left:3px}
 .pill.on{background:var(--lt-mint);border-color:var(--sage);color:var(--sage-dark)}
 .pill.on span{color:var(--sage-dark)}
+/* T-138: the one place-display pill (placePill()) -- mint, pin+check icon, city bold + ZIP
+   regular, or ZIP alone bold when there is no city to repeat. */
+.placepill{display:inline-flex;align-items:center;gap:6px;background:#E6F4F3;border-radius:999px;padding:4px 12px 4px 8px;font-size:15px;color:#00585A;white-space:nowrap}
+.placepill svg{flex:none}
+.placepill b{font-weight:700}
 .team2{margin-top:16px;background:#fff;border:0;border-radius:12px;box-shadow:0 4px 24px rgba(0,60,113,.10);padding:16px 14px;text-align:left}
 .team2 .tt{font-size:16px;font-weight:700;margin:0 0 12px;text-align:center;color:#1e2a32}
 .people{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -1546,6 +1551,20 @@ function loadZipIndex(){
     document.head.appendChild(s);
   });
 }
+// T-138: ZIP -> "City, ST" (USPS default city), for every visitor-facing place label. Never
+// blocks the flow -- a load/parse failure just leaves D.city empty, and placeText()/placePill()
+// fall back to the plain ZIP exactly as before this existed.
+let _zipCity = null;
+function loadZipCity(){
+  if(_zipCity) return Promise.resolve(_zipCity);
+  return new Promise(resolve => {
+    const s = document.createElement('script');
+    s.src = 'data/zip_city.js';
+    s.onload = () => { _zipCity = (typeof ZIP_CITY !== 'undefined') ? ZIP_CITY : {}; resolve(_zipCity); };
+    s.onerror = () => { _zipCity = {}; resolve(_zipCity); };
+    document.head.appendChild(s);
+  });
+}
 
 // Main: look up plans for a ZIP code
 async function loadPlansForZip(zip){
@@ -1553,10 +1572,11 @@ async function loadPlansForZip(zip){
     const idx = await loadZipIndex();
     const state = idx[zip];
     if(!state) { D._zipValid=false; PLANS=[]; wEvt('widget_error',{step:'zip',reason:'unknown_zip'}); return; }
-    const [data] = await Promise.all([loadPlanData(state), loadRepresented()]);
+    const [data,,cityIdx] = await Promise.all([loadPlanData(state), loadRepresented(), loadZipCity()]);
     const county = data.zips?.[zip];
     if(!county) { D._zipValid=false; PLANS=[]; wEvt('widget_error',{step:'zip',reason:'no_county'}); return; }
     D.county = county;
+    D.city = cityIdx[zip] || '';
     D.state = state;
     D._zipValid = true;
     if(_gaStartZip!==zip){
@@ -1749,7 +1769,7 @@ async function retryZip(){
     flowResults(); return;
   }
   const prev = D.zip;
-  D.zip = v; D.county = ''; D._zipValid = undefined; PLANS = [];
+  D.zip = v; D.county = ''; D.city = ''; D._zipValid = undefined; PLANS = [];
   await loadPlansForZip(v);
   _zipRetryMsg = (D._zipValid === false)
     ? (lang==='en' ? `We still do not have plan data for ${v}. Try another ZIP, or call us.`
@@ -3125,6 +3145,19 @@ function priorityComparator(pr){
 const PAGE=10, PAGE_ALL=13;
 let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+/* T-138 (D-110, AB 2026-10-25 "nicely represented every time we speak of someone's zip code, end
+   to end"): the ONE place-display helper pair for every visitor-facing ZIP, BM + MC.
+   placeText() -- "Culver City, CA 90230" (for messages, PDF title, page title); no city found ->
+   plain "ZIP 90230", today's words. placePill() -- same pin+check mint pill everywhere a ZIP
+   shows on screen; pass a city for the full city+ZIP pill (Su plan actual, compare/shared band),
+   or omit it for the ZIP-only checked pill (plan list, where the title above already says the
+   city, so the pill never repeats it). */
+const PLACE_PIN='<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 22s-7.5-6.4-7.5-12A7.5 7.5 0 0 1 19.5 10c0 5.6-7.5 12-7.5 12z" fill="#007B7B"/><path d="M8.6 10.2l2.4 2.4 4.4-4.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function placeText(zip,city){ return city?`${city} ${zip}`:`ZIP ${zip}`; }
+function placePill(zip,city){
+  const z=esc(zip||'');
+  return `<span class="placepill">${PLACE_PIN}${city?`<b>${esc(city)}</b> ${z}`:`<b>${z}</b>`}</span>`;
+}
 // Results top, T-088 round 3 + "less is more" (AB 2026-10-15). Pixel spec: flujo-completo-v11
 // screen 3 and 1545_sus-planes-titulo-v5 (B). Three things and no more: the count as a title, one
 // line saying where, one row of chips. The old grey count line, the "Ordenados por" row and the
@@ -3155,18 +3188,19 @@ function priorityNameWords(){
   return parts.length<=1?(parts[0]||''):parts.join(L(' and ',' y '));
 }
 function resultsHead(list){
-  const n=list.length, cty=D.county?esc(D.county):'';
+  // T-138: the title names the CITY, never the county (D.city, "Culver City, CA" -- no ZIP,
+  // which the pill below already carries). No city found -> the ZIP, same fallback as always.
+  const n=list.length, city=D.city?esc(D.city):'';
   const mg=_typeFilter==='supp';
   const zb=`<span class="zipb">${esc(D.zip||'')}</span>`;
-  const where=cty?`<span class="zipb">${cty}</span>`:zb;
+  const where=city?`<span class="zipb">${city}</span>`:zb;
   const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
   const title=mg?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
                 :tn?L(`${n} ${esc(tn)} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} ${esc(tn)} en&nbsp;${where}`)
                    :L(`${n} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} en&nbsp;${where}`);
   return `<div class="rh">
     <div class="rtop">${bk()}<p class="hl">${title}</p></div>
-    <div class="zl" id="zl">${PIN}
-      ${cty?`<span class="zcty">${cty}</span>`:''}
+    <div class="zl" id="zl">${placePill(D.zip)}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">${L('Change','Cambiar')}</button>
       <form class="zf" onsubmit="event.preventDefault();zipChange()">
         <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
@@ -3280,9 +3314,10 @@ function priDropMsgHTML(){
   const lbl=k=>CHIP_LBL[k]?CHIP_LBL[k]():k;
   const and=L(' and ',' y ');
   const tried=triedKeys.map(lbl).join(and), kept=keptKeys.map(lbl).join(and);
+  const place=D.city||D.zip||'';
   const msg=keptKeys.length
-    ? L(`No plans with ${tried} in your county; showing ${kept}.`,`No hay planes con ${tried} en su condado; mostramos los de ${kept}.`)
-    : L(`No plans with ${tried} in your county; showing every plan.`,`No hay planes con ${tried} en su condado; mostramos todos los planes.`);
+    ? L(`No plans with ${tried} in ${place}; showing ${kept}.`,`No hay planes con ${tried} en ${place}; mostramos los de ${kept}.`)
+    : L(`No plans with ${tried} in ${place}; showing every plan.`,`No hay planes con ${tried} en ${place}; mostramos todos los planes.`);
   const undo=droppedKeys.map(k=>`chipTap('${k}')`).join(';');
   return `<p class="fz0">${msg}
     <button class="fz0x" onclick="${esc(undo)}">${L('Show them anyway','Mostrarlos de todas formas')}</button></p>`;
@@ -3425,11 +3460,11 @@ async function zipChange(){
   const i=document.getElementById('zin'), e=document.getElementById('zerr');
   const v=((i&&i.value)||'').replace(/\D/g,'').slice(0,5);
   if(v.length!==5){if(e)e.textContent=L('Please enter all 5 digits.','Escriba los 5 dígitos.');return;}
-  const keep={PLANS,zip:D.zip,county:D.county,state:D.state,valid:D._zipValid,meta:_planMeta};
-  D.zip=v; D.county=''; D._zipValid=undefined; PLANS=[];
+  const keep={PLANS,zip:D.zip,county:D.county,city:D.city,state:D.state,valid:D._zipValid,meta:_planMeta};
+  D.zip=v; D.county=''; D.city=''; D._zipValid=undefined; PLANS=[];
   await loadPlansForZip(v);
   if(D._zipValid===false||!PLANS.length){
-    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
+    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.city=keep.city; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
     const e2=document.getElementById('zerr');
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
@@ -3792,13 +3827,13 @@ function mpType(v){
   if(hb){
     const t=mpNorm(v).trim(), first=list&&list[0];
     const byCarrier=!!(first&&t&&!/\s/.test(t)&&mpNorm(first.carrier).split(/[^a-z0-9]+/).some(w=>w&&w.indexOf(t)===0)&&list.every(p=>mpNorm(p.carrier)===mpNorm(first.carrier)));
-    hb.textContent=byCarrier?L('The carrier’s name is enough: its plans in your county appear.','Con el nombre de la aseguradora alcanza: aparecen sus planes del condado.')
+    hb.textContent=byCarrier?L('The carrier’s name is enough: its plans in your city appear.','Con el nombre de la aseguradora alcanza: aparecen sus planes de su ciudad.')
                             :L('Your card shows the plan name and a number like H5425-006.','Su tarjeta dice el nombre del plan y un número como H5425-006.');
   }
 }
 function mpSugHTML(list){
   if(list===null) return '';
-  if(!list.length) return `<div class="mpnone"><p>${L('We couldn’t find that plan in your county.','No encontramos ese plan en su condado.')}</p>
+  if(!list.length) return `<div class="mpnone"><p>${L('We couldn’t find that plan in your city.','No encontramos ese plan en su ciudad.')}</p>
     <button class="mpskip mpsk2" onclick="mpAll()">${L('See today’s plans','Ver los planes de hoy')} ›</button></div>`;
   return `<div class="mpac" role="listbox">`+list.map((p,i)=>
     `<button class="mpaci${i===0?' on':''}" role="option" onclick="mpPick('${esc(p.id)}')"><b>${nbLast(esc(dispName(p)))}</b> <small>${esc(p.type)} · ${esc(mpId(p.id))}</small></button>`).join('')+`</div>`;
@@ -3894,8 +3929,8 @@ function mpDiffLine(c){
   if(c.rule==='hmo') return p.moop!=null?L(`HMO with the lowest out-of-pocket max: ${usd(p.moop)}.`,`HMO con el máximo de bolsillo más bajo: ${usd(p.moop)}.`)
                                         :L('HMO with the lowest out-of-pocket max.','HMO con el máximo de bolsillo más bajo.');
   const base=L('Another carrier, no premium and the lowest out-of-pocket max.','Otra aseguradora, sin prima y el máximo de bolsillo más bajo.');
-  const cty=esc(D.county||'');
-  return c.rule==='noppo'?L(`There are no PPOs in ${cty}. `,`En ${cty} no hay PPO. `)+base:base;
+  const city=esc(D.city||D.county||'');
+  return c.rule==='noppo'?L(`There are no PPOs in ${city}. `,`En ${city} no hay PPO. `)+base:base;
 }
 // The line for a plan in Comparar when the comparison started here (section 5 row 1).
 function mpLineFor(p){const c=_mpCtx;if(!c||!p)return '';
@@ -4087,11 +4122,11 @@ function flowMyPlanResults(){
   if(_pin){_pin='';selPlans=selPlans.filter(id=>c.avail.indexOf(id)>=0);}
   // only the current plan enters ticked (there is only one card to tick); after that the ticks are the visitor's
   if(c.fresh){selPlans=c.cur27?[c.cur27.id]:[];c.fresh=false;}
-  const cty=esc(D.county||''), cnt=mpTodosCount();
+  // T-138: the pin+ZIP+county line becomes the one place pill (city, never county).
+  const city=D.city?esc(D.city):'', cnt=mpTodosCount();
   const title=L('Your current plan','Su plan actual');
   wb().innerHTML=`<div id="mpres"><div class="mptop">${bk()}<p class="mphl">${title}</p></div>
-    <div class="rh mprh"><div class="zl" id="zl">${PIN}
-      <span class="zv">${esc(D.zip||'')}</span>${cty?`<span class="zcty">· ${cty}</span>`:''}
+    <div class="rh mprh"><div class="zl" id="zl">${placePill(D.zip,D.city)}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar código postal')}">${L('Change','Cambiar')}</button>
       <form class="zf" onsubmit="event.preventDefault();mpZipChange()">
         <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','Código postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
@@ -4099,7 +4134,7 @@ function flowMyPlanResults(){
       </form></div><p class="zerr" id="zerr"></p></div>
     ${mpCurCard(c)}
     ${c.cur27?`<button class="mpall mpother" onclick="mpAll(true)">${L('Compare with other plans','Comparar con otros planes')} ›</button>`:''}
-    <button class="mpall" onclick="mpAll(true)">${L(`See all ${cnt} plans in ${cty}`,`Ver los ${cnt} planes de ${cty}`)} ›</button>
+    <button class="mpall" onclick="mpAll(true)">${L(`See all ${cnt} plans in ${city}`,`Ver los ${cnt} planes de ${city}`)} ›</button>
     <p class="mpfine">${L(`Figures from CMS for ${planYear()}. Your plan has the final word.`,`Cifras de CMS para ${planYear()}. Su plan es la palabra final.`)}</p>
     ${starDiscHTML()}</div>
     ${cbarHTML()}`;
@@ -4125,11 +4160,11 @@ async function mpZipChange(){
   const i=document.getElementById('zin'), e=document.getElementById('zerr');
   const v=((i&&i.value)||'').replace(/\D/g,'').slice(0,5);
   if(v.length!==5){if(e)e.textContent=L('Please enter all 5 digits.','Escriba los 5 dígitos.');return;}
-  const keep={PLANS,zip:D.zip,county:D.county,state:D.state,valid:D._zipValid,meta:_planMeta};
-  D.zip=v; D.county=''; D._zipValid=undefined; PLANS=[];
+  const keep={PLANS,zip:D.zip,county:D.county,city:D.city,state:D.state,valid:D._zipValid,meta:_planMeta};
+  D.zip=v; D.county=''; D.city=''; D._zipValid=undefined; PLANS=[];
   await loadPlansForZip(v);
   if(D._zipValid===false||!PLANS.length){
-    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
+    PLANS=keep.PLANS; D.zip=keep.zip; D.county=keep.county; D.city=keep.city; D.state=keep.state; D._zipValid=keep.valid; _planMeta=keep.meta;
     const e2=document.getElementById('zerr');
     if(e2) e2.textContent=L(`We do not have plan data for ${v}. Check the ZIP code, or call us at (310) 597-9142.`,`No tenemos datos de planes para ${v}. Verifique el código postal, o llámenos al (310) 597-9142.`);
     return;
@@ -4139,7 +4174,7 @@ async function mpZipChange(){
      never show the old cards over the new county's data. */
   const was=Object.assign({}, keep, {ctx:_mpCtx, my:_myPlan, sel:selPlans.slice(), seen:D.plansSeen, rep:D.represented});
   if(hist.length) hist[hist.length-1]=function(){
-    PLANS=was.PLANS; D.zip=was.zip; D.county=was.county; D.state=was.state; D._zipValid=was.valid; _planMeta=was.meta;
+    PLANS=was.PLANS; D.zip=was.zip; D.county=was.county; D.city=was.city; D.state=was.state; D._zipValid=was.valid; _planMeta=was.meta;
     _mpCtx=was.ctx; _myPlan=was.my; selPlans=was.sel.slice(); _priAuto=null;
     if(was.seen!==undefined) D.plansSeen=was.seen; if(was.rep!==undefined) D.represented=was.rep;
     flowMyPlanResults();
@@ -4283,7 +4318,7 @@ async function plansForShare(zip,ids,priority){
     const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
     // T-102: the sheet and its PDF draw their header from the same map as the widget.
     const ag=agent();
-    return {county:D.county||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
+    return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
       agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
       sug:sug?{id:planIdRaw(sug),name:dispName(sug),
                why:sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':'',
@@ -4426,11 +4461,14 @@ function sharePlans(){return (_shareIds||selPlans).map(id=>PLANS.find(p=>p.id===
    T-113 round 2 (AB 2026-10-20, "one change set"): add back exactly ONE line, the state's agent
    phone number with a 📞, after the link -- not the name, not a wa.me link, not email, so it stops
    short of being the signature block the 2026-10-19 audit removed. */
+// T-138 (6): one line, the city+ZIP never the county, and no "Medicare" -- the logo and the
+// link that follow already say it.
 function shareLine(){
   const z=String(D.zip||'').replace(/\D/g,'');
+  const place=placeText(z,D.city);
   return _shareIds
-    ?L(`What changes in your plan for ${planYear()} · ZIP ${z}`,`Lo que cambia en su plan ${planYear()} · ZIP ${z}`)
-    :L(`Medicare plans for ${planYear()} · ZIP ${z}`,`Planes Medicare ${planYear()} · ZIP ${z}`);
+    ?L(`Your plan in ${planYear()} · ${place}`,`Su plan en ${planYear()} · ${place}`)
+    :L(`${planYear()} plans · ${place}`,`Planes ${planYear()} · ${place}`);
 }
 function sharePhoneLine(){ return '📞 '+agentTel(agentFor(D.state)); }
 function shareMsg(){ return shareLine()+'\n'+shareURL()+'\n'+sharePhoneLine(); }

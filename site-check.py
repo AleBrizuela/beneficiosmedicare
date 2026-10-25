@@ -1156,6 +1156,76 @@ def check_contrast_heuristic(root, f):
                     "(add class=\"sm-dark-link\" or an inline color)")
 
 
+# ---------------------------------------------------------------- T-138 place display
+
+# Only the files this ticket built the place-display helpers into: the plan-finder widget,
+# both shared/compare pages and their link-preview edge Functions. Site copy elsewhere
+# (e.g. "llame a su SHIP para su condado" disclaimer boilerplate on article pages) is a
+# different, legitimate use of "county" and is deliberately out of scope here.
+PLACE_DISPLAY_FILES = (
+    "widget-v4.html",
+    "opciones-compartidas.html", "options-shared.html",
+    "functions/opciones-compartidas.js", "functions/opciones/[[path]].js",
+    "functions/options-shared.js", "functions/options/[[path]].js",
+)
+
+
+def _strip_js_comments(src):
+    # Cheap and not string-aware (a "//" inside a string literal would get stripped too), but
+    # this check only needs to find a comment EXPLAINING county logic vs. a real visitor-facing
+    # string, and every false negative here still gets caught on next read, per CLAUDE.md.
+    src = re.sub(r"/\*.*?\*/", " ", src, flags=re.S)
+    return re.sub(r"//[^\n]*", "", src)
+
+
+def _dualline_span(src):
+    """dualLine() (T-028) is the one deliberate exception this ticket (T-138) kept: Medi-Cal
+    eligibility really is administered county-by-county in California, unlike the MA plan
+    catalog grouping everything else on this page was about. Exempted by name, not by file,
+    so any OTHER county-facing string in the same file still trips this check."""
+    m = re.search(r"function\s+dualLine\s*\(", src)
+    if not m:
+        return (-1, -1)
+    end = src.find("\nfunction ", m.end())
+    return (m.start(), end if end != -1 else len(src))
+
+
+def check_place_display(root, f):
+    """T-138 (D-110, AB 2026-10-25 "nicely represented every time we speak of someone's zip
+    code, end to end"): a visitor is never shown the giant county where the city (placeText()/
+    placePill(), data/zip_city.js) could run instead. Catches the two shapes of the bug that
+    actually shipped before this ticket: a "ZIP 90230"-style display built straight from the
+    ZIP with no place name, and a sentence naming "your county"/"su condado" as the visitor's
+    own place. Scoped to the files T-138 touched (see PLACE_DISPLAY_FILES) -- this is a
+    regression check for the mechanism this ticket built, not a sitewide ban on the word
+    "county" (plenty of legitimate uses remain: data.zips/data.counties lookups, SHIP-hotline
+    disclaimer copy on article pages, the dualLine() exception below).
+    Like every check in this gate, a clean run means these two exact shapes weren't found here
+    today, not that no county string can ever reach a visitor -- audit by hand whenever this
+    check or the files it covers change (CLAUDE.md).
+    """
+    bullet_zip = re.compile(r"·\s*ZIP\b")
+    county_phrase = re.compile(r"\b(your|this|su|este)\s+(county|condado)\b", re.IGNORECASE)
+
+    for rel in PLACE_DISPLAY_FILES:
+        fp = os.path.join(root, rel)
+        if not os.path.isfile(fp):
+            continue
+        src = open(fp, encoding="utf-8", errors="ignore").read()
+        for m in bullet_zip.finditer(src):
+            f.error("place-display-zip", rel,
+                    f'line {src.count(chr(10), 0, m.start()) + 1}: "· ZIP" display '
+                    "-- use placeText()/placePill() instead")
+        clean = _strip_js_comments(src)
+        d0, d1 = _dualline_span(clean)
+        for m in county_phrase.finditer(clean):
+            if d0 <= m.start() < d1:
+                continue
+            f.error("place-display-county", rel,
+                    f'line {clean.count(chr(10), 0, m.start()) + 1}: visitor-facing '
+                    f'"{m.group(0)}" -- show the city (placeText()/D.city), not the county')
+
+
 # ---------------------------------------------------------------- output
 
 def report(f, strict):
@@ -1227,6 +1297,7 @@ def main():
         "og": lambda: check_og(root, domain, f),
         "google-safety": lambda: check_google_safety(root, domain, f, a.base),
         "contrast": lambda: check_contrast_heuristic(root, f),
+        "place-display": lambda: check_place_display(root, f),
     }
     if a.base:
         all_checks["content-loss"] = lambda: check_content_loss(root, a.base, f)

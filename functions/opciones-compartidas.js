@@ -62,22 +62,25 @@ export async function onRequestGet(context) {
     if (!/^[A-Z]{2}$/.test(st)) return res;
     const ak = SUSANA[st] ? 'susana' : 'alejandra', A = AGENTS[ak];
 
-    let county = '';
-    const pf = await env.ASSETS.fetch(new URL('/data/plans_' + st + '_2027.json', url.origin));
-    if (pf.ok) county = pick(await pf.text(), zip);
+    // T-138: the place is the CITY (USPS default city + state), never the county -- one fetch,
+    // same plain-text pick() trick, replaces the old zip_index(state)+plans_ST_2027.json(county) pair.
+    let place = '';
+    const zc = await env.ASSETS.fetch(new URL('/data/zip_city.js', url.origin));
+    if (zc.ok) place = pick(await zc.text(), zip);
+    const where = place || st;
 
     const n = ids.length;
-    const where = (county ? county + ', ' : '') + st;
     // T-113: the widget only ever shares a single plan from the "what changes" screen, tagged with
     // hoy= equal to that same plan's id (?chg=1 was redundant with that and is gone) -- so that
     // exact shape, and nothing else, is "what changes" rather than an ordinary compare.
     const hoy = url.searchParams.get('hoy') || '';
     const chg = n === 1 && !!hoy && hoy === ids[0];
+    // T-138 (7): no "Medicare" -- the logo and the link already say it.
     const title = chg
       ? (en ? 'What changes in your plan for 2027' : 'Lo que cambia en su plan en 2027')
       : en
-      ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 in ${where}`
-      : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 en ${where}`;
+      ? `${n} plan${n === 1 ? '' : 's'} for 2027 in ${where}`
+      : `${n} plan${n === 1 ? '' : 'es'} 2027 en ${where}`;
     const img = `${url.origin}/og-plans-bm-${ak}-${en ? 'en' : 'es'}-20261024.jpg`;
     const alt = en ? `${A.name}, ${A.tel}, BeneficiosMedicare.com` : `${A.name}, ${A.tel}, BeneficiosMedicare.com`;
 

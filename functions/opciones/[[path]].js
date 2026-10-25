@@ -37,14 +37,25 @@ export async function onRequest(context) {
 
     const en = url.searchParams.get('lang') === 'en';
     const n = Math.min(ids.length, 3);
-    // T-113: ZIP in the title was less useful than the county/state the live query-string path shows
-    // (functions/opciones-compartidas.js), and this path has no county lookup of its own; kept simple
-    // since SHARE_READABLE_PATH is off and no outgoing link uses this route today. No description --
-    // the image carries the tagline, agent name and phone.
-    const title = en ? `${n} Medicare plan${n === 1 ? '' : 's'} for 2027 · ZIP ${zip}`
-                     : `${n} plan${n === 1 ? '' : 'es'} de Medicare 2027 · ZIP ${zip}`;
     const esc = s => String(s).replace(/[&<>"]/g,
       c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    // T-138: the city, never the county (same data file and pick() trick as
+    // functions/opciones-compartidas.js). This path is dead (SHARE_READABLE_PATH is off, no
+    // outgoing link uses it today) but kept consistent in case it is ever turned back on.
+    function pick(text, key) {
+      const k = '"' + key + '":"', i = text.indexOf(k);
+      if (i < 0) return '';
+      const j = text.indexOf('"', i + k.length);
+      return j < 0 ? '' : text.slice(i + k.length, j);
+    }
+    let place = '';
+    try {
+      const zc = await env.ASSETS.fetch(new URL('/data/zip_city.js', url.origin));
+      if (zc.ok) place = pick(await zc.text(), zip);
+    } catch (e) { /* keep plain ZIP */ }
+    const where = place || `ZIP ${zip}`;
+    const title = en ? `${n} plan${n === 1 ? '' : 's'} for 2027 in ${where}`
+                     : `${n} plan${n === 1 ? '' : 'es'} 2027 en ${where}`;
 
     const html = (await res.text())
       .replace(/<meta property="og:title" content="[^"]*">/,
