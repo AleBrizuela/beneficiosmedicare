@@ -197,7 +197,8 @@ body.q3-go-fixed .q3skip{margin-bottom:74px}
 }
 /* Results top (T-088 round 3 + "less is more"): title, ZIP line, ONE chip row. The sort row and
    the "lo más importante" line are gone; "Filtros y orden" opens both in one panel. */
-.rh .hl{font-size:22px;font-weight:700;color:var(--cbar-ink);margin:0 0 2px;line-height:1.2;text-wrap:pretty}
+.rh .hl{font-size:22px;font-weight:700;color:var(--cbar-ink);margin:0 0 2px;line-height:1.2;text-wrap:pretty;min-width:0}
+.rh .hl.one{white-space:nowrap;overflow:hidden}
 /* T-096 round 5 b/c (AB 2026-10-16 00:50, spec 2026-10-16_0030_filtros-y-orden-v3.html). The three
    "Solo" answers from the question screen are always on screen as chips carrying their own count, so
    what is filtering the list is visible and one tap undoes it, with nothing to open first. The order
@@ -3213,6 +3214,18 @@ function resultsHead(list){
     ${carPanel()}
   </div>`;
 }
+/* T-138: the city (usually longer than the county it replaced, e.g. "Culver City, CA" vs
+   "Los Angeles") made this title wrap to two lines at widths where the county fit on one,
+   growing the card AB's spec says must not move. Same fix as mpFit(): shrink in 0.5px steps
+   until it fits one line, floor 17px; give up and allow the wrap rather than go smaller. */
+function hlFit(){
+  const q=document.querySelector('.rh .hl'); if(!q) return;
+  q.style.fontSize=''; q.classList.add('one');
+  let fs=parseFloat(getComputedStyle(q).fontSize);
+  const over=()=>q.scrollWidth>q.clientWidth+0.5;
+  while(over()&&fs>17){fs-=0.5;q.style.fontSize=fs+'px';}
+  if(over()){q.classList.remove('one');q.style.fontSize='';}
+}
 /* T-096 round 5 b (AB 2026-10-16 00:50). The three "Solo" answers from the question screen are
    chips that are ALWAYS on screen, each carrying the count it would leave. Before this they only
    appeared once something was filtering, so a visitor who wanted "$0 de prima" had to open a drawer
@@ -3680,6 +3693,8 @@ async function flowResults(){
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
   updBar();
   viewMsg();
+  hlFit();
+  try{ document.fonts&&document.fonts.ready.then(hlFit); }catch(e){}
   if(_gaResultsZip!==D.zip){ _gaResultsZip=D.zip; wEvt('widget_results',{step:'results',plan_count:PLANS.filter(p=>!p._medigap).length}); }
 }
 
