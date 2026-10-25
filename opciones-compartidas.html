@@ -155,6 +155,12 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   var PRI = q.get('r') || '';
   var HOY = OKID(q.get('hoy') || '') ? q.get('hoy') : '';
   var PRINT = q.get('print') === '1';
+  // T-139: a shared LIST link -- never plan ids, replayed instead by re-applying the same
+  // filters/sort/carrier to this zip's live plans (shareRenderList in widget-v4.html).
+  var LF = q.get('f') || '', LO = q.get('o') || '', LA = q.get('a') || '';
+  var LT = q.get('t') || '', LN = parseInt(q.get('n') || '0', 10) || 0;
+  var SHARE_ID = q.get('share_id') || '';
+  var LIST = !IDS.length && /^\d{5}$/.test(ZIP) && (LF || LO || LA || LN > 0);
   document.documentElement.lang = EN ? 'en' : 'es';
   if (EN) { var ld = document.querySelector('.loading'); if (ld) ld.textContent = 'Loading your options…'; }
 
@@ -228,7 +234,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   // now allowed in that one specific shape; any other single-id link (hoy missing or not matching) is
   // still incomplete and still fails, same as before.
   var MP_SINGLE = IDS.length === 1 && !!HOY && HOY === IDS[0];
-  if (!/^\d{5}$/.test(ZIP) || (IDS.length < 2 && !MP_SINGLE)) { fail(); return; }
+  if (!/^\d{5}$/.test(ZIP) || (IDS.length < 2 && !MP_SINGLE && !LIST)) { fail(); return; }
 
   // The frame is the plan finder with its UI switched off. On medicare-california it is loaded from
   // beneficiosmedicare, where the CMS files live; everywhere else it is this same site.
@@ -247,12 +253,15 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     var d = e.data;
     if (!d || d.type !== 'widget-plans-result' || d.rid !== rid) return;
     done = true; clearTimeout(timer);
+    if (LIST) { if (!d.ok || !d.html || !d.css) { fail(); return; } try { renderList(d); } catch (err) { fail(); } return; }
     if (!d.ok || !d.html || !d.css || !d.fns) { fail(); return; }
     try { render(d); } catch (err) { fail(); }
   });
   frame.addEventListener('load', function(){
     try {
-      frame.contentWindow.postMessage({type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true}, WIDGET_HOST);
+      frame.contentWindow.postMessage(LIST
+        ? {type:'widget-plans', rid:rid, zip:ZIP, f:LF, o:LO, a:LA, list:true}
+        : {type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true}, WIDGET_HOST);
     } catch (err) { fail(); }
   });
   frame.src = WIDGET_HOST + '/widget-v4.html?data=1&lang=' + (EN ? 'en' : 'es');
@@ -328,6 +337,64 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     if (PRINT) setTimeout(function(){
       // T-138 (8): the browser's Save-as-PDF defaults the file name to document.title -- place,
       // never the bare ZIP, first.
+      document.title = place + ' - ' + (EN ? (d.meta && d.meta.year) + ' Plans' : 'Planes ' + (d.meta && d.meta.year)) + ' - ' + when;
+      window.print();
+    }, 800);
+  }
+
+  // T-139: "N [filter words] plans in CITY" / "N planes [filter words] en CITY" -- LT is the exact
+  // plain words the sender's own results headline showed (typeNameWords + priorityNameWords,
+  // widget-v4.html resultsTitlePlain), carried in the link so this page never recomputes it. English
+  // puts the words BEFORE "plan(s)" ("8 HMO plans"), Spanish AFTER ("8 planes HMO") -- same order
+  // resultsTitlePlain uses, not the same position in both languages.
+  function listTitleBase(n){
+    return LT ? (EN ? n + ' ' + LT + ' plan' + (n === 1 ? '' : 's') : n + ' plan' + (n === 1 ? '' : 'es') + ' ' + LT)
+              : (EN ? n + ' plan' + (n === 1 ? '' : 's') : n + ' plan' + (n === 1 ? '' : 'es'));
+  }
+  function listTitle(n, place){ return listTitleBase(n) + (EN ? ' in ' : ' en ') + place; }
+  // The onclick on every card opens a detail screen that only exists inside the live, interactive
+  // widget; this page shows the list read-only (same reduction as the comparison above, which drops
+  // "Mostrar diferencias" state between visits), so the dead handler and the "Ver detalles" link that
+  // would do nothing are both removed rather than left looking tappable.
+  function stripDeadCardLinks(html){
+    return String(html || '')
+      .replace(/\sonclick="cardTap\([^"]*\)"/g, '')
+      .replace(/<div class="pc-det">[\s\S]*?<\/div>/g, '');
+  }
+  function renderList(d){
+    useAgent(d.agent);
+    var A = AGENT;
+    var n = d.n || 0;
+    if (!n) { fail(); return; }
+    var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES', {day:'numeric', month:'short', year:'numeric'});
+    var siteURL = 'https://beneficiosmedicare.com/' + (EN ? 'en' : '');
+    var photo = IMGBASE + esc(A.photo);
+    var place = placeText(ZIP, d.city);
+    var title = listTitle(n, place);
+    document.title = title + ' | Beneficios Medicare';
+
+    document.getElementById('out').innerHTML =
+      '<div class="sheet">' +
+        '<div class="card logo-only">' +
+          '<div class="logo"><a href="' + siteURL + '" target="_blank" rel="noopener" aria-label="BeneficiosMedicare.com">' + LOGO + '</a></div>' +
+        '</div>' +
+        '<div class="band"><h1><span class="nw">' + esc(listTitleBase(n)) + '</span> <span class="z nw">' + placePill(ZIP, d.city) + '</span></h1>' +
+          '<div class="chiprow"><span class="chip">' + T.before + '</span></div></div>' +
+        '<div class="cmpw" id="cmpA"></div>' +
+        '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +
+          '<img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="72" height="72">' +
+          '<div><div class="q">' + esc(T.q) + '</div><div class="nm">' + esc(A.name) + '</div>' +
+          '<a class="lnk t44" data-cta="shared_call" href="' + esc(smsH(A)) + '">' + esc(T.textme) + ' ›</a>' +
+          '</div></div></div>' +
+        '<p class="disc">' + discHTML() + ' ' + esc(T.sent) + esc(when) + '.</p>' +
+      '</div>' +
+      '<nav class="bar" aria-label="' + (EN ? 'Contact' : 'Contacto') + '">' +
+        '<a class="s" data-cta="shared_call" href="' + telH(A) + '">' + esc(T.callb) + '</a>' +
+        '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>';
+
+    part(document.getElementById('cmpA'), d.css, stripDeadCardLinks(d.html));
+    if (typeof gtag === 'function') gtag('event', 'list_share_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, share_id:SHARE_ID});
+    if (PRINT) setTimeout(function(){
       document.title = place + ' - ' + (EN ? (d.meta && d.meta.year) + ' Plans' : 'Planes ' + (d.meta && d.meta.year)) + ' - ' + when;
       window.print();
     }, 800);

@@ -54,7 +54,12 @@ export async function onRequestGet(context) {
     if (!/text\/html/i.test(res.headers.get('content-type') || '')) return res;
     const zip = url.searchParams.get('zip') || '';
     const ids = (url.searchParams.get('p') || '').split(',').filter(x => /^[A-Z0-9-]{4,}$/i.test(x)).slice(0, 3);
-    if (!/^\d{5}$/.test(zip) || !ids.length) return res;
+    // T-139: a shared LIST link carries no plan ids at all (it replays filters, not a plan set), so
+    // its own count (n) and filter words (t) -- written by shareListURL() in widget-v4.html -- stand
+    // in for what `ids` gives the compare case below.
+    const listN = parseInt(url.searchParams.get('n') || '0', 10) || 0;
+    const isList = !ids.length && listN > 0;
+    if (!/^\d{5}$/.test(zip) || (!ids.length && !isList)) return res;
     const en = url.searchParams.get('lang') === 'en';
 
     const zi = await env.ASSETS.fetch(new URL('/data/zip_index.js', url.origin));
@@ -69,15 +74,22 @@ export async function onRequestGet(context) {
     if (zc.ok) place = pick(await zc.text(), zip);
     const where = place || st;
 
-    const n = ids.length;
+    const n = isList ? listN : ids.length;
     // T-113: the widget only ever shares a single plan from the "what changes" screen, tagged with
     // hoy= equal to that same plan's id (?chg=1 was redundant with that and is gone) -- so that
     // exact shape, and nothing else, is "what changes" rather than an ordinary compare.
     const hoy = url.searchParams.get('hoy') || '';
-    const chg = n === 1 && !!hoy && hoy === ids[0];
+    const chg = !isList && n === 1 && !!hoy && hoy === ids[0];
+    // T-139: list-share words (typeNameWords + priorityNameWords, written by the widget's own
+    // shareListURL) go BEFORE "plan(s)" in English, AFTER "plan(es)" in Spanish -- same order as
+    // the results screen's own headline (resultsTitlePlain), not the same position in both languages.
+    const t = isList ? (url.searchParams.get('t') || '') : '';
     // T-138 (7): no "Medicare" -- the logo and the link already say it.
     const title = chg
       ? (en ? 'What changes in your plan for 2027' : 'Lo que cambia en su plan en 2027')
+      : isList
+      ? (en ? `${n}${t ? ' ' + t : ''} plan${n === 1 ? '' : 's'} in ${where}`
+            : `${n} plan${n === 1 ? '' : 'es'}${t ? ' ' + t : ''} en ${where}`)
       : en
       ? `${n} plan${n === 1 ? '' : 's'} for 2027 in ${where}`
       : `${n} plan${n === 1 ? '' : 'es'} 2027 en ${where}`;

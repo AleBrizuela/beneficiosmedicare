@@ -1011,6 +1011,14 @@ if(_initZip && /^\d{5}$/.test(_initZip)){
   // Pre-load plan data for the initial ZIP
   setTimeout(()=>loadPlansForZip(_initZip),0);
 }
+// T-139: a shared LIST link carries which filters, sort and carriers the sender had -- never which
+// plans. Unlike a compare link's p= (specific plan IDs, capped at 3), a list is replayed by
+// re-applying the same filters to the SAME zip's live plan data, so the link needs no plan IDs at
+// all, and f/o/a can only ever encode the filter chips' own booleans/sets -- never a typed drug
+// name. Read here (pure string parsing, safe before the filter state below is declared); applied
+// later, after that state exists (applyShareListFilters, near shareListURL).
+const _fParam=_params.get('f')||'', _oParam=_params.get('o')||'', _aParam=_params.get('a')||'';
+const _isListShareLoad=!!(_initZip && /^\d{5}$/.test(_initZip) && (_fParam||_oParam||_aParam));
 
 // ── EXPERIMENT LOADER ──
 // Usage: ?exp=drug-names (single) or ?exp=drug-names,other-exp (comma-separated)
@@ -3188,6 +3196,18 @@ function priorityNameWords(){
   if(parts.length>=3) return '';
   return parts.length<=1?(parts[0]||''):parts.join(L(' and ',' y '));
 }
+// T-139: the same count + type/filter words + city the results headline below prints, as plain text
+// (no &nbsp;, no <span> wrapper) -- for the list-share message line and the shared page's own title.
+// Deliberately a separate function rather than resultsHead() refactored to share one core: the
+// headline markup is tuned pixel-for-pixel (T-101/T-109/T-132/T-138) and this is read by GA4 and a
+// Pages Function that must never see it change shape because of an unrelated HTML tweak there.
+function resultsTitlePlain(n,isSupp){
+  const city=D.city||''; const where=city||D.zip||'';
+  const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
+  return isSupp?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
+    :tn?L(`${n} ${tn} plan${n===1?'':'s'} in ${where}`,`${n} plan${n===1?'':'es'} ${tn} en ${where}`)
+       :L(`${n} plan${n===1?'':'s'} in ${where}`,`${n} plan${n===1?'':'es'} en ${where}`);
+}
 function resultsHead(list){
   // T-138: the title names the CITY, never the county (D.city, "Culver City, CA" -- no ZIP,
   // which the pill below already carries). No city found -> the ZIP, same fallback as always.
@@ -3315,7 +3335,7 @@ function chipRow(){
   return `<div class="fx"><div class="fxr">`+cs.map(c=>
       `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
-    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
+    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}<button class="ord ords" onclick="openShareList()" aria-label="${L('Share this list','Compartir esta lista')}">${L('Share','Compartir')}</button></div>`
     +zeroMsg;
 }
 /* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
@@ -4391,6 +4411,28 @@ async function shareRender(q){
     fns:{cmpDiff:cmpDiff.toString(),cmpGrp:cmpGrp.toString()},
     names:plans.map(p=>dispName(p)), hoy:hoy?planIdRaw(hoy):''});
 }
+/* T-139: the shared-page counterpart of shareRender, for a LIST link instead of a compare link.
+   Reuses this file's own listHTML() (the exact cards the results screen itself draws) read-only, the
+   same reuse principle as shareRender does for the comparison -- one card template, never a second
+   copy for the shared page to drift from. _shown is forced to the full count first so no "Show more"
+   button (which nothing on the shared page can wire up) ever renders. */
+async function shareRenderList(q){
+  if(!/^\d{5}$/.test(String(q.zip||''))) return {err:'bad zip'};
+  D.zip=String(q.zip); D.priorities=[]; D.priority='';
+  await loadPlansForZip(D.zip);
+  if(D._zipValid===false||!PLANS.length) return {err:'no plans'};
+  applyShareListFilters(q.f,q.o,q.a);
+  const plans=orderedPlans();
+  if(!plans.length) return {err:'no plans'};
+  _shown=plans.length; _pin='';
+  const ag=agent();
+  const vars=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
+  return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
+    agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
+    n:plans.length,
+    html:listHTML(plans),
+    css:[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n')+(vars?`:host{${vars}}`:'')};
+}
 // Everything the sheet prints, already in the words the comparison uses.
 function sharePlanRow(p){
   const amb=p.amb||{};
@@ -4430,7 +4472,71 @@ function shareOrigin(){
    does not appear to run the functions/ directory), the link that goes out is the one that works.
    Everything else is unchanged, and this is one line to flip back. */
 const SHARE_READABLE_PATH=false;
+/* T-139 (AB 2026-10-25, DECIDE/now/2026-10-25_1628_compartir-lista.md): "Compartir" on the plan LIST,
+   not just a 2-3 plan compare. _shareList switches shareURL/shareLine over to the functions below;
+   openShareList() is the list screen's own entry point into the T-127 sheet that already exists.
+   applyShareListFilters() is the one place that both DECODES a list link's f/o/a (on this file's own
+   boot, below, and inside the hidden ?data=1 instance the shared page asks via shareRenderList) and
+   APPLIES them to the exact filter state the results screen itself reads -- so a replayed link can
+   never drift from what chipTap/setSort/carrierToggle would have set by hand. */
+let _shareList=false;
+function openShareList(){
+  _shareList=true; _shareIds=null;
+  if(!orderedPlans().length) return;
+  wEvt('share_open',{plans:Math.min(orderedPlans().length,99),mode:'list'});
+  openShareSheet();
+}
+function applyShareListFilters(fStr,oStr,aStr){
+  const toks=String(fStr||'').split(',').filter(Boolean);
+  _typeFilter=toks.indexOf('supp')>=0?'supp':'all';
+  _zeroOnly=toks.indexOf('zero')>=0; _drugOnly=toks.indexOf('drug')>=0;
+  _pdpOnly=toks.indexOf('pdp')>=0; _dsnpOnly=toks.indexOf('dsnp')>=0; _snpOnly=toks.indexOf('snp')>=0;
+  _planTypes.clear();
+  const pt=toks.find(t=>t.indexOf('pt:')===0);
+  if(pt) pt.slice(3).split('+').forEach(t=>{ if(t) _planTypes.add(t); });
+  _sortMode=oStr||'premium';
+  _carriers=String(aStr||'').split('|').filter(Boolean).map(c=>{ try{return decodeURIComponent(c);}catch(e){return c;} });
+  _carOpen=false; _foOpen=false; _shown=PAGE;
+}
+// The tokens above are the ONLY state a list link encodes; count (n) and the plain filter words (t)
+// ride along too, read-only, purely so the Pages Function (which cannot run this file's filtering)
+// can write a matching title for a bot/link-preview crawler.
+function shareListParams(){
+  const f=[];
+  if(_typeFilter==='supp') f.push('supp');
+  if(_zeroOnly) f.push('zero'); if(_drugOnly) f.push('drug');
+  if(_pdpOnly) f.push('pdp'); if(_dsnpOnly) f.push('dsnp'); if(_snpOnly) f.push('snp');
+  if(_planTypes.size) f.push('pt:'+[..._planTypes].join('+'));
+  const q=[];
+  if(f.length) q.push('f='+encodeURIComponent(f.join(',')));
+  if(_sortMode&&_sortMode!=='premium') q.push('o='+encodeURIComponent(_sortMode));
+  if(_carriers.length) q.push('a='+encodeURIComponent(_carriers.join('|')));
+  return q;
+}
+let _shareIdCache=null;
+function shareId(){ if(!_shareIdCache) _shareIdCache=Math.random().toString(36).slice(2,10); return _shareIdCache; }
+function shareListURL(){
+  const plans=orderedPlans(); if(!plans.length) return '';
+  const mc=leadSite()==='medicare-california';
+  const q=shareListParams();
+  if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
+  // T-139 guardrail: the plan year is pinned in the link, so a link opened after CMS rolls the data
+  // file forward never silently shows a different year's plans than the sender saw.
+  q.push('yr='+planYear());
+  q.push('n='+plans.length);
+  const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
+  if(tn) q.push('t='+encodeURIComponent(tn));
+  // T-139 (4): so PROVE can count a lead back to the share that produced it.
+  q.push('share_id='+shareId());
+  q.push('utm_source=share');
+  q.push('utm_medium='+(mc?'medicare_california':'beneficios_medicare'));
+  q.push('utm_campaign=list_share');
+  const file=mc?'options-shared':'opciones-compartidas';
+  q.unshift('zip='+encodeURIComponent(D.zip||''));
+  return `${shareOrigin()}/${file}?${q.join('&')}`;
+}
 function shareURL(){
+  if(_shareList) return shareListURL();
   const plans=sharePlans(); if(!plans.length) return '';
   const mc=leadSite()==='medicare-california';
   const q=[]; if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
@@ -4479,6 +4585,10 @@ function sharePlans(){return (_shareIds||selPlans).map(id=>PLANS.find(p=>p.id===
 // T-138 (6): one line, the city+ZIP never the county, and no "Medicare" -- the logo and the
 // link that follow already say it.
 function shareLine(){
+  // T-139: the list share's own one-line title -- count + the same filter words and plan-type
+  // words the results screen's own headline already builds (resultsTitlePlain), so the message
+  // never says something the list itself doesn't.
+  if(_shareList) return resultsTitlePlain(orderedPlans().length,_typeFilter==='supp');
   const z=String(D.zip||'').replace(/\D/g,'');
   const place=placeText(z,D.city);
   return _shareIds
@@ -4547,7 +4657,7 @@ function openShareSheet(){
 }
 function closeShare(){
   const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
-  _shareIds=null;
+  _shareIds=null; _shareList=false; _shareIdCache=null;
   try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
 }
 /* T-098. In the host page's iframe the sheet cannot find the screen on its own: there is no
@@ -4594,13 +4704,14 @@ function placeSheet(){
 }
 function shareSend(k){
   const url=shareURL(), msg=shareMsg();
-  wEvt('share_send',{channel:k,plans:sharePlans().length});
+  const n=_shareList?orderedPlans().length:sharePlans().length;
+  wEvt('share_send',Object.assign({channel:k,plans:n},_shareList?{mode:'list',share_id:_shareIdCache}:{}));
   if(k==='copy'){
     const ok=()=>{const e=document.getElementById('shok'); if(e) e.textContent=L('Link copied','Enlace copiado');};
     try{ navigator.clipboard.writeText(url).then(ok,()=>fallbackCopy(url,ok)); }catch(e){ fallbackCopy(url,ok); }
     return;
   }
-  if(k==='pdf'){ wEvt('pdf_open',{plans:sharePlans().length}); openTop(url+(url.indexOf('?')<0?'?':'&')+'print=1'); closeShare(); return; }
+  if(k==='pdf'){ wEvt('pdf_open',{plans:n}); openTop(url+(url.indexOf('?')<0?'?':'&')+'print=1'); closeShare(); return; }
   const t=encodeURIComponent(k==='sms'?smsMsg():msg);
   // T-113: the email subject is the same one line the message opens with, not a separate generic line.
   const href=k==='whatsapp'?`https://wa.me/?text=${t}`
@@ -5145,7 +5256,14 @@ function learnContact(){prog(15);wEvt('form_open',{source:'question'});wb().inne
    to GA4, no lead form exists in that mode — it is this file's data layer and nothing else.
    It answers only the origins already allowed to embed it, both sites and their previews. */
 const _dataOnly=_params.get('data')==='1';
-if(!_dataOnly) go(startZip);
+// T-139: the widget itself (not only the hidden ?data=1 copy) honours a list link's f/o/a when
+// loaded directly with a zip -- it applies them to the same filter state chipTap/setSort/
+// carrierToggle use and opens straight on the list, instead of the question flow. With no f/o/a
+// (every visit before this ticket) this branch is never taken and go(startZip) is unchanged.
+if(!_dataOnly){
+  if(_isListShareLoad){ applyShareListFilters(_fParam,_oParam,_aParam); go(flowResults); }
+  else go(startZip);
+}
 
 /* T-031: the host page's bottom bar shows one big "Continuar" from question 2 on. The widget tells the page
    which screen it is on (depth 1 = first question) and whether that screen has a next button, and presses
@@ -5204,10 +5322,12 @@ if(!_dataOnly) go(startZip);
       var src=e.source, org=e.origin, q=e.data;
       // T-105: render:true = the shared page wants the comparison itself (shareRender); without it, the
       // plain rows as before (medicare-california's options-shared still asks that way until its pass)
-      Promise.resolve(q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r)).then(function(r){
+      // T-139: list:true = a shared LIST, not a compare of specific ids -- shareRenderList re-applies
+      // the link's own filters/sort/carrier to this zip's live plans (never takes ids at all).
+      Promise.resolve(q.list?shareRenderList(q):q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
           county:r.county||'',city:r.city||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
-          html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||''},org); }catch(x){}
+          html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||'',n:r.n||0},org); }catch(x){}
       });
       return;
     }
