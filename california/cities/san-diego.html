@@ -562,26 +562,6 @@
   <i class="fab fa-whatsapp" style="font-size:28px;color:white"></i>
 </a>
 
-<script>
-    function handleZip() {
-        var zip = document.getElementById('city-zip').value.replace(/\D/g,'');
-        if(zip.length === 5) {
-            window.location.href = '/?zip=' + zip;
-        }
-    }
-    document.getElementById('city-zip').addEventListener('keypress', function(e) {
-        if(e.key === 'Enter') handleZip();
-    });
-    function toggleFaq(element) {
-        const answer = element.nextElementSibling;
-        const toggle = element.querySelector('.faq-toggle');
-        answer.classList.toggle('active');
-        toggle.textContent = answer.classList.contains('active') ? '−' : '+';
-    }
-    function toggleMobile() {
-        document.getElementById('mobile-nav').classList.toggle('active');
-    }
-</script>
 <script src="/zbx.js" defer></script>
 <script src="/js/city-share.js" defer></script>
 </body>
