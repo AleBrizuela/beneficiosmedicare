@@ -2969,11 +2969,15 @@ let _zeroOnly=false, _drugOnly=false;
 // just one or the other), still narrowed by whichever of PPO/HMO is active.
 let _pdpOnly=false, _dsnpOnly=false, _snpOnly=false;
 function hasDrug(p){return !p._medigap&&p.drug==='Included';}
-function categoryOK(p){
+// T-144 (AB 2026-10-25): with 1+ carrier picked and no category chip on, "Todos" for that carrier
+// means every MA plan it has -- regular + D-SNP + C-SNP + I-SNP -- not just regular, so a carrier
+// pick never hides its own Medi-Cal/special-needs plans. Drug-only (PDP) and Medigap still stay
+// behind their own chips. `widen` defaults to "carriers are currently picked"; carrierList() passes
+// `true` explicitly, since every row there is itself a hypothetical carrier pick.
+function baseCat(p,widen){ return widen ? ((!p._medigap&&!isPDP(p))||(_drugOnly&&isPDP(p))) : (inTodos(p)||(_drugOnly&&isPDP(p))); }
+function categoryOK(p,widen){
   if(_pdpOnly||_dsnpOnly||_snpOnly) return (_pdpOnly&&isPDP(p))||(_dsnpOnly&&isDual(p))||(_snpOnly&&isSNP(p)&&!isDual(p));
-  // While "Medicamentos cubiertos" is on and no category chip is on, "Todos" means every plan that
-  // covers drugs, so the standalone Part D plans belong in it too (the ticket: MAPD + PDP).
-  return inTodos(p)||(_drugOnly&&isPDP(p));
+  return baseCat(p, widen!==undefined?widen:_carriers.length>0);
 }
 // T-109: plan type (HMO, PPO, HMO-POS...) is its own MULTI-select group -- any number on at once,
 // OR'd together -- replacing the old single-slot "PPO/HMO, pick one" rule from T-104(7). Medigap
@@ -2994,7 +2998,7 @@ function countWith(over){
   return PLANS.filter(p=>{
     const cat=(o.pdp||o.dsnp||o.snp)
       ? ((o.pdp&&isPDP(p))||(o.dsnp&&isDual(p))||(o.snp&&isSNP(p)&&!isDual(p)))
-      : (inTodos(p)||(_drugOnly&&isPDP(p)));
+      : baseCat(p,_carriers.length>0);
     const net=o.typeFilter==='ppo'?/PPO/.test(p.type||''):o.typeFilter==='hmo'?/HMO/.test(p.type||''):o.typeFilter==='supp'?!!p._medigap:true;
     return cat&&net&&extrasOK(p);
   }).length;
@@ -3378,7 +3382,10 @@ let _carriers=[], _carOpen=false, _carList=[], _carQ='';
 function carOK(p){return !_carriers.length||_carriers.indexOf(p.carrier)>=0;}
 function carrierList(){
   const m=new Map();
-  PLANS.forEach(p=>{if(categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
+  // T-144: every row here IS a hypothetical carrier pick, so widen=true always -- a carrier whose
+  // only plans are Medi-Cal/special-needs (e.g. L.A. Care, Molina) must still appear and count right,
+  // even with no carrier picked yet.
+  PLANS.forEach(p=>{if(categoryOK(p,true)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&p.carrier)m.set(p.carrier,(m.get(p.carrier)||0)+1);});
   _carList=[...m.entries()].map(([c,n])=>({c,n,lb:carrierShort(c)}))
     .sort((a,b)=>b.n-a.n||a.lb.localeCompare(b.lb,lang)||a.c.localeCompare(b.c));
   _carList.forEach(x=>{if(_carList.some(y=>y!==x&&y.lb===x.lb))x.lb=carrierName(x.c);});
