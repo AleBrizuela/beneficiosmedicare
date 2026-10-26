@@ -4497,6 +4497,10 @@ function applyShareListFilters(fStr,oStr,aStr){
   _sortMode=oStr||'premium';
   _carriers=String(aStr||'').split('|').filter(Boolean).map(c=>{ try{return decodeURIComponent(c);}catch(e){return c;} });
   _carOpen=false; _foOpen=false; _shown=PAGE;
+  // applyPriority() clears _planTypes/_carriers the FIRST time it sees a zip (its own "start with
+  // every carrier" reset, T-101) -- marking this zip already-handled here is what stops it from
+  // wiping out the plan-type and carrier filters just set above, the moment flowResults() runs.
+  _priAuto=D.zip;
 }
 // The tokens above are the ONLY state a list link encodes; count (n) and the plain filter words (t)
 // ride along too, read-only, purely so the Pages Function (which cannot run this file's filtering)
