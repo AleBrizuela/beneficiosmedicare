@@ -1006,11 +1006,6 @@ const _initZip=_params.get('zip')||'';
 // T-133: zip_top/zip_end when this load came from a page's zip-box, via ?from=, so the first
 // widget_start can say which page started the search. Only ever attached to the INITIAL zip.
 const _initSource=_params.get('from')||'';
-if(_initZip && /^\d{5}$/.test(_initZip)){
-  D.zip=_initZip;
-  // Pre-load plan data for the initial ZIP
-  setTimeout(()=>loadPlansForZip(_initZip),0);
-}
 // T-139: a shared LIST link carries which filters, sort and carriers the sender had -- never which
 // plans. Unlike a compare link's p= (specific plan IDs, capped at 3), a list is replayed by
 // re-applying the same filters to the SAME zip's live plan data, so the link needs no plan IDs at
@@ -1019,6 +1014,14 @@ if(_initZip && /^\d{5}$/.test(_initZip)){
 // later, after that state exists (applyShareListFilters, near shareListURL).
 const _fParam=_params.get('f')||'', _oParam=_params.get('o')||'', _aParam=_params.get('a')||'';
 const _isListShareLoad=!!(_initZip && /^\d{5}$/.test(_initZip) && (_fParam||_oParam||_aParam));
+if(_initZip && /^\d{5}$/.test(_initZip)){
+  D.zip=_initZip;
+  // Pre-load plan data for the initial ZIP -- except a list-share load, where flowResults() (triggered
+  // at the bottom of this file) makes its own loadPlansForZip call anyway: calling it twice at once
+  // double-injects the zip/plan <script> data files, which throws "already declared" on their
+  // top-level consts (ZIP_INDEX, ZIP_CITY, MEDIGAP_ALL_DATA...) the second time. Found testing T-139.
+  if(!_isListShareLoad) setTimeout(()=>loadPlansForZip(_initZip),0);
+}
 
 // ── EXPERIMENT LOADER ──
 // Usage: ?exp=drug-names (single) or ?exp=drug-names,other-exp (comma-separated)
