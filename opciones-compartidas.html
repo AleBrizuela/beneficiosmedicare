@@ -415,7 +415,31 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       document.title = place + ' - ' + (EN ? (d.meta && d.meta.year) + ' Plans' : 'Planes ' + (d.meta && d.meta.year)) + ' - ' + when;
       window.print();
     }, 800);
+    // AMENDMENT B: this page fully reloads on browser Back (the hidden-iframe postMessage render
+    // can't survive bfcache), so the list's scroll position is restored by hand rather than relying
+    // on the browser -- keyed to this exact list's own query string, so a different share link's
+    // saved position is never applied here. Double rAF: the shadow-root cards need a layout pass
+    // after part() before their real height exists to scroll to.
+    try {
+      var savedY = sessionStorage.getItem(listScrollKey());
+      if (savedY != null) {
+        sessionStorage.removeItem(listScrollKey());
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ window.scrollTo(0, +savedY); }); });
+      }
+    } catch(e){}
   }
+  function listScrollKey(){ return 'bm_list_scroll:' + location.pathname + location.search; }
+  // AMENDMENT B: save scroll the instant a detail link is pressed (mousedown/touchstart, before
+  // click, and not gated on gtag like the listener below) -- navigation can start before a
+  // same-tick 'click' handler even finishes on some mobile browsers.
+  ['mousedown', 'touchstart'].forEach(function(evt){
+    document.addEventListener(evt, function(e){
+      var path = e.composedPath ? e.composedPath() : [e.target], a = null;
+      for (var i = 0; i < path.length && !a; i++) if (path[i] && path[i].hasAttribute && path[i].hasAttribute('data-plan-detail')) a = path[i];
+      if (!a) return;
+      try { sessionStorage.setItem(listScrollKey(), String(window.scrollY)); } catch(err){}
+    }, true);
+  });
 
   /* T-105 (2): every tap on the agent's phone, WhatsApp or email, here or inside the comparison (a shadow
      root, so the tap is read from the event's own path), goes to GA4 with placement shared_call. Only the
