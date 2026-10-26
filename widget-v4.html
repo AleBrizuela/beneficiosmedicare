@@ -3516,14 +3516,18 @@ function moreBtn(total){
     : L(`Show ${k} more plans (${left} left)`,`Ver ${k} planes más (${left} restantes)`);
   return `<button class="showmore" onclick="showMore()">${lab}</button>`;
 }
-function listHTML(all){
+// T-139: selectable defaults to true (every existing caller -- the live results screen -- wants the
+// compare tick box); shareRenderList passes false so the shared page's read-only cards never draw a
+// checkbox nothing on that page can wire up (it has no toggleCmp).
+function listHTML(all,selectable){
+  if(selectable===undefined) selectable=true;
   // Thirteen or fewer: all of them, and no button. "Comparar estos 3 planes" is gone -- comparing is
   // a tick box and the bar at the bottom now, and the old button said the same thing a third time.
   // T-103 (4): a pinned current plan sits above the list, whatever the order and filters, and is not
   // repeated in it.
   const pp=pinPlan(), list=pp?all.filter(p=>p.id!==pp.id):all;
   const n=list.length<=PAGE_ALL?list.length:_shown;
-  return `${dualNoteBox(all)}<div id="plist">${pp?planCard(pp,true):''}${list.slice(0,n).map(p=>planCard(p,true)).join('')}</div>`+
+  return `${dualNoteBox(all)}<div id="plist">${pp?planCard(pp,selectable):''}${list.slice(0,n).map(p=>planCard(p,selectable)).join('')}</div>`+
     `<div id="pmore">${list.length<=PAGE_ALL?'':moreBtn(list.length)}</div>`;
 }
 /* ── T-103 (4) (AB 2026-10-18): their current plan against ANY plans they pick ──────────────────────
@@ -4430,7 +4434,7 @@ async function shareRenderList(q){
   return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
     agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
     n:plans.length,
-    html:listHTML(plans),
+    html:listHTML(plans,false),
     css:[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n')+(vars?`:host{${vars}}`:'')};
 }
 // Everything the sheet prints, already in the words the comparison uses.
