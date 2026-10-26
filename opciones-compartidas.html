@@ -95,6 +95,15 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
 .err{max-width:640px;margin:60px auto;padding:0 20px;text-align:center;font-size:17px;line-height:1.5;color:#1E2A3B}
 .err a{color:#007B7B;font-weight:700}
 .loading{max-width:640px;margin:80px auto;text-align:center;color:#5b6670;font-size:16px}
+/* T-142 (AB 2026-10-25): compare-from-a-shared-list bar. Shown at EVERY width (the ticket's
+   Done-when line checks 390 and 1280, unlike .bar below which is phone-only), stacked above .bar
+   on a phone so Llamar/WhatsApp stay reachable under it. */
+.lcbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dbe2e9;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));align-items:center;justify-content:space-between;gap:10px;z-index:6;box-shadow:0 -2px 10px rgba(0,0,0,.08)}
+.lcbar.on{display:flex}
+.lcbar button{font:inherit;font-weight:700;border-radius:12px;cursor:pointer;min-height:44px}
+.lcbar .clr{background:none;border:2px solid #dbe2e9;color:#445;padding:0 14px;font-size:14.5px}
+.lcbar .go{background:#007B7B;border:0;color:#fff;padding:0 18px;font-size:15.5px}
+@media (max-width:600px){ .lcbar{bottom:72px} }
 /* the bar at the bottom of a phone: Llamar + WhatsApp */
 .bar{display:none}
 @media (max-width:600px){
@@ -164,6 +173,9 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   var LF = q.get('f') || '', LO = q.get('o') || '', LA = q.get('a') || '';
   var LT = q.get('t') || '', LN = parseInt(q.get('n') || '0', 10) || 0;
   var SHARE_ID = q.get('share_id') || '';
+  // T-142 (AB 2026-10-25): compare from a SHARED LIST. Ticked ids, this page's own (no pin, no
+  // _medigap filtering needed -- cmpBox()/listHTML() already keep Medigap plans out of the checkbox).
+  var selPlans = [];
   var LIST = !IDS.length && /^\d{5}$/.test(ZIP) && (LF || LO || LA || LN > 0);
   document.documentElement.lang = EN ? 'en' : 'es';
   if (EN) { var ld = document.querySelector('.loading'); if (ld) ld.textContent = 'Loading your options…'; }
@@ -411,7 +423,12 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       '</div>' +
       '<nav class="bar" aria-label="' + (EN ? 'Contact' : 'Contacto') + '">' +
         '<a class="s" data-cta="shared_call" href="' + telH(A) + '">' + esc(T.callb) + '</a>' +
-        '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>';
+        '<a data-cta="shared_call" href="' + esc(waH(A)) + '" target="_blank" rel="noopener">WhatsApp</a></nav>' +
+      // T-142: the compare bar, outside #out's shadow-rooted content so it survives this function's
+      // own re-renders and sits above the Llamar/WhatsApp bar, not inside it.
+      '<div class="lcbar" id="lcbar">' +
+        '<button type="button" class="clr" onclick="lcbarClear()">' + (EN ? 'Clear' : 'Borrar') + '</button>' +
+        '<button type="button" class="go" id="lcbarGo" onclick="lcbarGo()"></button></div>';
 
     part(document.getElementById('cmpA'), d.css, stripDeadCardLinks(d.html));
     if (typeof gtag === 'function') gtag('event', 'list_share_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, share_id:SHARE_ID});
@@ -435,8 +452,71 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         setTimeout(function(){ try { sessionStorage.removeItem(sk); } catch(e){} }, 1100);
       }
     } catch(e){}
+    // T-142: same Back-keeps-state idea as Amendment B's scroll restore above, same key prefix,
+    // one more sessionStorage slot for which boxes were ticked (navigating to compare is a real
+    // page load too, same as a plan-detail link, so nothing survives in memory).
+    try {
+      var tk = listTicksKey(), savedTicks = JSON.parse(sessionStorage.getItem(tk) || 'null');
+      if (savedTicks && savedTicks.length) {
+        setTimeout(function(){
+          savedTicks.forEach(function(id){
+            var cb = document.getElementById('cmpA').shadowRoot && document.getElementById('cmpA').shadowRoot.querySelector('input[type="checkbox"][data-pid="' + id + '"]');
+            if (cb) { cb.checked = true; if (selPlans.indexOf(id) < 0) selPlans.push(id); }
+          });
+          updateCmpHints(); renderLcbar();
+          try { sessionStorage.removeItem(tk); } catch(e){}
+        }, 50);
+      }
+    } catch(e){}
   }
   function listScrollKey(){ return 'bm_list_scroll:' + location.pathname + location.search; }
+  function listTicksKey(){ return 'bm_list_ticks:' + location.pathname + location.search; }
+  // T-142: same checkbox markup/CSS the widget's own list uses (cmpBox/cmpHint in widget-v4.html,
+  // already in d.css inside the shadow root) -- this page just supplies the state + the bar, since
+  // the widget's own toggleCmp/selPlans live in a different frame.
+  function updateCmpHints(){
+    var root = document.getElementById('cmpA').shadowRoot; if (!root) return;
+    var show = selPlans.length === 1 ? selPlans[0] : null;
+    [].forEach.call(root.querySelectorAll('.cmphint'), function(el){ el.hidden = el.getAttribute('data-pid') !== show; });
+  }
+  function lcEl(){ return document.getElementById('lcbar'); }
+  function renderLcbar(msg){
+    var bar = lcEl(); if (!bar) return;
+    var k = selPlans.length, go = document.getElementById('lcbarGo');
+    bar.classList.toggle('on', k >= 2 || !!msg);
+    if (go && (k >= 2 || msg)) go.textContent = msg || (EN ? 'Compare ' + k + ' plans ›' : 'Comparar ' + k + ' planes ›');
+  }
+  var _lcT = 0;
+  window.toggleCmp = function(el){
+    var id = el.getAttribute('data-pid'), i = selPlans.indexOf(id);
+    if (el.checked) {
+      if (i < 0) {
+        if (selPlans.length >= 3) {
+          el.checked = false;
+          renderLcbar(EN ? 'You can compare up to 3 plans' : 'Puede comparar hasta 3 planes');
+          clearTimeout(_lcT); _lcT = setTimeout(function(){ renderLcbar(); }, 2500);
+          return;
+        }
+        selPlans.push(id);
+      }
+    } else if (i >= 0) selPlans.splice(i, 1);
+    updateCmpHints(); renderLcbar();
+  };
+  window.lcbarClear = function(){
+    var root = document.getElementById('cmpA').shadowRoot;
+    if (root) [].forEach.call(root.querySelectorAll('input[type="checkbox"][data-pid]'), function(cb){ cb.checked = false; });
+    selPlans = []; updateCmpHints(); renderLcbar();
+  };
+  window.lcbarGo = function(){
+    if (selPlans.length < 2) return;
+    if (typeof gtag === 'function') gtag('event', 'share_list_compare', {count:selPlans.length, zip3:ZIP.slice(0,3), lang:EN?'en':'es'});
+    try {
+      sessionStorage.setItem(listScrollKey(), String(window.scrollY));
+      sessionStorage.setItem(listTicksKey(), JSON.stringify(selPlans));
+    } catch(e){}
+    var ids = selPlans.map(planIdRaw);
+    location.href = location.pathname + '?zip=' + encodeURIComponent(ZIP) + '&p=' + encodeURIComponent(ids.join(',')) + '&lang=' + (EN ? 'en' : 'es');
+  };
   // AMENDMENT B: save scroll the instant a detail link is pressed (mousedown/touchstart, before
   // click, and not gated on gtag like the listener below) -- navigation can start before a
   // same-tick 'click' handler even finishes on some mobile browsers.
