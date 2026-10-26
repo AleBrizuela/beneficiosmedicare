@@ -6,11 +6,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/" />
-<<<<<<< HEAD
     <lastmod>2026-10-26</lastmod>
-=======
-    <lastmod>2026-10-25</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -25,7 +21,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/benefits</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -34,7 +30,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/blog/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/blog/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/blog/" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -445,81 +441,16 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/" />
-<<<<<<< HEAD
     <lastmod>2026-10-26</lastmod>
-=======
-    <lastmod>2026-10-24</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< HEAD
-=======
-    <loc>https://beneficiosmedicare.com/california/cities/bakersfield</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/bakersfield" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/bakersfield" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/bakersfield" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/beverly-hills</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/beverly-hills" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/beverly-hills" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/beverly-hills" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/culver-city</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/culver-city" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/culver-city" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/culver-city" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/del-rey</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/del-rey" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/del-rey" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/del-rey" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/el-segundo</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/el-segundo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/el-segundo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/el-segundo" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/fresno</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/fresno" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/fresno" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/fresno" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <loc>https://beneficiosmedicare.com/california/cities/long-beach</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/long-beach" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/long-beach" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/long-beach" />
-<<<<<<< HEAD
     <lastmod>2026-10-26</lastmod>
-=======
-    <lastmod>2026-10-24</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -529,63 +460,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/los-angeles" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/los-angeles" />
     <lastmod>2026-10-25</lastmod>
-<<<<<<< HEAD
-=======
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/mar-vista</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/mar-vista" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/mar-vista" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/mar-vista" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/marina-del-rey</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/marina-del-rey" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/marina-del-rey" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/marina-del-rey" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/mid-city</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/mid-city" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/mid-city" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/mid-city" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/orange-county</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/orange-county" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/orange-county" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/orange-county" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/playa-del-rey</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/playa-del-rey" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/playa-del-rey" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/playa-del-rey" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/playa-vista</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/playa-vista" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/playa-vista" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/playa-vista" />
-    <lastmod>2026-10-24</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -594,20 +468,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/riverside" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/riverside" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/riverside" />
-<<<<<<< HEAD
     <lastmod>2026-10-26</lastmod>
-=======
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/sacramento</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/sacramento" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/sacramento" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/sacramento" />
-    <lastmod>2026-10-24</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -617,45 +478,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/san-diego" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/san-diego" />
     <lastmod>2026-10-26</lastmod>
-<<<<<<< HEAD
-=======
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/san-francisco</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/san-francisco" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/san-francisco" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/san-francisco" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/san-jose</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/san-jose" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/san-jose" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/san-jose" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/santa-monica</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/santa-monica" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/santa-monica" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/santa-monica" />
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/california/cities/westchester</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/westchester" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/westchester" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/westchester" />
-    <lastmod>2026-10-24</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -663,7 +485,7 @@
     <loc>https://beneficiosmedicare.com/careers</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/careers" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/careers" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -678,7 +500,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/contact</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -711,11 +533,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/en</loc>
-<<<<<<< HEAD
     <lastmod>2026-10-26</lastmod>
-=======
-    <lastmod>2026-10-25</lastmod>
->>>>>>> 07ebae1 (T-151: San Diego city page (BM), new standard built on T-141 LA template)
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -724,7 +542,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/equipo" />
     <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/team" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/equipo" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -827,72 +645,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://beneficiosmedicare.com/partials/footer-en</loc>
-    <lastmod>2026-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/footer-es</loc>
-    <lastmod>2026-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/head</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/head-favicon-alt</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/head-font-alt</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/header-en</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/header-es</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/header-key-en</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/header-key-es</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/zip-box--en</loc>
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://beneficiosmedicare.com/partials/zip-box--es</loc>
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://beneficiosmedicare.com/politica-editorial</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/politica-editorial" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/editorial-policy" />
@@ -902,7 +654,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/privacidad</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -920,7 +672,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/team" />
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/equipo" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/equipo" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
