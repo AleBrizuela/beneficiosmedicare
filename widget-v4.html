@@ -165,17 +165,6 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .q3ck{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--cbar-brand);color:#fff;font-weight:700;font-size:13px;display:none;align-items:center;justify-content:center}
 .q3opt.on .q3ck{display:flex}
 .q3skip{display:block;width:100%;text-align:center;color:var(--cbar-brand);font-weight:600;font-size:16px;margin:8px 0 0;text-decoration:underline;text-underline-offset:3px;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px}
-/* T-132 B1: multi-select. .q3sub is the second, smaller sentence under the one-line fitQ3 question.
-   .q3go is "Ver mis planes", hidden until 1+ is picked; .q3go-fixed is the below-the-fold case,
-   pinned to the bottom of the visible screen (placeQ3Go() decides which, measured not guessed). */
-.q3sub{margin:-6px 0 12px;font-size:13.5px;color:#66727c;line-height:1.3}
-.q3go{display:none;margin-top:4px}
-.q3go.show{display:block}
-body.q3-go-fixed .q3go.show{position:fixed;left:14px;right:14px;bottom:12px;z-index:5;box-shadow:0 -6px 16px rgba(0,0,0,.14);margin-top:0}
-/* The fixed button always sits at the same screen position regardless of scroll, so whatever is
-   last in normal flow (the skip link) needs its OWN clearance, not just extra scrollable space at
-   the end of the page -- a bottom-padded body does not move content that already fits on screen. */
-body.q3-go-fixed .q3skip{margin-bottom:74px}
 /* iPhone SE, 320 wide: four of the five explanations wrapped to a second line and pushed "Sin
    preferencia" 25px below the screen. They are one line again here -- the words are not cut, the
    type is, and only on the narrowest phone.
@@ -214,6 +203,11 @@ body.q3-go-fixed .q3skip{margin-bottom:74px}
 .fc.on{background:var(--cbar-brand);border-color:var(--cbar-brand);color:#fff}
 .fc.on i{color:#E0F2F1}
 .fc.on:before{content:"\2713";font-weight:700}
+/* T-145 (AB 2026-10-25): a chip at 0 stays in the row, greyed, instead of disappearing. Body text
+   on mist -- the site's own passing pair -- not the browser's disabled-control grey, so it still
+   clears the contrast gate. */
+.fc.fcd{background:#F0F3F6;border-color:#F0F3F6;color:#4A5568;cursor:default}
+.fc.fcd i{color:#4A5568}
 /* The mock's phone gives the chips 328px; the real page does not. At 390 the home page puts the
    finder in a 354px frame (BM) or 366px (MC), and the frame's 18px + the card's 14px padding left
    290px -- the middle row ("✓ Medi-Cal" on, the "Tengo Medi-Cal" answer) needs 328. So on the plan
@@ -1881,7 +1875,9 @@ function screenFirstPri(){
 function priorityStep(nextFn){
   prog(50);
   _cb.priority=nextFn;
-  const cur=Array.isArray(D.priorities)?D.priorities:[];
+  // T-146 (AB 2026-10-25, undoes T-132 B1): back to ONE answer, so "on" reflects the single current
+  // pick (Volver shows it still ticked), not a multi-select set.
+  const cur=D.priority||'';
   // T-099/T-103 turned ON in production 2026-10-19 (NOW.md SIGN-OFF: PROTECT yes on the wording,
   // relayed + go by AB). This was the one place the RED gate lived -- hiding "Revisar mi plan de
   // hoy" was enough to keep everything T-099/T-103 build (flowMyPlan, flowMyPlanResults,
@@ -1891,36 +1887,19 @@ function priorityStep(nextFn){
   const opts=PRI_OPTIONS;
   const cards=opts.map(o=>{
     const h=o[lang](), d=o[lang+'D'], dd=typeof d==='function'?d():d;
-    return `<button class="q3opt${cur.indexOf(o.id)>=0?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
+    return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
       priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
   }).join('');
   document.body.classList.add('q3');
-  document.body.classList.remove('q3-go-fixed');
   wb().innerHTML=`<div class="q3top">${bk()}<p class="q3q">${L('What matters most to you?','\u00BFQu\u00E9 le importa m\u00E1s?')}</p></div>
-    <p class="q3sub">${L('Pick all that apply.','Elija todas las que quiera.')}</p>
     ${cards}
-    <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>
-    <button class="btn-p q3go${cur.length?' show':''}" id="q3go" onclick="q3GoPlans()">${L('See my plans','Ver mis planes')} \u203A</button>`;
+    <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>`;
   fitQ3();
   try{ document.fonts&&document.fonts.ready.then(fitQ3); }catch(e){}
-  placeQ3Go();
-  if(!_q3GoListener){ _q3GoListener=true; window.addEventListener('resize',placeQ3Go); }
   // The ZIP's state arrives with the plan file, which can land after this screen has drawn. Until
   // it does, mcd() says "Medicaid"; a California visitor must read "Medi-Cal", which is the word the
   // ticket spells out. So the one option that carries the name is refreshed when the state lands.
   if(!D.state) fixMcdLabel(0);
-}
-/* T-132 B1: "Ver mis planes" sits inline under the last option by default; if that would put it
-   below the visible screen (390x660's fold, or the iframe's own viewport via _hostVP), it pins to
-   the bottom instead -- measured after every render and after resize, same pattern as placeSheet(). */
-let _q3GoListener=false;
-function placeQ3Go(){
-  const go=document.getElementById('q3go'); if(!go||!go.classList.contains('show')) {
-    document.body.classList.remove('q3-go-fixed'); return;
-  }
-  document.body.classList.remove('q3-go-fixed');
-  const vh=(_hostVP&&_hostVP.height)||window.innerHeight;
-  if(go.getBoundingClientRect().bottom>vh) document.body.classList.add('q3-go-fixed');
 }
 function fixMcdLabel(n){
   const el=document.getElementById('pri-medicaid'); if(!el) return;
@@ -1951,15 +1930,16 @@ function fitQ3(){
 }
 window.addEventListener('resize',fitQ3);
 let _priTimer=null;
-/* T-132 B1/B2: "Revisar mi plan de hoy" and "Sin preferencia" are the two one-tap exits this screen
-   always had -- unchanged behavior, just no longer sharing pickPri's old single-answer branch with
-   the toggle. Any other option tap now only toggles D.priorities; "Ver mis planes" (q3GoPlans) is
-   the only way those picks leave this screen. */
+/* T-146 (AB 2026-10-25, undoes T-132 B1's multi-select): one tap on an answer picks it and leaves
+   for the list -- no tick state to collect, no separate "Ver mis planes" step. "Revisar mi plan de
+   hoy" and "Sin preferencia" keep their own one-tap behavior, as they always had. Volver back onto
+   this screen shows the previous answer still ticked (priorityStep reads D.priority); tapping it
+   again just re-picks the same thing and goes straight back to the list. */
 function pickPri(id){
   if(_priTimer) return;
+  document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',!!id&&el.id==='pri-'+id));
   if(id==='myplan'){
-    document.querySelectorAll('.q3opt').forEach(el=>el.classList.toggle('on',el.id==='pri-myplan'));
-    // Not an order or a filter, so D.priorities is left as it was and the list behaves as before.
+    // Not an order or a filter, so D.priority/D.priorities are left as they were.
     wEvt('priority_pick',{priority:'myplan',on:true});
     _priTimer=setTimeout(()=>{
       _priTimer=null;
@@ -1972,54 +1952,26 @@ function pickPri(id){
   }
   if(id===''){   // "Sin preferencia": clears every pick and goes straight on, as before
     D.priority=''; D.priorities=[];
-    _priAuto=null; _priAppliedKey=null;   // a new answer sets the order and the filters once more
+    _priAuto=null;   // a new answer sets the order and the filters once more
     resetListFilters('answer_change');
     wEvt('priority_pick',{priority:'none',on:true});
     go(_cb.priority);
     return;
   }
-  const cur=Array.isArray(D.priorities)?D.priorities:(D.priorities=[]);
-  const at=cur.indexOf(id), on=at<0;
-  if(on) cur.push(id); else cur.splice(at,1);
-  D.priority=screenFirstPri();   // legacy single-value readers (SUG_SHORT, askLine) get the screen-first pick
-  const el=document.getElementById('pri-'+id); if(el) el.classList.toggle('on',on);
-  wEvt('priority_pick',{priority:id,on:on});
-  const go3=document.getElementById('q3go');
-  if(go3) go3.classList.toggle('show',cur.length>0);
-  placeQ3Go();
+  // T-146 (4): D.priorities stays an array of one, so share links, Volver persistence and GA4
+  // priority_sort (which already read D.priorities/screenFirstPri(), not a single string) keep working.
+  D.priority=id; D.priorities=[id];
+  _priAuto=null;   // a new answer sets the order and the filters once more
+  resetListFilters('answer_change');
+  wEvt('priority_pick',{priority:id,on:true});
+  _priTimer=setTimeout(()=>{_priTimer=null;go(_cb.priority);},400);
 }
 function restoreQ3OnStates(){
-  const cur=Array.isArray(D.priorities)?D.priorities:[];
+  const cur=D.priority||'';
   document.querySelectorAll('.q3opt').forEach(el=>{
     const id=el.id.replace(/^pri-/,'');
-    el.classList.toggle('on',id!=='myplan'&&cur.indexOf(id)>=0);
+    el.classList.toggle('on',id!=='myplan'&&id===cur);
   });
-}
-/* T-132 B1: the only way picks on this screen reach the plan list. Opens with whatever the picks
-   already set via applyPriority()/flowResults() -- same destination pickPri() used to jump to after
-   its 400ms "you picked this" pause, now a deliberate tap instead of an auto-advance timer. */
-let _priAppliedKey=null;
-function q3GoPlans(){
-  const pr=Array.isArray(D.priorities)?D.priorities:[];
-  if(!pr.length) return;
-  // B4: screen order, not pick order, for both the key and telemetry.
-  const screenPr=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0);
-  const key=screenPr.join('+');
-  // B8: the lead sheet's existing "priority" column (D.priority, sent wholesale by sendLead(D)) gets
-  // this same "+"-joined set -- no new column. Internal readers (sugLine, suggestPlan, saidMedicaid)
-  // already read D.priorities/screenFirstPri(), not this string, so widening it here is safe.
-  D.priority=key;
-  // B7: "Volver ... keeps the picks ticked (today a new answer resets the list; keep that reset
-  // only when the picks change)" -- tapping "Ver mis planes" with the SAME set already applied (a
-  // visitor who went back to look, changed nothing, and came forward again) must not wipe the chips,
-  // carrier and sort they had set on the list.
-  if(key!==_priAppliedKey){
-    _priAppliedKey=key;
-    _priAuto=null;   // a changed set of picks sets the order and filters once more
-    resetListFilters('answer_change');
-  }
-  wEvt('priority_submit',{priorities:key});
-  go(_cb.priority);
 }
 // T-104 (6) (AB 2026-10-18): picking a different answer, or Volver-ing back onto the question
 // screen, clears every chip, the carrier and the sort back to the answer's default, and drops the
@@ -3293,34 +3245,38 @@ function chipDefs(){
   // number the list does not actually show; chipTap drops a chip that would empty it.
   const cat=(id,lb,on)=>{
     const x=PILLS.find(q=>q.id===id);
+    const n=countWith({[id]:true});
     return {k:id, lb:lb||(typeof x[lang]==='function'?x[lang]():x[lang]), on, group:'rest',
-            any:PLANS.filter(x.f).length>0, n:countWith({[id]:true})};
+            any:PLANS.filter(x.f).length>0, n, disabled:!on&&n===0};
   };
+  const drugN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length;
+  const zeroN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length;
   return [
     {k:'drug', lb:L('With drugs','Con medicamentos'), on:_drugOnly, group:'rest',
-     any:PLANS.some(hasDrug),
-     n:PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length},
+     any:PLANS.some(hasDrug), n:drugN, disabled:!_drugOnly&&drugN===0},
     {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, group:'rest',
-     any:PLANS.some(p=>inTodos(p)&&p.premium===0),
-     n:PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length},
+     any:PLANS.some(p=>inTodos(p)&&p.premium===0), n:zeroN, disabled:!_zeroOnly&&zeroN===0},
     cat('pdp',L('Drugs only','Solo medicamentos'),_pdpOnly),
     {...cat('dsnp',mcd(),_dsnpOnly), group:'last'},
     {...cat('snp',L('Special needs','Necesidades especiales'),_snpOnly), group:'last'}
   ];
 }
-/* T-109 (1): "Tipo de plan" -- every distinct network type that actually exists among plans the
-   OTHER filters already leave (HMO, PPO, HMO-POS...; baseType() strips the SNP qualifier, which
-   the dsnp/snp chips above already cover on their own, so a plan is never double-counted between
-   the two groups). Multi-select, OR'd together: picking HMO and PPO shows either. */
+/* T-109 (1) / T-145 (AB 2026-10-25): "Tipo de plan" -- every distinct network type among the ZIP's
+   OWN MA plans (HMO, PPO, HMO-POS...; baseType() strips the SNP qualifier, which the dsnp/snp chips
+   above already cover on their own, so a plan is never double-counted between the two groups).
+   T-145: the SET is fixed per ZIP -- built from the full, unfiltered plan pool, never from what
+   other filters currently leave -- so a chip never disappears because another filter emptied it;
+   only its own count (still "what tapping it would leave", same as before) can go to 0. Multi-select,
+   OR'd together: picking HMO and PPO shows either. */
 function planTypeChipDefs(){
-  const present=new Map();
+  const present=new Set();
   // Standalone Part D plans carry type "PDP" literally -- that is already its own category chip
-  // ("Drugs only"/"Solo medicamentos"), so excluded here regardless of current filters, never a
-  // second, differently-wired chip offering the same plans under a confusing second label.
-  PLANS.forEach(p=>{ if(!isPDP(p)&&categoryOK(p)&&extrasOK(p)){ const t=baseType(p); present.set(t,(present.get(t)||0)+1); } });
+  // ("Drugs only"/"Solo medicamentos"); Medigap is a different category entirely. Neither belongs in
+  // this set, regardless of current filters.
+  PLANS.forEach(p=>{ if(!isPDP(p)&&!p._medigap) present.add(baseType(p)); });
   // amendment (evening): HMO and PPO first, then the rest, alphabetically
   const FIRST=['HMO','PPO'];
-  const keys=[...present.keys()].sort((a,b)=>{
+  const keys=[...present].sort((a,b)=>{
     const ia=FIRST.indexOf(a), ib=FIRST.indexOf(b);
     if(ia>=0||ib>=0) return (ia<0?99:ia)-(ib<0?99:ib);
     return a.localeCompare(b);
@@ -3329,7 +3285,7 @@ function planTypeChipDefs(){
     const on=_planTypes.has(t);
     const test=new Set(_planTypes); if(on) test.delete(t); else test.add(t);
     const n=PLANS.filter(p=>!isPDP(p)&&categoryOK(p)&&extrasOK(p)&&(test.size===0||test.has(baseType(p)))).length;
-    return {k:'type:'+t, lb:t, on, group:'type', isType:true, typeVal:t, any:true, n};
+    return {k:'type:'+t, lb:t, on, group:'type', isType:true, typeVal:t, any:true, n, disabled:!on&&n===0};
   });
 }
 const PRI_CHIP={cost:'zero', drugs:'drug', medicaid:'dsnp'};
@@ -3363,7 +3319,11 @@ function chipRow(){
     ? `<button class="ord ordc" aria-expanded="${_carOpen}" aria-controls="carpan" onclick="toggleCar()">${L('Carrier','Aseguradora')} ${_carOpen?'\u25B4':'\u25BE'}</button>` : '';
   const zeroMsg=zeroResultMsg()||priDropMsgHTML();
   return `<div class="fx"><div class="fxr">`+cs.map(c=>
-      `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
+      // T-145: a 0-and-not-selected chip stays in its place, greyed, aria-disabled, and does
+      // nothing on tap (no onclick at all, rather than a guard that still fires on Enter/Space).
+      c.disabled
+        ? `<button class="fc fcd" aria-pressed="false" aria-disabled="true">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
+        : `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
     `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}<button class="ord ords" onclick="openShareList()" aria-label="${L('Share this list','Compartir esta lista')}">${shrIcon()}${L('Share','Compartir')}</button></div>`
     +zeroMsg;
@@ -4374,12 +4334,13 @@ function sugCard(p,plans){
 async function plansForShare(zip,ids,priority){
   try{
     if(!/^\d{5}$/.test(String(zip||''))) return {err:'bad zip'};
-    // T-132 B8: the link's pr= carries the whole "+"-joined set (screen order, written by
-    // shareURL()); split it back into D.priorities so suggestPlan() runs its real multi-pick rule
-    // on the recipient's page, not just its first id. D.priority stays the screen-first id, for
-    // SUG_SHORT's "For X:" lead-in, which names only one thing by design.
+    // T-132 B8 / T-146 (AB 2026-10-25, undoes B8's multi-pick part): the link's pr= may still carry
+    // an older multi-answer set from before T-146. D.priorities is at most one now, so an old link
+    // with 2+ uses only the first ON-SCREEN one (PRI_OPTIONS order), same rule screenFirstPri() uses
+    // everywhere else -- never the first one in the link itself.
     const prList=String(priority||'').split('+').filter(Boolean);
-    D.priorities=prList; D.priority=prList[0]||'';
+    const prFirst=PRI_OPTIONS.map(o=>o.id).find(id=>prList.indexOf(id)>=0)||'';
+    D.priorities=prFirst?[prFirst]:[]; D.priority=prFirst;
     D.zip=String(zip); await loadPlansForZip(D.zip);
     if(D._zipValid===false||!PLANS.length) return {err:'no plans'};
     const want=(ids||[]).map(String);
@@ -5256,7 +5217,7 @@ function flowSuccess(){
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
-  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carriers=[];_planTypes.clear();_carOpen=false;_priAuto=null;_priAppliedKey=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
+  const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carriers=[];_planTypes.clear();_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
   wb().innerHTML=`<div class="cf">
     <div class="cf-ic">${CFI.check}</div>
