@@ -62,7 +62,7 @@ p,div,span{text-wrap:pretty}
 /* top card */
 .card{background:#F0F3F6;border:1px solid #dbe2e9;border-radius:14px;padding:14px 16px;margin:0 0 12px}
 .logo a{display:inline-block;text-decoration:none;padding:6px 0;margin:-6px 0;min-height:44px}
-.logo svg{width:200px;height:auto;display:block}
+.logo svg{width:237px;height:auto;display:block}
 .agent{display:flex;gap:12px;align-items:center;margin-top:12px}
 .ph-img{border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 0 0 1px #cfd8e0;flex:none}
 .eyebrow{font-size:11px;letter-spacing:.16em;font-weight:700;color:#007B7B;text-transform:uppercase}
@@ -118,7 +118,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   .card{padding:8px 14px;display:flex;align-items:center;gap:24px}
   .card .agent{margin-top:0}
   .card .ph-img{width:56px;height:56px}
-  .logo svg{width:190px}
+  .logo svg{width:226px}
   .band{padding:8px 14px;margin-bottom:8px}
   .band h1{font-size:17px}
   .box{break-inside:avoid;padding:10px 14px}
@@ -416,8 +416,10 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   }, true);
 
   var IMGBASE = (location.hostname.indexOf('medicare-california') > -1) ? (WIDGET_HOST + '/') : '/';
-  /* T-102: the real logo, the exact markup of the site header (index.html), not a typed stand-in. */
-  var LOGO = '<svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/><text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="700" fill="#007B7B">Medicare</tspan></text></svg>';
+  /* T-102: the real logo, the exact markup of the site header (index.html), not a typed stand-in.
+     AMENDMENT A (T-139, AB 2026-10-25 17:25): ".com" appended, #5d6b78 600, no gap before it --
+     viewBox/width widened to fit (322->382 / 252->302), nothing else about the mark changed. */
+  var LOGO = '<svg class="logo-full" viewBox="0 0 382 48" width="302" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/><text y="34" font-family="\'Open Sans\',\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="700" fill="#007B7B">Medicare</tspan><tspan font-size="26" font-weight="600" fill="#5d6b78">.com</tspan></text></svg>';
 })();
 </script>
 </body>
