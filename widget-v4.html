@@ -221,6 +221,12 @@ body.q3 .widget-body{padding:10px 14px 16px}
 .fc.fcx b{font-weight:700;font-size:17px;line-height:1;margin-left:2px}
 /* T-104 (3): ONE row under the chips, Orden on the left and Aseguradora on the right, never wrapping under */
 .fxo{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:0 16px;margin:2px 0 0}
+/* T-143: the share icon's extra ~24px (18px + 6px gap) pushed this row past a 320 phone's width --
+   measured: Orden + Aseguradora + icon-Compartir sum to ~307px, the row's own box is 270px at 320.
+   Not new at 320 (Compartir already sat flush against the edge before the icon, no icon-free margin
+   to spend), so letting the row wrap instead of clipping text is the fix, not shrinking the icon
+   below its 18px/6px spec. Unaffected at 375+, where the row already has room to spare. */
+@media(max-width:359px){.fxo{flex-wrap:wrap;row-gap:6px}}
 .rtop{display:flex;align-items:center;gap:12px;margin:0 0 4px}
 .rtop .btn-back{margin-bottom:0;flex:0 0 auto}
 .rtop .hl{margin:0}
