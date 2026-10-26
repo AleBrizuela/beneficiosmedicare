@@ -83,3 +83,20 @@
   .cty-cta-row{flex-direction:column}
   .cty-cta-row a{width:100%;justify-content:center}
 }
+/* v34: "this week on social" follow block, grid layout, real brand-colored icons */
+.soc{display:grid;grid-template-columns:96px 1fr;grid-template-areas:"img h" "img t" "img l";column-gap:16px;row-gap:4px;align-items:start;background:var(--white);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.soc img{grid-area:img;width:96px;height:120px;object-fit:cover;border-radius:8px}
+.soc .folh{grid-area:h;margin:0}
+.soc .fol{font-size:17px;line-height:1.25;color:var(--navy)}
+.soc .folt{grid-area:t;margin:0;font-size:14px;color:#6b7a7a;text-wrap:pretty}
+.soc .soclinks{grid-area:l;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:8px}
+.soclinks a{display:inline-flex;align-items:center}
+.soclinks svg{width:28px;height:28px;flex:none}
+.sl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(max-width:600px){
+  .soc{grid-template-columns:72px 1fr;padding:14px}
+  .soc img{width:72px;height:90px}
+  .soc .fol{font-size:15px}
+  .soc .folt{font-size:13px}
+  .soclinks svg{width:24px;height:24px}
+}
