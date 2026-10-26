@@ -352,14 +352,23 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
               : (EN ? n + ' plan' + (n === 1 ? '' : 's') : n + ' plan' + (n === 1 ? '' : 'es'));
   }
   function listTitle(n, place){ return listTitleBase(n) + (EN ? ' in ' : ' en ') + place; }
-  // The onclick on every card opens a detail screen that only exists inside the live, interactive
-  // widget; this page shows the list read-only (same reduction as the comparison above, which drops
-  // "Mostrar diferencias" state between visits), so the dead handler and the "Ver detalles" link that
-  // would do nothing are both removed rather than left looking tappable.
+  // The onclick on every card (cardTap) opens a detail screen that only exists inside the live,
+  // interactive widget, so it is stripped -- the card itself stays non-tappable on this read-only
+  // page (same reduction as the comparison above, which drops "Mostrar diferencias" state between
+  // visits). AMENDMENT B (T-139, AB 2026-10-25): the "Ver detalles ›" button inside .pc-det is NOT
+  // dropped -- it's rewired from the dead openPlan() call to a real link to this same page's own
+  // single-plan view (zip+p+hoy+lang, the existing MP_SINGLE path), same tab.
+  function detailURL(id){
+    return location.pathname + '?zip=' + encodeURIComponent(ZIP) + '&p=' + encodeURIComponent(id) +
+      '&hoy=' + encodeURIComponent(id) + '&lang=' + (EN ? 'en' : 'es');
+  }
   function stripDeadCardLinks(html){
     return String(html || '')
       .replace(/\sonclick="cardTap\([^"]*\)"/g, '')
-      .replace(/<div class="pc-det">[\s\S]*?<\/div>/g, '');
+      .replace(/(data-pid="([^"]+)"[\s\S]*?)<div class="pc-det">[\s\S]*?<\/div>/g, function(_, pre, id){
+        return pre + '<div class="pc-det"><a class="pc-detl" href="' + esc(detailURL(id)) +
+          '" data-plan-detail="' + esc(id) + '">' + esc(EN ? 'See details' : 'Ver detalles') + ' ›</a></div>';
+      });
   }
   function renderList(d){
     useAgent(d.agent);
@@ -408,6 +417,8 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     var path = e.composedPath ? e.composedPath() : [e.target], a = null;
     for (var i = 0; i < path.length && !a; i++) if (path[i] && path[i].tagName === 'A' && path[i].getAttribute('href')) a = path[i];
     if (!a) return;
+    // AMENDMENT B (T-139): "Ver detalles ›" on a shared-list card, before the click navigates away.
+    if (a.hasAttribute('data-plan-detail')) { gtag('event', 'shared_list_details', {plan_id:a.getAttribute('data-plan-detail'), zip3:ZIP.slice(0,3), lang:EN?'en':'es'}); return; }
     var h = a.getAttribute('href') || '';
     var n = /^tel:\+18006334227/.test(h) ? '' : /^tel:/i.test(h) ? 'phone_click' : /wa\.me/i.test(h) ? 'whatsapp_click' : /^mailto:/i.test(h) ? 'email_click' : /^sms:/i.test(h) ? 'sms_click' : '';
     if (!n) return;
