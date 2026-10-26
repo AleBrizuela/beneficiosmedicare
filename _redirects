@@ -164,3 +164,17 @@
 /Widget-QA-Report.docx   /           301
 /.gitignore              /           301
 /CNAME                   /           301
+
+# T-147 (AB 2026-10-25): same leak, two more spots. QA_TEST_REPORT.txt is tracked and was live at
+# 200 (PILLAR_PAGE_NOTES.txt, also internal, is in .gitignore and was never actually deployed --
+# checked, not assumed). SHIP/now/*.md are this repo's own internal release reports (T-108
+# summaries etc.), also live at 200. tools/ scripts are listed individually, NOT as /tools/* --
+# that directory also holds medigap-scraper.html and medigap-scraper-v2.html, which NOW.md's Keep
+# list says must stay reachable (already noindex via their own meta tag, intentionally kept
+# working as internal tools); a blanket block would have taken them down too.
+/QA_TEST_REPORT.txt            /     301
+/SHIP/*                        /     301
+/tools/check-shared.mjs        /     301
+/tools/stamp-shared.mjs        /     301
+/tools/build_zip_city.py       /     301
+/tools/.last-stamp-report.json /     301
