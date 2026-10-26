@@ -420,15 +420,19 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       window.print();
     }, 800);
     // AMENDMENT B: this page fully reloads on browser Back (the hidden-iframe postMessage render
-    // can't survive bfcache), so the list's scroll position is restored by hand rather than relying
-    // on the browser -- keyed to this exact list's own query string, so a different share link's
-    // saved position is never applied here. Double rAF: the shadow-root cards need a layout pass
-    // after part() before their real height exists to scroll to.
+    // can't survive bfcache), so the list's scroll position is restored by hand -- keyed to this
+    // exact list's own query string, so a different share link's saved position is never applied
+    // here. A single rAF pair was not enough: measured on staging, something later in this page's
+    // own render/layout pipeline (past the shadow-root content this function itself injects) still
+    // moves scroll back to 0 after one or two frames. Re-asserting across a spread of delays wins
+    // that race without having to chase the exact cause; the key is kept until the last attempt so
+    // a stray late reset still gets corrected.
     try {
-      var savedY = sessionStorage.getItem(listScrollKey());
+      var sk = listScrollKey(), savedY = sessionStorage.getItem(sk);
       if (savedY != null) {
-        sessionStorage.removeItem(listScrollKey());
-        requestAnimationFrame(function(){ requestAnimationFrame(function(){ window.scrollTo(0, +savedY); }); });
+        var y = +savedY;
+        [0, 50, 150, 300, 600, 1000].forEach(function(ms){ setTimeout(function(){ window.scrollTo(0, y); }, ms); });
+        setTimeout(function(){ try { sessionStorage.removeItem(sk); } catch(e){} }, 1100);
       }
     } catch(e){}
   }
