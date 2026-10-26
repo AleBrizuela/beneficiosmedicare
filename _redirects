@@ -178,3 +178,39 @@
 /tools/stamp-shared.mjs        /     301
 /tools/build_zip_city.py       /     301
 /tools/.last-stamp-report.json /     301
+
+# T-135 (2026-10-26): retire look-alike neighborhood pages, 301 to the Los Angeles city page
+/california/cities/beverly-hills.html /california/cities/los-angeles 301
+/california/cities/beverly-hills /california/cities/los-angeles 301
+/california/cities/culver-city.html /california/cities/los-angeles 301
+/california/cities/culver-city /california/cities/los-angeles 301
+/california/cities/del-rey.html /california/cities/los-angeles 301
+/california/cities/del-rey /california/cities/los-angeles 301
+/california/cities/el-segundo.html /california/cities/los-angeles 301
+/california/cities/el-segundo /california/cities/los-angeles 301
+/california/cities/mar-vista.html /california/cities/los-angeles 301
+/california/cities/mar-vista /california/cities/los-angeles 301
+/california/cities/marina-del-rey.html /california/cities/los-angeles 301
+/california/cities/marina-del-rey /california/cities/los-angeles 301
+/california/cities/mid-city.html /california/cities/los-angeles 301
+/california/cities/mid-city /california/cities/los-angeles 301
+/california/cities/playa-del-rey.html /california/cities/los-angeles 301
+/california/cities/playa-del-rey /california/cities/los-angeles 301
+/california/cities/playa-vista.html /california/cities/los-angeles 301
+/california/cities/playa-vista /california/cities/los-angeles 301
+/california/cities/santa-monica.html /california/cities/los-angeles 301
+/california/cities/santa-monica /california/cities/los-angeles 301
+/california/cities/westchester.html /california/cities/los-angeles 301
+/california/cities/westchester /california/cities/los-angeles 301
+
+# T-135 (2026-10-26): retire look-alike Northern/Central CA city pages (not our market), 301 to the CA Medicare Advantage guide
+/california/cities/san-jose.html /medicare-advantage-california 301
+/california/cities/san-jose /medicare-advantage-california 301
+/california/cities/san-francisco.html /medicare-advantage-california 301
+/california/cities/san-francisco /medicare-advantage-california 301
+/california/cities/sacramento.html /medicare-advantage-california 301
+/california/cities/sacramento /medicare-advantage-california 301
+/california/cities/fresno.html /medicare-advantage-california 301
+/california/cities/fresno /medicare-advantage-california 301
+/california/cities/bakersfield.html /medicare-advantage-california 301
+/california/cities/bakersfield /medicare-advantage-california 301
