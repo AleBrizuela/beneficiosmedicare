@@ -4781,10 +4781,12 @@ function cmpParts(plans,ro){
   const row=(lab,cells,big,icon)=>R.push({lab,cells,big,icon});
   const txt=v=>v==null?{t:noInfo(),na:true}:{t:v,off:false};
   const dash={t:'–',off:true};
-  // T-052: the same groups as the card. Card bands stay open; the "Ver todos los beneficios" groups start closed
-  // (tap the grey bar). A V-object cell keeps its own "No incluido" / "Sin información" state.
+  // T-052: the same groups as the card. T-140 (AB 2026-10-25, "open EVERYTHING on load"): the
+  // "Ver todos los beneficios" groups now start OPEN too, same as the card bands -- tg still marks
+  // them tappable (the grey bar), it just no longer implies closed-by-default. A V-object cell
+  // keeps its own "No incluido" / "Sin información" state.
   const cv=v=>v==null?{t:noInfo(),na:true}:{t:v.t,off:!!v.off};
-  const shut=(g,icon)=>R.push({g,shut:true,icon});
+  const shut=(g,icon)=>R.push({g,tg:true,icon});
   grp(L('Costs','Costos'),'cost');
   row(L('Monthly premium','Prima mensual'),plans.map(p=>txt(premUsd(p.premium))),true);
   if(plans.some(ma)){
@@ -4843,14 +4845,17 @@ function cmpParts(plans,ro){
      figure about 70px wide at 375, which is where the mid-word breaks and the 12px type came from.
      Two <tr>s per row, carrying the SAME classes, so "Mostrar diferencias" and the group toggles
      hide or show a label and its values together and can never separate them. */
-  let gi=-1, closed=false;
+  // T-140: every group starts open (no 'shut' class, no row gets 'hid' here) -- tg groups are still
+  // tappable (cmpGrp toggles 'shut'/'hid' live off the current classList, it never reads this
+  // initial render), so tapping a grey bar still closes it exactly as before.
+  let gi=-1;
   const body=R.map(r=>{
-    if(r.g){gi++;closed=!!r.shut;
+    if(r.g){gi++;
       const gic=r.icon?`<svg class="gic" viewBox="0 0 24 24">${PIC[r.icon]}</s`+`vg>`:'';
-      return r.shut?`<tr class="grp tg shut" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length}"><span>${gic}${r.g}</span></td></tr>`
-                   :`<tr class="grp" data-gi="${gi}" data-gi2="${gi}"><td colspan="${plans.length}"><span class="gi2">${gic}${r.g}</span></td></tr>`;}
+      return r.tg?`<tr class="grp tg" data-gi="${gi}" onclick="cmpGrp(this,${gi})"><td colspan="${plans.length}"><span>${gic}${r.g}</span></td></tr>`
+                 :`<tr class="grp" data-gi="${gi}" data-gi2="${gi}"><td colspan="${plans.length}"><span class="gi2">${gic}${r.g}</span></td></tr>`;}
     const same=r.cells.every(c=>c.t===r.cells[0].t);
-    const cls=`g${gi}${same?' same':''}${closed?' hid':''}`;
+    const cls=`g${gi}${same?' same':''}`;
     const ric=r.icon?`<svg class="ric" viewBox="0 0 24 24">${PIC[r.icon]}</s`+`vg>`:'';
     return `<tr class="r lr ${cls}"><td class="lab" colspan="${plans.length}">${ric}${nbLast(r.lab)}</td></tr>`+
       `<tr class="r vr ${cls}">${r.cells.map(c=>`<td class="v${c.off?' off':''}${c.na?' na':''}${!c.off&&!c.na&&isZero(String(c.t).replace(/<[^>]+>/g,''))?' zero':''}">${nbLast(c.t)}</td>`).join('')}</tr>`;
