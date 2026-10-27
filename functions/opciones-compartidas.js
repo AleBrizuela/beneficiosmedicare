@@ -14,7 +14,7 @@
  * WhatsApp, iMessage, Facebook and Gmail do not run JavaScript: the preview is whatever HTML the server
  * hands their crawler. /opciones-compartidas is one static file for every link, so on its own every preview
  * reads the same. For a link-preview crawler only, this serves that same file with its og/twitter tags
- * rewritten from the link: the agent for the ZIP's state (T-102: Susana for KS, MO, TX, FL; Alejandra for
+ * rewritten from the link: the agent for the ZIP's state (T-159: Alejandra for CA and AZ; Susana for
  * everything else) and her card image (1200x630, og-plans-bm-<agent>-<lang>-20261024.jpg; T-136).
  *
  * People get the plain file, untouched and with no extra work: the page draws itself in the browser. Only a
@@ -27,7 +27,7 @@
  * Twitterbot, so it is covered by those.
  */
 const BOT = /facebookexternalhit|facebot|whatsapp|twitterbot|slackbot|linkedinbot|telegrambot|discordbot|skypeuripreview|googlebot|google-inspectiontool|googleimageproxy|google-pagerenderer|bingbot|applebot|pinterest|embedly|redditbot|iframely|vkshare|outbrain|quora link preview|nuzzel|bitlybot|xing-contenttabreceiver|mastodon|bluesky/i;
-const SUSANA = { KS: 1, MO: 1, TX: 1, FL: 1 };
+const ALEJANDRA = { CA: 1, AZ: 1 };
 const AGENTS = {
   susana: { first: 'Susana', name: 'Susana Marcos', tel: '(913) 488-5341' },
   alejandra: { first: 'Alejandra', name: 'Alejandra Brizuela', tel: '(310) 597-9142' }
@@ -65,7 +65,7 @@ export async function onRequestGet(context) {
     const zi = await env.ASSETS.fetch(new URL('/data/zip_index.js', url.origin));
     const st = zi.ok ? pick(await zi.text(), zip) : '';
     if (!/^[A-Z]{2}$/.test(st)) return res;
-    const ak = SUSANA[st] ? 'susana' : 'alejandra', A = AGENTS[ak];
+    const ak = ALEJANDRA[st] ? 'alejandra' : 'susana', A = AGENTS[ak];
 
     // T-138: the place is the CITY (USPS default city + state), never the county -- one fetch,
     // same plain-text pick() trick, replaces the old zip_index(state)+plans_ST_2027.json(county) pair.
