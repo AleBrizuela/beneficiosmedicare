@@ -841,6 +841,14 @@ html body .t31-form #zip-card .t31-zip-wrap{margin:0 0 16px!important}
 html body .t31-form #zip-card #zip-btn{height:52px!important;padding:0 24px!important;box-sizing:border-box!important}
 html body .t31-checks{margin-top:22px!important;padding-top:0!important}
 
+/* T-157 (AB 2026-10-26): the trust strip under the ZIP card. Desktop: reviews, 2,000+, languages in one
+   row. Phones: the reviews line only, then the D-136 line. Review count = the live Business Profile
+   number (12 on 2026-10-26); change it here when it moves. */
+html body .t31-checks .t157-st{color:#F5A623;letter-spacing:1px}
+html body .t31-checks .t157-rev b{color:#002147}
+html body .t31-checks .t157-rev a{color:#007B7B;text-decoration:underline;text-underline-offset:3px}
+html body .t31-checks .t157-gov{margin:6px auto 0;font-size:13px;line-height:18px;color:#4A5568;text-align:center;max-width:320px}
+
 html body .t31-bar{display:none}
 /* T-084: the page's compare bar is a phone thing, exactly like the contact bar above this line.
    Outside the phone media query it has no display rule of its own, so without this it renders as
@@ -901,7 +909,9 @@ html body details.t31-cities[open]>summary{margin-bottom:16px}
 
 @media (max-width:768px){
   /* top of page */
-  html body .t31-checks{display:none!important}
+  html body .t31-checks{margin-top:18px!important}
+  html body .t31-checks .t157-d{display:none!important}
+  html body .t31-checks .t157-rev{font-size:15px;line-height:22px;color:#4A5568}
   html body .t31-band{padding:20px 18px 32px!important}
   html body.t31-thin .t31-band{padding:14px 18px 36px!important}
   html body.t31-thin .t31-band h1{font-size:22px!important;margin:0!important}
@@ -1071,7 +1081,7 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
   <div class="header-inner t31-head">
     <a href="/" class="logo"><svg class="logo-full" viewBox="0 0 322 48" width="252" height="38" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="navShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#007B7B"/><stop offset="100%" style="stop-color:#007B7B"/></linearGradient></defs><path d="M23 2 L43 10 L43 26 C43 37 35 43 23 49 C11 43 3 37 3 26 L3 10 Z" fill="url(#navShieldGrad)"/><path d="M200 272 C150 236 132 212 132 184 C132 160 150 144 172 144 C185 144 195 151 200 160 C205 151 215 144 228 144 C250 144 268 160 268 184 C268 212 250 236 200 272 Z" fill="#fff" transform="translate(23 26) scale(0.181) translate(-200 -208)"/><text y="34" font-family="'Open Sans','Segoe UI','Helvetica Neue',Arial,sans-serif"><tspan x="54" font-size="26" font-weight="700" fill="#002147">Beneficios</tspan><tspan dx="6" font-size="26" font-weight="700" fill="#007B7B">Medicare</tspan></text></svg></a>
     <nav id="desktop-nav" class="t31-nav">
-      <a href="/beneficios">Medicare 101</a>
+      <a href="/beneficios">Gu&iacute;a de Medicare</a>
       <a href="/en" hreflang="en" lang="en">In English</a>
       <a data-cta="header" href="/contacto">Contáctenos</a>
     </nav>
@@ -1082,7 +1092,7 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
 
 <!-- Mobile nav -->
 <div class="mobile-nav" id="mobile-nav">
-  <a href="/beneficios">Medicare 101</a>
+  <a href="/beneficios">Gu&iacute;a de Medicare</a>
       <a href="/en" hreflang="en" lang="en">In English</a>
       <a data-cta="header" href="/contacto">Contáctenos</a>
 </div>
@@ -1135,19 +1145,17 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
   <!-- TRUST BADGE STRIP -->
   <div class="trust-badge-strip t31-checks" style="padding:0 24px 24px;background:white;border-bottom:1px solid rgba(0,33,71,0.08);text-align:center">
     <div style="max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:12px 20px;flex-wrap:wrap;font-size:14px;color:var(--gray);font-weight:500">
-      <div style="display:flex;align-items:center;gap:6px;white-space:nowrap">
-        <svg style="width:18px;height:18px;color:var(--green)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <span>3 min</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;white-space:nowrap">
+      <div class="t157-rev" style="display:flex;align-items:center;gap:6px;white-space:nowrap"><span class="t157-st" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <b>5.0</b> &middot; <a href="https://maps.app.goo.gl/wfbQjcZ2C4wkN5E99" target="_blank" rel="noopener">12 reseñas en Google</a></div>
+      <div class="t157-d" style="display:flex;align-items:center;gap:6px;white-space:nowrap">
         <svg style="width:18px;height:18px;color:var(--green)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
         <span>2,000+ clientes</span>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;white-space:nowrap">
+      <div class="t157-d" style="display:flex;align-items:center;gap:6px;white-space:nowrap">
         <svg style="width:18px;height:18px;color:var(--green)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
         <span>Español e inglés</span>
       </div>
     </div>
+    <p class="t157-gov">No somos el gobierno ni Medicare.</p>
   </div>
 
   <!-- 3-STEP PROCESS -->
@@ -1237,7 +1245,7 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
         <div class="role">CPTO y Agente</div>
         <p class="team-bio">La misión de Alejandra: hacer que Medicare sea accesible para cada familia, especialmente las comunidades hispanas y los hijos adultos que ayudan a sus padres.</p>
         <div class="credentials">
-          <span class="credential-tag">Con licencia en CA</span>
+          <span class="credential-tag">Con licencia en CA y AZ</span>
           <span class="credential-tag">Certificada AHIP</span>
           <span class="credential-tag">Bilingüe</span>
         </div>
@@ -1266,9 +1274,9 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
   <!-- STATS BAR -->
   <section class="stats-bar">
     <div class="stats-grid">
-      <div class="stat-item"><h3 class="counter" data-target="2000" data-suffix="+">0</h3><p>Familias asesoradas</p></div>
-      <div class="stat-item"><h3 class="counter" data-target="15" data-suffix="+">0</h3><p>Años de experiencia</p></div>
-      <div class="stat-item"><h3 class="counter" data-target="9" data-suffix="">0</h3><p>Estados con licencia</p></div>
+      <div class="stat-item"><h3 class="counter" data-target="2000" data-suffix="+">2,000+</h3><p>Familias asesoradas</p></div>
+      <div class="stat-item"><h3 class="counter" data-target="15" data-suffix="+">15+</h3><p>Años de experiencia</p></div>
+      <div class="stat-item"><h3 class="counter" data-target="9" data-suffix="">9</h3><p>Estados con licencia</p></div>
     </div>
     <p class="t31-rating"><span class="t31-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <a href="https://maps.app.goo.gl/wfbQjcZ2C4wkN5E99" target="_blank" rel="noopener">Lea nuestras rese&ntilde;as en Google &rarr;</a></p>
   </section>
