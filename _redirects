@@ -214,3 +214,17 @@
 /california/cities/fresno /medicare-advantage-california 301
 /california/cities/bakersfield.html /medicare-advantage-california 301
 /california/cities/bakersfield /medicare-advantage-california 301
+
+# T-135 phase 2 (2026-10-26, AB "only LA and SD are ready, remove the other 3"): long-beach,
+# riverside and orange-county were kept live pending a rewrite; AB decided not to wait. 301 to
+# Los Angeles, the only other finished Southern California guide (same reasoning T-135 already
+# used for the 11 neighborhoods). Routed through functions/_middleware.js too, since a plain
+# _redirects 301 for a page retired in the same deploy that adds the rule doesn't actually fire
+# (confirmed earlier this same day, see D-124) -- this block documents intent, the Function below
+# is what actually works.
+/california/cities/long-beach.html /california/cities/los-angeles 301
+/california/cities/long-beach /california/cities/los-angeles 301
+/california/cities/riverside.html /california/cities/los-angeles 301
+/california/cities/riverside /california/cities/los-angeles 301
+/california/cities/orange-county.html /california/cities/los-angeles 301
+/california/cities/orange-county /california/cities/los-angeles 301
