@@ -1126,14 +1126,14 @@ html body #zip-card .t42-book:focus-visible{outline:3px solid #FFB300;outline-of
           <input type="tel" inputmode="numeric" id="zip-input" maxlength="5" autocomplete="postal-code" style="width:100%;padding:16px 18px;font-size:20px;font-family:'Open Sans',sans-serif;font-weight:600;border:2px solid #D4DEE8;border-radius:12px;outline:none;text-align:center;letter-spacing:0.08em;color:var(--navy);background:var(--lt-blue);box-sizing:border-box;transition:border-color .2s,box-shadow .2s">
           <div id="zip-error" style="display:none;font-size:13px;color:#C0392B;margin-top:6px;text-align:center">Ingrese un código postal válido de 5 dígitos.</div>
         </div>
-        <button data-cta="home_hero" id="zip-btn" data-cta-target="my_plan" onclick="handleZipSubmit(window.t156On?'myplan':'')" style="width:100%;padding:16px 24px;background:var(--green);color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
+        <button data-cta="home_hero" id="zip-btn" onclick="handleZipSubmit(window.t156On?'myplan':'')" style="width:100%;padding:16px 24px;background:var(--green);color:white;font-size:17px;font-weight:700;font-family:'Open Sans',sans-serif;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s">
           <span id="t156-btn">Comparar mi plan actual</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
         <!-- T-156 (AB 2026-10-26): the headline asks "is your plan changing?", the button answers it (opens the
              plan finder on "¿Qué plan tiene hoy?"), the link keeps today's path. The video call leaves the card
              (still in the menu and footer). Reverts by itself on Dec 8, with the date strip. -->
-        <p class="t156-all" id="t156-all"><a data-cta="home_hero" data-cta-target="all_plans" href="#comparar" onclick="event.preventDefault();handleZipSubmit('')">O vea todos los planes 2027</a></p>
+        <p class="t156-all" id="t156-all"><a data-cta="home_hero" data-cta-target="plan_finder" href="#comparar" onclick="event.preventDefault();handleZipSubmit('')">O vea todos los planes 2027</a></p>
         <script>(function(){var p=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));window.t156On=p<new Date(2026,11,8);if(window.t156On)return;
           document.getElementById('t156-h1').innerHTML='<span class="lim-nw">Ayuda con Medicare</span> <span class="t31-accent">en español</span>';document.getElementById('t156-btn').textContent='Compare Planes Gratis';document.getElementById('t156-all').style.display='none';})();</script>
       </div>
