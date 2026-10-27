@@ -1408,20 +1408,20 @@ function isRepresented(parent,state){
    PDF (they ask this file for their data, see plansForShare), the WhatsApp/Texto/Email text the
    share sheet builds, and the `agent` field on the lead row. The state is the one loadPlansForZip
    already resolved from the ZIP (D.state); nothing here re-derives it.
-     Susana    = KS, MO, TX, FL
-     Alejandra = CA, AZ, IA, IL, OK, and anything else or no state yet (the default)
+     Alejandra = CA, AZ only (T-159, AB 2026-10-26: she is licensed in CA and AZ, nowhere else)
+     Susana    = every other state, and no state yet (the default)
    lic: the licence number shown next to the name. Alejandra's is the CA DOI number the shared sheet
-   already carried (T-078). Susana's numbers for KS/MO/TX/FL are NOT on file: until PROTECT has them
-   her surfaces show NO licence line at all -- not a placeholder, not her CA number (CA is not one
-   of her states here). Never an NPN, for either agent. */
+   already carried (T-078). Susana's numbers are NOT on file: until PROTECT has them her surfaces
+   show NO licence line at all -- not a placeholder, not anyone else's number. Never an NPN, for
+   either agent. */
 const AGENTS={
   susana:   {key:'susana',   name:'Susana Marcos',      tel:'(913) 488-5341', digits:'19134885341',
              email:'Susana@BeneficiosMedicare.com',    photo:'images/susana-headshot.jpg',    lic:''},
   alejandra:{key:'alejandra',name:'Alejandra Brizuela', tel:'(310) 597-9142', digits:'13105979142',
              email:'Alejandra@BeneficiosMedicare.com', photo:'images/alejandra-headshot.jpg', lic:'4507923'}
 };
-const AGENT_BY_STATE={KS:'susana',MO:'susana',TX:'susana',FL:'susana'};
-function agentFor(state){return AGENTS[AGENT_BY_STATE[String(state||'').toUpperCase()]]||AGENTS.alejandra;}
+const AGENT_BY_STATE={CA:'alejandra',AZ:'alejandra'};
+function agentFor(state){return AGENTS[AGENT_BY_STATE[String(state||'').toUpperCase()]]||AGENTS.susana;}
 function agent(){return agentFor(D.state);}
 // Non-breaking space and hyphen keep "(913) 488-5341" on one line wherever it wraps.
 function agentTel(a){return String(a.tel).replace(') ',') ').replace('-','‑');}

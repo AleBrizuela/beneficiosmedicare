@@ -25,9 +25,10 @@
 <meta name="robots" content="noindex, follow">
 <title>Opciones de Medicare 2027 | Beneficios Medicare</title>
 <!-- T-105 (4) (AB 2026-10-18): the preview carries the agent for the link's state, with her photo and name.
-     These are the defaults (Alejandra, Spanish: every state that is not KS, MO, TX or FL). For a preview
-     crawler, functions/opciones-compartidas.js rewrites each of them from the link itself: Susana's card
-     for KS, MO, TX and FL, the English card for ?lang=en, and a title naming the comparison.
+     These are the static defaults (Alejandra, Spanish), seen only when the state cannot be read. For a
+     preview crawler, functions/opciones-compartidas.js rewrites each of them from the link itself (T-159):
+     Alejandra's card for CA and AZ, Susana's for every other state, the English card for ?lang=en, and a
+     title naming the comparison.
      T-113: no description -- the image already carries the tagline, the agent's name and phone, so a
      caption repeating them was the clutter AB's audit found ("less is more"). -->
 <meta property="og:title" content="Planes Medicare 2027, lado a lado">
@@ -205,9 +206,9 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
 
   /* T-102: who is on the page follows the ZIP's state. The widget owns the one state->agent map and
      sends the agent with the plans (d.agent); this is only the fallback for the error screen, which is
-     drawn before any state is known. */
-  var AGENT = {key:'alejandra', name:'Alejandra Brizuela', tel:'(310) 597-9142', digits:'13105979142',
-               email:'Alejandra@BeneficiosMedicare.com', photo:'images/alejandra-headshot.jpg', lic:'4507923'};
+     drawn before any state is known: Susana, the no-state default (T-159). */
+  var AGENT = {key:'susana', name:'Susana Marcos', tel:'(913) 488-5341', digits:'19134885341',
+               email:'Susana@BeneficiosMedicare.com', photo:'images/susana-headshot.jpg', lic:''};
   function useAgent(a){
     if (!a || !/^1\d{10}$/.test(String(a.digits || '')) || !/^images\/[a-z-]+\.jpg$/.test(String(a.photo || ''))) return;
     AGENT = {key:String(a.key || ''), name:String(a.name || ''), tel:String(a.tel || ''), digits:String(a.digits),
