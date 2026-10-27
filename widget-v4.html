@@ -184,6 +184,35 @@ body.q3 .widget-body{padding:10px 14px 16px}
   .q3tx span{font-size:12.8px;text-wrap:wrap}
   .q3ck{width:18px;height:18px;right:5px;font-size:11px}
 }
+/* T-160 (AB 2026-10-26/27, mock HiFi-D140-iconos PROPUESTA): "Revisar mi plan de hoy" is its own highlighted card on
+   top (it is a task, not a priority), then "O elija lo que más le importa:", then the priorities as calm white tiles
+   in ONE colour -- line icons in the site's brand colour on a pale circle, a chevron at the right. Replaces T-096's
+   six colour families (the red Medi-Cal tile read as a warning). Mock colours #00796B/#E0F2F1 are the Material
+   teal; the brand's own --cbar-brand is used instead, so medicare-california gets its blue. */
+.q3hero{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;cursor:pointer;margin:0 0 4px;
+  padding:10px 12px;min-height:64px;border-radius:12px;border:2px solid var(--cbar-brand);
+  background:#E0F2F1;background:color-mix(in srgb,var(--cbar-brand) 12%,#fff);position:relative}
+.q3hero .q3ic{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:var(--cbar-brand)}
+.q3hero .q3ic svg{width:24px;height:24px;stroke:#fff;stroke-width:2}
+.q3sub{margin:10px 2px 6px;font-size:15px;font-weight:600;color:#4A5568}
+.q3opt.t160{border:0;box-shadow:0 2px 10px rgba(0,60,113,.08);border-radius:12px;min-height:58px}
+.q3opt.t160.on{border:2px solid var(--cbar-brand)}
+.q3opt.t160 .q3ic,.q3hero .q3ic{display:flex;align-items:center;justify-content:center}
+.q3opt.t160 .q3ic{width:40px;height:40px;flex:0 0 40px;border-radius:50%;background:#E0F2F1;background:color-mix(in srgb,var(--cbar-brand) 12%,#fff)}
+.q3opt.t160 .q3ic svg{width:22px;height:22px;stroke:var(--cbar-brand);stroke-width:2}
+.q3opt.t160 .q3tx em,.q3hero .q3tx em{font-style:normal;font-weight:700;color:#002147}
+.q3chev{margin-left:auto;flex:0 0 auto;color:var(--cbar-brand);font-size:24px;font-weight:700;line-height:1;padding-left:4px}
+.q3opt.on .q3chev{visibility:hidden}
+.q3hero .q3tx,.q3opt.t160 .q3tx{padding-right:0}
+@media(max-width:383px){.q3chev{font-size:20px;padding-left:0}.q3opt.t160{gap:8px;min-height:56px}.q3hero{gap:9px;min-height:58px;padding:8px 10px}.q3sub{margin:8px 2px 4px}}
+/* T-160 (4): the agent's real check, offered on the results a doctors / medicines answer opens */
+.ask160{margin:0 0 12px;padding:14px;border-radius:12px;background:#E0F2F1;background:color-mix(in srgb,var(--cbar-brand) 12%,#fff)}
+.ask160 .row{display:flex;gap:12px;align-items:center;margin:0 0 10px}
+.ask160 .ic{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.ask160 .ic svg{width:24px;height:24px;fill:none;stroke:var(--cbar-brand);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ask160 h3{margin:0;font-size:17px;line-height:1.25;color:#002147}
+.ask160 p{margin:2px 0 0;font-size:15px;line-height:1.35;color:#4A5568}
+.ask160 button{display:block;width:100%;min-height:48px;border:0;border-radius:12px;background:var(--cbar-brand);color:#fff;font:700 16px 'Open Sans',Arial,sans-serif;cursor:pointer}
 /* Results top (T-088 round 3 + "less is more"): title, ZIP line, ONE chip row. The sort row and
    the "lo más importante" line are gone; "Filtros y orden" opens both in one panel. */
 .rh .hl{font-size:22px;font-weight:700;color:var(--cbar-ink);margin:0 0 2px;line-height:1.2;text-wrap:pretty;min-width:0}
@@ -1016,6 +1045,9 @@ const _initSource=_params.get('from')||'';
 // flow opens straight on "¿Qué plan tiene hoy?" (T-099) instead of "¿Qué le importa más?"; Back from
 // there returns to the ZIP step. Without it (every other entry) nothing changes.
 const _startMyPlan=_params.get('start')==='myplan';
+// T-160 (3): ?start=all = the home's "Ver todos los planes 2027" link (T-156/T-161). The question screen then
+// leaves out "Revisar mi plan de hoy" for that ZIP: the visitor just chose the list over checking their plan.
+const _startAll=_params.get('start')==='all';
 // T-139: a shared LIST link carries which filters, sort and carriers the sender had -- never which
 // plans. Unlike a compare link's p= (specific plan IDs, capped at 3), a list is replayed by
 // re-applying the same filters to the SAME zip's live plan data, so the link needs no plan IDs at
@@ -1837,16 +1869,17 @@ const PRI_OPTIONS=[
    enD:'My plan 2026 vs&nbsp;2027.', esD:'Mi plan 2026 vs&nbsp;2027.'},
   {id:'doctors', ic:'doctor', d:'#1F4E89', t:'#BCD0EA', b:'#E9F0F9',
    en:()=>'Keep my doctors',  es:()=>'Seguir con mis m\u00E9dicos',
-   enD:'<em>First</em>, the ones with more&nbsp;freedom.', esD:'<em>Primero</em> los que dan m\u00E1s&nbsp;libertad.'},
+   /* T-160 (1): the list only puts PPOs first; the doctor check itself is done by an agent, offered on the results */
+   enD:'We check your&nbsp;doctors.', esD:'Revisamos sus&nbsp;m\u00E9dicos.'},
   {id:'drugs',   ic:'bottle', d:'#007B7B', t:'#A6DCD8', b:'#E2F3F2',
    en:()=>'My medicines',     es:()=>'Mis medicamentos',
-   enD:'<em>Only</em> plans with drug&nbsp;coverage.',     esD:'<em>Solo</em> planes con&nbsp;medicamentos.'},
+   enD:'We check your&nbsp;medicines.',     esD:'Revisamos sus&nbsp;medicinas.'},
   {id:'cost',    ic:'coin',   d:'#1F7A5A', t:'#A7DCC4', b:'#E6F4EE',
    en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
    enD:'<em>Only</em> plans with no monthly&nbsp;premium.',esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
   {id:'benefits',ic:'toothb', d:'#9A6410', t:'#F3D58E', b:'#FCF4E1',
    en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
-   enD:'<em>First</em>, the ones that cover all&nbsp;three.', esD:'<em>Primero</em> los que cubren los&nbsp;tres.'},
+   enD:'First, the ones that cover all&nbsp;three.', esD:'Primero los que cubren los&nbsp;tres.'},   // T-160 (1): bold only on Solo/Only
   /* T-132 B4 (AB 2026-10-23): moved last -- most common things go up top, and Medi-Cal is the
      fewest people and mostly a filter. Was 4th (right after "Mis medicamentos"). */
   {id:'medicaid',ic:'shieldb',d:'#A8473B', t:'#F0C3BA', b:'#FBEDEA',
@@ -1862,6 +1895,16 @@ const PRI_GLYPH={
   coin:'<circle class="f" cx="12" cy="12" r="9"/><path d="M14.8 9.4c-.5-.9-1.5-1.4-2.8-1.4-1.7 0-2.8.8-2.8 2 0 2.7 5.6 1.5 5.6 4.1 0 1.2-1.1 2-2.8 2-1.3 0-2.4-.6-2.8-1.5M12 6.3v1.7M12 16v1.7"/>',
   toothb:'<path class="f" d="M7.2 3.5c-2.4 0-3.9 1.9-3.9 4.3 0 2.9 1.4 4.3 1.9 6.7.5 2.9 1 6.2 2.4 6.2s1.4-3.3 2.3-4.7c.5-.8 1.5-.8 2 0 .9 1.4.9 4.7 2.3 4.7s1.9-3.3 2.4-6.2c.5-2.4 1.9-3.8 1.9-6.7 0-2.4-1.5-4.3-3.9-4.3-1.4 0-2.2.8-2.8.8s-1.4-.8-2.8-.8z"/>'
 };
+// T-160 (2): one family of line icons (mock HiFi-D140-iconos), stroke only, coloured by CSS
+const PRI_LINE={
+  myplan:'<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="M9 15h6M13 13l2 2-2 2"/>',
+  doctors:'<path d="M6 3v5a4 4 0 0 0 8 0V3"/><path d="M10 12v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
+  drugs:'<path d="M10.5 20.5l-7-7a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/>',
+  cost:'<circle cx="12" cy="12" r="9"/><path d="M14.8 9.4c-.5-.9-1.5-1.4-2.8-1.4-1.7 0-2.8.8-2.8 2 0 2.7 5.6 1.5 5.6 4.1 0 1.2-1.1 2-2.8 2-1.3 0-2.4-.6-2.8-1.5M12 6.3v1.7M12 16v1.7"/>',
+  benefits:'<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/>',
+  medicaid:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 9v6M9 12h6"/>'
+};
+function priLineIcon(id){ return `<span class="q3ic"><svg viewBox="0 0 24 24" aria-hidden="true">${PRI_LINE[id]||''}</s`+`vg></span>`; }
 function priIcon(o){
   return `<span class="q3ic" style="--d:${o.d};--t:${o.t};--b:${o.b}"><svg viewBox="0 0 24 24">${PRI_GLYPH[o.ic]}</s`+`vg></span>`;
 }
@@ -1892,15 +1935,19 @@ function priorityStep(nextFn){
   // mp26v27Block) unreachable, since none of it runs until a visitor picks this option. RED_RUN
   // itself stays defined, for whichever of the fine-print/unlicensed-state/multi-county items (none
   // of which exist in code yet) needs the same mechanism once PROTECT signs each of those.
-  const opts=PRI_OPTIONS;
-  const cards=opts.map(o=>{
-    const h=o[lang](), d=o[lang+'D'], dd=typeof d==='function'?d():d;
-    return `<button class="q3opt${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
-      priIcon(o)+`<span class="q3tx"><b>${h}</b><span>${dd}</span></span><span class="q3ck">\u2713</span></button>`;
-  }).join('');
+  // T-160 (2)(3): "Revisar mi plan de hoy" is a card of its own on top -- hidden for a visitor who came from the
+  // home's "Ver todos los planes 2027" (?start=all, T-156), who has just chosen not to check their plan.
+  const showMine=!(_startAll&&D.zip===_initZip);
+  const opts=PRI_OPTIONS.filter(o=>o.id!=='myplan');
+  const mine=PRI_OPTIONS.find(o=>o.id==='myplan');
+  const txt=o=>{const d=o[lang+'D'];return `<span class="q3tx"><b>${o[lang]()}</b><span>${typeof d==='function'?d():d}</span></span>`;};
+  const hero=showMine?`<button class="q3hero" id="pri-myplan" onclick="pickPri('myplan')">${priLineIcon('myplan')}${txt(mine)}<span class="q3chev" aria-hidden="true">\u203A</span></button>
+    <p class="q3sub">${L('Or choose what matters most:','O elija lo que m\u00E1s le importa:')}</p>`:'';
+  const cards=opts.map(o=>`<button class="q3opt t160${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
+      priLineIcon(o.id)+txt(o)+`<span class="q3chev" aria-hidden="true">\u203A</span><span class="q3ck">\u2713</span></button>`).join('');
   document.body.classList.add('q3');
   wb().innerHTML=`<div class="q3top">${bk()}<p class="q3q">${L('What matters most to you?','\u00BFQu\u00E9 le importa m\u00E1s?')}</p></div>
-    ${cards}
+    ${hero}${cards}
     <button class="q3skip" onclick="pickPri('')">${L('No preference','Sin preferencia')}</button>`;
   fitQ3();
   try{ document.fonts&&document.fonts.ready.then(fitQ3); }catch(e){}
@@ -2898,7 +2945,7 @@ function pickPlan(id){
   const p=PLANS.find(x=>x.id===id); if(!p) return;
   if(!p._medigap&&!p.agent) return;   // sanctioned, unlicensed state, or carrier list unavailable: no lead capture
   if(p._medigap&&(!leadOK()||(D.state&&!_rep))) return;
-  D.selectedPlan=p.name; D.selectedPlanId=p.id;
+  D.selectedPlan=p.name; D.selectedPlanId=p.id; delete D.topic;
   D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
   wEvt('widget_plan_select',{step:'card'});
   go(planEnroll);
@@ -3713,6 +3760,7 @@ async function flowResults(){
     ${resultsHead(plans)}
     ${unlicensedNote()}
     ${noPlans?`<div style="text-align:center;padding:20px 0;color:#66727c;font-size:14px">${L('No plans of this type here. Choose another type above.','No hay planes de este tipo aquí. Elija otro tipo arriba.')}</div>`:''}
+    ${noPlans?'':askCard()}
     ${listHTML(plans)}
     ${teamCard()}
     ${cbarHTML()}
@@ -4976,7 +5024,7 @@ function helpCompare(){
   D.plansSeen=plans.map(planLeadTag).join(' | ');
   D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
   wEvt('widget_plan_select',{step:'compare',plans:plans.length});
-  _helpSrc='compare'; _listAbout='';
+  _helpSrc='compare'; _listAbout=''; delete D.topic;
   go(helpChoose);
 }
 /* T-154 (AB 2026-10-27): the list's own "Ayúdeme a elegir". One plan ticked -> about that plan, as
@@ -4984,6 +5032,33 @@ function helpCompare(){
    the visitor never picked would put words in their mouth, so the lead row gets the list title as
    the plan and the first 3 plans they saw as plansSeen, marked as the top of the list. */
 let _helpSrc='compare', _listAbout='';
+/* T-160 (4) (AB 2026-10-26, mock HiFi-D140-resultados): a doctors or medicines answer only reorders / filters the
+   list; checking the visitor's own doctors or medicines is what an agent does. One card between the frozen top and
+   the first plan offers exactly that, free; it opens the existing "Ayúdeme a elegir" form, tagged topic=doctors /
+   drugs on the lead row. Never blocks the list: it is a card, not a step. */
+function askCard(){
+  const k=screenFirstPri(); if(k!=='doctors'&&k!=='drugs') return '';
+  if(!leadOK()||(D.state&&!_rep)) return '';
+  const doc=k==='doctors';
+  const ic=doc?PRI_LINE.doctors:PRI_LINE.drugs;
+  return `<div class="ask160" data-ask="${k}"><div class="row"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</s`+`vg></span>
+    <div><h3>${doc?L('Shall we check your doctors?','\u00BFRevisamos sus m\u00E9dicos?'):L('Shall we check your medicines?','\u00BFRevisamos sus medicinas?')}</h3>
+    <p>${doc?L('We tell you which plans accept your doctors. Free.','Le decimos qu\u00E9 planes aceptan a sus m\u00E9dicos. Gratis.')
+            :L('We tell you which plans cover your medicines. Free.','Le decimos qu\u00E9 planes cubren sus medicinas. Gratis.')}</p></div></div>
+    <button onclick="helpAsk('${k}')">${doc?L('Yes, check my doctors','S\u00ED, revisen mis m\u00E9dicos'):L('Yes, check my medicines','S\u00ED, revisen mis medicinas')}</button></div>`;
+}
+function helpAsk(k){
+  const list=orderedPlans(), top=list.slice(0,3);
+  _listAbout=k==='doctors'?L('Checking your doctors','Revisar sus m\u00E9dicos'):L('Checking your medicines','Revisar sus medicinas');
+  D.topic=k;
+  D.selectedPlan=_listAbout+' \u00B7 '+resultsTitlePlain(list.length,_typeFilter==='supp');
+  D.selectedPlanId='';
+  D.plansSeen=top.length?'top of list: '+top.map(planLeadTag).join(' | '):'';
+  D.represented=top.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
+  _helpSrc='ask_'+k;
+  wEvt('widget_plan_select',{step:'ask',topic:k});
+  go(helpChoose);
+}
 function helpList(){
   const picked=compareSelection().filter(p=>p.agent&&!p.sanction);
   if(picked.length){
@@ -5000,7 +5075,7 @@ function helpList(){
     D.plansSeen=(top.length?'top of list: '+top.map(planLeadTag).join(' | '):'list: '+_listAbout);
     D.represented=top.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
   }
-  _helpSrc='list';
+  _helpSrc='list'; delete D.topic;
   wEvt('widget_plan_select',{step:'list',plans:picked.length});
   go(helpChoose);
 }
@@ -5056,7 +5131,7 @@ function planEnroll(){
 function agentChip(){const a=agent();return `<div class="agchip" data-agent="${a.key}">${agentPerson(a)}</div>`;}
 function helpChoose(){
   prog(92); _plansView=true; wEvt('form_open',{source:_helpSrc});
-  const about=seenPlanNames()||(_helpSrc==='list'?esc(_listAbout):'');
+  const about=seenPlanNames()||(_helpSrc==='list'||/^ask_/.test(_helpSrc)?esc(_listAbout):'');
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
     ${agentChip()}
