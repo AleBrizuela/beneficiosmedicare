@@ -227,6 +227,10 @@ body.q3 .widget-body{padding:10px 14px 16px}
    to spend), so letting the row wrap instead of clipping text is the fix, not shrinking the icon
    below its 18px/6px spec. Unaffected at 375+, where the row already has room to spare. */
 @media(max-width:359px){.fxo{flex-wrap:wrap;row-gap:6px}}
+/* T-154 + D-137 (AB 2026-10-27, mock HiFi-T154-lista): Compartir leaves this row; Orden and Aseguradora are two
+   equal outlined 44px buttons. Alone (one carrier), Orden keeps its half so it never reads as the main action. */
+.fxo{gap:0 8px}
+.fxo .ord{flex:1 1 0;max-width:calc(50% - 4px);min-height:44px;padding:0 8px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;text-decoration:none;font-size:15px;font-weight:600}
 .rtop{display:flex;align-items:center;gap:12px;margin:0 0 4px}
 .rtop .btn-back{margin-bottom:0;flex:0 0 auto}
 .rtop .hl{margin:0}
@@ -3330,7 +3334,7 @@ function chipRow(){
         ? `<button class="fc fcd" aria-pressed="false" aria-disabled="true">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
         : `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
-    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}<button class="ord ords" onclick="openShareList()" aria-label="${L('Share this list','Compartir esta lista')}">${shrIcon()}${L('Share','Compartir')}</button></div>`
+    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
     +zeroMsg;
 }
 /* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
@@ -3583,9 +3587,9 @@ let _cbarLast='';
 /* T-084 round 2 + the T-096 fixed-bar rule (AB 2026-10-15: "always want the ideal next action to be
    OBVIOUS and EASY"). Every screen has ONE main action and it is visible without scrolling at
    390x660 and at 320x548. Which bar, per screen:
-     results, nothing ticked  -> none here; the page's own Llamar / WhatsApp bar has the bottom
-     results / plan, 1-3 ticked -> the white "N planes elegidos · Comparar" bar
-     plan screen, nothing ticked -> the solid "Ayúdeme a elegir"
+     results, 0-1 ticked      -> the solid "Ayúdeme a elegir" (T-154; was none)
+     results / plan, 2-3 ticked -> the white "Comparar N planes" bar
+     plan screen, 0-1 ticked  -> the solid "Ayúdeme a elegir"
      compare screen             -> the solid "Ayúdeme a elegir", ticks or no ticks, and the
                                    button under the table goes: one main action, said once
      question, form, gracias    -> none (the options, Enviar, and the phone number are the action)
@@ -3596,7 +3600,8 @@ let _act=null;   // {id,label} — set by the screen that has a main action
 function barState(){
   const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
   // on the comparison the main action is the point of the screen, so it wins over the compare bar
-  if(_act&&(_act.wins||k===0)) return {mode:_act.sec?'duo':'action',on:true,label:'',compare:_act.label,
+  // T-154: under 2 ticked (was: none ticked), so one tick on the list never leaves the bar empty
+  if(_act&&(_act.wins||k<2)) return {mode:_act.sec?'duo':'action',on:true,label:'',compare:_act.label,
     secondary:_act.sec||'',canCompare:true,action:_act.id};
   // T-096 round 4 f (AB: "Compare (2)"): the count rides in the button, so the bar is one thing to
   // read and one thing to tap instead of a label and a button competing.
@@ -3614,7 +3619,7 @@ function barState(){
 function barAct(){
   if(!_act) return;
   wEvt('bar_action',{action:_act.id});
-  if(_act.id==='compare') helpCompare(); else if(_act.id) pickPlan(_act.id.replace(/^plan:/,''));
+  if(_act.id==='compare') helpCompare(); else if(_act.id==='list') helpList(); else if(_act.id) pickPlan(_act.id.replace(/^plan:/,''));
 }
 function cbarReport(){
   if(window.self===window.top) return;
@@ -3713,6 +3718,9 @@ async function flowResults(){
     ${cbarHTML()}
     ${fineBlock([],plans.some(p=>!p._medigap))}`;
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
+  // T-154 (AB 2026-10-27): with fewer than 2 ticked, the list's bar is "Ayúdeme a elegir" (was: none,
+  // and "Compartir" up in the Orden row). At 2+ it turns into "Comparar N planes" exactly as before.
+  _act=(leadOK()&&!(D.state&&!_rep))?{id:'list',label:L('Help me choose','Ayúdeme a elegir')}:null;
   updBar();
   viewMsg();
   hlFit();
@@ -4139,7 +4147,7 @@ function mp26v27Block(p26,p27,ro){
   // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-    ${ro?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')} ›</button>`}`;
+`;   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
@@ -4756,7 +4764,9 @@ function flowCompare(){
   if(plans.length<2){back();return;}
   const c=cmpParts(plans,false);
   // T-096 round 3d + T-078: the comparison's bar is Compartir (outline) and Ayúdeme a elegir (solid)
-  _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
+  // T-154 (AB 2026-10-27): Compartir is gone; ONE full-width "Ayúdeme a elegir", or no bar where we
+  // may not take a lead (the bar used to be Compartir alone there).
+  _act=c.can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
   wb().innerHTML=`
     ${c.top}
     ${c.table}
@@ -4966,6 +4976,32 @@ function helpCompare(){
   D.plansSeen=plans.map(planLeadTag).join(' | ');
   D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
   wEvt('widget_plan_select',{step:'compare',plans:plans.length});
+  _helpSrc='compare'; _listAbout='';
+  go(helpChoose);
+}
+/* T-154 (AB 2026-10-27): the list's own "Ayúdeme a elegir". One plan ticked -> about that plan, as
+   on its card. Nothing ticked -> about the list itself ("70 planes en Culver City, CA"): naming plans
+   the visitor never picked would put words in their mouth, so the lead row gets the list title as
+   the plan and the first 3 plans they saw as plansSeen, marked as the top of the list. */
+let _helpSrc='compare', _listAbout='';
+function helpList(){
+  const picked=compareSelection().filter(p=>p.agent&&!p.sanction);
+  if(picked.length){
+    D.selectedPlan=picked.map(p=>p.name).join('; ');
+    D.selectedPlanId=picked.map(p=>p.id).join(';');
+    D.plansSeen=picked.map(planLeadTag).join(' | ');
+    D.represented=picked.map(p=>p.rep?'yes':'no').join(';');
+    _listAbout='';
+  } else {
+    const list=orderedPlans(), top=list.slice(0,3);
+    _listAbout=resultsTitlePlain(list.length,_typeFilter==='supp');
+    D.selectedPlan=L('List: ','Lista: ')+_listAbout;
+    D.selectedPlanId='';
+    D.plansSeen=(top.length?'top of list: '+top.map(planLeadTag).join(' | '):'list: '+_listAbout);
+    D.represented=top.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
+  }
+  _helpSrc='list';
+  wEvt('widget_plan_select',{step:'list',plans:picked.length});
   go(helpChoose);
 }
 // Old entry point kept so any saved history entry still lands somewhere sensible.
@@ -5019,11 +5055,12 @@ function planEnroll(){
 // T-102: who will call back, from the ZIP's state -- the same agent the lead row names (D.agent).
 function agentChip(){const a=agent();return `<div class="agchip" data-agent="${a.key}">${agentPerson(a)}</div>`;}
 function helpChoose(){
-  prog(92); _plansView=true; wEvt('form_open',{source:'compare'});
+  prog(92); _plansView=true; wEvt('form_open',{source:_helpSrc});
+  const about=seenPlanNames()||(_helpSrc==='list'?esc(_listAbout):'');
   wb().innerHTML=`${bk()}
     <h3 class="lead-title">${lang==='en'?'One of us will contact you':'Una de nosotras le contacta'}</h3>
     ${agentChip()}
-    ${seenPlanNames()?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${seenPlanNames()}</b></p>`:''}
+    ${about?`<p class="lead-about">${L('About: ','Sobre: ')}<b>${about}</b></p>`:''}
     <p class="lead-sub">${lang==='en'?'We help you compare the plans in your area.':'Le ayudamos a comparar los planes de su zona.'}</p>
     ${inp('fullName',lang==='en'?'Full name':'Nombre completo',lang==='en'?'First and last name':'Nombre y apellido')}
     ${inp('phone',lang==='en'?'Phone number':'N\u00FAmero de tel\u00E9fono','(555) 123-4567','tel')}
