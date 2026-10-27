@@ -1008,6 +1008,10 @@ const _initZip=_params.get('zip')||'';
 // T-133: zip_top/zip_end when this load came from a page's zip-box, via ?from=, so the first
 // widget_start can say which page started the search. Only ever attached to the INITIAL zip.
 const _initSource=_params.get('from')||'';
+// T-156 (AB 2026-10-26): ?start=myplan = the home's "Comparar mi plan actual" button. After the ZIP the
+// flow opens straight on "¿Qué plan tiene hoy?" (T-099) instead of "¿Qué le importa más?"; Back from
+// there returns to the ZIP step. Without it (every other entry) nothing changes.
+const _startMyPlan=_params.get('start')==='myplan';
 // T-139: a shared LIST link carries which filters, sort and carriers the sender had -- never which
 // plans. Unlike a compare link's p= (specific plan IDs, capped at 3), a list is replayed by
 // re-applying the same filters to the SAME zip's live plan data, so the link needs no plan IDs at
@@ -2007,7 +2011,8 @@ function startZip(){
    T-071 - we asked and nothing on the results used the answer. These three return the step that used
    to follow it, so every route that reached *_health now lands there instead. They return the
    function and do not call go() themselves, so the history stack holds the real step and Back works. */
-function ft_next(){return _activeExps.length>0?ft_experiment:ft_priority}
+function ft_next(){return _startMyPlan?ft_myplan:_activeExps.length>0?ft_experiment:ft_priority}
+function ft_myplan(){ wEvt('priority_pick',{priority:'myplan',on:true,via:'home_button'}); flowMyPlan(); }
 function ft_experiment(){expOrNext(ft_priority)}
 function ft_priority(){priorityStep(flowResults)}
 
