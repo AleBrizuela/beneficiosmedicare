@@ -634,6 +634,9 @@ body.host-cbar .cbar{display:none!important}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));z-index:61;box-shadow:0 -8px 30px rgba(16,24,40,.18);max-width:560px;margin:0 auto}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:#cfd6da;margin:0 auto 10px}
 .sheet .sh{font-size:20px;font-weight:700;color:var(--cbar-ink);margin:0 0 10px;text-align:left}
+/* T-166: "Enviado por" (team only): the list's own filter chips, one row */
+.sheet .shfrom{font-size:14px;font-weight:600;color:#4A5568;margin:0 0 6px;text-align:left}
+.sheet .shwho{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 /* T-107 (2): row 1 is three large tiles (icon over word); row 2 is two quieter outlined buttons.
    The sheet now sizes to this content -- no fixed row count, no dead band under the last row. */
 .chgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
@@ -1493,6 +1496,51 @@ function agent(){return agentFor(D.state);}
 // Non-breaking space and hyphen keep "(913) 488-5341" on one line wherever it wraps.
 function agentTel(a){return String(a.tel).replace(') ',') ').replace('-','‑');}
 function agentLicLine(a){return a.lic?'Lic. #'+a.lic:'';}
+
+/* -- T-166 (AB 2026-10-29): Compartir for the team only ("equipo") ---------------------------------
+   T-154 took Compartir away from visitors. The team (Alejandra, Susana, Martha) still sends plans to
+   clients, so ?equipo=1 on a home page (remembered in that browser until ?equipo=0) brings back the
+   T-127 share sheet: Texto, Email, WhatsApp, Copiar enlace, PDF, in the places it used to be, next to
+   "Ayúdeme a elegir". Visitors see nothing new.
+   SENDERS: who the client sees on the shared page and its PDF. Picked once per browser in the sheet
+   ("Enviado por"), carried in the link as de=, and used regardless of the ZIP's state. The email is
+   the site's own: on medicare-california only Alejandra sends. states = where each one is licensed
+   (kept here, not shown). A link without de= keeps today's agent by state (AGENTS above). */
+const SENDERS={
+  bm:{
+    alejandra:{key:'alejandra',name:'Alejandra Brizuela',tel:'(310) 597-9142',digits:'13105979142',
+               email:'Alejandra@BeneficiosMedicare.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',states:['CA','AZ']},
+    susana:   {key:'susana',   name:'Susana Marcos',     tel:'(913) 488-5341',digits:'19134885341',
+               email:'Susana@BeneficiosMedicare.com',   photo:'images/susana-headshot.jpg',   lic:'6005328',states:['AZ','CA','TX','FL','KS','MO','IA','IL','OK']},
+    martha:   {key:'martha',   name:'Martha Olivarez',   tel:'(816) 803-0305',digits:'18168030305',
+               email:'Martha@BeneficiosMedicare.com',   photo:'images/martha-headshot.jpg',   lic:'19999897',states:['MO','KS']}
+  },
+  mc:{
+    alejandra:{key:'alejandra',name:'Alejandra Brizuela',tel:'(310) 597-9142',digits:'13105979142',
+               email:'Alejandra@Medicare-California.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',states:['CA','AZ']}
+  }
+};
+function senderSite(){return leadSite()==='medicare-california'?'mc':'bm';}
+function senderKeys(){return Object.keys(SENDERS[senderSite()]);}
+function senderAgent(k){return SENDERS[senderSite()][String(k||'')]||null;}
+const EQUIPO=(function(){
+  // inside a home page the page decides (it forwards &equipo=1); only a direct visit remembers it here
+  if(window.self!==window.top) return /[?&]equipo=1(?=&|#|$)/.test(location.search);
+  try{
+    const m=/[?&]equipo=([01])(?=&|#|$)/.exec(location.search);
+    if(m){ if(m[1]==='1') localStorage.setItem('bm_equipo','1'); else localStorage.removeItem('bm_equipo'); return m[1]==='1'; }
+    return localStorage.getItem('bm_equipo')==='1';
+  }catch(e){ return /[?&]equipo=1(?=&|#|$)/.test(location.search); }
+})();
+let _sender=(function(){try{return localStorage.getItem('bm_sender')||'';}catch(e){return '';}})();
+function shareSender(){const ks=senderKeys();return ks.length===1?ks[0]:(ks.indexOf(_sender)>=0?_sender:'');}
+function pickSender(k){
+  if(senderKeys().indexOf(k)<0) return;
+  _sender=k; try{localStorage.setItem('bm_sender',k);}catch(e){}
+  document.querySelectorAll('#shwrap .shwho .fc').forEach(b=>{const on=b.dataset.k===k;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+  const ok=document.getElementById('shok'); if(ok) ok.textContent='';
+}
+function equipoShareBtn(fn,cls){return EQUIPO?`<button class="${cls}" onclick="${fn}" aria-label="${L('Share','Compartir')}">${shrIcon()}${L('Share','Compartir')}</button>`:'';}
 
 /* ── T-104 (1) (AB 2026-10-18): plan names in proper case ─────────────────────────────────────────────
    747 of the 6,373 plans in the 2027 files are named in capitals (740 of them Devoted: "DEVOTED CORE 034 IA
@@ -3409,7 +3457,7 @@ function chipRow(){
         ? `<button class="fc fcd" aria-pressed="false" aria-disabled="true">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
         : `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
-    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
+    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}${equipoShareBtn('openShareList()','ord ords')}</div>`
     +zeroMsg;
 }
 /* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
@@ -4223,7 +4271,7 @@ function mp26v27Block(p26,p27,ro){
   // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-`;   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
+    ${ro||!EQUIPO?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')} ›</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
@@ -4420,7 +4468,7 @@ function sugCard(p,plans){
    can never show plans other than the ones that were on screen. */
 /* The shared page's whole data path. It reuses loadPlansForZip (the ZIP index, the state's plan
    file, the carrier file) exactly as the widget does, then hands back only what a sheet prints. */
-async function plansForShare(zip,ids,priority){
+async function plansForShare(zip,ids,priority,de){
   try{
     if(!/^\d{5}$/.test(String(zip||''))) return {err:'bad zip'};
     // T-132 B8 / T-146 (AB 2026-10-25, undoes B8's multi-pick part): the link's pr= may still carry
@@ -4439,7 +4487,7 @@ async function plansForShare(zip,ids,priority){
     const sug=suggestPlan(out);
     const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
     // T-102: the sheet and its PDF draw their header from the same map as the widget.
-    const ag=agent();
+    const ag=senderAgent(de)||agent();   // T-166: the sender in the link, else agent by state
     return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
       agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
       sug:sug?{id:planIdRaw(sug),name:dispName(sug),
@@ -4462,7 +4510,7 @@ function mpFind26For27(p27){
   return mpPlans26().find(p=>p.id===rec.id||_mpCP(p.id)===_mpCP(rec.id))||null;
 }
 async function shareRender(q){
-  const base=await plansForShare(q.zip,q.ids,q.r);
+  const base=await plansForShare(q.zip,q.ids,q.r,q.de);
   if(base.err) return base;
   const ids=(q.ids||[]).map(String);
   const plans=ids.map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(p=>p&&!p._medigap).slice(0,3);
@@ -4512,7 +4560,7 @@ async function shareRenderList(q){
   const plans=orderedPlans();
   if(!plans.length) return {err:'no plans'};
   _shown=plans.length; _pin='';
-  const ag=agent();
+  const ag=senderAgent(q.de)||agent();   // T-166
   const vars=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
   return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
     agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
@@ -4621,6 +4669,7 @@ function shareListURL(){
   const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
   if(tn) q.push('t='+encodeURIComponent(tn));
   // T-139 (4): so PROVE can count a lead back to the share that produced it.
+  if(EQUIPO&&shareSender()) q.push('de='+shareSender());   // T-166
   q.push('share_id='+shareId());
   q.push('utm_source=share');
   q.push('utm_medium='+(mc?'medicare_california':'beneficios_medicare'));
@@ -4650,6 +4699,7 @@ function shareURL(){
   // (T-113: dropped the redundant chg=1 the same way).
   const hoy=((_cmpFrom==='myplan'||_shareIds)&&_mpCtx&&_mpCtx.cur27)?plans.find(p=>p.id===_mpCtx.cur27.id):null;
   if(hoy) q.push('hoy='+encodeURIComponent(planIdRaw(hoy)));
+  if(EQUIPO&&shareSender()) q.push('de='+shareSender());   // T-166
   if(SHARE_READABLE_PATH){
     const word=mc?'options':'opciones';
     return `${shareOrigin()}/${word}/${encodeURIComponent(D.zip||'')}/${plans.map(planIdRaw).join('/')}${q.length?'?'+q.join('&'):''}`;
@@ -4710,7 +4760,7 @@ function shareLine(){
     ?L(`Your plan in ${planYear()} · ${place}`,`Su plan en ${planYear()} · ${place}`)
     :L(`${planYear()} plans · ${place}`,`Planes ${planYear()} · ${place}`);
 }
-function sharePhoneLine(){ return '📞 '+agentTel(agentFor(D.state)); }
+function sharePhoneLine(){ return '📞 '+agentTel((EQUIPO&&senderAgent(shareSender()))||agentFor(D.state)); }
 function shareMsg(){ return shareLine()+'\n'+shareURL()+'\n'+sharePhoneLine(); }
 /* T-132 A3 (AB 2026-10-23): iMessage only draws a link-preview card when the URL is the LAST
    line of the body; WhatsApp draws one either way. So SMS/iMessage gets its own ordering
@@ -4763,12 +4813,21 @@ function openShareSheet(){
   el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
     <div class="sheet" role="dialog" aria-label="${L('Share','Compartir')}">
       <div class="grab"></div><p class="sh">${L('Share','Compartir')}</p>
-      ${btns}<p class="shok" id="shok"></p></div>`;
+      ${senderRow()}${btns}<p class="shok" id="shok"></p></div>`;
   // framed: keep it out of sight for the one tick it takes the page to answer, rather than
   // letting it paint a thousand pixels down and jump
   if(window.self!==window.top){ el.classList.add('vp'); el.style.visibility='hidden'; }
   document.body.appendChild(el);
   askViewport();
+}
+// T-166: who sends it. The same filter chips the list uses; picked once, remembered in this browser.
+function senderRow(){
+  if(!EQUIPO||senderKeys().length<2) return '';
+  const cur=shareSender();
+  return `<p class="shfrom">${L('Sent by','Enviado por')}</p><div class="shwho">`+senderKeys().map(k=>{
+    const a=senderAgent(k), on=k===cur;
+    return `<button class="fc${on?' on':''}" data-k="${k}" aria-pressed="${on}" onclick="pickSender('${k}')">${esc(a.name.split(' ')[0])}</button>`;
+  }).join('')+`</div>`;
 }
 function closeShare(){
   const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
@@ -4818,6 +4877,7 @@ function placeSheet(){
   el.style.visibility='';
 }
 function shareSend(k){
+  if(EQUIPO&&!shareSender()){ const e=document.getElementById('shok'); if(e) e.textContent=L('First pick who is sending it','Primero elija quién lo envía'); return; }
   const url=shareURL(), msg=shareMsg();
   const n=_shareList?orderedPlans().length:sharePlans().length;
   wEvt('share_send',Object.assign({channel:k,plans:n},_shareList?{mode:'list',share_id:_shareIdCache}:{}));
@@ -4864,6 +4924,8 @@ function flowCompare(){
   // T-154 (AB 2026-10-27): Compartir is gone; ONE full-width "Ayúdeme a elegir", or no bar where we
   // may not take a lead (the bar used to be Compartir alone there).
   _act=c.can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
+  // T-166: for the team, the pre-T-154 bar: Compartir (outline) + Ayúdeme a elegir, or Compartir alone
+  if(EQUIPO) _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
   wb().innerHTML=`
     ${c.top}
     ${c.table}
@@ -5565,7 +5627,7 @@ if(!_dataOnly){
       // plain rows as before (medicare-california's options-shared still asks that way until its pass)
       // T-139: list:true = a shared LIST, not a compare of specific ids -- shareRenderList re-applies
       // the link's own filters/sort/carrier to this zip's live plans (never takes ids at all).
-      Promise.resolve(q.list?shareRenderList(q):q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r)).then(function(r){
+      Promise.resolve(q.list?shareRenderList(q):q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r,q.de)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
           county:r.county||'',city:r.city||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
           html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||'',n:r.n||0},org); }catch(x){}
