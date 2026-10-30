@@ -899,6 +899,33 @@ body.host-cbar .cbar{display:none!important}
 .cf-links a{color:#5f6b75;text-decoration:underline;text-underline-offset:2px;padding:6px 2px}
 .cf-errbox{background:#fdecea;color:#b42318;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:0 0 12px}
 .cf-err{margin-top:14px;border-top:1px solid #e5e9ec;padding-top:14px}
+/* T-165 (AB 2026-10-29, mock DECIDE/now/2026-10-26_hifi-T157-T158/HiFi-T165-medicinas.dc.html): after the lead is saved,
+   an optional "your medicines" step. Values copied from the mock; BM teal, MC blue (.mc). */
+.cf-head{display:flex;gap:12px;align-items:center;margin:0 0 12px}
+.cf-head .cf-ic{width:44px;height:44px;margin:0;flex:none}
+.cf-head .cf-ic svg{width:24px;height:24px}
+.cf-head .cf-t{color:#002147;margin:0}
+.cf-head .cf-s{color:#4A5568;margin:2px 0 0}
+.tm{--tm-brand:#007B7B;--tm-line:#00796B;--tm-fill:#E0F2F1}
+.tm.mc{--tm-brand:#0071BC;--tm-line:#0071BC;--tm-fill:#E8F2FC}
+.tm-box{margin:0 0 14px;border-top:1px solid #E2E8F0;padding:14px 4px 0;display:flex;flex-direction:column;gap:10px}
+.tm-q{font-size:17px;font-weight:700;color:#002147;margin:0;line-height:1.3}
+.tm-q span{font-weight:400;color:#4A5568;font-size:14px}
+.tm-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tm-chip{border:1.5px solid #D4DEE8;border-radius:10px;padding:7px 9px;font-family:inherit;font-size:15px;line-height:1.25;color:#002147;background:#fff;text-align:left;min-height:44px;cursor:pointer;overflow-wrap:anywhere}
+.tm-chip small{display:block;font-size:12px;color:#4A5568}
+.tm-chip[aria-pressed="true"]{border-color:var(--tm-line);background:var(--tm-fill)}
+.tm-chip:focus-visible,.tm-in:focus-visible,.tm-done:focus-visible,.tm-skip:focus-visible{outline:3px solid var(--tm-brand);outline-offset:2px}
+.tm-lbl{font-size:14px;font-weight:600;color:#002147}
+.tm-in{border:1px solid #D4DEE8;border-radius:12px;padding:11px 12px;font-size:16px;color:#002147;background:#E8F2FA;font-family:inherit;width:100%;box-sizing:border-box;min-height:44px}
+.tm-in::placeholder{color:#8A97A8}
+.tm-done{height:50px;border:0;border-radius:12px;background:var(--tm-brand);color:#fff;font:700 17px 'Open Sans',Arial,sans-serif;cursor:pointer;width:100%}
+.tm-done:disabled{opacity:.7;cursor:default}
+.tm-skip{background:none;border:0;text-align:center;font-family:inherit;font-size:15px;font-weight:600;text-decoration:underline;color:var(--tm-brand);cursor:pointer;min-height:44px}
+.tm-priv{font-size:12px;line-height:17px;color:#4A5568;margin:0}
+.tm-priv a{color:var(--tm-brand)}
+.tm-err{background:#fdecea;color:#b42318;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:0}
+.tm-ok{background:var(--tm-fill);color:#002147;border-radius:10px;padding:12px;font-size:15px;font-weight:600;margin:0 0 14px;text-align:center}
 .stg-badge{position:fixed;bottom:8px;left:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none}
 /* T-017 b13-b18 (AB 2026-10-02): list card, plain ZIP line, filter pills, sort menu, team card,
    lighter numbers, empty states. Source of truth: DECIDE/now/2026-10-02_widget-2027-results-mockup.html.
@@ -2947,6 +2974,7 @@ function pickPlan(id){
   if(p._medigap&&(!leadOK()||(D.state&&!_rep))) return;
   D.selectedPlan=p.name; D.selectedPlanId=p.id; delete D.topic;
   D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
+  D.leadSrc='card'; delete D.listTitle; delete D.listPicked;   // T-164: what the lead alert says they were looking at
   wEvt('widget_plan_select',{step:'card'});
   go(planEnroll);
 }
@@ -4631,6 +4659,27 @@ function shareURL(){
   q.unshift('zip='+encodeURIComponent(D.zip||''));
   return `${shareOrigin()}/${file}?${q.join('&')}`;
 }
+/* T-164 (AB 2026-10-29): the lead alert carries ONE link that reopens exactly what the visitor was looking at
+   -- the same page T-139 uses for shared lists (opciones-compartidas / options-shared, noindex), in the
+   visitor's own site and language. Plans ticked, compared or opened from a card -> that page with their IDs;
+   a whole list (nothing ticked, or a doctors / medicines card) -> the list link with its filters. Only a ZIP and
+   plan IDs ride in it. The share_id / utm_* a forwarded link carries are swapped for utm_source=lead_alert so
+   an agent opening it is never counted as a share. '' when there is nothing the page can show (a Medigap plan). */
+function leadReopenURL(){
+  const src=D.leadSrc||''; if(!src) return '';
+  const mc=leadSite()==='medicare-california';
+  const tail=url=>url.replace(/&(share_id|utm_[a-z]+)=[^&]*/g,'')+'&utm_source=lead_alert&utm_medium=alert&utm_campaign=lead';
+  const ids=(src==='card'||src==='compare'||(src==='list'&&D.listPicked>0))?String(D.selectedPlanId||'').split(';').filter(Boolean):[];
+  if(ids.length){
+    const plans=ids.map(id=>PLANS.find(p=>p.id===id)).filter(p=>p&&!p._medigap).slice(0,3);
+    if(!plans.length) return '';
+    const q=['zip='+encodeURIComponent(D.zip||''),'p='+plans.map(planIdRaw).join(',')];
+    if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
+    return tail(`${shareOrigin()}/${mc?'options-shared':'opciones-compartidas'}?${q.join('&')}`);
+  }
+  if(src==='list'||/^ask_/.test(src)) return tail(shareListURL());
+  return '';
+}
 // T-105 (9): "Compartir lo que cambia" on the 2026-vs-2027 block opens this same sheet for just that
 // one plan, without touching selPlans (the Compare bar's own ticks must survive opening and closing
 // the sheet unchanged). _shareIds overrides the normal selPlans source for one open; openShare clears
@@ -5025,6 +5074,7 @@ function helpCompare(){
   D.represented=plans.map(p=>p.rep?'yes':'no').join(';');
   wEvt('widget_plan_select',{step:'compare',plans:plans.length});
   _helpSrc='compare'; _listAbout=''; delete D.topic;
+  D.leadSrc='compare'; delete D.listTitle; delete D.listPicked;   // T-164
   go(helpChoose);
 }
 /* T-154 (AB 2026-10-27): the list's own "Ayúdeme a elegir". One plan ticked -> about that plan, as
@@ -5056,6 +5106,7 @@ function helpAsk(k){
   D.plansSeen=top.length?'top of list: '+top.map(planLeadTag).join(' | '):'';
   D.represented=top.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
   _helpSrc='ask_'+k;
+  D.leadSrc='ask_'+k; D.listTitle=resultsTitlePlain(list.length,_typeFilter==='supp'); delete D.listPicked;   // T-164
   wEvt('widget_plan_select',{step:'ask',topic:k});
   go(helpChoose);
 }
@@ -5076,6 +5127,7 @@ function helpList(){
     D.represented=top.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
   }
   _helpSrc='list'; delete D.topic;
+  D.leadSrc='list'; D.listTitle=resultsTitlePlain(orderedPlans().length,_typeFilter==='supp'); D.listPicked=picked.length;   // T-164
   wEvt('widget_plan_select',{step:'list',plans:picked.length});
   go(helpChoose);
 }
@@ -5277,7 +5329,8 @@ function submitLead(type){
   D.timestamp=new Date().toISOString();
   D.leadType=type;
   D.agent=agent().key;   // T-102: 'susana' | 'alejandra', from the ZIP's state; the leads script routes on it
-  if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;}   // a reminder or question is not about a plan
+  if(type!=='enroll'&&type!=='help'){delete D.plansSeen;delete D.represented;delete D.leadSrc;delete D.listTitle;delete D.listPicked;delete D.reopenUrl;}
+  else{try{D.reopenUrl=leadReopenURL();}catch(e){D.reopenUrl='';}}   // T-164: one link that reopens exactly what they were looking at   // a reminder or question is not about a plan
   // T-099: the plan they said they have today, kept in this page only until now. curPlan is the field the
   // leads script prints as "Plan actual" in the alert email and writes to the sheet; only for this ZIP.
   if(_myPlan&&_myPlan.zip===D.zip){D.curPlan=_myPlan.name+' · '+mpId(_myPlan.id);D.curPlanId=_myPlan.id;D.curPlanMatch=_myPlan.match;}
@@ -5328,18 +5381,79 @@ function seenPlanNames(){
   const ids=String(D.selectedPlanId||'').split(';').filter(Boolean);
   return ids.map(id=>{const p=PLANS.find(x=>x.id===id);return p?esc(dispName(p))+' ('+planId(p)+')':'';}).filter(Boolean).join(', ');
 }
+/* T-165 (AB 2026-10-29): optional medicines + a note, offered only on the thank-you screen, i.e. after the lead
+   is confirmed saved. "Listo" is a second POST to the same lead URL with the same Lead ID and kind:'followup'; the
+   leads script fills "Medicinas" / "Nota del cliente" on that lead's row and sends no text alert. PRIVACY: what the
+   visitor picks or types goes ONLY to the sheet. Never into an alert text, an email subject, a GA4 event (counts
+   only) or a URL. */
+const TM_MEDS=[['Atorvastatina','Atorvastatin','Lipitor'],['Amlodipino','Amlodipine','Norvasc'],['Levotiroxina','Levothyroxine','Synthroid'],
+  ['Lisinopril','Lisinopril','Zestril'],['Gabapentina','Gabapentin','Neurontin'],['Losart\u00E1n','Losartan','Cozaar'],
+  ['Metformina','Metformin','Glucophage'],['Metoprolol','Metoprolol','Toprol XL'],['Omeprazol','Omeprazole','Prilosec'],
+  ['Rosuvastatina','Rosuvastatin','Crestor']];
+let _tmPicked=new Set(), _tmBusy=false;
+function tmName(i){return L(TM_MEDS[i][1],TM_MEDS[i][0]);}
+function tmHTML(){
+  const mc=leadSite()==='medicare-california';
+  return `<div class="tm-box tm${mc?' mc':''}" id="tmBox">
+    <p class="tm-q" id="tmQ">${L('Want to tell us your medicines?','\u00BFQuiere adelantarnos sus medicinas?')} <span>${L('(optional)','(opcional)')}</span></p>
+    <div class="tm-chips" role="group" aria-labelledby="tmQ">${TM_MEDS.map((m,i)=>`<button type="button" class="tm-chip" aria-pressed="false" onclick="tmToggle(${i},this)">${esc(tmName(i))}<small>${esc(m[2])}</small></button>`).join('')}</div>
+    <label class="tm-lbl" for="tmOther">${L('Other medicines','Otras medicinas')}</label>
+    <input class="tm-in" id="tmOther" type="text" maxlength="300" autocomplete="off" placeholder="${L('Any not listed above','Las que no est\u00E1n arriba')}">
+    <label class="tm-lbl" for="tmNote">${L('Anything else we should know?','\u00BFAlgo m\u00E1s que debamos saber?')}</label>
+    <input class="tm-in" id="tmNote" type="text" maxlength="500" autocomplete="off" placeholder="${L('For example, your doctor or pharmacy','Por ejemplo, su m\u00E9dico o su farmacia')}">
+    <div id="tmErr"></div>
+    <button type="button" class="tm-done" id="tmDone" onclick="tmDone()">${L('Done','Listo')}</button>
+    <button type="button" class="tm-skip" onclick="tmSkip()">${L('Not now','Ahora no')}</button>
+    <p class="tm-priv">${L('Only your agents see this, to compare plans.','Solo lo ven sus agentes, para comparar planes.')} <a href="${privacyURL()}" target="_blank" rel="noopener">${L('Privacy','Privacidad')}</a></p></div>`;
+}
+function tmToggle(i,b){
+  if(_tmPicked.has(i)) _tmPicked.delete(i); else _tmPicked.add(i);
+  b.setAttribute('aria-pressed',_tmPicked.has(i)?'true':'false');
+}
+function tmSkip(){const b=document.getElementById('tmBox'); if(b) b.remove(); wEvt('thanks_meds_skip');}
+function sendFollowup(d){
+  var ctl=window.AbortController?new AbortController():null;
+  var t=setTimeout(function(){if(ctl)ctl.abort();},25000);
+  d.env=leadURL()===LEAD_URL_STAGING?'staging':'production';
+  return fetch(leadURL(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d),signal:ctl?ctl.signal:undefined})
+    .then(function(r){return r.json();}).then(function(j){clearTimeout(t);return !!(j&&j.saved===true);})
+    .catch(function(){clearTimeout(t);return false;});
+}
+function tmDone(){
+  if(_tmBusy) return;
+  const box=document.getElementById('tmBox'); if(!box) return;
+  const picked=[..._tmPicked].sort((a,b)=>a-b).map(i=>tmName(i)+' ('+TM_MEDS[i][2]+')');
+  const other=(document.getElementById('tmOther')?.value||'').trim(), note=(document.getElementById('tmNote')?.value||'').trim();
+  if(!picked.length&&!other&&!note){ tmSkip(); return; }
+  _tmBusy=true;
+  const btn=document.getElementById('tmDone'), err=document.getElementById('tmErr');
+  if(btn){btn.disabled=true;btn.textContent=L('Saving...','Guardando...');}
+  if(err) err.innerHTML='';
+  sendFollowup({kind:'followup',leadId:D.leadId,medicines:picked.concat(other?[other]:[]).join(', '),notes:note,
+    lang:lang,source:leadSite()}).then(ok=>{
+    _tmBusy=false;
+    if(ok){
+      wEvt('thanks_meds_submit',{picked:picked.length,other:other?1:0,note:note?1:0});   // counts only, never the words
+      box.outerHTML=`<p class="tm-ok tm ${leadSite()==='medicare-california'?'mc':''}" role="status">${L('Saved. Thank you.','Guardado. Gracias.')}</p>`;
+    } else {
+      if(btn){btn.disabled=false;btn.textContent=L('Done','Listo');}
+      if(err) err.innerHTML=`<p class="tm-err" role="alert">${L("We couldn't save that just now. You can tell whoever calls you.",'No pudimos guardarlo ahora. Puede decírselo a quien le llame.')}</p>`;
+    }
+  });
+}
 function flowSuccess(){
   prog(100); _plansView=true;
-  const first=esc((D.fullName||'').trim().split(/\s+/)[0]||'');
   const name=esc(D.fullName||''), phone=esc(D.phone||'');
   const email=D.email?esc(D.email):'';
   const fix=`<p class="cf-fix">${L('Something wrong?','¿Algo está mal?')} <a href="#" onclick="event.preventDefault();back()">${L('Fix it here','Corríjalo aquí')}</a></p>`;
   const restart=`<a href="#" onclick="event.preventDefault();hist=[];D={};selConds=[];priRank=[];selPlans=[];_pin='';_typeFilter='all';_zeroOnly=false;_drugOnly=false;_pdpOnly=false;_dsnpOnly=false;_snpOnly=false;_carriers=[];_planTypes.clear();_carOpen=false;_priAuto=null;_sortMode='premium';_shown=PAGE;_myPlan=null;_mpCtx=null;_mpQ='';go(startZip)">${L('Start over','Empezar de nuevo')}</a>`;
   const plans=seenPlanNames();
+  _tmPicked=new Set(); _tmBusy=false;
   wb().innerHTML=`<div class="cf">
-    <div class="cf-ic">${CFI.check}</div>
-    <p class="cf-t">${L(`Thank you${first?', '+first:''}. We got your message.`,`Gracias${first?', '+first:''}. Recibimos su mensaje.`)}</p>
-    <p class="cf-s">${L('One of us will contact you soon by call, text or WhatsApp.','Una de nosotras le contacta pronto por llamada, texto o WhatsApp.')}</p>
+    <div class="cf-head"><div class="cf-ic">${CFI.check}</div><div>
+      <p class="cf-t">${L('Thank you! We have it.','¡Gracias! Ya lo tenemos.')}</p>
+      <p class="cf-s">${L('One of us will contact you soon by call, text or WhatsApp.','Una de nosotras le contacta pronto por llamada, texto o WhatsApp.')}</p></div></div>
+    ${tmHTML()}
     <div class="cf-band"><p class="h">${L('What you sent us','Lo que nos envió')}</p>
       ${cfRow(L('Name','Nombre'),name)}${cfRow(L('Phone','Teléfono'),phone)}
       ${cfRow(L('Email','Correo'),email||L('Not given','No lo dio'),!email)}

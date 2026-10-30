@@ -432,7 +432,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<button type="button" class="go" id="lcbarGo" onclick="lcbarGo()"></button></div>';
 
     part(document.getElementById('cmpA'), d.css, stripDeadCardLinks(d.html));
-    if (typeof gtag === 'function') gtag('event', 'list_share_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, share_id:SHARE_ID});
+    if (typeof gtag === 'function' && q.get('utm_source') !== 'lead_alert') gtag('event', 'list_share_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, share_id:SHARE_ID});
     if (PRINT) setTimeout(function(){
       document.title = place + ' - ' + (EN ? (d.meta && d.meta.year) + ' Plans' : 'Planes ' + (d.meta && d.meta.year)) + ' - ' + when;
       window.print();
