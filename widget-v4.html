@@ -2013,7 +2013,7 @@ function priorityStep(nextFn){
   // of which exist in code yet) needs the same mechanism once PROTECT signs each of those.
   // T-160 (2)(3): "Revisar mi plan de hoy" is a card of its own on top -- hidden for a visitor who came from the
   // home's "Ver todos los planes 2027" (?start=all, T-156), who has just chosen not to check their plan.
-  const showMine=!(_startAll&&D.zip===_initZip);
+  const showMine=true; // T-170 (AB 2026-10-29): the card stays for the home's Ver todos path too (T-160 hid it)
   const opts=PRI_OPTIONS.filter(o=>o.id!=='myplan');
   const mine=PRI_OPTIONS.find(o=>o.id==='myplan');
   const txt=o=>{const d=o[lang+'D'];return `<span class="q3tx"><b>${o[lang]()}</b><span>${typeof d==='function'?d():d}</span></span>`;};
