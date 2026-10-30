@@ -172,6 +172,8 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   // T-139: a shared LIST link -- never plan ids, replayed instead by re-applying the same
   // filters/sort/carrier to this zip's live plans (shareRenderList in widget-v4.html).
   var LF = q.get('f') || '', LO = q.get('o') || '', LA = q.get('a') || '';
+  // T-166: who sent it (team share); the plan finder answers with that person, whatever the state
+  var DE = /^[a-z]{2,12}$/.test(q.get('de') || '') ? q.get('de') : '';
   var LT = q.get('t') || '', LN = parseInt(q.get('n') || '0', 10) || 0;
   var SHARE_ID = q.get('share_id') || '';
   // T-142 (AB 2026-10-25): compare from a SHARED LIST. Ticked ids, this page's own (no pin, no
@@ -212,7 +214,8 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   function useAgent(a){
     if (!a || !/^1\d{10}$/.test(String(a.digits || '')) || !/^images\/[a-z-]+\.jpg$/.test(String(a.photo || ''))) return;
     AGENT = {key:String(a.key || ''), name:String(a.name || ''), tel:String(a.tel || ''), digits:String(a.digits),
-             email:String(a.email || ''), photo:String(a.photo), lic:/^\d+$/.test(String(a.lic || '')) ? String(a.lic) : ''};
+             email:String(a.email || ''), photo:String(a.photo), lic:/^\d+$/.test(String(a.lic || '')) ? String(a.lic) : '',
+             licSt:/^[A-Z]{2}(, [A-Z]{2})*$/.test(String(a.licSt || '')) ? String(a.licSt) : ''};
   }
   // (913) 488-5341 with a non-breaking space and hyphen: it never splits. The href is +1 and digits.
   function tel(a){ return String(a.tel).replace(') ', ') ').replace('-', '‑'); }
@@ -277,8 +280,8 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   frame.addEventListener('load', function(){
     try {
       frame.contentWindow.postMessage(LIST
-        ? {type:'widget-plans', rid:rid, zip:ZIP, f:LF, o:LO, a:LA, list:true}
-        : {type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true}, WIDGET_HOST);
+        ? {type:'widget-plans', rid:rid, zip:ZIP, f:LF, o:LO, a:LA, list:true, de:DE}
+        : {type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true, de:DE}, WIDGET_HOST);
     } catch (err) { fail(); }
   });
   frame.src = WIDGET_HOST + '/widget-v4.html?data=1&lang=' + (EN ? 'en' : 'es');
@@ -314,7 +317,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
   function render(d){
     useAgent(d.agent);
     install(d.fns);
-    var A = AGENT, adv = T.adv + (A.lic ? ' · LIC. #' + A.lic : '');
+    var A = AGENT, adv = T.adv + (A.lic ? ' · ' + (A.licSt ? A.licSt + ' ' : '') + 'LIC. #' + A.lic : '');
     var n = (d.names || []).length || IDS.length;
     var mpOne = MP_SINGLE && n === 1;
     var when = new Date().toLocaleDateString(EN ? 'en-US' : 'es-ES', {day:'numeric', month:'short', year:'numeric'});
