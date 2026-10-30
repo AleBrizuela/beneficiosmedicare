@@ -1,7 +1,7 @@
 {
  "year": 2027,
- "updated": "2026-10-02",
- "signed": "Alejandra Brizuela 2026-10-02 (T-017: CA); same 7 carriers in AZ FL IA IL KS MO OK TX, AB 2026-10-02 (D-056)",
+ "updated": "2026-10-29",
+ "signed": "AB 2026-10-29 (T-167): CA adds Astiva, Wellcare (Centene), Champion; other states unchanged",
  "_README": "Which states we are licensed in, and per state which CMS parent organizations we are appointed with and Ready to Sell for 2027. The widget shows an agent button ONLY on plans whose CMS Parent Organization Name is listed for the visitor's state; every other plan is 'Information only'. A state not in 'licensed' gets no lead capture at all. An empty list means licensed but no appointment confirmed there yet. Change this file only with AB's sign-off (RED). 'licensedSince' added 2026-10-18 (NOW.md T-106 follow-up, SHIP part of the PROTECT note): ONE list with the license date per state, purely additive -- 'licensed' is unchanged and still read by older code paths. Dates here are the ones already on record above (the 2026-10-02 sign-off), not new facts. The widget now checks the date, not just membership, so a FUTURE-dated state (added ahead of its actual effective date) correctly stays unlicensed until that day, and the unlicensed note clears itself on the date without a code change.",
  "licensed": [
   "AZ",
@@ -42,7 +42,10 @@
    "Humana Inc.",
    "SCAN Group",
    "UnitedHealth Group, Inc.",
-   "The Regents of the University of California"
+   "The Regents of the University of California",
+   "Astiva Health Holdings Incorporated",
+   "Centene Corporation",
+   "Champion Health Plans-USA, LLC."
   ],
   "FL": [
    "Alignment Healthcare USA, LLC",

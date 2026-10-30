@@ -1436,7 +1436,7 @@ let _planMeta=null;   // {year, source} of the file currently loaded
 let _rep=null,_repTried=false;
 function loadRepresented(){
   if(_repTried) return Promise.resolve(_rep);
-  return fetch('data/represented-2027.json?v=20261002')
+  return fetch('data/represented-2027.json?v=20261029')
     .then(r=>{const ct=(r.headers.get('content-type')||'');if(!r.ok||ct.indexOf('json')===-1)throw new Error('no file');return r.json();})
     .then(j=>{_repTried=true;_rep=j;return j;})
     .catch(()=>{_repTried=false;_rep=null;return null;});
