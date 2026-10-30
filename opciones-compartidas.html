@@ -87,6 +87,7 @@ p,div,span{text-wrap:pretty}
 .box .two>div,.agent>div{min-width:0}
 .box .q{font-weight:700;font-size:18px;line-height:1.3}
 .box .nm{margin-top:4px}
+.box .lic{margin-top:3px;font-size:13px;line-height:1.35;color:#4A5568;overflow-wrap:anywhere}
 .lnk{color:#007B7B;text-decoration:underline;text-underline-offset:2px;font-size:13.5px}
 a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
 .box .sig{display:none}
@@ -211,6 +212,13 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
      drawn before any state is known: Susana, the no-state default (T-159). */
   var AGENT = {key:'susana', name:'Susana Marcos', tel:'(913) 488-5341', digits:'19134885341',
                email:'Susana@BeneficiosMedicare.com', photo:'images/susana-headshot.jpg', lic:''};
+  // T-166 (AB 2026-10-30): a team share (de=) also prints the sender's licence line and site email under the name, here and in the PDF.
+  function teamLine(a){
+    if (!DE || !a) return '';
+    var l = (a.lic ? (a.licSt ? a.licSt + ' ' : '') + 'LIC. #' + a.lic : ''), e = a.email || '';
+    if (!l && !e) return '';
+    return '<div class="lic">' + esc(l) + (l && e ? ' · ' : '') + esc(e) + '</div>';
+  }
   function useAgent(a){
     if (!a || !/^1\d{10}$/.test(String(a.digits || '')) || !/^images\/[a-z-]+\.jpg$/.test(String(a.photo || ''))) return;
     AGENT = {key:String(a.key || ''), name:String(a.name || ''), tel:String(a.tel || ''), digits:String(a.digits),
@@ -341,6 +349,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +
           '<img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="72" height="72">' +
           '<div><div class="q">' + esc(T.q) + '</div><div class="nm">' + esc(A.name) + '</div>' +
+          teamLine(A) +
           '<a class="lnk t44" data-cta="shared_call" href="' + esc(smsH(A)) + '">' + esc(T.textme) + ' ›</a>' +
           '</div></div></div>' +
         '<div class="cmpw" id="cmpB"></div>' +
@@ -421,6 +430,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
         '<div class="box" data-agent="' + esc(A.key) + '"><div class="two">' +
           '<img class="ph-img" src="' + photo + '" alt="' + esc(A.name) + '" width="72" height="72">' +
           '<div><div class="q">' + esc(T.q) + '</div><div class="nm">' + esc(A.name) + '</div>' +
+          teamLine(A) +
           '<a class="lnk t44" data-cta="shared_call" href="' + esc(smsH(A)) + '">' + esc(T.textme) + ' ›</a>' +
           '</div></div></div>' +
         '<p class="disc">' + discHTML() + ' ' + esc(T.sent) + esc(when) + '.</p>' +
