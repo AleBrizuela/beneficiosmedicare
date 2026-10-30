@@ -1505,19 +1505,20 @@ function agentLicLine(a){return a.lic?'Lic. #'+a.lic:'';}
    SENDERS: who the client sees on the shared page and its PDF. Picked once per browser in the sheet
    ("Enviado por"), carried in the link as de=, and used regardless of the ZIP's state. The email is
    the site's own: on medicare-california only Alejandra sends. states = where each one is licensed
-   (kept here, not shown). A link without de= keeps today's agent by state (AGENTS above). */
+   (kept here; licSt is the state(s) printed before "LIC. #" on the shared page). Personal links preset the
+   sender: /?equipo=1&de=martha (the home page saves it for this file, BM only). A link without de= keeps today's agent by state (AGENTS above). */
 const SENDERS={
   bm:{
     alejandra:{key:'alejandra',name:'Alejandra Brizuela',tel:'(310) 597-9142',digits:'13105979142',
-               email:'Alejandra@BeneficiosMedicare.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',states:['CA','AZ']},
+               email:'Alejandra@BeneficiosMedicare.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',licSt:'CA',states:['CA','AZ']},
     susana:   {key:'susana',   name:'Susana Marcos',     tel:'(913) 488-5341',digits:'19134885341',
-               email:'Susana@BeneficiosMedicare.com',   photo:'images/susana-headshot.jpg',   lic:'6005328',states:['AZ','CA','TX','FL','KS','MO','IA','IL','OK']},
+               email:'Susana@BeneficiosMedicare.com',   photo:'images/susana-headshot.jpg',   lic:'6005328',licSt:'CA',states:['AZ','CA','TX','FL','KS','MO','IA','IL','OK']},
     martha:   {key:'martha',   name:'Martha Olivarez',   tel:'(816) 803-0305',digits:'18168030305',
-               email:'Martha@BeneficiosMedicare.com',   photo:'images/martha-headshot.jpg',   lic:'19999897',states:['MO','KS']}
+               email:'Martha@BeneficiosMedicare.com',   photo:'images/martha-headshot.jpg',   lic:'19999897',licSt:'KS, MO',states:['KS','MO']}
   },
   mc:{
     alejandra:{key:'alejandra',name:'Alejandra Brizuela',tel:'(310) 597-9142',digits:'13105979142',
-               email:'Alejandra@Medicare-California.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',states:['CA','AZ']}
+               email:'Alejandra@Medicare-California.com',photo:'images/alejandra-headshot.jpg',lic:'4507923',licSt:'CA',states:['CA','AZ']}
   }
 };
 function senderSite(){return leadSite()==='medicare-california'?'mc':'bm';}
@@ -4489,7 +4490,7 @@ async function plansForShare(zip,ids,priority,de){
     // T-102: the sheet and its PDF draw their header from the same map as the widget.
     const ag=senderAgent(de)||agent();   // T-166: the sender in the link, else agent by state
     return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
-      agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
+      agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic,licSt:ag.licSt||''},
       sug:sug?{id:planIdRaw(sug),name:dispName(sug),
                why:sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':'',
                lead:sh?L(`For ${sh}:`,`Para ${sh}:`):''}:null,
@@ -4563,7 +4564,7 @@ async function shareRenderList(q){
   const ag=senderAgent(q.de)||agent();   // T-166
   const vars=Object.entries(THEMES[_theme]||{}).map(([k,v])=>k+':'+v).join(';');
   return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
-    agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic},
+    agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic,licSt:ag.licSt||''},
     n:plans.length,
     // T-142 (AB 2026-10-25): selectable=true -- the recipient can now tick "Comparar" on a shared
     // list, same checkbox markup/CSS as the widget's own list (cmpBox/cmpHint). The shared page has
