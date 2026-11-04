@@ -7,7 +7,7 @@ Central data folder for all plan data used by the widget (widget-v4.html).
 ### plans_{STATE}_2027.json (56 files)
 Every MA, SNP, Cost and PDP plan CMS lists for 2027, one file per state/territory, ~5.6 MB total
 (California 515 KB, 33 KB compressed). Built from the CMS CY2027 Landscape (data last updated
-09/22/2026) and CMS PBP Benefits 2027 (released 2026-10-01) by
+10/18/2026) and CMS PBP Benefits 2027 (released 2026-10-01; CMS 2027 Star Ratings, Oct 8 2026) by
 `SHIP/reference/tools/build-plan-data-2027.py`, which lives OUTSIDE this repo because repo-root
 files are served publicly. Checked against the raw CMS files by `spot-check-plan-data-2027.py`
 (same folder). Each file carries its own `year` and `source`; the widget displays those.
