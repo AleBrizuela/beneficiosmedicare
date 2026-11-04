@@ -2014,10 +2014,15 @@ function priorityStep(nextFn){
   // T-160 (2)(3): "Revisar mi plan de hoy" is a card of its own on top -- hidden for a visitor who came from the
   // home's "Ver todos los planes 2027" (?start=all, T-156), who has just chosen not to check their plan.
   const showMine=true; // T-170 (AB 2026-10-29): the card stays for the home's Ver todos path too (T-160 hid it)
-  const opts=PRI_OPTIONS.filter(o=>o.id!=='myplan');
+  // T-175 (AB 2026-11-04): the hero treatment (its own boxed, highlighted card on top) reads as the
+  // pre-picked default. For a visitor who just chose "Ver todos los planes 2027" that overrides the
+  // choice they made one tap ago -- so for that path "Revisar mi plan de hoy" stays visible (T-170)
+  // but drops into the plain card list, same size and style as every other option: offered, not picked.
+  const heroMine=showMine&&!_startAll;
+  const opts=heroMine?PRI_OPTIONS.filter(o=>o.id!=='myplan'):PRI_OPTIONS;
   const mine=PRI_OPTIONS.find(o=>o.id==='myplan');
   const txt=o=>{const d=o[lang+'D'];return `<span class="q3tx"><b>${o[lang]()}</b><span>${typeof d==='function'?d():d}</span></span>`;};
-  const hero=showMine?`<button class="q3hero" id="pri-myplan" onclick="pickPri('myplan')">${priLineIcon('myplan')}${txt(mine)}<span class="q3chev" aria-hidden="true">\u203A</span></button>
+  const hero=heroMine?`<button class="q3hero" id="pri-myplan" onclick="pickPri('myplan')">${priLineIcon('myplan')}${txt(mine)}<span class="q3chev" aria-hidden="true">\u203A</span></button>
     <p class="q3sub">${L('Or choose what matters most:','O elija lo que m\u00E1s le importa:')}</p>`:'';
   const cards=opts.map(o=>`<button class="q3opt t160${o.id===cur?' on':''}" id="pri-${o.id}" onclick="pickPri('${o.id}')">`+
       priLineIcon(o.id)+txt(o)+`<span class="q3chev" aria-hidden="true">\u203A</span><span class="q3ck">\u2713</span></button>`).join('');
