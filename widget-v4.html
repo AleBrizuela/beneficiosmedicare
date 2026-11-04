@@ -3266,7 +3266,7 @@ function priorityComparator(pr){
    until every plan is on screen, and the last tap says how many are left. AB raised the cutoff from
    twelve to thirteen the same evening; the number lives here only, so the comment above and the two
    tests in listHTML all follow it. */
-const PAGE=10, PAGE_ALL=13;
+const PAGE=5, PAGE_ALL=13;
 let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 /* T-138 (D-110, AB 2026-10-25 "nicely represented every time we speak of someone's zip code, end
@@ -3634,13 +3634,13 @@ async function zipChange(){
 }
 function moreBtn(total){
   if(total<=_shown) return '';
-  const left=total-_shown, k=Math.min(PAGE,left);
-  // the last tap says it is the last one, so nobody wonders how deep this goes. T-104 (2): the label carries
-  // how many are still to come, live from the list as it stands (filters and the pinned plan included).
-  const lab=left<=PAGE
-    ? L(`See the last ${left} plan${left===1?'':'s'}`,`Ver ${left===1?'el último plan':`los últimos ${left} planes`}`)
-    : L(`Show ${k} more plans (${left} left)`,`Ver ${k} planes más (${left} restantes)`);
-  return `<button class="showmore" onclick="showMore()">${lab}</button>`;
+  // T-082 (2026-11): one button reveals every remaining plan, not another page of PAGE at a time --
+  // the real total in the label, "Mostrando N de M" as the quiet sub-line the existing .showmore span
+  // style already draws (T-104 folded an equivalent count into the label; this keeps that CSS, not
+  // the per-tap increment).
+  const lab=L(`See all ${total} plans`,`Ver los ${total} planes`);
+  const sub=L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`);
+  return `<button class="showmore" onclick="showMore()">${lab}<span>${sub}</span></button>`;
 }
 // T-139: selectable defaults to true (every existing caller -- the live results screen -- wants the
 // compare tick box); shareRenderList passes false so the shared page's read-only cards never draw a
@@ -3673,8 +3673,9 @@ function unpin(e){
   hist[hist.length-1](); updBar();
 }
 function showMore(){
+  // T-082: one tap reveals everything left (was +=PAGE per tap, 14 taps to see 70 plans).
   const list=listPlans(), from=_shown;
-  _shown=Math.min(list.length,_shown+PAGE); wEvt('show_more',{shown:_shown,total:list.length});
+  _shown=list.length; wEvt('show_more',{shown:_shown,total:list.length});
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
