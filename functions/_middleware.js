@@ -62,8 +62,8 @@ const CITY_REDIRECTS = new Map([
   ['/california/cities/fresno', '/medicare-advantage-california'],
   ['/california/cities/bakersfield', '/medicare-advantage-california'],
   // T-135 phase 2 (2026-10-26, AB: "only LA and SD are ready, remove the other 3") --
-  // long-beach/riverside/orange-county were kept live pending a rewrite; not waiting.
-  ['/california/cities/long-beach', '/california/cities/los-angeles'],
+  // riverside/orange-county were kept live pending a rewrite; not waiting.
+  // long-beach removed from this list by T-173 (2026-11-04): it's a real page now.
   ['/california/cities/riverside', '/california/cities/los-angeles'],
   ['/california/cities/orange-county', '/california/cities/los-angeles'],
 ]);
