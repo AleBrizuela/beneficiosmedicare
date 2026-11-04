@@ -6,7 +6,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,13 +15,13 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/beneficios" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/benefits" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/beneficios" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/benefits</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -30,7 +30,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/blog/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/blog/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/blog/" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -168,7 +168,7 @@
     <loc>https://beneficiosmedicare.com/blog/inscripcion-anual-aep-2027-california</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/blog/inscripcion-anual-aep-2027-california" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/blog/medicare-aep-2027-california-changes" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -441,7 +441,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/california/cities/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/california/cities/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medicare-california.com/california/cities/" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -467,7 +467,7 @@
     <loc>https://beneficiosmedicare.com/careers</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/careers" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/careers" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -482,7 +482,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/contact</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -491,7 +491,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/contacto" />
     <xhtml:link rel="alternate" hreflang="en" href="https://medicare-california.com/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/contacto" />
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -515,7 +515,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/en</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -524,61 +524,61 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/equipo" />
     <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/team" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/equipo" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/california</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/florida</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/illinois</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/iowa</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/kansas</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/missouri</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/oklahoma</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/estados/texas</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -636,7 +636,7 @@
   </url>
   <url>
     <loc>https://beneficiosmedicare.com/privacidad</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -654,7 +654,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://beneficiosmedicare.com/team" />
     <xhtml:link rel="alternate" hreflang="es" href="https://beneficiosmedicare.com/equipo" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://beneficiosmedicare.com/equipo" />
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
