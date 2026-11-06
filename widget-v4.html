@@ -993,6 +993,8 @@ body.host-cbar .cbar{display:none!important}
 .rh .zl .zsh{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .rh .zl .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .rh .zl.edit .zsh{display:none}
+.cmptop .zsh{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+.cmptop .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .rh .zl>svg{stroke:#5b6670;width:16px;height:16px}
 .rh .zl .zv{font-size:16px;font-weight:700;color:#1e2a32;text-decoration:none;cursor:default;min-height:0}
 .rh .zl .zcty{font-size:15px;color:#3a4650}
@@ -5076,7 +5078,10 @@ function cmpParts(plans,ro){
   // WhatsApp contact sheet, and the shared page's bottom box. Volver and the differences toggle move
   // to ONE line above the suggestion box (was: Volver alone on top, toggle below the box per T-105(8)).
   const diffTog=`<label class="tog cmptog"><input type="checkbox" onchange="cmpDiff(this)"> <span class="tfull">${L('Show differences','Mostrar diferencias')}</span><span class="tshort">${L('Diffs only','Solo diferencias')}</span></label>`;
-  const top=`<div class="cmptop">${ro?'':bk()}${diffTog}</div>
+  // T-176 (AB 2026-11-06): Compartir on the comparison too, in the top row beside Volver and the toggle.
+  // Not on the shared page (ro): sharing the page you already opened from a share makes no sense.
+  const cmpShare=(!ro&&shareOn())?equipoShareBtn('openShare()','zsh cmpsh'):'';
+  const top=`<div class="cmptop">${ro?'':bk()}${cmpShare}${diffTog}</div>
     ${unlicensedNote()}
     ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
     <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>`;
