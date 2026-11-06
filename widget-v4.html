@@ -995,6 +995,8 @@ body.host-cbar .cbar{display:none!important}
 .rh .zl.edit .zsh{display:none}
 .cmptop .zsh{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .cmptop .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* T-176 (AB 2026-11-06): the 26-vs-27 box's Compartir is the same outlined pill as the others, centred under the table */
+.zsh.mpshare{display:flex;justify-content:center;margin:4px auto 8px;min-height:44px;width:auto}
 .rh .zl>svg{stroke:#5b6670;width:16px;height:16px}
 .rh .zl .zv{font-size:16px;font-weight:700;color:#1e2a32;text-decoration:none;cursor:default;min-height:0}
 .rh .zl .zcty{font-size:15px;color:#3a4650}
@@ -4290,7 +4292,7 @@ function mp26v27Block(p26,p27,ro){
   // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-    ${ro||!shareOn()?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')} ›</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
+    ${ro||!shareOn()?'':`<button class="zsh mpshare" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')}</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
