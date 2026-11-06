@@ -1767,14 +1767,15 @@ function toggleMobile() {
   // T-017 b16 (AB 2026-10-03): while plans show, the hero above the widget becomes a results headline;
   // the original comes back when the visitor goes back to the questions.
   var heroSaved = null;
-  function setResultsHero(on){
+  function setResultsHero(on, title){
     var h1 = document.querySelector('section.hero h1'); if (!h1) return;
     var p = h1.nextElementSibling && h1.nextElementSibling.tagName === 'P' ? h1.nextElementSibling : null;
     var label = document.querySelector('section.hero .section-label');
     var en = (typeof currentLang !== 'undefined' ? currentLang : (document.documentElement.lang || '')).indexOf('en') === 0;
     if (on) {
       if (!heroSaved) heroSaved = {h1: h1.innerHTML, p: p ? p.innerHTML : null, pDisp: p ? p.style.display : '', lDisp: label ? label.style.display : ''};
-      h1.textContent = en ? 'Your 2027 plans' : 'Sus planes para 2027';
+      /* T-176: the widget sends its own banner title on the 26-vs-27 screen ("Su plan actual") */
+      h1.textContent = title || (en ? 'Your 2027 plans' : 'Sus planes para 2027');
       /* T-098 SHORTER TOP (AB 2026-10-15 02:00): the title keeps the context, the subline goes.
          On a 390x660 phone those two lines were the difference between seeing one plan and
          seeing none. The body class hides the AEP strip and shrinks the band; see t31-plans. */
@@ -1819,7 +1820,7 @@ function toggleMobile() {
     }
     // T-020: the widget's GA4 events land in THIS site's property (the iframe is BM's; on MC they must count for MC).
     if (e.data.type === 'widget-ga' && e.origin === location.origin && typeof gtag === 'function' && /^[a-z_]{3,40}$/.test(e.data.name || '')) gtag('event', e.data.name, e.data.params || {});
-    if (e.data.type === 'widget-view') { setPlansView(!!e.data.results, frame.closest('section')); setResultsHero(!!e.data.results); }
+    if (e.data.type === 'widget-view') { setPlansView(!!e.data.results, frame.closest('section')); setResultsHero(!!e.data.results, e.data.title); }
     if (e.data.type === 'widget-scrolltop') {
       if (autoLoaded && !widgetTouched) return;  // widget's own start-up must not scroll the page
       var a = widgetC || frame;

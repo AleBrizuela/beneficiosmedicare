@@ -995,6 +995,8 @@ body.host-cbar .cbar{display:none!important}
 .rh .zl.edit .zsh{display:none}
 .cmptop .zsh{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .cmptop .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.zerotop{display:block;width:100%;min-height:44px;margin:0 0 8px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+.zerotop.on{background:var(--cbar-brand);color:#fff}
 /* T-176 (AB 2026-11-06): the 26-vs-27 box's Compartir is the same outlined pill as the others, centred under the table */
 .zsh.mpshare{display:flex;justify-content:center;margin:4px auto 8px;min-height:44px;width:auto}
 .rh .zl>svg{stroke:#5b6670;width:16px;height:16px}
@@ -3469,7 +3471,10 @@ function chipRow(){
   const carBtn=cars.length>1||_carriers.length
     ? `<button class="ord ordc" aria-expanded="${_carOpen}" aria-controls="carpan" onclick="toggleCar()">${L('Carrier','Aseguradora')} ${_carOpen?'\u25B4':'\u25BE'}</button>` : '';
   const zeroMsg=zeroResultMsg()||priDropMsgHTML();
-  return `<div class="fx"><div class="fxr">`+cs.map(c=>
+  /* T-176 (AB 2026-11-06): "Elegir $0 de prima" at the top of the list, always, EXCEPT when the visitor came
+     from comparing their previous-year plan (_cmpFrom 'myplan'). It is the same $0 premium filter as the chip. */
+  const zeroTop=_cmpFrom==='myplan'?'':`<button class="zerotop${_zeroOnly?' on':''}" aria-pressed="${_zeroOnly}" onclick="chipTap('zero')">${_zeroOnly?'✓ ':''}${L('Choose $0 premium','Elegir $0 de prima')}</button>`;
+  return zeroTop+`<div class="fx"><div class="fxr">`+cs.map(c=>
       // T-145: a 0-and-not-selected chip stays in its place, greyed, aria-disabled, and does
       // nothing on tap (no onclick at all, rather than a guard that still fires on Enter/Space).
       c.disabled
@@ -3902,7 +3907,9 @@ function teamCard(){
 // widget while they are. Results, compare, the contact step and the thank-you all count as "plans";
 // going back to the questions before the results brings the home page back.
 let _plansView=false;
-function viewMsg(){if(window.self!==window.top)window.parent.postMessage({type:'widget-view',results:_plansView},'*');}
+/* T-176 (AB 2026-11-06): the page's banner above the widget says "Su plan actual" on the 26-vs-27 screen (the
+   page reads the title from this message; empty = the page's own "Sus planes para 2027") */
+function viewMsg(){if(window.self!==window.top)window.parent.postMessage({type:'widget-view',results:_plansView,title:document.getElementById('mpres')?L('Your current plan','Su plan actual'):''},'*');}
 // Kept for the "Back to all plans" link on the success screen: the same list, more of it shown.
 function allPlans(){_shown=Math.max(_shown,8);return flowResults();}
 
@@ -5663,6 +5670,6 @@ if(!_dataOnly){
   });
 })();
 </script>
-<script>/* T-027 (6): staging badge. Shown only on *.pages.dev hosts, decided by hostname at view time, so it cannot ship to the live domains. */if(/\.pages\.dev$/.test(location.hostname)){var sb=document.createElement('div');sb.className='stg-badge';sb.textContent='STAGING \u00b7 no es el sitio real';sb.setAttribute('style','position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));left:8px;z-index:2147483647;background:#5f6b75;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;padding:6px 10px;border-radius:999px;opacity:.92;pointer-events:none');document.body.appendChild(sb);}</script>
+<!-- T-176 (AB 2026-11-06): the widget's own staging badge was removed (it showed inside the card after going back). The page keeps its own staging badge. -->
 </body>
 </html>
