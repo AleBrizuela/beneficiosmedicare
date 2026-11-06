@@ -2033,7 +2033,8 @@ function priorityStep(nextFn){
   // choice they made one tap ago -- so for that path "Revisar mi plan de hoy" stays visible (T-170)
   // but drops into the plain card list, same size and style as every other option: offered, not picked.
   const heroMine=showMine&&!_startAll;
-  const opts=heroMine?PRI_OPTIONS.filter(o=>o.id!=='myplan'):PRI_OPTIONS;
+  /* T-176 (AB 2026-11-06): after "Ver todos los planes 2027" (?start=all), "Revisar mi plan de hoy" goes LAST in the list */
+  const opts=heroMine?PRI_OPTIONS.filter(o=>o.id!=='myplan'):(_startAll?[...PRI_OPTIONS.filter(o=>o.id!=='myplan'),...PRI_OPTIONS.filter(o=>o.id==='myplan')]:PRI_OPTIONS);
   const mine=PRI_OPTIONS.find(o=>o.id==='myplan');
   const txt=o=>{const d=o[lang+'D'];return `<span class="q3tx"><b>${o[lang]()}</b><span>${typeof d==='function'?d():d}</span></span>`;};
   const hero=heroMine?`<button class="q3hero" id="pri-myplan" onclick="pickPri('myplan')">${priLineIcon('myplan')}${txt(mine)}<span class="q3chev" aria-hidden="true">\u203A</span></button>
