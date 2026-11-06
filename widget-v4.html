@@ -989,6 +989,10 @@ body.host-cbar .cbar{display:none!important}
 .pc .disc{font-size:12px;color:#56616a;line-height:1.45;margin:4px 0 8px}
 .pc-btn{padding:12px;min-height:46px}
 .rh .zl{flex-wrap:wrap;gap:6px;margin:6px 0 2px;min-height:40px;font-size:15px;color:#3a4650}
+/* T-176 (AB 2026-11-06): Compartir sits at the FAR RIGHT of the ZIP row, after "Cambiar" (was in the Orden row) */
+.rh .zl .zsh{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+.rh .zl .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rh .zl.edit .zsh{display:none}
 .rh .zl>svg{stroke:#5b6670;width:16px;height:16px}
 .rh .zl .zv{font-size:16px;font-weight:700;color:#1e2a32;text-decoration:none;cursor:default;min-height:0}
 .rh .zl .zcty{font-size:15px;color:#3a4650}
@@ -3347,6 +3351,7 @@ function resultsHead(list){
     <div class="rtop">${bk()}<p class="hl">${title}</p></div>
     <div class="zl" id="zl">${placePill(D.zip)}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">${L('Change','Cambiar')}</button>
+      ${equipoShareBtn('openShareList()','zsh')}
       <form class="zf" onsubmit="event.preventDefault();zipChange()">
         <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
         <button type="submit">${L('See','Ver')}</button>
@@ -3467,7 +3472,7 @@ function chipRow(){
         ? `<button class="fc fcd" aria-pressed="false" aria-disabled="true">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
         : `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
-    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}${equipoShareBtn('openShareList()','ord ords')}</div>`
+    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
     +zeroMsg;
 }
 /* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
@@ -3745,9 +3750,10 @@ function barState(){
   // (cmpHint below) -- this naturally also covers (3), the my-plan flow's own plan counting as
   // ticked, since that is just k starting at 1 or more under the same rule, nothing extra to build.
   // T-104 amendment (AB 2026-10-19): "Comparar 2 planes" / "Compare 2 plans", not "Compare (2)".
+  // T-176 (AB 2026-11-06): Compartir also sits beside "Comparar" when 2+ plans are ticked (any three)
   if(k>=2&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
     compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare ${k} plans`,`Comparar ${k} planes`),
-    canCompare:k>=1&&total>=2};
+    canCompare:k>=1&&total>=2,secondary:shareOn()?L('Share','Compartir'):''};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
 }
 function barAct(){
@@ -3770,12 +3776,12 @@ function updBar(msg){
   const b=document.getElementById('cbar'); if(!b) return;
   b.classList.toggle('on',st.on||!!msg);
   b.classList.toggle('solid',st.mode==='action'&&!msg);
-  b.classList.toggle('duo',st.mode==='duo'&&!msg);
+  b.classList.toggle('duo',(st.mode==='duo'||(st.mode==='compare'&&!!st.secondary))&&!msg);
   const wasReady=b.classList.contains('ready');
   b.classList.toggle('ready',!!st.ready&&!msg);
   document.getElementById('cbarN').textContent=msg||st.label||'';
   const sec=document.getElementById('cbarSec'), secT=document.getElementById('cbarSecT');
-  if(sec){ sec.hidden=!(st.mode==='duo'&&st.secondary&&!msg); if(secT) secT.textContent=st.secondary||''; }
+  if(sec){ sec.hidden=!((st.mode==='duo'||st.mode==='compare')&&st.secondary&&!msg); if(secT) secT.textContent=st.secondary||''; }
   const g=document.getElementById('cbarGo');
   g.textContent=st.compare; g.hidden=st.mode==='duo'&&!st.compare; g.disabled=!st.canCompare&&!msg;
   if(st.ready&&!msg&&!wasReady){ g.classList.remove('pulse'); void g.offsetWidth; g.classList.add('pulse'); }
