@@ -4755,7 +4755,16 @@ function leadReopenURL(){
     if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
     return tail(`${shareOrigin()}/${mc?'options-shared':'opciones-compartidas'}?${q.join('&')}`);
   }
-  if(src==='list'||/^ask_/.test(src)) return tail(shareListURL());
+  /* T-176 (AB 2026-11-06): a doctors / medicines request on the list used to reopen the bare list (o=priority&n=29),
+     which the shared page could not draw as plans. It now reopens the same first 3 plans the alert email lists
+     ("LOS PRIMEROS 3 DE LA LISTA"), with their IDs, like the card and compare links. */
+  if(src==='list'||/^ask_/.test(src)){
+    const top=orderedPlans().filter(p=>!p._medigap&&p.id).slice(0,3);
+    if(!top.length) return tail(shareListURL());
+    const q=['zip='+encodeURIComponent(D.zip||''),'p='+top.map(planIdRaw).join(',')];
+    if(lang==='en'&&!mc) q.push('lang=en'); if(lang==='es'&&mc) q.push('lang=es');
+    return tail(`${shareOrigin()}/${mc?'options-shared':'opciones-compartidas'}?${q.join('&')}`);
+  }
   return '';
 }
 // T-105 (9): "Compartir lo que cambia" on the 2026-vs-2027 block opens this same sheet for just that
