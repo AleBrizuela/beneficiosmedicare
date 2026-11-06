@@ -1541,7 +1541,11 @@ function pickSender(k){
   document.querySelectorAll('#shwrap .shwho .fc').forEach(b=>{const on=b.dataset.k===k;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
   const ok=document.getElementById('shok'); if(ok) ok.textContent='';
 }
-function equipoShareBtn(fn,cls){return EQUIPO?`<button class="${cls}" onclick="${fn}" aria-label="${L('Share','Compartir')}">${shrIcon()}${L('Share','Compartir')}</button>`:'';}
+/* T-176 (AB 2026-11-05): visitors on BeneficiosMedicare in Spanish get Compartir back (Texto, Email,
+   WhatsApp, Copiar enlace, PDF) so they can send themselves their options. No sender row, no de=;
+   the shared page shows the agent by state as before. English and medicare-california unchanged. */
+function shareOn(){return EQUIPO||(lang==='es'&&leadSite()!=='medicare-california');}
+function equipoShareBtn(fn,cls){return shareOn()?`<button class="${cls}" onclick="${fn}" aria-label="${L('Share','Compartir')}">${shrIcon()}${L('Share','Compartir')}</button>`:'';}
 
 /* ── T-104 (1) (AB 2026-10-18): plan names in proper case ─────────────────────────────────────────────
    747 of the 6,373 plans in the 2027 files are named in capitals (740 of them Devoted: "DEVOTED CORE 034 IA
@@ -4278,7 +4282,7 @@ function mp26v27Block(p26,p27,ro){
   // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-    ${ro||!EQUIPO?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')} ›</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
+    ${ro||!shareOn()?'':`<button class="mpall" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')} ›</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
@@ -4932,7 +4936,7 @@ function flowCompare(){
   // may not take a lead (the bar used to be Compartir alone there).
   _act=c.can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
   // T-166: for the team, the pre-T-154 bar: Compartir (outline) + Ayúdeme a elegir, or Compartir alone
-  if(EQUIPO) _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
+  if(shareOn()) _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
   wb().innerHTML=`
     ${c.top}
     ${c.table}
