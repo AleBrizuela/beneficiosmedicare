@@ -5107,8 +5107,8 @@ function askSheet(){
 }
 function askInput(){
   return _ask.ch==='email'
-    ?`<input class="in" id="askIn" type="email" inputmode="email" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="email" placeholder="email@ejemplo.com" aria-label="Email">`
-    :`<input class="in" id="askIn" type="tel" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="tel" placeholder="(310) 555-1234" aria-label="${L('Cell','Celular')}">`;
+    ?`<input class="in" id="askIn" type="email" inputmode="email" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="email" aria-label="Email">`
+    :`<input class="in" id="askIn" type="tel" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="tel" aria-label="${L('Cell','Celular')}">`;
 }
 function askCh(ch){
   if(!_ask||_ask.ch===ch) return;
