@@ -458,6 +458,17 @@ body.q3 .widget-body{padding:10px 14px 16px}
 /* T-179 (AB 2026-11-07, mock DECIDE/now/2026-11-07_0145_T179-v4-preguntar-mock.html): every card ends in ONE quiet
    link, "Preguntar", the same weight as "Ver detalles", opening the ask sheet below. The T-178a Texto / WhatsApp
    links and the agent strip above the bar are gone: the agent's face now sits in the sheet itself. */
+.askic{vertical-align:-4px;flex:none}
+/* T-181 (B): inline agent card after the 3rd plan. Mock .inl, radius 12px per the design system. */
+.agcard{margin:12px 0;border:1px solid #cfe3df;border-radius:12px;padding:14px;background:#f3f9f8;text-align:left}
+.agcard .top{display:flex;align-items:center;gap:12px}
+.agcard img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none}
+.agcard b{display:block;font-size:16px;font-weight:700;color:var(--cbar-ink);line-height:1.25}
+.agcard .r{display:block;font-size:13px;font-weight:400;color:#4A5568;line-height:1.35}
+.agcard .rt{display:block;font-size:13px;font-weight:700;color:var(--cbar-brand);margin-top:2px}
+.agcard .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;margin-top:12px;border:0;border-radius:12px;background:var(--cbar-brand);color:#fff;font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+#cbarGo img.face{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin:-6px 6px -6px -8px;flex:none;vertical-align:middle}
+#cbarGo:has(img.face){display:inline-flex;align-items:center;justify-content:center;gap:3px}
 .pc-det.withask{justify-content:space-between;gap:0 12px}
 .pc-askl{font:inherit;font-size:14px;font-weight:700;color:var(--cbar-brand);background:none;border:0;padding:0 4px 0 0;min-height:44px;cursor:pointer}
 /* T-179: the ONE contact sheet (Preguntar on a card, and Enviar > A mí). Sizes from the mock's .who/.tg/.in/.qa/.go */
@@ -2963,10 +2974,26 @@ const CHAT_GLYPH='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" st
 function isPhoneUA(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));}
 /* T-179: ONE quiet link under every card, "💬 Preguntar", opening the ask sheet for that plan. Same gate and same
    agent as before (licensed state, signed carrier file). The face strip of T-178a is gone (its face is in the sheet). */
+/* T-181 icon board option C: teal speech bubble with a white "?" (18px). `inv` = white bubble, teal "?" for the filled button. */
+function askIcon(inv){
+  const f=inv?'#fff':'var(--cbar-brand)', q=inv?'var(--cbar-brand)':'#fff';
+  return `<svg class="askic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="${f}" d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H10l-4.5 3.5V17H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><text x="12" y="14.6" text-anchor="middle" font-size="11" font-weight="800" fill="${q}" font-family="Arial">?</text></svg>`;
+}
 function askRow(p){
   if(!leadOK()||(D.state&&!_rep)) return '';
-  return `<button type="button" class="pc-askl" onclick="openAsk('plan','${esc(p.id)}')">💬 ${L('Ask','Preguntar')}</button>`;
+  return `<button type="button" class="pc-askl" onclick="openAsk('plan','${esc(p.id)}')">${askIcon()} ${L('Ask','Preguntar')}</button>`;
 }
+/* T-181 (B) (AB 2026-11-07, mock cara-en-la-lista-v5): ONE inline card after the 3rd plan, in the list (not floating).
+   Photo 56px, full name, "Asesora de Medicare · Lic. CA #lic" (licence only when set), "Le respondo hoy", then a full-width
+   filled button that opens the T-179 question sheet with no plan. Agent per AGENT_BY_STATE. No WhatsApp. */
+function agentCardHTML(){
+  if(!leadOK()||(D.state&&!_rep)) return '';
+  const a=agent(), lic=a.lic?`\u00a0\u00b7 ${L('CA Lic.','Lic. CA')}\u00a0#${esc(a.lic)}`:'';
+  return `<div class="agcard" data-agent="${a.key}"><div class="top"><img src="${a.photo}" alt="${esc(a.name)}" width="56" height="56"><div>
+    <b>${esc(a.name)}</b><span class="r">${L('Medicare advisor','Asesora de Medicare')}${lic}</span><span class="rt">${L('I reply today','Le respondo hoy')}</span></div></div>
+    <button type="button" class="btn" onclick="agentCardTap()">${askIcon(true)} ${L('I have a question','Tengo una pregunta')}</button></div>`;
+}
+function agentCardTap(){ wEvt('agent_card_tap',{agent:agent().key,step:'plan_card_inline'}); openAsk('general'); }
 function detBtn(p){
   const ask=askRow(p);
   return `<div class="pc-det${ask?' withask':''}">${ask}<button class="pc-detl" onclick="openPlan('${esc(p.id)}')">${L('See details','Ver detalles')} ›</button></div>`;
@@ -3372,7 +3399,8 @@ const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9
    shows on screen; pass a city for the full city+ZIP pill (Su plan actual, compare/shared band),
    or omit it for the ZIP-only checked pill (plan list, where the title above already says the
    city, so the pill never repeats it). */
-const PLACE_PIN='<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 22s-7.5-6.4-7.5-12A7.5 7.5 0 0 1 19.5 10c0 5.6-7.5 12-7.5 12z" fill="#E0453A"/><path d="M8.6 10.2l2.4 2.4 4.4-4.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+/* T-181 (AB 2026-11-07, icon board option A): red map pin, white centre, soft shadow, 18px. */
+const PLACE_PIN='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))"><path fill="#E0453A" d="M12 22s-7.5-6.6-7.5-12.2a7.5 7.5 0 0 1 15 0C19.5 15.4 12 22 12 22z"/><circle cx="12" cy="9.8" r="3" fill="#fff"/></svg>';
 function placeText(zip,city){ return city?`${city} ${zip}`:`ZIP ${zip}`; }
 function placePill(zip,city){
   const z=esc(zip||'');
@@ -3828,7 +3856,8 @@ function listHTML(all,selectable){
   // repeated in it.
   const pp=pinPlan(), list=pp?all.filter(p=>p.id!==pp.id):all;
   const n=list.length<=PAGE_ALL?list.length:_shown;
-  return `${dualNoteBox(all)}<div id="plist">${pp?planCard(pp,selectable):''}${list.slice(0,n).map(p=>planCard(p,selectable)).join('')}</div>`+
+  return `${dualNoteBox(all)}<div id="plist">${pp?planCard(pp,selectable):''}${(()=>{const cards=list.slice(0,n).map(p=>planCard(p,selectable)), at=pp?2:3;
+      if(selectable&&cards.length>=at){ const c=agentCardHTML(); if(c) cards.splice(at,0,c); } return cards.join('');})()}</div>`+
     `<div id="pmore">${list.length<=PAGE_ALL?'':moreBtn(list.length)}</div>`;
 }
 /* ── T-103 (4) (AB 2026-10-18): their current plan against ANY plans they pick ──────────────────────
@@ -3908,12 +3937,15 @@ let _cbarLast='';
    as anything is here. Inside the iframe the page draws it, because the frame grows to its content
    and has no scrollport of its own to stick to; on desktop the widget draws its own. */
 let _act=null;   // {id,label} — set by the screen that has a main action
+/* T-181 (A): the agent's photo rides in the bar message so the page that draws the bar (BM and MC home pages, phones) can
+   put it inside "Ayúdeme a elegir". Absolute URL on this widget's own origin; the host only accepts that origin. */
+function agentFaceURL(){ try{ return new URL(agent().photo,location.href).href; }catch(e){ return ''; } }
 function barState(){
   const k=selPlans.length, total=orderedPlans().filter(p=>!p._medigap).length;
   // on the comparison the main action is the point of the screen, so it wins over the compare bar
   // T-154: under 2 ticked (was: none ticked), so one tick on the list never leaves the bar empty
   if(_act&&(_act.wins||k<2)) return {mode:_act.sec?'duo':'action',on:true,label:'',compare:_act.label,
-    secondary:_act.sec||'',canCompare:true,action:_act.id};
+    secondary:_act.sec||'',canCompare:true,action:_act.id,face:_act.label?agentFaceURL():''};
   // T-096 round 4 f (AB: "Compare (2)"): the count rides in the button, so the bar is one thing to
   // read and one thing to tap instead of a label and a button competing.
   // T-098 item 7 (AB 2026-10-15 01:55): at three the button stops counting and starts asking.
@@ -3955,7 +3987,9 @@ function updBar(msg){
   const sec=document.getElementById('cbarSec'), secT=document.getElementById('cbarSecT');
   if(sec){ sec.hidden=!((st.mode==='duo'||st.mode==='compare')&&st.secondary&&!msg); if(secT) secT.textContent=st.secondary||''; }
   const g=document.getElementById('cbarGo');
-  g.textContent=st.compare; g.hidden=st.mode==='duo'&&!st.compare; g.disabled=!st.canCompare&&!msg;
+  if(st.face&&st.compare){ g.innerHTML=`<img class="face" src="${esc(st.face)}" alt="" width="40" height="40"><span></span>`; g.lastChild.textContent=st.compare; }
+  else g.textContent=st.compare;
+  g.hidden=st.mode==='duo'&&!st.compare; g.disabled=!st.canCompare&&!msg;
   if(st.ready&&!msg&&!wasReady){ g.classList.remove('pulse'); void g.offsetWidth; g.classList.add('pulse'); }
   if(!st.ready||msg) g.classList.remove('pulse');
 }
@@ -5071,18 +5105,20 @@ function openAsk(mode,pid){
                 :L(`These ${n} plans in ${where}, just as you see them now.`,`Estos ${n} planes de ${where}, tal como los ve ahora.`),
       title:resultsTitlePlain(orderedPlans().length,_typeFilter==='supp')};
     closeShare();
+  } else if(mode==='general'){
+    _ask={mode:'plan',p:null,q:L('I have a question.','Tengo una pregunta.')};
   } else {
     const p=PLANS.find(x=>x.id===pid); if(!p) return;
     _ask={mode:'plan',p:p,q:L(`I have a question about ${dispName(p)}.`,`Tengo una pregunta sobre ${dispName(p)}.`)};
   }
   _ask.ch='phone';
-  wEvt('ask_open',{mode:_ask.mode==='plan'?'ask_plan':'share_self'});
+  wEvt('ask_open',{mode:_ask.mode==='plan'?(_ask.p?'ask_plan':'ask_general'):'share_self'});
   askSheet();
 }
 function askBtnLabel(){return _ask&&_ask.mode==='self'?L('Send me the list','Enviarme la lista'):L('Send question','Enviar pregunta');}
 function askSheet(){
   const a=agent(), first=askAgentFirst(), btn=askBtnLabel();
-  const ttl=_ask.mode==='plan'?L(`Ask ${first} about ${dispName(_ask.p)}`,`Pregúntele a ${first} sobre ${dispName(_ask.p)}`)
+  const ttl=_ask.mode==='plan'?(_ask.p?L(`Ask ${first} about ${dispName(_ask.p)}`,`Pregúntele a ${first} sobre ${dispName(_ask.p)}`):L(`Ask ${first} a question`,`Pregúntele a ${first}`))
                               :L('Which cell should we send it to?','¿A qué celular se la mandamos?');
   const q=_ask.mode==='plan'
     ?`<textarea class="qa" id="askQ" rows="2" maxlength="500" aria-label="${L('Your question (optional)','Su pregunta (opcional)')}">${esc(_ask.q)}</textarea><span class="qh">${L('(optional, you can change it)','(opcional, puede cambiarla)')}</span>`
@@ -5143,13 +5179,13 @@ function askSend(){
   D.leadType='help'; D.agent=agent().key;
   const tail=u=>u?u.replace(/&(share_id|utm_[a-z]+)=[^&]*/g,'')+'&utm_source=lead_alert&utm_medium=alert&utm_campaign=lead':'';
   if(_ask.mode==='plan'){
-    const p=_ask.p;
+    const p=_ask.p;   // T-181: null when asked from the inline agent card (no plan)
     D.leadSrc='ask_plan';
-    D.selectedPlan=p.name; D.selectedPlanId=p.id;
-    D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
+    if(p){ D.selectedPlan=p.name; D.selectedPlanId=p.id;
+      D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no'); }
     const q=(document.getElementById('askQ')?.value||'').trim(); if(q) D.question=q;
     D.listTitle=resultsTitlePlain(orderedPlans().length,_typeFilter==='supp');
-    let u=''; if(!p._medigap){ const mc=leadSite()==='medicare-california', qs=['zip='+encodeURIComponent(D.zip||''),'p='+planIdRaw(p)];
+    let u=''; if(p&&!p._medigap){ const mc=leadSite()==='medicare-california', qs=['zip='+encodeURIComponent(D.zip||''),'p='+planIdRaw(p)];
       if(lang==='en'&&!mc) qs.push('lang=en'); if(lang==='es'&&mc) qs.push('lang=es');
       u=tail(`${shareOrigin()}/${mc?'options-shared':'opciones-compartidas'}?${qs.join('&')}`); }
     D.reopenUrl=u;
@@ -5168,7 +5204,7 @@ function askSend(){
   else{delete D.curPlan;delete D.curPlanId;delete D.curPlanMatch;}
   D.source=leadSite(); D.url=((window.self!==window.top)?document.referrer:'')||window.location.href;
   withConsent(D,lang,lbl,D.url);
-  const mode=_ask.mode==='plan'?'ask_plan':'share_self', ch=_ask.ch;
+  const mode=_ask.mode==='plan'?(_ask.p?'ask_plan':'ask_general'):'share_self', ch=_ask.ch;
   sendLead(D).then(ok=>{
     _submitting=false;
     if(ok){ wEvt('ask_submit',{mode:mode,channel:ch}); closeShare(); go(askThanks); return; }
