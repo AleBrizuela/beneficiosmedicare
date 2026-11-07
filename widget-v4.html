@@ -995,8 +995,29 @@ body.host-cbar .cbar{display:none!important}
 .rh .zl.edit .zsh{display:none}
 .cmptop .zsh{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .cmptop .zsh svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.zerotop{display:block;width:100%;min-height:44px;margin:0 0 8px;padding:0 12px;border:1.5px solid var(--cbar-brand);border-radius:10px;background:#fff;color:var(--cbar-brand);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
-.zerotop.on{background:var(--cbar-brand);color:#fff}
+/* T-177 (AB 2026-11-07, mock 2026-11-07_0010_T177-T178-v5): Ordenar and Aseguradora go back to two small links on
+   one line (were two 44px outlined buttons); "Mostrando 10 de N · Ver todos" under them. */
+.fxo .ord{flex:0 0 auto;max-width:none;min-height:40px;padding:0 2px;border:0;border-radius:0;background:none;font-size:14px;font-weight:600;text-decoration:none}
+.cnt{margin:2px 0 6px;font-size:14px;color:#4A5568}
+.cntx{font:inherit;font-weight:700;color:var(--cbar-brand);background:none;border:0;padding:0;min-height:32px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+/* T-177 Suplementos */
+.mgex{margin:4px 0 10px;padding:10px 12px;background:#F0F3F6;border-radius:12px;font-size:14px;line-height:1.45;color:#4A5568}
+.mgexl{font:inherit;font-weight:700;color:var(--cbar-brand);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.mgc .pc-name{margin:0}
+.mgc .mgpop{display:inline-block;margin-top:4px;background:#B2DFDB;color:#002147;border:0;border-radius:12px;padding:1px 8px;font-size:12px;font-weight:700}
+.mgc .mgsub{margin:4px 0 0;font-size:13px;color:#4A5568}
+.pc-keys.k1{grid-template-columns:1fr}
+.mgcta{display:block;margin:8px 12px 12px;min-height:44px;line-height:44px;border-radius:10px;background:var(--cbar-brand);color:#fff;text-align:center;font-weight:700;font-size:15px;text-decoration:none}
+.mgfine{margin:6px 2px 10px;font-size:12px;color:#4A5568;line-height:1.4}
+.mgmore{margin-top:4px}
+/* T-177 sheet (mock pantalla 3) */
+.sheet .ss{margin:-6px 0 12px;font-size:14px;color:#4A5568;line-height:1.4}
+.chgrid.c4{grid-template-columns:repeat(4,1fr);gap:6px}
+.chgrid.c4 .cht{border:0;min-height:0;padding:4px 0;font-size:13px;gap:6px;justify-content:flex-start;text-align:center;line-height:1.2}
+.chgrid.c4 .ci{width:52px;height:52px;flex:0 0 52px;border-radius:50%}
+.chgrid.c4 .ci svg{width:26px;height:26px}
+.chalt{display:flex;justify-content:space-between;border-top:1px solid #e3e7ea;margin-top:14px;padding-top:4px}
+.chalt button{font:inherit;font-size:15px;font-weight:600;color:var(--cbar-brand);background:none;border:0;padding:0 2px;min-height:44px;cursor:pointer}
 /* T-176 (AB 2026-11-06): the 26-vs-27 box's Compartir is the same outlined pill as the others, centred under the table */
 .zsh.mpshare{display:flex;justify-content:center;margin:4px auto 8px;min-height:44px;width:auto}
 .rh .zl>svg{stroke:#5b6670;width:16px;height:16px}
@@ -1953,6 +1974,10 @@ function onZipInput(el, fieldId){
    shouts, and no purple. Paths and the three colours per family are the mock's own.
    Spec: 2026-10-15_2230_iconos-pregunta-v1 column B + 2026-10-15_2300_lo-mas-importante-v2. */
 const PRI_OPTIONS=[
+  /* T-177 (AB 2026-11-07): "Pagar $0 de prima" first, ahead of everything (was 4th). */
+  {id:'cost',    ic:'coin',   d:'#1F7A5A', t:'#A7DCC4', b:'#E6F4EE',
+   en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
+   enD:'<em>Only</em> plans with no monthly&nbsp;premium.',esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
   /* T-100 (AB 2026-10-17): first, for whoever already has a plan (in AEP, most visitors). It does not
      set an order or a filter; it opens T-099's "¿Qué plan tiene hoy?" screen. See pickPri(). */
   {id:'myplan',  ic:'card',   d:'#002147', t:'#B2DFDB', b:'#E6F2F1',
@@ -1965,9 +1990,6 @@ const PRI_OPTIONS=[
   {id:'drugs',   ic:'bottle', d:'#007B7B', t:'#A6DCD8', b:'#E2F3F2',
    en:()=>'My medicines',     es:()=>'Mis medicamentos',
    enD:'We check your&nbsp;medicines.',     esD:'Revisamos sus&nbsp;medicinas.'},
-  {id:'cost',    ic:'coin',   d:'#1F7A5A', t:'#A7DCC4', b:'#E6F4EE',
-   en:()=>'Pay $0 premium',   es:()=>'Pagar $0 de prima',
-   enD:'<em>Only</em> plans with no monthly&nbsp;premium.',esD:'<em>Solo</em> planes sin prima&nbsp;mensual.'},
   {id:'benefits',ic:'toothb', d:'#9A6410', t:'#F3D58E', b:'#FCF4E1',
    en:()=>'Dental, vision and hearing', es:()=>'Dental, vista y audici\u00F3n',
    enD:'First, the ones that cover all&nbsp;three.', esD:'Primero los que cubren los&nbsp;tres.'},   // T-160 (1): bold only on Solo/Only
@@ -2240,7 +2262,7 @@ function bb_experiment(){expOrNext(flowResults)}
 // Card, results and compare follow the mockups AB approved for staging on 2026-10-02:
 // DECIDE/now/2026-10-02_widget-2027-card-mockup.html, ..._results-mockup.html,
 // ..._missing-and-compare-mockup.html (T-017 b2-b13).
-function orderedPlans(){ return sortPlans(filterByType(PLANS), _sortMode); }
+function orderedPlans(){ if(_typeFilter==='supp') return mgMain().concat(mgOthers()); return sortPlans(filterByType(PLANS), _sortMode); }
 
 /* NO WIDOWS (AB's standing rule): join the last two words of a label, a name or a value with a
    non-breaking space, so a line can never end up holding one word on its own. Only from three
@@ -2811,6 +2833,7 @@ function dCallRow(){
 function planDetail(id){
   const p=PLANS.find(x=>x.id===id); if(!p){flowResults();return;}
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
+  _scrList=false;
   _onDetail=true;     // T-093: the browser's Back from here lands on the card, like "‹ Volver"
   const can=leadOK()&&!(D.state&&!_rep)&&(p._medigap||p.agent)&&!p.sanction;
   // with nothing ticked, THIS plan is the main action of this screen
@@ -2891,9 +2914,10 @@ function planHead(p,selectable,detail){
   // taller Compare button) instead of right under the name -- a one-line name (Imperial Dynamic,
   // SCAN Prime) left a visible gap that a two- or three-line name did not. Nesting them inside the
   // left div makes their position depend only on the name's own height, never the button's.
+  // T-177 (AB 2026-11-07): the plan ID lives in "Ver detalles" (detail), not on the list card.
   const body=`${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p>
       ${planTags(p)}
-      ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
+      ${p._medigap||!detail?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}`;
   return `<div class="pc-head${detail?' pd-head':''}">
       ${_pin&&p.id===_pin?`<div class="pc-top mprow"><span class="mpchip navy">${L('YOUR PLAN TODAY','SU PLAN HOY')}</span>${selectable?cmpBox(p):''}</div>
@@ -3097,13 +3121,14 @@ let _zeroOnly=false, _drugOnly=false;
 // "Solo medicamentos" + "Con Medi-Cal" shows Part-D-only plans together with dual-SNP plans, not
 // just one or the other), still narrowed by whichever of PPO/HMO is active.
 let _pdpOnly=false, _dsnpOnly=false, _snpOnly=false;
-function hasDrug(p){return !p._medigap&&p.drug==='Included';}
+function hasDrug(p){return !p._medigap&&!isPDP(p)&&p.drug==='Included';}   // T-177: never a Part D-only plan (was 22 + 9 = 31)
 // T-144 (AB 2026-10-25): with 1+ carrier picked and no category chip on, "Todos" for that carrier
 // means every MA plan it has -- regular + D-SNP + C-SNP + I-SNP -- not just regular, so a carrier
 // pick never hides its own Medi-Cal/special-needs plans. Drug-only (PDP) and Medigap still stay
 // behind their own chips. `widen` defaults to "carriers are currently picked"; carrierList() passes
 // `true` explicitly, since every row there is itself a hypothetical carrier pick.
-function baseCat(p,widen){ return widen ? ((!p._medigap&&!isPDP(p))||(_drugOnly&&isPDP(p))) : (inTodos(p)||(_drugOnly&&isPDP(p))); }
+// T-177: "Incluye medicamentos" no longer pulls Part D-only plans in (the shared list said 31 = 22 + 9 and opened on a PDP)
+function baseCat(p,widen){ return widen ? (!p._medigap&&!isPDP(p)) : inTodos(p); }
 function categoryOK(p,widen){
   if(_pdpOnly||_dsnpOnly||_snpOnly) return (_pdpOnly&&isPDP(p))||(_dsnpOnly&&isDual(p))||(_snpOnly&&isSNP(p)&&!isDual(p));
   return baseCat(p, widen!==undefined?widen:_carriers.length>0);
@@ -3112,23 +3137,30 @@ function categoryOK(p,widen){
 // OR'd together -- replacing the old single-slot "PPO/HMO, pick one" rule from T-104(7). Medigap
 // ('supp') is a different category entirely, untouched, still its own single switch.
 let _planTypes=new Set();
+/* T-177 (AB 2026-11-07): two network pills, not four. HMO includes HMO-POS, PPO includes Regional PPO;
+   the exact label stays on each card. Anything else (PFFS, MSA, Cost) is under no pill, only in the full list. */
+function netGroup(p){const t=baseType(p);return /PPO/.test(t)?'PPO':(/HMO/.test(t)?'HMO':t);}
 function networkOK(p){
   if(_typeFilter==='supp') return !!p._medigap;
-  if(_planTypes.size) return _planTypes.has(baseType(p));
+  if(_planTypes.size) return _planTypes.has(netGroup(p));
   return true;
 }
 function extrasOK(p){return (!_zeroOnly||p.premium===0)&&(!_drugOnly||hasDrug(p))&&carOK(p);}
-function filterByType(plans){return plans.filter(p=>categoryOK(p)&&networkOK(p)&&extrasOK(p));}
+function filterByType(plans){
+  if(_typeFilter==='supp') return plans.filter(p=>p._medigap);   // T-177: Suplementos is its own view, no other filter applies
+  return plans.filter(p=>categoryOK(p)&&networkOK(p)&&extrasOK(p));
+}
 // How many plans WOULD show if the chip named by `over` were also turned on, combined with every
 // OTHER filter exactly as it stands now -- the "what tapping this would leave" convention every
 // chip's count already followed for zero/drug; ppo/hmo/pdp/dsnp/snp now follow it too.
 function countWith(over){
-  const o=Object.assign({typeFilter:_typeFilter,pdp:_pdpOnly,dsnp:_dsnpOnly,snp:_snpOnly},over);
+  const o=Object.assign({pdp:_pdpOnly,dsnp:_dsnpOnly,snp:_snpOnly},over);
   return PLANS.filter(p=>{
     const cat=(o.pdp||o.dsnp||o.snp)
       ? ((o.pdp&&isPDP(p))||(o.dsnp&&isDual(p))||(o.snp&&isSNP(p)&&!isDual(p)))
       : baseCat(p,_carriers.length>0);
-    const net=o.typeFilter==='ppo'?/PPO/.test(p.type||''):o.typeFilter==='hmo'?/HMO/.test(p.type||''):o.typeFilter==='supp'?!!p._medigap:true;
+    if(p._medigap) return false;
+    const net=_planTypes.size?_planTypes.has(netGroup(p)):true;
     return cat&&net&&extrasOK(p);
   }).length;
 }
@@ -3287,7 +3319,7 @@ function priorityComparator(pr){
    until every plan is on screen, and the last tap says how many are left. AB raised the cutoff from
    twelve to thirteen the same evening; the number lives here only, so the comment above and the two
    tests in listHTML all follow it. */
-const PAGE=5, PAGE_ALL=13;
+const PAGE=10, PAGE_ALL=13;   // T-177 (AB 2026-11-07): back to 10; 13 or fewer shows all
 let _shown=PAGE, _inAllPlans=false;
 const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 /* T-138 (D-110, AB 2026-10-25 "nicely represented every time we speak of someone's zip code, end
@@ -3340,7 +3372,7 @@ function priorityNameWords(){
 function resultsTitlePlain(n,isSupp){
   const city=D.city||''; const where=city||D.zip||'';
   const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
-  return isSupp?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
+  return isSupp?L(`Medigap supplements in ${where}`,`Suplementos Medigap en ${where}`)
     :tn?L(`${n} ${tn} plan${n===1?'':'s'} in ${where}`,`${n} plan${n===1?'':'es'} ${tn} en ${where}`)
        :L(`${n} plan${n===1?'':'s'} in ${where}`,`${n} plan${n===1?'':'es'} en ${where}`);
 }
@@ -3352,14 +3384,13 @@ function resultsHead(list){
   const zb=`<span class="zipb">${esc(D.zip||'')}</span>`;
   const where=city?`<span class="zipb">${city}</span>`:zb;
   const tn=[typeNameWords(),priorityNameWords()].filter(Boolean).join(', ');
-  const title=mg?L(`${n} Medigap plan${n===1?'':'s'}`,`${n} plan${n===1?'':'es'} Medigap`)
+  const title=mg?L(`Medigap supplements in&nbsp;${where}`,`Suplementos Medigap en&nbsp;${where}`)
                 :tn?L(`${n} ${esc(tn)} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} ${esc(tn)} en&nbsp;${where}`)
                    :L(`${n} plan${n===1?'':'s'} in&nbsp;${where}`,`${n} plan${n===1?'':'es'} en&nbsp;${where}`);
   return `<div class="rh">
     <div class="rtop">${bk()}<p class="hl">${title}</p></div>
     <div class="zl" id="zl">${placePill(D.zip)}
       <button class="zc" onclick="zipEdit()" aria-label="${L('Change ZIP code','Cambiar c\u00F3digo postal')}">${L('Change','Cambiar')}</button>
-      ${equipoShareBtn('openShareList()','zsh')}
       <form class="zf" onsubmit="event.preventDefault();zipChange()">
         <input id="zin" type="tel" inputmode="numeric" maxlength="5" aria-label="${L('ZIP code','C\u00F3digo postal')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,5)">
         <button type="submit">${L('See','Ver')}</button>
@@ -3406,12 +3437,15 @@ function chipDefs(){
   };
   const drugN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length;
   const zeroN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length;
+  // T-177 (AB 2026-11-07): fixed order -- $0 prima, Incluye medicamentos, Suplementos, Parte D sola, Medicaid, Necesidades especiales
+  const suppN=mgMain().length;
   return [
-    {k:'drug', lb:L('With drugs','Con medicamentos'), on:_drugOnly, group:'rest',
-     any:PLANS.some(hasDrug), n:drugN, disabled:!_drugOnly&&drugN===0},
     {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, group:'rest',
      any:PLANS.some(p=>inTodos(p)&&p.premium===0), n:zeroN, disabled:!_zeroOnly&&zeroN===0},
-    cat('pdp',L('Drugs only','Solo medicamentos'),_pdpOnly),
+    {k:'drug', lb:L('Includes drugs','Incluye medicamentos'), on:_drugOnly, group:'rest',
+     any:PLANS.some(hasDrug), n:drugN, disabled:!_drugOnly&&drugN===0},
+    {k:'supp', lb:L('Supplements','Suplementos'), on:_typeFilter==='supp', group:'rest', any:suppN>0, n:suppN, disabled:false},
+    cat('pdp',L('Part D only','Parte D sola'),_pdpOnly),
     {...cat('dsnp',mcd(),_dsnpOnly), group:'last'},
     {...cat('snp',L('Special needs','Necesidades especiales'),_snpOnly), group:'last'}
   ];
@@ -3424,22 +3458,11 @@ function chipDefs(){
    only its own count (still "what tapping it would leave", same as before) can go to 0. Multi-select,
    OR'd together: picking HMO and PPO shows either. */
 function planTypeChipDefs(){
-  const present=new Set();
-  // Standalone Part D plans carry type "PDP" literally -- that is already its own category chip
-  // ("Drugs only"/"Solo medicamentos"); Medigap is a different category entirely. Neither belongs in
-  // this set, regardless of current filters.
-  PLANS.forEach(p=>{ if(!isPDP(p)&&!p._medigap) present.add(baseType(p)); });
-  // amendment (evening): HMO and PPO first, then the rest, alphabetically
-  const FIRST=['HMO','PPO'];
-  const keys=[...present].sort((a,b)=>{
-    const ia=FIRST.indexOf(a), ib=FIRST.indexOf(b);
-    if(ia>=0||ib>=0) return (ia<0?99:ia)-(ib<0?99:ib);
-    return a.localeCompare(b);
-  });
-  return keys.map(t=>{
+  // T-177 (AB 2026-11-07): HMO (incl. HMO-POS) and PPO (incl. Regional PPO), only where the ZIP has one.
+  return ['HMO','PPO'].filter(t=>PLANS.some(p=>!isPDP(p)&&!p._medigap&&netGroup(p)===t)).map(t=>{
     const on=_planTypes.has(t);
     const test=new Set(_planTypes); if(on) test.delete(t); else test.add(t);
-    const n=PLANS.filter(p=>!isPDP(p)&&categoryOK(p)&&extrasOK(p)&&(test.size===0||test.has(baseType(p)))).length;
+    const n=PLANS.filter(p=>!isPDP(p)&&!p._medigap&&categoryOK(p)&&extrasOK(p)&&(test.size===0||test.has(netGroup(p)))).length;
     return {k:'type:'+t, lb:t, on, group:'type', isType:true, typeVal:t, any:true, n, disabled:!on&&n===0};
   });
 }
@@ -3450,12 +3473,14 @@ const PRI_CHIP={cost:'zero', drugs:'drug', medicaid:'dsnp'};
    normally in the last group, when the answer was "Tengo Medi-Cal". No PRI_CHIP entry for an answer
    (doctors, benefits, no preference) just leaves the default order with nothing promoted. */
 function orderedChips(){
+  const tf=_typeFilter; if(tf==='supp') _typeFilter='all';   // T-177: other chips count as if Suplementos were off
   const type=planTypeChipDefs(), rest=chipDefs();
+  _typeFilter=tf; rest.forEach(c=>{ if(c.k==='supp') c.on=tf==='supp'; });
   let ordered=[...type, ...rest.filter(c=>c.group==='rest'), ...rest.filter(c=>c.group==='last')];
   // T-132 B3: every picked filter chip is pre-selected and moves to the front, in pick order --
   // not just the single one T-109 promoted for the old one-answer question.
-  const pr=Array.isArray(D.priorities)?D.priorities:[];
-  const promoteKeys=pr.map(id=>PRI_CHIP[id]).filter(Boolean);
+  // T-177 (AB 2026-11-07): the 8 pills keep ONE fixed order; a pre-selected pill shows ticked in its own place.
+  const promoteKeys=[];
   if(promoteKeys.length){
     const promoted=[], rest2=[];
     ordered.forEach(c=>{ (promoteKeys.indexOf(c.k)>=0?promoted:rest2).push(c); });
@@ -3475,16 +3500,16 @@ function chipRow(){
   const zeroMsg=zeroResultMsg()||priDropMsgHTML();
   /* T-176 (AB 2026-11-06): "Elegir $0 de prima" at the top of the list, always, EXCEPT when the visitor came
      from comparing their previous-year plan (_cmpFrom 'myplan'). It is the same $0 premium filter as the chip. */
-  const zeroTop=_cmpFrom==='myplan'?'':`<button class="zerotop${_zeroOnly?' on':''}" aria-pressed="${_zeroOnly}" onclick="chipTap('zero')">${_zeroOnly?'✓ ':''}${L('Choose $0 premium','Elegir $0 de prima')}</button>`;
-  return zeroTop+`<div class="fx"><div class="fxr">`+cs.map(c=>
+  // T-177 (AB 2026-11-07): "Elegir $0 de prima" is gone -- it repeated the "$0 prima" pill.
+  return `<div class="fx"><div class="fxr">`+cs.map(c=>
       // T-145: a 0-and-not-selected chip stays in its place, greyed, aria-disabled, and does
       // nothing on tap (no onclick at all, rather than a guard that still fires on Enter/Space).
       c.disabled
         ? `<button class="fc fcd" aria-pressed="false" aria-disabled="true">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
         : `<button class="fc${c.on?' on':''}" aria-pressed="${c.on}" onclick="chipTap('${c.k}')">${esc(c.lb)} <i aria-hidden="true">${c.n}</i></button>`
     ).join('')+carChips+`</div></div>`+
-    `<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Orden')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`
-    +zeroMsg;
+    (_typeFilter==='supp'?'':`<div class="fxo"><button class="ord ordo" aria-expanded="${_foOpen}" aria-controls="fopan" onclick="toggleFO()">${L('Sort','Ordenar')} ${_foOpen?'\u25B4':'\u25BE'}</button>${carBtn}</div>`)
+    +showingLine()+zeroMsg;
 }
 /* T-132 B3: the question screen's own auto-applied filters can combine into a mix with 0 plans; this
    says so by name (what was tried, what is showing) and undoes with the same one-tap pattern as
@@ -3587,10 +3612,20 @@ function carrierClear(c){
    never clear one another -- any mix of them, plus any mix of plan types, can be on at once.
    T-109 (3): a combination that empties the list stays on (not auto-dropped); zeroResultMsg names
    whichever chip was JUST turned on and offers "Quitar filtro" for that one tap. */
-const CHIP_LBL={zero:()=>L('$0 premium','$0 prima'), drug:()=>L('With drugs','Con medicamentos'),
-  pdp:()=>L('Drugs only','Solo medicamentos'), dsnp:()=>mcd(), snp:()=>L('Special needs','Necesidades especiales')};
+const CHIP_LBL={zero:()=>L('$0 premium','$0 prima'), drug:()=>L('Includes drugs','Incluye medicamentos'),
+  pdp:()=>L('Part D only','Parte D sola'), dsnp:()=>mcd(), snp:()=>L('Special needs','Necesidades especiales')};
 function chipTap(k){
   _priDropMsg=null;   // T-132 B3: a manual chip tap (including the drop message's own undo) supersedes the auto-applied message
+  // T-177 (AB 2026-11-07): Suplementos is its own view. On: every other filter goes. Any other pill: back to the plans.
+  if(k==='supp'){
+    const on=_typeFilter!=='supp';
+    wEvt('filter_chip',{chip:'supp',on}); wEvt('filter_use',{filter:'supp',on});
+    _typeFilter=on?'supp':'all'; _mgMore=false;
+    if(on){ _zeroOnly=_drugOnly=_pdpOnly=_dsnpOnly=_snpOnly=false; _planTypes.clear(); _carriers=[]; }
+    _lastChip=null; _shown=PAGE;selReset();_foOpen=false;_carOpen=false;flowResults();toTop();
+    return;
+  }
+  if(_typeFilter==='supp') _typeFilter='all';
   if(k.indexOf('type:')===0){
     const t=k.slice(5), was=_planTypes.has(t);
     wEvt('filter_chip',{chip:k,on:!was}); wEvt('filter_use',{filter:'type_'+t,on:!was});
@@ -3624,7 +3659,7 @@ function toggleFO(){
   _foOpen=!_foOpen; if(_foOpen&&_carOpen) toggleCar();
   wEvt('filters_sort_panel',{on:_foOpen});
   const p=document.getElementById('fopan');
-  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ordo');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort','Orden')+' '+(_foOpen?'\u25B4':'\u25BE');}}
+  if(p){p.hidden=!_foOpen;const b=document.querySelector('.ordo');if(b){b.setAttribute('aria-expanded',_foOpen);b.innerHTML=L('Sort','Ordenar')+' '+(_foOpen?'\u25B4':'\u25BE');}}
 }
 // T-028: only for a visitor who picked "Tengo Medicaid / Medi-Cal". Nobody else sees a line.
 function dualLine(){
@@ -3667,11 +3702,84 @@ function moreBtn(total){
   const sub=L(`Showing ${_shown} of ${total}`,`Mostrando ${_shown} de ${total}`);
   return `<button class="showmore" onclick="showMore()">${lab}<span>${sub}</span></button>`;
 }
+/* T-177 (AB 2026-11-07, mock 2026-11-07_0010_T177-T178-v5 pantalla 1): "Mostrando 10 de 29 · Ver todos" right under
+   the pills, so the visitor knows there are more before scrolling. Same showMore() as the button under the list. */
+function showingLine(){
+  if(_typeFilter==='supp') return '';
+  const total=listPlans().length;
+  if(total<=PAGE_ALL||_shown>=total) return '';
+  return `<p class="cnt" id="cnt">${L(`Showing ${Math.min(_shown,total)} of ${total}`,`Mostrando ${Math.min(_shown,total)} de ${total}`)} · <button class="cntx" onclick="showMore()">${L('See all','Ver todos')}</button></p>`;
+}
+/* ── T-177 Suplementos (AB 2026-11-07, mock pantalla 2) ──────────────────────────────────────────────
+   Every state the Medigap file has (33 today) gets the pill. Only G, N and high-deductible G show, in that
+   order; the other letters wait behind "Ver otras letras". Prices are Medicare.gov's March 2026 lowest rate
+   for any age, starred and dated, never a promise: "Reciba su tarifa exacta" opens the T-158 rates form, and
+   where we are not licensed it is "Hablar con nosotras" (a call), because we do not quote there.
+   $283 (Part B deductible) and $2,950 (high-deductible G) are medicare-figures.json's 2026 values. */
+let _mgMore=false;
+const MG_MAIN=['G','N','HIGH_G'], MG_REST=['A','B','C','D','F','HIGH_F','K','L','M'];
+const MG_PARTB_DED='$283', MG_HD_DED='$2,950';
+const ST_NAMES={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'};
+function mgLetter(p){return String(p.id).replace(/^medigap-/,'').replace(/-[A-Z]{2}$/,'');}
+function mgMain(){
+  const mg=PLANS.filter(p=>p._medigap);
+  const main=MG_MAIN.map(t=>mg.find(p=>mgLetter(p)===t)).filter(Boolean);
+  return main.length?main:mg;   // a state with none of the three: show what it has
+}
+function mgOthers(){
+  const main=mgMain(), mg=PLANS.filter(p=>p._medigap&&main.indexOf(p)<0);
+  const rk=p=>{const i=MG_REST.indexOf(mgLetter(p));return i<0?99:i;};
+  return mg.sort((a,b)=>rk(a)-rk(b));
+}
+function mgName(t){
+  if(t==='HIGH_G') return L('High-deductible Plan G','Plan G con deducible alto');
+  if(t==='HIGH_F') return L('High-deductible Plan F','Plan F con deducible alto');
+  return 'Plan '+t;
+}
+function mgRatesURL(){
+  if(lang!=='en') return '/blog/medicare-supplement-plans-california#mgr';
+  return (/\.pages\.dev$/.test(location.hostname)?'https://staging.medicare-california.pages.dev':'https://medicare-california.com')+'/blog/medicare-supplement-plans-california#mgr';
+}
+function mgCta(){
+  if(leadOK()&&!(D.state&&!_rep))
+    return `<a class="mgcta" href="${mgRatesURL()}" target="_top" onclick="wEvt('medigap_rates_click',{state:D.state||''})">${L('Get your exact rate','Reciba su tarifa exacta')}</a>`;
+  return `<a class="mgcta" href="tel:+13105979142" onclick="wEvt('phone_click',{placement:'medigap_unlicensed'})">${L('Talk to us','Hablar con nosotras')}</a>`;
+}
+function mgCard(p,selectable,main){
+  const t=mgLetter(p), n=p._carrierCount||0, st=ST_NAMES[D.state]||D.state||'';
+  const ins=L(`${n} insurer${n===1?'':'s'}`,`${n} aseguradora${n===1?'':'s'}`);
+  let sub='', tag='', right='';
+  if(t==='G'){ tag=`<span class="tg mgpop">${L('Most chosen','El más elegido')}</span>`; sub=L(`${ins} in ${st}`,`${ins} en ${st}`);
+    right=kTile(MG_PARTB_DED,L('You pay per year (Part B deductible)','Usted paga al año (deducible Parte B)')); }
+  else if(t==='N'){ sub=L(`${ins} · small copays at visits`,`${ins} · copagos chicos en consultas`);
+    right=kTile(MG_PARTB_DED,L('+ copays up to $20','+ copagos de hasta $20')); }
+  else if(t==='HIGH_G'||t==='HIGH_F'){ right=kTile(MG_HD_DED,L('Deductible per year','Deducible al año')); if(!main) sub=ins; }
+  else { sub=ins+((t==='C'||t==='F')?L(' · only if you turned 65 before 2020',' · solo si cumplió 65 antes de 2020'):''); }
+  const price=kTile(L('from ','desde ')+usd(Math.round(p._pmin)),L('per month*','al mes*'),'zero');
+  return `<div class="pc mgc" data-pid="${esc(p.id)}" style="--cc:var(--cbar-brand)"><div class="pc-head"><div class="pc-top"><div>
+      <p class="pc-name">${esc(mgName(t))}</p>${tag}${sub?`<p class="mgsub">${sub}</p>`:''}</div></div></div>
+    <div class="pc-keys ${right?'k2':'k1'}">${price}${right}</div>
+    ${selectable&&t==='G'?mgCta():''}</div>`;
+}
+function mgListHTML(selectable){
+  const main=mgMain(), rest=mgOthers();
+  const pdpN=PLANS.filter(isPDP).length;
+  const ex=`<p class="mgex">${L('They add to Original Medicare.','Se suman a Medicare Original.')} ${
+    pdpN?L(`You also need a Part D plan for medicines (<button class="mgexl" onclick="chipTap('pdp')">see ${pdpN}</button>).`,`Necesita también una Parte D sola para medicinas (<button class="mgexl" onclick="chipTap('pdp')">ver ${pdpN}</button>).`)
+        :L('You also need a Part D plan for medicines.','Necesita también una Parte D sola para medicinas.')} ${
+    L('Use any doctor who accepts Medicare. The price depends on your age and whether you smoke.','Use cualquier médico que acepte Medicare. El precio depende de su edad y si fuma.')}</p>`;
+  const more=rest.length?(_mgMore||!selectable
+      ? rest.map(p=>mgCard(p,selectable,false)).join('')
+      : `<button class="showmore mgmore" onclick="_mgMore=true;flowResults()">${L(`See other letters (${rest.length})`,`Ver otras letras (${rest.length})`)}</button>`):'';
+  return `${ex}<div id="plist">${main.map(p=>mgCard(p,selectable,true)).join('')}${more}</div>
+    <p class="mgfine">${L('*Lowest rate for any age, Medicare.gov, March 2026.','*Tarifa más baja para cualquier edad, Medicare.gov, marzo 2026.')}</p><div id="pmore"></div>`;
+}
 // T-139: selectable defaults to true (every existing caller -- the live results screen -- wants the
 // compare tick box); shareRenderList passes false so the shared page's read-only cards never draw a
 // checkbox nothing on that page can wire up (it has no toggleCmp).
 function listHTML(all,selectable){
   if(selectable===undefined) selectable=true;
+  if(_typeFilter==='supp') return mgListHTML(selectable);
   // Thirteen or fewer: all of them, and no button. "Comparar estos 3 planes" is gone -- comparing is
   // a tick box and the bar at the bottom now, and the old button said the same thing a third time.
   // T-103 (4): a pinned current plan sits above the list, whatever the order and filters, and is not
@@ -3701,6 +3809,7 @@ function showMore(){
   // T-082: one tap reveals everything left (was +=PAGE per tap, 14 taps to see 70 plans).
   const list=listPlans(), from=_shown;
   _shown=list.length; wEvt('show_more',{shown:_shown,total:list.length});
+  const cl=document.getElementById('cnt'); if(cl) cl.remove();   // T-177
   const box=document.getElementById('plist'), m=document.getElementById('pmore');
   if(!box){flowResults();return;}
   box.insertAdjacentHTML('beforeend',list.slice(from,_shown).map(p=>planCard(p,true)).join(''));
@@ -3709,7 +3818,17 @@ function showMore(){
 // T-084: the bar shows from ONE ticked plan, and Comparar works from one -- it opens that plan
 // next to the next two in the list, exactly as the "Comparar estos 3 planes" button already does.
 function cbarHTML(){return `<div class="cbar" id="cbar"><span class="n" id="cbarN"></span><button class="sec" id="cbarSec" onclick="barSec()" hidden>${shrIcon()}<span id="cbarSecT"></span></button><button id="cbarGo" onclick="cbarTap()">${L('Compare','Comparar')}</button></div>`;}
-function barSec(){ if(_act&&_act.sec) openShare(); }
+function barSec(){ sendTap(); }
+/* T-177: the one Enviar. On the list: 2-3 ticked = "Enviar estos N planes", else the whole list as it is on screen. */
+let _scrList=false;
+function sendTap(){
+  if(_scrList){
+    const k=selPlans.filter(id=>{const p=PLANS.find(x=>x.id===id);return p&&!p._medigap;}).length;
+    if(k>=2) openShare(); else openShareList();
+    return;
+  }
+  openShare();
+}
 function cbarTap(){const st=barState();if(st.mode==='action')barAct();else goCompare();}
 function goCompare(){
   if(!selPlans.length) return;
@@ -3764,7 +3883,7 @@ function barState(){
   // T-176 (AB 2026-11-06): Compartir also sits beside "Comparar" when 2+ plans are ticked (any three)
   if(k>=2&&_planScreen) return {mode:'compare',on:true,n:k,label:'',ready:k>=3,
     compare:k>=3?L('Compare now \u203A','Comparar ya \u203A'):L(`Compare ${k} plans`,`Comparar ${k} planes`),
-    canCompare:k>=1&&total>=2,secondary:shareOn()?L('Share','Compartir'):''};
+    canCompare:k>=1&&total>=2,secondary:shareOn()?L('Send','Enviar'):''};
   return {mode:'none',on:false,n:k,label:'',compare:L('Compare','Comparar'),canCompare:false};
 }
 function barAct(){
@@ -3872,7 +3991,9 @@ async function flowResults(){
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
   // T-154 (AB 2026-10-27): with fewer than 2 ticked, the list's bar is "Ayúdeme a elegir" (was: none,
   // and "Compartir" up in the Orden row). At 2+ it turns into "Comparar N planes" exactly as before.
-  _act=(leadOK()&&!(D.state&&!_rep))?{id:'list',label:L('Help me choose','Ayúdeme a elegir')}:null;
+  // T-177 (AB 2026-11-07): "Enviar" lives in ONE place, beside "Ayúdeme a elegir" in this bar.
+  _act=(leadOK()&&!(D.state&&!_rep))?{id:'list',label:L('Help me choose','Ayúdeme a elegir'),sec:L('Send','Enviar')}:{id:'',label:'',sec:L('Send','Enviar')};
+  _scrList=true;
   updBar();
   viewMsg();
   hlFit();
@@ -4301,7 +4422,7 @@ function mp26v27Block(p26,p27,ro){
   // already opened from a share makes no sense anyway), so it's left out there, not just disabled.
   return `${pill}
     <div class="mp26g"><div class="mp26h"></div><div class="mp26h a">2026</div><div class="mp26h" style="background:${cc}">${planYear()}</div>${cells}</div>
-    ${ro||!shareOn()?'':`<button class="zsh mpshare" onclick="openShare(['${esc(p27.id)}'])">${shrIcon()}${L('Share','Compartir')}</button>`}`;   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
+`;   // T-177: Enviar is in the bar only (was a Compartir pill here)   // T-166: team only   // T-154 (AB 2026-10-27): its "Compartir ›" is gone; on the plan screen the bar's "Ayúdeme a elegir" is the action
 }
 // mpOptCard() (the "Similar to yours"/"Different from yours" card renderer) removed 2026-10-19:
 // its only two call sites, in flowMyPlanResults(), are gone per the 2026-10-18 evening amendment.
@@ -4661,7 +4782,7 @@ function applyShareListFilters(fStr,oStr,aStr){
   _pdpOnly=toks.indexOf('pdp')>=0; _dsnpOnly=toks.indexOf('dsnp')>=0; _snpOnly=toks.indexOf('snp')>=0;
   _planTypes.clear();
   const pt=toks.find(t=>t.indexOf('pt:')===0);
-  if(pt) pt.slice(3).split('+').forEach(t=>{ if(t) _planTypes.add(t); });
+  if(pt) pt.slice(3).split('+').forEach(t=>{ if(t) _planTypes.add(/PPO/.test(t)?'PPO':(/HMO/.test(t)?'HMO':t)); });   // T-177: HMO-POS -> HMO, Regional PPO -> PPO
   _sortMode=oStr||'premium';
   _carriers=String(aStr||'').split('|').filter(Boolean).map(c=>{ try{return decodeURIComponent(c);}catch(e){return c;} });
   _carOpen=false; _foOpen=false; _shown=PAGE;
@@ -4845,13 +4966,19 @@ function openShare(ids){
 function openShareSheet(){
   const tile=c=>`<button class="cht" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span><span class="chtl">${c.lb}</span></button>`;
   const quiet=c=>`<button class="chq" onclick="shareSend('${c.k}')"><span class="ci ${c.ic}" aria-hidden="true"><svg viewBox="0 0 24 24">${SHARE_ICONS[c.ic]}</s`+`vg></span>${c.lb}</button>`;
-  const chans=shareChannels(), tiles=chans.slice(0,3), quiets=chans.slice(3);
-  const btns=`<div class="chgrid">`+tiles.map(tile).join('')+`</div><div class="chq2">`+quiets.map(quiet).join('')+`</div>`;
+  /* T-177 (AB 2026-11-07, mock pantalla 3): four round tiles (WhatsApp, Texto, Email, Copiar enlace), then
+     "Descargar PDF" and "Cerrar" as two quiet links. Title says what goes: the list, or the 2-3 ticked plans. */
+  const by=k=>shareChannels().find(c=>c.k===k);
+  const tiles=['whatsapp','sms','email','copy'].map(by);
+  const btns=`<div class="chgrid c4">`+tiles.map(tile).join('')+`</div><div class="chalt"><button onclick="shareSend('pdf')">${L('Download PDF','Descargar PDF')}</button><button onclick="closeShare()">${L('Close','Cerrar')}</button></div>`;
+  const n=_shareList?0:sharePlans().length;
+  const ttl=_shareList?L('Send this list','Enviar esta lista'):L(`Send these ${n} plans`,`Enviar estos ${n} planes`);
   const el=document.createElement('div');
   el.id='shwrap';
   el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
-    <div class="sheet" role="dialog" aria-label="${L('Share','Compartir')}">
-      <div class="grab"></div><p class="sh">${L('Share','Compartir')}</p>
+    <div class="sheet" role="dialog" aria-label="${ttl}">
+      <div class="grab"></div><p class="sh">${ttl}</p>
+      <p class="ss">${L('To a son, a daughter or yourself. It opens just as you see it now.','A un hijo, a una hija o a usted mismo. Se abre igual que la ve ahora.')}</p>
       ${senderRow()}${btns}<p class="shok" id="shok"></p></div>`;
   // framed: keep it out of sight for the one tick it takes the page to answer, rather than
   // letting it paint a thousand pixels down and jump
@@ -4964,7 +5091,8 @@ function flowCompare(){
   // may not take a lead (the bar used to be Compartir alone there).
   _act=c.can?{id:'compare',label:L('Help me choose','Ayúdeme a elegir'),wins:true}:null;
   // T-166: for the team, the pre-T-154 bar: Compartir (outline) + Ayúdeme a elegir, or Compartir alone
-  if(shareOn()) _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Share','Compartir'),wins:true};
+  if(shareOn()) _act={id:c.can?'compare':'',label:c.can?L('Help me choose','Ayúdeme a elegir'):'',sec:L('Send','Enviar'),wins:true};
+  _scrList=false;
   wb().innerHTML=`
     ${c.top}
     ${c.table}
@@ -5100,7 +5228,7 @@ function cmpParts(plans,ro){
   const diffTog=`<label class="tog cmptog"><input type="checkbox" onchange="cmpDiff(this)"> <span class="tfull">${L('Show differences','Mostrar diferencias')}</span><span class="tshort">${L('Diffs only','Solo diferencias')}</span></label>`;
   // T-176 (AB 2026-11-06): Compartir on the comparison too, in the top row beside Volver and the toggle.
   // Not on the shared page (ro): sharing the page you already opened from a share makes no sense.
-  const cmpShare=(!ro&&shareOn())?equipoShareBtn('openShare()','zsh cmpsh'):'';
+  const cmpShare='';   // T-177: Enviar is in the bar only
   const top=`<div class="cmptop">${ro?'':bk()}${cmpShare}${diffTog}</div>
     ${unlicensedNote()}
     ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
@@ -5656,7 +5784,7 @@ if(!_dataOnly){
     if(e.data.type==='widget-compare'){var st=(typeof barState==='function')?barState():null;
       if(st&&(st.mode==='action'||st.mode==='duo')){barAct();}else{goCompare();}return;}
     /* T-078: the page's outline button is Compartir */
-    if(e.data.type==='widget-share'){ if(typeof openShare==='function') openShare(); return; }
+    if(e.data.type==='widget-share'){ if(typeof sendTap==='function') sendTap(); return; }
     /* T-098: where the screen is, reported by the page as it scrolls, so the share sheet can
        sit at the bottom of it instead of at the bottom of a 2,000px frame. */
     if(e.data.type==='host-viewport'){ _hostVP=e.data;
