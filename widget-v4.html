@@ -2988,7 +2988,7 @@ function askRow(p){
    filled button that opens the T-179 question sheet with no plan. Agent per AGENT_BY_STATE. No WhatsApp. */
 function agentCardHTML(){
   if(!leadOK()||(D.state&&!_rep)) return '';
-  const a=agent(), lic=a.lic?`\u00a0\u00b7 ${L('CA Lic.','Lic. CA')}\u00a0#${esc(a.lic)}`:'';
+  const a=agent(), lic=a.lic?`\u00a0\u00b7 ${L('CA\u00a0Lic.','Lic.\u00a0CA')}\u00a0#${esc(a.lic)}`:'';
   return `<div class="agcard" data-agent="${a.key}"><div class="top"><img src="${a.photo}" alt="${esc(a.name)}" width="56" height="56"><div>
     <b>${esc(a.name)}</b><span class="r">${L('Medicare advisor','Asesora de Medicare')}${lic}</span><span class="rt">${L('I reply today','Le respondo hoy')}</span></div></div>
     <button type="button" class="btn" onclick="agentCardTap()">${askIcon(true)} ${L('I have a question','Tengo una pregunta')}</button></div>`;
