@@ -455,25 +455,39 @@ body.q3 .widget-body{padding:10px 14px 16px}
   border-top:1px solid #EEF1F3;border-radius:0;margin:0;padding:10px 14px;min-height:44px}
 .pc-detl{font:inherit;font-size:16px;font-weight:600;color:var(--cbar-brand);background:none;border:0;
   padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-/* T-178a (AB 2026-11-07, mock T177-T178-v7 pantalla 4): every card ends in "Preguntar: Texto · WhatsApp" as
-   plain text links (no filled buttons: 30 cards would be 30 buttons), each opening the app with the plan's
-   name already typed. WhatsApp keeps its official green glyph, the only green outside the brand. */
-.pc-det.withask{justify-content:space-between;flex-wrap:wrap;gap:0 12px}
-.pc-ask{display:inline-flex;align-items:center;flex-wrap:wrap;font-size:13.5px;font-weight:700;color:var(--cbar-brand)}
-.pc-ask .lb{padding-right:6px}
-.pc-ask a{display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:0 4px;color:var(--cbar-brand);font-weight:700;text-decoration:none}
-.pc-ask a.wa{color:#1A8F4A}
-.pc-ask .dot{color:#66727C;font-weight:400;padding:0 2px}
-.pc-ask svg{flex:none}
-/* T-178a: Susana (or the ZIP's agent) + "Le respondo hoy", above the bottom bar. In the iframe it closes the
-   list, right above where the page's fixed bar sits; with the widget's own bar it floats above it. */
-.facestrip{margin:12px 0 4px;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,60,113,.10);padding:8px 10px;display:flex;align-items:center;gap:10px}
-.facestrip img{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:none}
-.facestrip b{display:block;font-size:14px;font-weight:700;color:#1e2a32;line-height:1.25}
-.facestrip span.fs{display:block;font-size:12.5px;color:#4A5568;line-height:1.3}
-.facestrip a.w{margin-left:auto;display:inline-flex;align-items:center;min-height:44px;padding:0 4px;color:var(--cbar-brand);font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none}
-body.host-cbar .facestrip{display:none}   /* the page draws it above its own fixed bar */
-body:not(.in-iframe) .facestrip{position:fixed;left:10px;right:10px;bottom:78px;margin:0 auto;max-width:560px;z-index:5}
+/* T-179 (AB 2026-11-07, mock DECIDE/now/2026-11-07_0145_T179-v4-preguntar-mock.html): every card ends in ONE quiet
+   link, "Preguntar", the same weight as "Ver detalles", opening the ask sheet below. The T-178a Texto / WhatsApp
+   links and the agent strip above the bar are gone: the agent's face now sits in the sheet itself. */
+.pc-det.withask{justify-content:space-between;gap:0 12px}
+.pc-askl{font:inherit;font-size:14px;font-weight:700;color:var(--cbar-brand);background:none;border:0;padding:0 4px 0 0;min-height:44px;cursor:pointer}
+/* T-179: the ONE contact sheet (Preguntar on a card, and Enviar > A mí). Sizes from the mock's .who/.tg/.in/.qa/.go */
+.sheet.ask{padding-top:12px}
+.sheet .askx{position:absolute;right:6px;top:2px;width:44px;height:44px;font-size:26px;line-height:1;color:#5b6470;background:none;border:0;cursor:pointer}
+.ask .who{display:flex;gap:10px;align-items:center;margin:0 34px 12px 0;text-align:left}
+.ask .who img{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:none}
+.ask .who b{display:block;font-size:16px;font-weight:700;line-height:1.25;color:var(--cbar-ink)}
+.ask .who span{display:block;font-size:12.5px;color:#5b6470}
+.ask .tg{display:flex;gap:6px;margin-bottom:8px}
+.ask .tg button{flex:1;font:inherit;text-align:center;border:1.5px solid #d9dee3;border-radius:10px;padding:7px;min-height:40px;font-weight:700;font-size:14px;color:var(--cbar-ink);background:#fff;cursor:pointer}
+.ask .tg button.on{border-color:var(--cbar-brand);background:var(--cbar-brand);color:#fff}
+.ask .in{display:block;width:100%;box-sizing:border-box;font:inherit;border:1.5px solid #d9dee3;border-radius:10px;padding:11px 12px;font-size:17px;margin-bottom:8px;color:var(--cbar-ink);background:#fff}
+.ask .in:focus{outline:none;border:2px solid var(--cbar-brand);padding:10.5px 11.5px}
+.ask .qa{display:block;width:100%;box-sizing:border-box;font:inherit;border:1.5px solid #d9dee3;border-radius:10px;padding:9px 12px;font-size:14px;line-height:1.35;margin-bottom:10px;min-height:56px;color:var(--cbar-ink);resize:none;text-align:left;background:#fff}
+.ask .qa.ro{min-height:0}
+.ask .qh{display:block;font-size:12px;color:#5b6470;margin:-6px 2px 10px;text-align:left}
+.ask .go{display:block;width:100%;font:inherit;background:var(--cbar-brand);color:#fff;text-align:center;border:0;border-radius:12px;padding:13px;min-height:48px;font-weight:800;font-size:16px;cursor:pointer}
+.ask .go:disabled{opacity:.7}
+.ask .askerr{color:#a5281b;font-size:14px;margin:0 2px 8px;text-align:left}
+.askok{padding:30px 22px;text-align:center}
+.askok .c{width:64px;height:64px;border-radius:50%;background:#e4f1d3;color:#2d5a12;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.askok .c svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.askok h3{margin:0 0 6px;font-size:22px;font-weight:700;color:var(--cbar-ink)}
+.askok p.s{color:#5b6470;margin:0 0 18px;font-size:16px}
+.askok .tm-box{text-align:left}
+/* T-179: "A mí, para verla después", the Enviar sheet's first row */
+.shme{display:flex;align-items:center;gap:10px;width:100%;font:inherit;font-size:16px;font-weight:700;color:var(--cbar-brand);background:#fff;border:1.5px solid #e3e7ea;border-radius:14px;padding:10px 12px;min-height:52px;margin:0 0 4px;cursor:pointer;text-align:left}
+.shme img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
+.shme span.ar{margin-left:auto;font-size:20px;font-weight:400}
 /* T-103 (6)(b): quiet on purpose -- smaller and greyer than "Ver detalles", so it never competes
    with the card's main action, but still a real 44px tap target. */
 .pc-withpin{display:block;width:100%;text-align:left;font:inherit;font-size:13.5px;font-weight:600;
@@ -2947,28 +2961,11 @@ function planHead(p,selectable,detail){
 const WA_GLYPH=`<svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><path fill="#25D366" d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3.5 29l7-1.8c1.8 1 3.9 1.5 5.9 1.5 7 0 12.7-5.6 12.7-12.6S23 3 16 3z"/><path fill="#fff" d="M22.6 19.2c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2l-1 1.3c-.2.2-.4.3-.7.1-1.9-.9-3.2-2-4.2-3.7-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.6l-1-2.5c-.3-.6-.5-.5-.8-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 .9 4.1.8.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.7-.4z"/></svg>`;
 const CHAT_GLYPH='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H4l2.5-3A8 8 0 1 1 21 12z"/></svg>';
 function isPhoneUA(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent));}
-/* T-178a: "Preguntar: Texto · WhatsApp" under every card. Same gate and same agent as the team card (licensed
-   state, signed carrier file); a computer has no texting app, so there it is WhatsApp only. */
+/* T-179: ONE quiet link under every card, "💬 Preguntar", opening the ask sheet for that plan. Same gate and same
+   agent as before (licensed state, signed carrier file). The face strip of T-178a is gone (its face is in the sheet). */
 function askRow(p){
   if(!leadOK()||(D.state&&!_rep)) return '';
-  const a=agent(), nm=dispName(p), where=placeText(D.zip,D.city);
-  const msg=encodeURIComponent(L(`Hi, I have a question about ${nm}${p._medigap?'':' ('+planIdRaw(p)+')'} in ${where}`,
-                                 `Hola, tengo una pregunta sobre ${nm}${p._medigap?'':' ('+planIdRaw(p)+')'} en ${where}`));
-  const wa=`https://wa.me/${a.digits}?text=${msg}`, ph=isPhoneUA();
-  return `<span class="pc-ask"><span class="lb">${L('Ask:','Preguntar:')}</span>${ph?`<a href="sms:+${a.digits}?&body=${msg}">${CHAT_GLYPH}${L('Text','Texto')}</a><span class="dot">·</span>`:''}<a class="wa" href="${wa}" target="_blank" rel="noopener">${WA_GLYPH}WhatsApp</a></span>`;
-}
-function faceData(){
-  const el=document.querySelector('.facestrip'); if(!el) return null;
-  const a=agent(), l=el.querySelector('a.w'); if(!l) return null;
-  let photo=''; try{photo=new URL(a.photo,location.href).href;}catch(e){}
-  return {photo:photo,name:a.name,text:el.querySelector('.fs').textContent,cta:l.textContent.replace(/\s*\u203A\s*$/,''),href:l.getAttribute('href')};
-}
-function faceStrip(){
-  if(!leadOK()||(D.state&&!_rep)) return '';
-  const a=agent();
-  const msg=encodeURIComponent(L("Hi, I'd like help with the 2027 plans",'Hola, quiero ayuda con los planes 2027'));
-  const href=isPhoneUA()?`sms:+${a.digits}?&body=${msg}`:`https://wa.me/${a.digits}?text=${msg}`;
-  return `<div class="facestrip" data-agent="${a.key}"><img src="${a.photo}" alt="${esc(a.name)}" width="42" height="42"><div><b>${esc(a.name)}</b><span class="fs">${L("Questions? I'll reply today.",'¿Dudas? Le respondo hoy.')}</span></div><a class="w" href="${href}"${isPhoneUA()?'':' target="_blank" rel="noopener"'}>${L('Message me','Escríbame')} ›</a></div>`;
+  return `<button type="button" class="pc-askl" onclick="openAsk('plan','${esc(p.id)}')">💬 ${L('Ask','Preguntar')}</button>`;
 }
 function detBtn(p){
   const ask=askRow(p);
@@ -3938,7 +3935,7 @@ function barAct(){
 }
 function cbarReport(){
   if(window.self===window.top) return;
-  const st=Object.assign({type:'widget-cbar'},barState(),{face:faceData()});   // T-178a: the page draws the strip above its own bar
+  const st=Object.assign({type:'widget-cbar'},barState(),{face:null});   // T-179: no agent strip any more; null tells the page to hide its copy
   const j=JSON.stringify(st); if(j===_cbarLast) return; _cbarLast=j;
   window.parent.postMessage(st,'*');
 }
@@ -4031,7 +4028,6 @@ async function flowResults(){
     ${noPlans?'':askCard()}
     ${listHTML(plans)}
     ${teamCard()}
-    ${faceStrip()}
     ${cbarHTML()}
     ${fineBlock([],plans.some(p=>!p._medigap))}`;
   _planScreen=true;   // T-084: ticked plans keep the compare bar at the bottom of this screen too
@@ -5025,7 +5021,7 @@ function openShareSheet(){
     <div class="sheet" role="dialog" aria-label="${ttl}">
       <div class="grab"></div><p class="sh">${ttl}</p>
       <p class="ss">${L('To a son, a daughter or yourself. It opens just as you see it now.','A un hijo, a una hija o a usted mismo. Se abre igual que la ve ahora.')}</p>
-      ${senderRow()}${btns}<p class="shok" id="shok"></p></div>`;
+      ${meRow()}${senderRow()}${btns}<p class="shok" id="shok"></p></div>`;
   // framed: keep it out of sight for the one tick it takes the page to answer, rather than
   // letting it paint a thousand pixels down and jump
   if(window.self!==window.top){ el.classList.add('vp'); el.style.visibility='hidden'; }
@@ -5045,6 +5041,150 @@ function closeShare(){
   const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
   _shareIds=null; _shareList=false; _shareIdCache=null;
   try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
+}
+/* ── T-179 (AB 2026-11-07): ONE contact sheet, two doors ────────────────────────────────────────────────
+   Mock = spec: DECIDE/now/2026-11-07_0145_T179-v4-preguntar-mock.html, screens 1-4.
+   (1) "💬 Preguntar" on a card -> "Pregúntele a Susana sobre <plan>", lead leadSrc ask_plan + the plan ID.
+   (2) Enviar -> "A mí, para verla después" -> "¿A qué celular se la mandamos?", lead leadSrc share_self + the link.
+   Celular is the one required field (Email is the other toggle), no name, the question is optional and comes
+   written. Consent is the widget's existing consentText(), word for word, right under the button; nothing is
+   pre-ticked and nothing has to be ticked. No WhatsApp link, no "Ahora no": the sheet closes by tapping outside
+   or on the ×. It reuses the share sheet's #shwrap, so it is placed on screen inside the iframe the same way.
+   Lead: leadType 'help' (Current Leads, same as "Ayúdeme a elegir"), "Gracias" only after the script confirms. */
+let _ask=null;
+function askAgentFirst(){return String(agent().name||'').split(' ')[0];}
+function meRow(){
+  if(!leadOK()||(D.state&&!_rep)) return '';
+  const a=agent();
+  return `<button type="button" class="shme" onclick="openAsk('self')"><img src="${a.photo}" alt="" width="32" height="32">${L('Me, to see it later','A mí, para verla después')}<span class="ar" aria-hidden="true">›</span></button>`;
+}
+function openAsk(mode,pid){
+  if(!leadOK()||(D.state&&!_rep)) return;
+  const where=placeText(D.zip,D.city);
+  if(mode==='self'){
+    // what the Enviar sheet was about to send: the whole list, or the 2-3 ticked plans. Read before closeShare() clears it.
+    const list=_shareList, n=list?orderedPlans().length:sharePlans().length;
+    let url=''; try{ url=shareURL(); }catch(e){}
+    const plans=list?orderedPlans().filter(p=>!p._medigap).slice(0,3):sharePlans();
+    _ask={mode:'self',url:url,n:n,list:list,plans:plans,
+      about:list?L(`The ${n} plans in ${where}, just as you see them now.`,`Los ${n} planes de ${where}, tal como los ve ahora.`)
+                :L(`These ${n} plans in ${where}, just as you see them now.`,`Estos ${n} planes de ${where}, tal como los ve ahora.`),
+      title:resultsTitlePlain(orderedPlans().length,_typeFilter==='supp')};
+    closeShare();
+  } else {
+    const p=PLANS.find(x=>x.id===pid); if(!p) return;
+    _ask={mode:'plan',p:p,q:L(`I have a question about ${dispName(p)}.`,`Tengo una pregunta sobre ${dispName(p)}.`)};
+  }
+  _ask.ch='phone';
+  wEvt('ask_open',{mode:_ask.mode==='plan'?'ask_plan':'share_self'});
+  askSheet();
+}
+function askBtnLabel(){return _ask&&_ask.mode==='self'?L('Send me the list','Enviarme la lista'):L('Send question','Enviar pregunta');}
+function askSheet(){
+  const a=agent(), first=askAgentFirst(), btn=askBtnLabel();
+  const ttl=_ask.mode==='plan'?L(`Ask ${first} about ${dispName(_ask.p)}`,`Pregúntele a ${first} sobre ${dispName(_ask.p)}`)
+                              :L('Which cell should we send it to?','¿A qué celular se la mandamos?');
+  const q=_ask.mode==='plan'
+    ?`<textarea class="qa" id="askQ" rows="2" maxlength="500" aria-label="${L('Your question (optional)','Su pregunta (opcional)')}">${esc(_ask.q)}</textarea><span class="qh">${L('(optional, you can change it)','(opcional, puede cambiarla)')}</span>`
+    :`<div class="qa ro">${esc(_ask.about)}</div>`;
+  const old=document.getElementById('shwrap'); if(old) old.remove();
+  const el=document.createElement('div');
+  el.id='shwrap';
+  el.innerHTML=`<div class="shbg" onclick="closeShare()"></div>
+    <div class="sheet ask" role="dialog" aria-label="${esc(ttl)}">
+      <div class="grab"></div><button type="button" class="askx" onclick="closeShare()" aria-label="${L('Close','Cerrar')}">×</button>
+      <div class="who"><img src="${a.photo}" alt="${esc(a.name)}" width="42" height="42"><div><b>${esc(ttl)}</b><span>${esc(first)} · ${L("I'll reply today by text",'Le respondo hoy por texto')}</span></div></div>
+      <div class="tg" role="group"><button type="button" id="askTgP" class="on" aria-pressed="true" onclick="askCh('phone')">${L('Cell','Celular')}</button><button type="button" id="askTgE" aria-pressed="false" onclick="askCh('email')">Email</button></div>
+      <div id="askInBox">${askInput()}</div>
+      ${q}
+      <div id="askErr"></div>
+      <button type="button" class="go" id="askGo" onclick="askSend()">${btn}</button>
+      ${consentHTML(lang,btn,privacyURL())}</div>`;
+  if(window.self!==window.top){ el.classList.add('vp'); el.style.visibility='hidden'; }
+  document.body.appendChild(el);
+  askViewport();
+  const i=document.getElementById('askIn'); if(i){ try{ i.focus({preventScroll:true}); }catch(e){ i.focus(); } }
+}
+function askInput(){
+  return _ask.ch==='email'
+    ?`<input class="in" id="askIn" type="email" inputmode="email" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="email" placeholder="email@ejemplo.com" aria-label="Email">`
+    :`<input class="in" id="askIn" type="tel" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();askSend();}" autocomplete="tel" placeholder="(310) 555-1234" aria-label="${L('Cell','Celular')}">`;
+}
+function askCh(ch){
+  if(!_ask||_ask.ch===ch) return;
+  _ask.ch=ch;
+  const p=document.getElementById('askTgP'), e=document.getElementById('askTgE');
+  if(p){p.classList.toggle('on',ch==='phone');p.setAttribute('aria-pressed',ch==='phone');}
+  if(e){e.classList.toggle('on',ch==='email');e.setAttribute('aria-pressed',ch==='email');}
+  const b=document.getElementById('askInBox'); if(b) b.innerHTML=askInput();
+  const er=document.getElementById('askErr'); if(er) er.innerHTML='';
+  const i=document.getElementById('askIn'); if(i) i.focus();
+}
+function askSend(){
+  if(_submitting||!_ask) return;
+  const v=(document.getElementById('askIn')?.value||'').trim(), er=document.getElementById('askErr');
+  let digits=v.replace(/\D/g,''); if(digits.length===11&&digits.charAt(0)==='1') digits=digits.slice(1);
+  const okPhone=_ask.ch==='phone'&&digits.length===10, okEmail=_ask.ch==='email'&&/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  if(!okPhone&&!okEmail){
+    if(er) er.innerHTML=`<p class="askerr" role="alert">${_ask.ch==='phone'
+      ?L('Please enter a valid 10-digit US phone number.','Por favor ingrese un número de teléfono válido de 10 dígitos (EE.UU.).')
+      :L('Please enter a valid email.','Por favor ingrese un email válido.')}</p>`;
+    document.getElementById('askIn')?.focus(); return;
+  }
+  _submitting=true;
+  const go_=document.getElementById('askGo'), lbl=askBtnLabel();
+  if(go_){go_.disabled=true;go_.textContent=L('Processing...','Procesando...');}
+  if(er) er.innerHTML='';
+  // a fresh lead every time: never reuse the Lead ID or the name / question of an earlier form on this page
+  ['leadId','fullName','firstName','lastName','question','topic','listPicked','reopenUrl','plansSeen','represented','selectedPlan','selectedPlanId','listTitle'].forEach(k=>delete D[k]);
+  D.fullName=''; D.firstName=''; D.lastName='';
+  D.phone=_ask.ch==='phone'?v:''; D.email=_ask.ch==='email'?v:''; D.prefer=_ask.ch==='phone'?'text':'email';
+  D.lang=lang; D.conditions=[...selConds]; D.healthNotes=''; D.timestamp=new Date().toISOString();
+  D.leadType='help'; D.agent=agent().key;
+  const tail=u=>u?u.replace(/&(share_id|utm_[a-z]+)=[^&]*/g,'')+'&utm_source=lead_alert&utm_medium=alert&utm_campaign=lead':'';
+  if(_ask.mode==='plan'){
+    const p=_ask.p;
+    D.leadSrc='ask_plan';
+    D.selectedPlan=p.name; D.selectedPlanId=p.id;
+    D.plansSeen=planLeadTag(p); D.represented=p._medigap?'n/a':(p.rep?'yes':'no');
+    const q=(document.getElementById('askQ')?.value||'').trim(); if(q) D.question=q;
+    D.listTitle=resultsTitlePlain(orderedPlans().length,_typeFilter==='supp');
+    let u=''; if(!p._medigap){ const mc=leadSite()==='medicare-california', qs=['zip='+encodeURIComponent(D.zip||''),'p='+planIdRaw(p)];
+      if(lang==='en'&&!mc) qs.push('lang=en'); if(lang==='es'&&mc) qs.push('lang=es');
+      u=tail(`${shareOrigin()}/${mc?'options-shared':'opciones-compartidas'}?${qs.join('&')}`); }
+    D.reopenUrl=u;
+  } else {
+    D.leadSrc='share_self';
+    D.selectedPlan=(_ask.list?L('List: ','Lista: ')+_ask.title:_ask.plans.map(p=>p.name).join('; '));
+    D.selectedPlanId=_ask.list?'':_ask.plans.map(p=>p.id).join(';');
+    D.plansSeen=_ask.plans.length?(_ask.list?'top of list: ':'')+_ask.plans.map(planLeadTag).join(' | '):'';
+    D.represented=_ask.plans.map(p=>p._medigap?'n/a':(p.rep?'yes':'no')).join(';');
+    D.listTitle=_ask.title; D.listPicked=_ask.list?0:_ask.plans.length;
+    // the leads script prints no line of its own for share_self yet, so the request is spelled out where the alert shows it
+    D.question=L('(Asked us to send them this list to see later: ','(Pidió que le mandemos esta lista para verla después: ')+_ask.about+')';
+    D.reopenUrl=tail(_ask.url);
+  }
+  if(_myPlan&&_myPlan.zip===D.zip){D.curPlan=_myPlan.name+' · '+mpId(_myPlan.id);D.curPlanId=_myPlan.id;D.curPlanMatch=_myPlan.match;}
+  else{delete D.curPlan;delete D.curPlanId;delete D.curPlanMatch;}
+  D.source=leadSite(); D.url=((window.self!==window.top)?document.referrer:'')||window.location.href;
+  withConsent(D,lang,lbl,D.url);
+  const mode=_ask.mode==='plan'?'ask_plan':'share_self', ch=_ask.ch;
+  sendLead(D).then(ok=>{
+    _submitting=false;
+    if(ok){ wEvt('ask_submit',{mode:mode,channel:ch}); closeShare(); go(askThanks); return; }
+    if(go_){go_.disabled=false;go_.textContent=lbl;}
+    const e2=document.getElementById('askErr'); if(e2) e2.innerHTML=leadErrorHTML(lang);
+    placeSheet();
+  });
+}
+// Screen 4: "Listo." + who writes today, then the existing T-165 medicines box (it posts to this same Lead ID).
+function askThanks(){
+  prog(100); _plansView=true;
+  _tmPicked=new Set(); _tmBusy=false;
+  const by=D.prefer==='email'?L('by email','por email'):L('by text','por texto');
+  wb().innerHTML=`${bk()}<div class="askok"><div class="c">${CFI.check}</div>
+    <h3>${L('Done.','Listo.')}</h3><p class="s">${L(`${esc(askAgentFirst())} will write to you today ${by}.`,`${esc(askAgentFirst())} le escribe hoy ${by}.`)}</p>
+    ${tmHTML()}</div>`;
 }
 /* T-098. In the host page's iframe the sheet cannot find the screen on its own: there is no
    scrollport in here, so position:fixed resolves against the whole frame. The page reports
@@ -5546,7 +5686,7 @@ document.addEventListener('click',function(e){
   const h=a.getAttribute('href')||'';
   const ch=/^tel:/i.test(h)?'phone':/^sms:/i.test(h)?'sms':/wa\.me|whatsapp\.com/i.test(h)?'whatsapp':/calendar\.app\.google|calendly\.com|cal\.com/i.test(h)?'book':'';
   if(!ch) return;
-  const step=a.closest('.pc-ask')?'plan_card':a.closest('.facestrip')?'face_strip':a.closest('.team2')?'team_card':a.closest('.cf-err,.lead-err')?'error':a.closest('.cf')?'confirmation':'widget';
+  const step=a.closest('.team2')?'team_card':a.closest('.cf-err,.lead-err')?'error':a.closest('.cf')?'confirmation':'widget';
   wEvt(ch+'_click',{step:step});
   if(step==='team_card') wEvt('widget_agent_click',{step:step,channel:ch});
 },true);
