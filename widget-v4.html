@@ -1551,10 +1551,11 @@ function pickSender(k){
   document.querySelectorAll('#shwrap .shwho .fc').forEach(b=>{const on=b.dataset.k===k;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
   const ok=document.getElementById('shok'); if(ok) ok.textContent='';
 }
-/* T-176 (AB 2026-11-05): visitors on BeneficiosMedicare in Spanish get Compartir back (Texto, Email,
-   WhatsApp, Copiar enlace, PDF) so they can send themselves their options. No sender row, no de=;
-   the shared page shows the agent by state as before. English and medicare-california unchanged. */
-function shareOn(){return EQUIPO||(lang==='es'&&leadSite()!=='medicare-california');}
+/* T-176 (AB 2026-11-05, extended AB 2026-11-06 "mirror all changes in medicare CA, english and spanish, both
+   versions of both sites"): every visitor gets Compartir (Texto, Email, WhatsApp, Copiar enlace, PDF) so they
+   can send themselves their options, on BM and MC, in English and Spanish. No sender row, no de=; the shared
+   page shows the agent by state as before. */
+function shareOn(){return true;}
 function equipoShareBtn(fn,cls){return shareOn()?`<button class="${cls}" onclick="${fn}" aria-label="${L('Share','Compartir')}">${shrIcon()}${L('Share','Compartir')}</button>`:'';}
 
 /* ── T-104 (1) (AB 2026-10-18): plan names in proper case ─────────────────────────────────────────────
