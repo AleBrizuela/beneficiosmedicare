@@ -3438,7 +3438,7 @@ function chipDefs(){
   const drugN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_zeroOnly||p.premium===0)&&carOK(p)&&hasDrug(p)).length;
   const zeroN=PLANS.filter(p=>categoryOK(p)&&networkOK(p)&&(!_drugOnly||hasDrug(p))&&carOK(p)&&p.premium===0).length;
   // T-177 (AB 2026-11-07): fixed order -- $0 prima, Incluye medicamentos, Suplementos, Parte D sola, Medicaid, Necesidades especiales
-  const suppN=mgMain().length;
+  const suppN=PLANS.filter(p=>p._medigap).length;   // T-177: every letter the state has (12), not just the 3 shown first
   return [
     {k:'zero', lb:L('$0 premium','$0 prima'), on:_zeroOnly, group:'rest',
      any:PLANS.some(p=>inTodos(p)&&p.premium===0), n:zeroN, disabled:!_zeroOnly&&zeroN===0},
@@ -3768,9 +3768,8 @@ function mgListHTML(selectable){
     pdpN?L(`You also need a Part D plan for medicines (<button class="mgexl" onclick="chipTap('pdp')">see ${pdpN}</button>).`,`Necesita también una Parte D sola para medicinas (<button class="mgexl" onclick="chipTap('pdp')">ver ${pdpN}</button>).`)
         :L('You also need a Part D plan for medicines.','Necesita también una Parte D sola para medicinas.')} ${
     L('Use any doctor who accepts Medicare. The price depends on your age and whether you smoke.','Use cualquier médico que acepte Medicare. El precio depende de su edad y si fuma.')}</p>`;
-  const more=rest.length?(_mgMore||!selectable
-      ? rest.map(p=>mgCard(p,selectable,false)).join('')
-      : `<button class="showmore mgmore" onclick="_mgMore=true;flowResults()">${L(`See other letters (${rest.length})`,`Ver otras letras (${rest.length})`)}</button>`):'';
+  // T-177 (AB 2026-11-07): at most 12 letters, under the 13-or-fewer rule -> all shown, G / N / high-deductible G first, no button
+  const more=rest.map(p=>mgCard(p,selectable,false)).join('');
   return `${ex}<div id="plist">${main.map(p=>mgCard(p,selectable,true)).join('')}${more}</div>
     <p class="mgfine">${L('*Lowest rate for any age, Medicare.gov, March 2026.','*Tarifa más baja para cualquier edad, Medicare.gov, marzo 2026.')}</p><div id="pmore"></div>`;
 }
