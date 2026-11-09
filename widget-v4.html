@@ -4600,8 +4600,18 @@ const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
 // on screen decides, a tie falls to the next picked answer, then CMS rating. Replaces the old
 // one-answer-at-a-time branches (which each ended the same way: the metric, then rating, then
 // out-of-pocket) with one chain built from however many answers were picked, in screen order.
+let _dualWhy=null;   // T-184: the sentence for the plan sheetSuggest chose, read back by sugLine
 function suggestPlan(plans){
   if(plans.length<2) return null;
+  _dualWhy=null;
+  /* T-184 (AB 2026-11-09): the compare screen and the shared sheet must pick the SAME plan. A compare with
+     any dual (D-SNP) plan, or the Medi-Cal answer, uses T-183's dual rules (sheetSuggest), never the old
+     rating-then-out-of-pocket chain, which suggested Kaiser here while the sheet suggested SCAN. */
+  if(plans.some(isDual)||D.priority==='medicaid'){
+    const ss=sheetSuggest(plans,{mc:true});
+    if(ss.sug) _dualWhy={id:ss.sug.id,t:ss.why};
+    return ss.sug;
+  }
   const pr=Array.isArray(D.priorities)?D.priorities:(D.priority?[D.priority]:[]);
   const screenOrder=PRI_OPTIONS.map(o=>o.id).filter(id=>pr.indexOf(id)>=0&&(id==='medicaid'||PRI_KEY[id]));
   // T-101 (6), mock v9 section 5 "Sin preferencia": with no answer there is nothing to suggest FROM,
@@ -4640,6 +4650,7 @@ function sugWhy(p,plans){
    line, their answer folded into it rather than announced first. Each priority has its own shape,
    and the figure that carries it comes from the table underneath. */
 function sugLine(p,plans){
+  if(_dualWhy&&_dualWhy.id===p.id) return _dualWhy.t;
   const st=p.rating==null?'':String(p.rating);
   const moop=p.moop==null?'':usd(p.moop);
   const ded=_dd(p)===Infinity?'':usd(p.ded);
@@ -4713,17 +4724,7 @@ function _knownZero(key,v){
   if(key==='tiers') return t.split(' · ').every(x=>x==='$0');
   return /^\$0(\.00)?$/.test(t);
 }
-function dualizeRows(rows){
-  const out={};
-  Object.keys(rows).forEach(k=>{
-    let c=rows[k];
-    if(c&&SHEET_COST_KEYS[k]&&!c.off&&!_knownZero(k,c)) c={t:L('Confirm','Confirmar'),off:false,mc:'confirm'};
-    else if(c&&SHEET_COST_KEYS[k]) c=Object.assign({},c,{mc:'with'});
-    else if(c&&(k==='premium'||k==='giveback')) c=Object.assign({},c,{mc:'with'});
-    out[k]=c;
-  });
-  return out;
-}
+function dualizeRows(rows){return rows;}   // T-184: facts, not "Confirm": the sheet shows each plan's own figure; the note says it is before Medi-Cal
 const _yrFactor={mo:12,'3mo':4,'6mo':2,yr:1};
 function _otcYear(p){const o=p.otc;return o&&o.has&&o.amt!=null?o.amt*(_yrFactor[o.per]||1):0;}
 function extrasScore(p){
@@ -5550,6 +5551,12 @@ function cmpParts(plans,ro){
   // T-140: every group starts open (no 'shut' class, no row gets 'hid' here) -- tg groups are still
   // tappable (cmpGrp toggles 'shut'/'hid' live off the current classList, it never reads this
   // initial render), so tapping a grey bar still closes it exactly as before.
+  /* T-184 (AB 2026-11-09, "i need facts not the CONFIRM"): every cell is the plan's own published figure, the
+     same basis on every plan (CMS PBP cost sharing, before Medi-Cal). The Costs bar says so. No "Confirm". */
+  if(plans.some(isDual)){
+    const g0=R.find(r=>r.g&&r.icon==='cost');
+    if(g0) g0.g=g0.g+' · '+L('plan cost sharing, before '+mcd(),'costo del plan, antes de '+mcd());
+  }
   let gi=-1;
   const body=R.map(r=>{
     if(r.g){gi++;
@@ -5598,7 +5605,7 @@ function cmpParts(plans,ro){
   const cmpShare='';   // T-177: Enviar is in the bar only
   const top=`<div class="cmptop">${ro?'':bk()}${cmpShare}${diffTog}</div>
     ${unlicensedNote()}
-    ${sug?sugCard(sug,plans):(D.priority?'':askLine())}
+    ${sug?sugCard(sug,plans):((D.priority&&!plans.some(isDual))?'':askLine())}
     <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>`;
   const table=`<div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
