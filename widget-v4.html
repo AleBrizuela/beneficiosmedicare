@@ -4600,6 +4600,19 @@ const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
 // on screen decides, a tie falls to the next picked answer, then CMS rating. Replaces the old
 // one-answer-at-a-time branches (which each ended the same way: the metric, then rating, then
 // out-of-pocket) with one chain built from however many answers were picked, in screen order.
+/* T-185 (AB 2026-11-09): three optional facts about the CLIENT that decide a dual suggestion and that the agent
+   (team mode, ?equipo=1) sets in the Enviar sheet: mc = has Medi-Cal / Extra Help, kp = already uses Kaiser,
+   net = carriers whose network has the client's doctors. Flags and carrier words only, never a name or a doctor.
+   They ride the share link (mc=1 kp=1 net=scan,kaiser); the compare screen and the shared page read the same
+   three, so both pick the same plan. Non-dual compares never read them. */
+let _cf={mc:false,kp:false,net:[],ids:''}, _cfDirty=false;
+// flags belong to the plans they were set on: a different selection starts clean
+function cfSync(plans){const k=plans.map(p=>p.id).sort().join();if(_cf.ids&&_cf.ids!==k) _cf={mc:false,kp:false,net:[],ids:''};}
+function cfCtx(){return {mc:true,kp:_cf.kp,net:_cf.net.join(',')};}
+function cfFromQuery(mc,kp,net){
+  _cf={mc:String(mc||'')==='1',kp:String(kp||'')==='1',
+       net:String(net||'').toLowerCase().split(',').map(x=>x.replace(/[^a-z0-9 ]/g,'').trim()).filter(Boolean).slice(0,6)};
+}
 let _dualWhy=null;   // T-184: the sentence for the plan sheetSuggest chose, read back by sugLine
 function suggestPlan(plans){
   if(plans.length<2) return null;
@@ -4608,7 +4621,8 @@ function suggestPlan(plans){
      any dual (D-SNP) plan, or the Medi-Cal answer, uses T-183's dual rules (sheetSuggest), never the old
      rating-then-out-of-pocket chain, which suggested Kaiser here while the sheet suggested SCAN. */
   if(plans.some(isDual)||D.priority==='medicaid'){
-    const ss=sheetSuggest(plans,{mc:true});
+    cfSync(plans);
+    const ss=sheetSuggest(plans,cfCtx());
     if(ss.sug) _dualWhy={id:ss.sug.id,t:ss.why};
     return ss.sug;
   }
@@ -4852,6 +4866,7 @@ async function plansForShare(zip,ids,priority,de,ctx){
     let sug=suggestPlan(out), dual=false, why2=null;
     const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
     if(ctx&&ctx.sheet){
+      cfFromQuery(ctx.mc,ctx.kp,ctx.net);
       const ss=sheetSuggest(out,Object.assign({r:D.priority},ctx));
       dual=ss.dual;
       const blocks=sheetChecks(out,dual);
@@ -4885,6 +4900,7 @@ function mpFind26For27(p27){
 async function shareRender(q){
   const base=await plansForShare(q.zip,q.ids,q.r,q.de);
   if(base.err) return base;
+  cfFromQuery(q.mc,q.kp,q.net);   // T-185: after plansForShare, which resets nothing of its own on this path
   const ids=(q.ids||[]).map(String);
   const plans=ids.map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(p=>p&&!p._medigap).slice(0,3);
   if(!plans.length) return {err:'no match'};
@@ -5063,6 +5079,7 @@ function shareURL(){
   // as everywhere else in this ticket, not pick order.
   const prSet=Array.isArray(D.priorities)?PRI_OPTIONS.map(o=>o.id).filter(id=>D.priorities.indexOf(id)>=0):[];
   if(prSet.length) q.push('r='+encodeURIComponent(prSet.join('+')));
+  if(cfShown()){ if(_cf.mc) q.push('mc=1'); if(_cf.kp) q.push('kp=1'); if(_cf.net.length) q.push('net='+encodeURIComponent(_cf.net.join(','))); }   // T-185
   // T-105 (1)(5): from Mi plan de hoy, which column is their current plan -- a plan ID, nothing about them.
   // Also true for the "Compartir lo que cambia" button, which shares straight from the mpCurCard
   // screen -- before Compare has ever been opened, so _cmpFrom might not say 'myplan' yet even though
@@ -5201,7 +5218,7 @@ function openShareSheet(){
     <div class="sheet" role="dialog" aria-label="${ttl}">
       <div class="grab"></div><p class="sh">${ttl}</p>
       <p class="ss">${L('To a son, a daughter or yourself. It opens just as you see it now.','A un hijo, a una hija o a usted mismo. Se abre igual que la ve ahora.')}</p>
-      ${meRow()}${senderRow()}${btns}<p class="shok" id="shok"></p></div>`;
+      ${meRow()}${senderRow()}${clientRow()}${btns}<p class="shok" id="shok"></p></div>`;
   // framed: keep it out of sight for the one tick it takes the page to answer, rather than
   // letting it paint a thousand pixels down and jump
   if(window.self!==window.top){ el.classList.add('vp'); el.style.visibility='hidden'; }
@@ -5217,9 +5234,34 @@ function senderRow(){
     return `<button class="fc${on?' on':''}" data-k="${k}" aria-pressed="${on}" onclick="pickSender('${k}')">${esc(a.name.split(' ')[0])}</button>`;
   }).join('')+`</div>`;
 }
+/* T-185: the client row of the Enviar sheet. Team mode only, a dual compare only (any D-SNP plan, or the
+   Medi-Cal answer), never a list or a "what changes" share. Same chips as the sender row. */
+function cfShown(){
+  return EQUIPO&&!_shareList&&!_shareIds&&_plansView&&(()=>{const ps=sharePlans();cfSync(ps);return ps.length>=2&&(ps.some(isDual)||D.priority==='medicaid');})();
+}
+function cfToken(p){return carrierShort(p.carrier).toLowerCase().replace(/[^a-z0-9 ]/g,'').trim();}
+function clientRow(){
+  if(!cfShown()) return '';
+  const chip=(k,on,lb)=>`<button class="fc${on?' on':''}" data-cf="${esc(k)}" aria-pressed="${on}" onclick="cfToggle(this.dataset.cf)">${lb}</button>`;
+  const toks=[...new Set(sharePlans().map(cfToken).filter(Boolean))];
+  return `<p class="shfrom">${L('About the client','Sobre el cliente')}</p><div class="shwho" id="shcf">`
+    +chip('mc',_cf.mc,'Medi-Cal')+chip('kp',_cf.kp,L('Uses Kaiser','Usa Kaiser'))+`</div>`
+    +`<p class="shfrom">${L('Doctors in the network of','Sus médicos están en la red de')}</p><div class="shwho" id="shcn">`
+    +toks.map(t=>chip('n:'+t,_cf.net.indexOf(t)>=0,esc(carrierShort(sharePlans().find(p=>cfToken(p)===t).carrier)))).join('')+`</div>`;
+}
+function cfToggle(k){
+  if(k==='mc') _cf.mc=!_cf.mc;
+  else if(k==='kp') _cf.kp=!_cf.kp;
+  else if(k.slice(0,2)==='n:'){const t=k.slice(2),i=_cf.net.indexOf(t); if(i>=0) _cf.net.splice(i,1); else _cf.net.push(t);}
+  _cfDirty=true; _cf.ids=sharePlans().map(p=>p.id).sort().join();
+  document.querySelectorAll('#shwrap [data-cf]').forEach(b=>{const k2=b.dataset.cf,on=k2==='mc'?_cf.mc:k2==='kp'?_cf.kp:_cf.net.indexOf(k2.slice(2))>=0;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+  const ok=document.getElementById('shok'); if(ok) ok.textContent='';
+}
 function closeShare(){
   const el=document.getElementById('shwrap'); if(el){ clearTimeout(el._t); el.remove(); }
+  const redraw=_cfDirty&&!_shareList&&!_shareIds&&_plansView; _cfDirty=false;
   _shareIds=null; _shareList=false; _shareIdCache=null;
+  if(redraw){ try{ flowCompare(); }catch(e){} }   // T-185: the screen behind re-picks with the flags just set
   try{ if(window.self!==window.top) window.parent.postMessage({type:'widget-want-viewport',on:false},'*'); }catch(e){}
 }
 /* ── T-179 (AB 2026-11-07): ONE contact sheet, two doors ────────────────────────────────────────────────
