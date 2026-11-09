@@ -4600,6 +4600,10 @@ const _dent=p=>{const v=_dentAmt(p);return v==null?-1:v;};
 // on screen decides, a tie falls to the next picked answer, then CMS rating. Replaces the old
 // one-answer-at-a-time branches (which each ended the same way: the metric, then rating, then
 // out-of-pocket) with one chain built from however many answers were picked, in screen order.
+/* T-186 (AB 2026-11-09): "I am NOT confident on our ability to recommend best possible plan": no plan is suggested, anywhere,
+   until she says otherwise. One switch. false = no "Our suggestion" box, no tinted column, no badge, on the compare screen
+   and in the shared sheet's data; the "tell me your doctors" call box (askLine) shows instead. Flip to true to bring T-183/T-184 back. */
+const SUGGEST_ON=false;
 let _dualWhy=null;   // T-184: the sentence for the plan sheetSuggest chose, read back by sugLine
 function suggestPlan(plans){
   if(plans.length<2) return null;
@@ -4858,6 +4862,7 @@ async function plansForShare(zip,ids,priority,de,ctx){
       if(blocks.length) return {err:'blocked',blocks:blocks.map(b=>L(b.en,b.es))};
       if(!ss.legacy){ sug=ss.sug; why2=ss.why; }
     }
+    if(!SUGGEST_ON){ sug=null; why2=null; }
     // T-102: the sheet and its PDF draw their header from the same map as the widget.
     const ag=senderAgent(de)||agent();   // T-166: the sender in the link, else agent by state
     return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
@@ -5571,7 +5576,7 @@ function cmpParts(plans,ro){
   }).join('');
   /* (2) The three header cells line up: the colour stripe and the carrier sit at the top of all
      three, and the name block reserves two lines so the type · ID line and the stars line up too. */
-  const sug=(_cmpFrom==='myplan'&&_mpCtx)?mpSuggest(plans):suggestPlan(plans), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
+  const sug=!SUGGEST_ON?null:((_cmpFrom==='myplan'&&_mpCtx)?mpSuggest(plans):suggestPlan(plans)), sugIx=sug?plans.findIndex(p=>p.id===sug.id):-1;
   // T-096 round 4 i: "HMO" on all three columns tells nobody anything. The type shows only when
   // the plans being compared actually differ on it.
   const types=[...new Set(plans.map(p=>String(p.type||'')))];
@@ -5605,7 +5610,7 @@ function cmpParts(plans,ro){
   const cmpShare='';   // T-177: Enviar is in the bar only
   const top=`<div class="cmptop">${ro?'':bk()}${cmpShare}${diffTog}</div>
     ${unlicensedNote()}
-    ${sug?sugCard(sug,plans):((D.priority&&!plans.some(isDual))?'':askLine())}
+    ${sug?sugCard(sug,plans):askLine()}
     <p class="diffline" id="diffline" hidden>${L(`Only what differs between the ${plans.length}.`,`Solo lo que cambia entre los ${plans.length}.`)}</p>`;
   const table=`<div class="cmp${sugIx>=0?' s'+(sugIx+1):''}" id="cmp">
       <table><thead>${head}</thead><tbody>${body}</tbody></table>
