@@ -4695,7 +4695,142 @@ function sugCard(p,plans){
    can never show plans other than the ones that were on screen. */
 /* The shared page's whole data path. It reuses loadPlansForZip (the ZIP index, the state's plan
    file, the carrier file) exactly as the widget does, then hands back only what a sheet prints. */
-async function plansForShare(zip,ids,priority,de){
+/* ── T-183 (AB 2026-11-09): how the SHEET picks "Our suggestion" ──────────────────────────────────
+   Two rule sets, never mixed on one sheet. Used by plansForShare only (the shared sheet); the
+   widget's own compare screen (suggestPlan above) is deliberately untouched.
+   DUAL (any D-SNP on the sheet, or the link says mc=1): Medi-Cal pays most Medicare cost sharing, so
+   the cost rows barely move what the client pays and are never the reason. Order: network, stars,
+   extras, then cost only as a tiebreaker. The plan file carries NO Medi-Cal / Extra Help figures,
+   only each plan's own cost sharing, so a cost cell is shown as a number only where Medi-Cal cannot
+   change it (a flat $0); everything else reads "Confirm" on EVERY plan (AB 2026-11-09, option 1).
+   NON-DUAL: cost leads, as estimated total yearly cost, stars break ties. */
+const SHEET_COST_KEYS={moop:1,mded:1,pcp:1,spec:1,hosp:1,er:1,urg:1,amb:1,wwe:1,ded:1,tiers:1};
+function _plainT(v){return v==null?'':String(v.t!==undefined?v.t:v).replace(/<[^>]+>/g,'').trim();}
+function _knownZero(key,v){
+  const t=_plainT(v);
+  if(key==='moop') return false;                                   // a plan maximum is before Medi-Cal, always
+  if(key==='hosp') return /^\$0 (per stay|por estad)/i.test(t);
+  if(key==='tiers') return t.split(' · ').every(x=>x==='$0');
+  return /^\$0(\.00)?$/.test(t);
+}
+function dualizeRows(rows){
+  const out={};
+  Object.keys(rows).forEach(k=>{
+    let c=rows[k];
+    if(c&&SHEET_COST_KEYS[k]&&!c.off&&!_knownZero(k,c)) c={t:L('Confirm','Confirmar'),off:false,mc:'confirm'};
+    else if(c&&SHEET_COST_KEYS[k]) c=Object.assign({},c,{mc:'with'});
+    else if(c&&(k==='premium'||k==='giveback')) c=Object.assign({},c,{mc:'with'});
+    out[k]=c;
+  });
+  return out;
+}
+const _yrFactor={mo:12,'3mo':4,'6mo':2,yr:1};
+function _otcYear(p){const o=p.otc;return o&&o.has&&o.amt!=null?o.amt*(_yrFactor[o.per]||1):0;}
+function extrasScore(p){
+  let s=0;
+  const d=p.dent; s+=(!d||(!d.prev&&!d.comp))?-4:(d.comp?3:1);
+  const h=p.hear; s+=(!h||(!h.exam&&!h.aids))?-4:(h.aids?3:1);
+  const v=p.vis;  s+=(!v||(!v.exam&&!v.wear))?-1:(v.wear?1:.5);
+  s+=Math.min(3,_otcYear(p)/600);
+  const t=p.trans; s+=!t?0:(t.unl?1.5:(t.n>=24?1:(t.n>0?.5:0)));
+  return s;
+}
+function _matchCarrier(p,tok){return (String(p.carrier||'')+' '+String(p.parent||'')).toLowerCase().indexOf(tok)>=0;}
+function _extrasWhy(win,others){
+  const f=[];
+  if(win.rating!=null&&win.rating>=4&&others.some(o=>(o.rating==null?-1:o.rating)<win.rating)) f.push(L(`${win.rating} stars`,`${win.rating} estrellas`));
+  const hasD=p=>p.dent&&(p.dent.prev||p.dent.comp), hasH=p=>p.hear&&p.hear.aids;
+  if(hasD(win)&&others.some(o=>!hasD(o))) f.push(L('dental','dental'));
+  if(hasH(win)&&others.some(o=>!hasH(o))) f.push(L('hearing aids','audífonos'));
+  const oy=_otcYear(win);
+  if(oy>0&&others.every(o=>_otcYear(o)<oy)){
+    const o=win.otc; f.push(L(`${usd(o.amt)}${perw(o.per)} for pharmacy items`,`${usd(o.amt)}${perw(o.per)} para artículos de farmacia`));
+  }
+  return f;
+}
+function _moneyNum(s,allowed){
+  if(s==null) return 0;
+  const m=String(s).match(/(\$|)(\d+(?:\.\d+)?)(%?)/g); if(!m) return 0;
+  const last=m[m.length-1], n=parseFloat(last.replace(/[^\d.]/g,''));
+  return /%/.test(last)?allowed*n/100:n;
+}
+// Typical year for a non-dual client: 6 primary visits, 4 specialist visits, 1 ER visit. Medicines are
+// added only when the link carries them (it does not yet), so today this is premium + visits.
+function yearlyCost(p){
+  const prem=(p.premium==null?0:p.premium)*12, gb=(p.gb||0)*12;
+  return Math.max(0,prem-gb)+6*_moneyNum(p.pcp,150)+4*_moneyNum(p.spec,250)+_moneyNum(p.er,500);
+}
+function sheetSuggest(out,ctx){
+  const dual=!!(ctx&&ctx.mc)||out.some(isDual);
+  const net=String((ctx&&ctx.net)||'').toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
+  if(ctx&&ctx.kp&&net.indexOf('kaiser')<0) net.push('kaiser');
+  const res={dual,sug:null,why:''};
+  if(out.length<2) return res;
+  if(!dual){
+    if(ctx&&ctx.r&&ctx.r!=='cost') return Object.assign(res,{legacy:true});
+    const ranked=[...out].sort((a,b)=>yearlyCost(a)-yearlyCost(b));
+    const a=ranked[0], b=ranked[1];
+    const tied=yearlyCost(b)-yearlyCost(a)<120;
+    const pool=tied?ranked.filter(p=>yearlyCost(p)-yearlyCost(a)<120).sort((x,y)=>(y.rating==null?-1:y.rating)-(x.rating==null?-1:x.rating)||_mo(x)-_mo(y)):ranked;
+    res.sug=pool[0];
+    const c=Math.round(yearlyCost(res.sug)/10)*10;
+    res.why=tied&&res.sug.rating!=null
+      ? L(`Close on yearly cost, and ${res.sug.rating} stars.`,`Costo anual parecido, y ${res.sug.rating} estrellas.`)
+      : L(`The lowest estimated yearly cost: about ${usd(c)} (premium plus typical visits).`,`El costo anual estimado más bajo: unos ${usd(c)} (prima más visitas típicas).`);
+    return res;
+  }
+  // DUAL. 1. network
+  let pool=out.slice(), netWhy=false;
+  if(net.length){ pool=pool.filter(p=>net.some(t=>_matchCarrier(p,t))); netWhy=pool.length<out.length; }
+  else { const nk=pool.filter(p=>!_matchCarrier(p,'kaiser')); if(nk.length) pool=nk; else pool=[]; }   // never Kaiser without a reason to
+  if(!pool.length) return res;
+  let win=null;
+  if(pool.length===1) win=pool[0];
+  else {
+    // 2. stars: with a 4+ plan available only 4+ plans compete (anything under 3.5 is out)
+    const st=p=>p.rating==null?-1:p.rating;
+    if(pool.some(p=>st(p)>=4)) pool=pool.filter(p=>st(p)>=4);
+    else if(pool.some(p=>st(p)>=3.5)) pool=pool.filter(p=>st(p)>=3.5);
+    if(pool.length===1) win=pool[0];
+    else {
+      // 3. extras: the leader must clear the runner-up by a full point
+      const sc=pool.map(p=>({p,s:extrasScore(p)})).sort((x,y)=>y.s-x.s);
+      if(sc[0].s-sc[1].s>=1) win=sc[0].p;
+      else {
+        // 4. cost, only as a tiebreaker, only rows the client pays something on
+        const c=p=>Math.max(0,(p.premium||0)-(p.gb||0));
+        const tops=sc.filter(x=>sc[0].s-x.s<1).map(x=>x.p).sort((x,y)=>c(x)-c(y));
+        if(c(tops[1])-c(tops[0])>0) win=tops[0];
+      }
+    }
+  }
+  if(!win) return res;
+  res.sug=win;
+  const others=out.filter(p=>p.id!==win.id);
+  const f=_extrasWhy(win,others).slice(0,netWhy?2:3);
+  res.why=netWhy
+    ? L('Your doctors are in its network','Sus médicos están en su red')+(f.length?L(', with ',', con ')+andList(f):'')+'.'
+    : (f.length?L('Chosen for ','Elegido por ')+andList(f)+'.':'');
+  return res;
+}
+// The sheet is blocked, not printed, when the figures contradict each other. Pure: takes plans.
+function sheetChecks(out,dual){
+  const bad=[];
+  out.forEach(p=>{
+    const id=planIdRaw(p), nm=dispName(p);
+    if(!/^[HRS]\d{4}-\d{3}(-\d{1,2})?$/.test(id)) bad.push({en:`${nm}: the contract ID ${id} is not a valid CMS ID.`,es:`${nm}: el ID de contrato ${id} no es válido.`});
+    if(p.rating!=null&&!(p.rating>=1&&p.rating<=5&&p.rating*2===Math.round(p.rating*2))) bad.push({en:`${nm}: star rating ${p.rating} is not a CMS rating.`,es:`${nm}: la calificación ${p.rating} no es válida.`});
+    if(dual&&p.drug==='Included'&&p.ded!=null&&p.ded>0&&p.tiers){
+      const t=p.tiers.filter(x=>x.t<=3);
+      const allZero=t.length&&t.every(x=>isZero(x.v));
+      const skipsDed=t.every(x=>(p.noded||[]).indexOf(x.t)>=0);   // PBP says tiers 1-3 skip the deductible: consistent
+      if(allZero&&!skipsDed) bad.push({en:`${nm}: drug deductible ${usd(p.ded)} next to $0 tiers 1-3 that the plan does not exempt from it. Check the plan data before sending.`,es:`${nm}: deducible de medicamentos ${usd(p.ded)} junto a niveles 1-3 de $0 que el plan no exime. Revise los datos del plan antes de enviar.`});
+    }
+  });
+  if(String(planYear())!==String(PLAN_FILE_YEAR)) bad.push({en:`Plan year ${planYear()} does not match the sheet year ${PLAN_FILE_YEAR}.`,es:`El año del plan ${planYear()} no coincide con el año de la hoja ${PLAN_FILE_YEAR}.`});
+  return bad;
+}
+async function plansForShare(zip,ids,priority,de,ctx){
   try{
     if(!/^\d{5}$/.test(String(zip||''))) return {err:'bad zip'};
     // T-132 B8 / T-146 (AB 2026-10-25, undoes B8's multi-pick part): the link's pr= may still carry
@@ -4711,16 +4846,26 @@ async function plansForShare(zip,ids,priority,de){
     const out=want.map(id=>PLANS.find(p=>planIdRaw(p)===id)).filter(Boolean).filter(p=>!p._medigap).slice(0,3);
     if(!out.length) return {err:'no match'};
     // T-078 round 8: the same suggestion the comparison showed, from the answer carried in the link.
-    const sug=suggestPlan(out);
+    // T-183: the sheet (ctx.sheet, sent by the MC sheet page) uses its own dual / non-dual rules; the
+    // BM page's render:true path and everything else keeps the widget's suggestPlan exactly as before.
+    let sug=suggestPlan(out), dual=false, why2=null;
     const sh=SUG_SHORT[D.priority]?SUG_SHORT[D.priority]():'';
+    if(ctx&&ctx.sheet){
+      const ss=sheetSuggest(out,Object.assign({r:D.priority},ctx));
+      dual=ss.dual;
+      const blocks=sheetChecks(out,dual);
+      if(blocks.length) return {err:'blocked',blocks:blocks.map(b=>L(b.en,b.es))};
+      if(!ss.legacy){ sug=ss.sug; why2=ss.why; }
+    }
     // T-102: the sheet and its PDF draw their header from the same map as the widget.
     const ag=senderAgent(de)||agent();   // T-166: the sender in the link, else agent by state
     return {county:D.county||'',city:D.city||'',state:D.state||'',meta:{year:planYear(),src:provenanceNote()},
       agent:{key:ag.key,name:ag.name,tel:ag.tel,digits:ag.digits,email:ag.email,photo:ag.photo,lic:ag.lic,licSt:ag.licSt||''},
       sug:sug?{id:planIdRaw(sug),name:dispName(sug),
-               why:sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':'',
-               lead:sh?L(`For ${sh}:`,`Para ${sh}:`):''}:null,
-      plans:out.map(sharePlanRow)};
+               why:why2!==null?why2:(sugWhy(sug,out).length?andList(sugWhy(sug,out))+'.':''),
+               lead:why2!==null?'':(sh?L(`For ${sh}:`,`Para ${sh}:`):'')}:null,
+      dual:dual,
+      plans:out.map(p=>{const r=sharePlanRow(p); if(dual) r.rows=dualizeRows(r.rows); return r;})};
   }catch(e){ return {err:String(e&&e.message||e)}; }
 }
 /* T-105 (1) (AB 2026-10-18): the shared page draws the widget's OWN comparison. It asks this file (loaded
@@ -6019,9 +6164,9 @@ if(!_dataOnly){
       // plain rows as before (medicare-california's options-shared still asks that way until its pass)
       // T-139: list:true = a shared LIST, not a compare of specific ids -- shareRenderList re-applies
       // the link's own filters/sort/carrier to this zip's live plans (never takes ids at all).
-      Promise.resolve(q.list?shareRenderList(q):q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r,q.de)).then(function(r){
+      Promise.resolve(q.list?shareRenderList(q):q.render?shareRender(q):plansForShare(q.zip,q.ids,q.r,q.de,q.sheet?{sheet:true,mc:q.mc==='1',kp:q.kp==='1',net:String(q.net||'')}:null)).then(function(r){
         try{ src.postMessage({type:'widget-plans-result',rid:q.rid,ok:!r.err,err:r.err||'',zip:q.zip,
-          county:r.county||'',city:r.city||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,agent:r.agent||null,
+          county:r.county||'',city:r.city||'',state:r.state||'',plans:r.plans||[],meta:r.meta||null,sug:r.sug||null,dual:!!r.dual,blocks:r.blocks||null,agent:r.agent||null,
           html:r.html||null,css:r.css||'',fns:r.fns||null,names:r.names||[],hoy:r.hoy||'',n:r.n||0},org); }catch(x){}
       });
       return;
