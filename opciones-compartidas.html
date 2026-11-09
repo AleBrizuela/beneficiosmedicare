@@ -289,7 +289,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     try {
       frame.contentWindow.postMessage(LIST
         ? {type:'widget-plans', rid:rid, zip:ZIP, f:LF, o:LO, a:LA, list:true, de:DE}
-        : {type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true, de:DE}, WIDGET_HOST);
+        : {type:'widget-plans', rid:rid, zip:ZIP, ids:IDS, r:PRI, hoy:HOY, render:true, de:DE, mc:q.get('mc') || '', kp:q.get('kp') || '', net:q.get('net') || ''}, WIDGET_HOST);
     } catch (err) { fail(); }
   });
   frame.src = WIDGET_HOST + '/widget-v4.html?data=1&lang=' + (EN ? 'en' : 'es');
