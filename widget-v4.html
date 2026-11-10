@@ -2958,10 +2958,10 @@ function planHead(p,selectable,detail){
   // taller Compare button) instead of right under the name -- a one-line name (Imperial Dynamic,
   // SCAN Prime) left a visible gap that a two- or three-line name did not. Nesting them inside the
   // left div makes their position depend only on the name's own height, never the button's.
-  // T-177 (AB 2026-11-07): the plan ID lives in "Ver detalles" (detail), not on the list card.
+  // Plan ID line restored on every list card and the plan screen (AB 2026-11-10); T-177's `!detail` wrap had dropped it from lists.
   const body=`${sameCarrier(p)?'':`<p class="pc-eb">${esc(carrierName(p.carrier))}</p>`}<p class="pc-name">${nbLast(esc(dispName(p)))}</p>
       ${planTags(p)}
-      ${p._medigap||!detail?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
+      ${p._medigap?'':`<div class="pc-idline">${L('Plan ID: ','ID del plan: ')}<span class="pid">${planId(p)}</span></div>`}
       <div class="pc-rating">${rStar(p)}</div>${rLow(p)}`;
   return `<div class="pc-head${detail?' pd-head':''}">
       ${_pin&&p.id===_pin?`<div class="pc-top mprow"><span class="mpchip navy">${L('YOUR PLAN TODAY','SU PLAN HOY')}</span>${selectable?cmpBox(p):''}</div>
