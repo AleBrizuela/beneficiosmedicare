@@ -430,7 +430,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       var any = false, tr = document.createElement('tr'); tr.className = 'dtl';
       [].forEach.call(pr.children, function(th){
         var id = th.textContent.split('·').pop().trim(), c = document.createElement('th');
-        if (OKID(id) && has[rawOf(id)]) { any = true; c.innerHTML = '<a href="' + esc(detailURL(id)) + '" data-plan-detail="' + esc(id) + '">' + esc(EN ? 'See details' : 'Ver detalles') + ' ›</a>'; }
+        if (OKID(id) && (has[rawOf(id)] || has[rawOf(id).replace(/_0$/, '')])) { any = true; c.innerHTML = '<a href="' + esc(detailURL(id)) + '" data-plan-detail="' + esc(id) + '">' + esc(EN ? 'See details' : 'Ver detalles') + ' ›</a>'; }
         tr.appendChild(c);
       });
       if (!any) return;
