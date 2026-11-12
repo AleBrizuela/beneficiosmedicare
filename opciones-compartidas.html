@@ -362,7 +362,7 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
     var rootA = part(document.getElementById('cmpA'), d.css, d.html.top + d.html.table);
     // T-187: one details link under each plan's column, to the same single-plan view the list cards use
     // (detailURL). Every row stays shown; the single-plan page itself gets none (it is that page).
-    if (!mpOne) detailLinks(rootA);
+    if (!mpOne) detailLinks(rootA, d.state);
     // T-117 (4)/L1 (AB 2026-10-21): the shared page opens with every row shown; "Mostrar diferencias" stays the visitor's choice.
     part(document.getElementById('cmpB'), d.css, d.html.fine);
     if (typeof gtag === 'function') gtag('event', 'shared_page_view', {plans:n, zip3:ZIP.slice(0,3), lang:EN?'en':'es', agent:A.key, hoy:HOY?1:0});
@@ -411,21 +411,36 @@ a.t44{display:inline-block;padding:13px 2px;margin:-13px -2px}
       });
   }
   // T-187: the plan's public id is the last part of the "type · ID" header cell the widget draws.
-  function detailLinks(root){
+  // T-189 (AB 2026-11-12): the single-plan view is "what changes in your plan", so it only opens for a plan that
+  // has a 2026 twin. A plan new in 2027 (no 2026 plan crosswalks to it) gets NO link instead of a dead end. The
+  // twin test is the state's own crosswalk file, same data the widget uses. Unknown state / file -> no links.
+  function rawOf(id){ var m = String(id || '').split('-'); return m[0] + '_' + (m[1] || '') + '_' + (m[2] || '0'); }
+  function priorSet(st){
+    if (!/^[A-Z]{2}$/.test(String(st || ''))) return Promise.resolve(null);
+    return fetch('data/crosswalk_' + st + '_2027.json').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (!j || !Array.isArray(j.plans)) return null;
+        var o = {}; j.plans.forEach(function(p){ if (p && p.to) o[p.to] = 1; }); return o; })
+      .catch(function(){ return null; });
+  }
+  function detailLinks(root, st){
     var head = root.querySelector('.cmp thead'), pr = head && head.querySelector('tr.pid');
     if (!pr) return;
-    var tr = document.createElement('tr'); tr.className = 'dtl';
-    [].forEach.call(pr.children, function(th){
-      var id = th.textContent.split('·').pop().trim(), c = document.createElement('th');
-      if (OKID(id)) c.innerHTML = '<a href="' + esc(detailURL(id)) + '" data-plan-detail="' + esc(id) + '">' + esc(EN ? 'See details' : 'Ver detalles') + ' ›</a>';
-      tr.appendChild(c);
+    priorSet(st).then(function(has){
+      if (!has) return;
+      var any = false, tr = document.createElement('tr'); tr.className = 'dtl';
+      [].forEach.call(pr.children, function(th){
+        var id = th.textContent.split('·').pop().trim(), c = document.createElement('th');
+        if (OKID(id) && has[rawOf(id)]) { any = true; c.innerHTML = '<a href="' + esc(detailURL(id)) + '" data-plan-detail="' + esc(id) + '">' + esc(EN ? 'See details' : 'Ver detalles') + ' ›</a>'; }
+        tr.appendChild(c);
+      });
+      if (!any) return;
+      head.appendChild(tr);
+      var stl = document.createElement('style');
+      stl.textContent = '.cmp thead tr.dtl th{padding-top:0;font-size:13.5px;font-weight:400}' +
+        '.cmp thead tr.dtl a{color:#007B7B;text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:13px 2px;margin:-13px -2px}' +
+        '@media print{.cmp thead tr.dtl{display:none}}';
+      root.appendChild(stl);
     });
-    head.appendChild(tr);
-    var st = document.createElement('style');
-    st.textContent = '.cmp thead tr.dtl th{padding-top:0;font-size:13.5px;font-weight:400}' +
-      '.cmp thead tr.dtl a{color:#007B7B;text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:13px 2px;margin:-13px -2px}' +
-      '@media print{.cmp thead tr.dtl{display:none}}';
-    root.appendChild(st);
   }
   function renderList(d){
     useAgent(d.agent);
