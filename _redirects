@@ -221,8 +221,6 @@
 # neighborhoods). Routed through functions/_middleware.js too, since a plain _redirects 301 for a
 # page retired in the same deploy that adds the rule doesn't actually fire (confirmed earlier
 # the same day, see D-124) -- this block documents intent, the Function is what actually works.
-# long-beach removed from this block by T-173 (2026-11-04): it's a real page now.
-/california/cities/riverside.html /california/cities/los-angeles 301
-/california/cities/riverside /california/cities/los-angeles 301
+# long-beach removed from this block by T-173 (2026-11-04): it's a real page now. riverside removed by T-182 (2026-11-12): real page now.
 /california/cities/orange-county.html /california/cities/los-angeles 301
 /california/cities/orange-county /california/cities/los-angeles 301
